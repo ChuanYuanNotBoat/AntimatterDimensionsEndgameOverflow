@@ -204,9 +204,15 @@ export const AutoGlyphProcessor = {
 
 export function autoAdjustGlyphWeights() {
   const sources = getGlyphLevelSources();
-  const f = x => Decimal.pow(Decimal.clampMin(1, Decimal.ln(x.times(5))), 3 / 2);
-  const totalWeight = Object.values(sources).map(s => f(s.value)).decimalSum();
-  const scaledWeight = key => f(sources[key].value).times(100).div(totalWeight).toNumber();
+  // The optimal weight is proportional to ln(5x)^(3/2). At extreme post-Endgame values, directly
+  // evaluating those scores and dividing by their sum can turn a finite ratio into Infinity / Infinity.
+  // Normalize in log-space instead; subtracting the largest score log keeps every exponent at or below zero.
+  const scoreLog = x => Decimal.ln(Decimal.clampMin(1, Decimal.ln(x).add(Math.log(5)))).times(3 / 2);
+  const scoreLogs = Object.fromEntries(Object.entries(sources).map(([key, source]) => [key, scoreLog(source.value)]));
+  const maxScoreLog = Object.values(scoreLogs).reduce((max, value) => Decimal.max(max, value), DC.D0);
+  const relativeScore = key => Decimal.exp(scoreLogs[key].sub(maxScoreLog));
+  const totalWeight = Object.keys(sources).map(relativeScore).decimalSum();
+  const scaledWeight = key => relativeScore(key).times(100).div(totalWeight).toNumber();
 
   // Adjust all weights to be integer, while maintaining that they must sum to 100. We ensure it's within 1 on the
   // weights by flooring and then taking guesses on which ones would give the largest boost when adding the lost

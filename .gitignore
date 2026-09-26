@@ -11,3 +11,4 @@ save
 .gitignore
 tests/fixtures/.gitignore
 .gitignore
+*.patch
