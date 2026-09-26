@@ -1,3 +1,4 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "../../finite-decimal";
 import { GameMechanicState } from "../../game-mechanics";
 import { Quotes } from "../quotes";
 
@@ -136,11 +137,12 @@ class RaPetState extends GameMechanicState {
 
   get memoryChunksPerSecond() {
     if (!this.canGetMemoryChunks) return DC.D0;
-    let res = this.rawMemoryChunksPerSecond.times(this.chunkUpgradeCurrentMult).times(
-      Effects.product(Ra.unlocks.continuousTTBoost.effects.memoryChunks)).times(GlyphSacrifice.reality.effectValue);
-    if (this.hasRemembrance) res = res.times(Ra.remembrance.multiplier);
-    else if (Ra.petWithRemembrance) res = res.times(Ra.remembrance.nerf);
-    if (ExpansionPack.raPack.isBought && !player.disablePostReality) res = res.times(10);
+    let res = boundedPositiveProduct(this.rawMemoryChunksPerSecond, this.chunkUpgradeCurrentMult);
+    res = boundedPositiveProduct(res, Effects.product(Ra.unlocks.continuousTTBoost.effects.memoryChunks));
+    res = boundedPositiveProduct(res, GlyphSacrifice.reality.effectValue);
+    if (this.hasRemembrance) res = boundedPositiveProduct(res, Ra.remembrance.multiplier);
+    else if (Ra.petWithRemembrance) res = boundedPositiveProduct(res, Ra.remembrance.nerf);
+    if (ExpansionPack.raPack.isBought && !player.disablePostReality) res = boundedPositiveProduct(res, 10);
     return res;
   }
 
@@ -153,19 +155,19 @@ class RaPetState extends GameMechanicState {
   }
 
   get memoryUpgradeCurrentMult() {
-    return Decimal.pow(1.3, this.data.memoryUpgrades);
+    return boundedPositivePower(1.3, this.data.memoryUpgrades);
   }
 
   get chunkUpgradeCurrentMult() {
-    return Decimal.pow(1.5, this.data.chunkUpgrades);
+    return boundedPositivePower(1.5, this.data.chunkUpgrades);
   }
 
   get memoryUpgradeCost() {
-    return Decimal.pow(5, this.data.memoryUpgrades).times(1000);
+    return boundedPositiveProduct(boundedPositivePower(5, this.data.memoryUpgrades), 1000);
   }
 
   get chunkUpgradeCost() {
-    return Decimal.pow(25, this.data.chunkUpgrades).times(5000);
+    return boundedPositiveProduct(boundedPositivePower(25, this.data.chunkUpgrades), 5000);
   }
 
   get canBuyMemoryUpgrade() {
@@ -213,16 +215,18 @@ class RaPetState extends GameMechanicState {
   }
 
   tick(realDiff, generateChunks) {
-    const seconds = realDiff / 1000;
+    const seconds = Decimal.clamp(new Decimal(realDiff).div(1000), 0, DC.BEMAX);
     const newMemoryChunks = generateChunks
-      ? this.memoryChunksPerSecond.times(seconds)
+      ? boundedPositiveProduct(this.memoryChunksPerSecond, seconds)
       : DC.D0;
     // Adding memories from half of the gained chunks this tick results in the best mathematical behavior
     // for very long simulated ticks
-    const newMemories = (this.memoryChunks.add(newMemoryChunks.div(2))).times(seconds).times(Ra.productionPerMemoryChunk).times(
-      this.memoryUpgradeCurrentMult);
-    this.memoryChunks = this.memoryChunks.add(newMemoryChunks);
-    this.memories = this.memories.add(newMemories);
+    let newMemories = boundedPositiveSum(this.memoryChunks, newMemoryChunks.div(2));
+    newMemories = boundedPositiveProduct(newMemories, seconds);
+    newMemories = boundedPositiveProduct(newMemories, Ra.productionPerMemoryChunk);
+    newMemories = boundedPositiveProduct(newMemories, this.memoryUpgradeCurrentMult);
+    this.memoryChunks = boundedPositiveSum(this.memoryChunks, newMemoryChunks);
+    this.memories = boundedPositiveSum(this.memories, newMemories);
   }
 
   reset() {
@@ -269,9 +273,9 @@ export const Ra = {
   get productionPerMemoryChunk() {
     let res = new Decimal(Effects.product(Ra.unlocks.continuousTTBoost.effects.memories, Achievement(168), Achievement(236)));
     for (const pet of Ra.pets.all) {
-      if (pet.isUnlocked) res = res.times(pet.memoryProductionMultiplier);
+      if (pet.isUnlocked) res = boundedPositiveProduct(res, pet.memoryProductionMultiplier);
     }
-    if (ExpansionPack.raPack.isBought && !player.disablePostReality) res = res.times(10);
+    if (ExpansionPack.raPack.isBought && !player.disablePostReality) res = boundedPositiveProduct(res, 10);
     return res;
   },
   get memoryBoostResources() {
