@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+
 export const GALAXY_TYPE = {
   NORMAL: 0,
   DISTANT: 1,
@@ -23,8 +25,10 @@ export class Galaxy {
   
   static get remoteStart() {
     const extraDelay = GalacticPowers.remoteGalaxyScale.isUnlocked ? GalacticPowers.remoteGalaxyScale.reward : 0;
-    return new Decimal(this.baseRemoteStart).add(Effects.sum(BreakEternityUpgrade.galaxyScaleDelay))
-      .add(extraDelay).times(player.disablePostReality ? 1 : AlphaUnlocks.powerGalaxies.effects.buff.effectOrDefault(1));
+    let start = boundedPositiveSum(this.baseRemoteStart, Effects.sum(BreakEternityUpgrade.galaxyScaleDelay));
+    start = boundedPositiveSum(start, extraDelay);
+    return boundedPositiveProduct(
+      start, player.disablePostReality ? 1 : AlphaUnlocks.powerGalaxies.effects.buff.effectOrDefault(1));
   }
 
   static get remoteGalaxyStrength() {
@@ -121,23 +125,29 @@ export class Galaxy {
 
   static requirementAt(galaxies) {
     const equivGal = Decimal.min(Galaxy.remoteStart, galaxies);
-    let amount = Galaxy.baseCost.add((equivGal.times(Galaxy.costMult)));
+    let amount = boundedPositiveSum(Galaxy.baseCost, boundedPositiveProduct(equivGal, Galaxy.costMult));
     const type = Galaxy.typeAt(galaxies);
 
     if (type === GALAXY_TYPE.DISTANT || type === GALAXY_TYPE.REMOTE) {
       const galaxyCostScalingStart = this.costScalingStart;
       const galaxiesAfterDistant = Decimal.clampMin(equivGal.sub(galaxyCostScalingStart).add(1), 0);
-      amount = amount.add(Decimal.pow(galaxiesAfterDistant, 2).add(galaxiesAfterDistant));
+      const distantCost = boundedPositiveSum(
+        boundedPositivePower(galaxiesAfterDistant, 2), galaxiesAfterDistant);
+      amount = boundedPositiveSum(amount, distantCost);
     }
 
     if (type === GALAXY_TYPE.REMOTE) {
-      amount = amount.times(Decimal.pow(Galaxy.remoteGalaxyStrength, new Decimal(galaxies).sub(Galaxy.remoteStart).add(1)));
+      const remoteExponent = new Decimal(galaxies).sub(Galaxy.remoteStart).add(1);
+      const remoteCost = boundedPositivePower(Galaxy.remoteGalaxyStrength, remoteExponent);
+      amount = boundedPositiveProduct(amount, remoteCost);
     }
 
     amount = amount.sub(Effects.sum(InfinityUpgrade.resetBoost));
     if (InfinityChallenge(5).isCompleted) amount = amount.sub(1);
 
-    if (GlyphAlteration.isAdded("power")) amount = amount.mul(getSecondaryGlyphEffect("powerpow"));
+    if (GlyphAlteration.isAdded("power")) {
+      amount = boundedPositiveProduct(amount, getSecondaryGlyphEffect("powerpow"));
+    }
 
     // A vanishing secondary Power-glyph modifier can otherwise floor costs to
     // zero, making the inverse logarithm divide by zero. Costs are positive.
@@ -147,8 +157,9 @@ export class Galaxy {
   }
 
   static get costMult() {
-    return new Decimal(Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42)))
-      .times(GalacticPowers.galaxyScaling.isUnlocked ? GalacticPowers.galaxyScaling.reward : 1);
+    return boundedPositiveProduct(
+      Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42)),
+      GalacticPowers.galaxyScaling.isUnlocked ? GalacticPowers.galaxyScaling.reward : 1);
   }
 
   static get baseCost() {
@@ -178,12 +189,13 @@ export class Galaxy {
 
   static get costScalingStart() {
     const extraDelay = Alpha.isRunning ? 0 : BreakEternityUpgrade.galaxyScaleDelay.effectOrDefault(0);
-    return new Decimal(Alpha.isRunning ? AlphaUnlocks.powerGalaxies.effects.nerf.effectOrDefault(100) : 100)
-      .add(TimeStudy(302).effectOrDefault(0))
-      .add(GlyphSacrifice.power.effectValue)
-      .add(Effects.sum(TimeStudy(223), TimeStudy(224), EternityChallenge(5).reward))
-      .add(extraDelay)
-      .times(player.disablePostReality ? 1 : AlphaUnlocks.powerGalaxies.effects.buff.effectOrDefault(1));
+    let start = new Decimal(Alpha.isRunning ? AlphaUnlocks.powerGalaxies.effects.nerf.effectOrDefault(100) : 100);
+    start = boundedPositiveSum(start, TimeStudy(302).effectOrDefault(0));
+    start = boundedPositiveSum(start, GlyphSacrifice.power.effectValue);
+    start = boundedPositiveSum(start, Effects.sum(TimeStudy(223), TimeStudy(224), EternityChallenge(5).reward));
+    start = boundedPositiveSum(start, extraDelay);
+    return boundedPositiveProduct(
+      start, player.disablePostReality ? 1 : AlphaUnlocks.powerGalaxies.effects.buff.effectOrDefault(1));
   }
 
   static get type() {
