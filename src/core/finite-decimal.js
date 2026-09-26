@@ -1,6 +1,6 @@
 // Very large powers and products can overflow the finite Decimal representation.
 // Use the established DC.BEMAX boundary only for otherwise overflowing arithmetic.
-const ceiling = () => DC.BEMAX;
+const ceiling = () => new Decimal(DC.BEMAX);
 
 function checkedOperand(input, label) {
   const value = new Decimal(input);

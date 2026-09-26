@@ -80,7 +80,7 @@ export class RealityAutobuyerState extends AutobuyerState {
 
     // --- Main triggers ---
     let proc = false;
-    const ampFactor = simulatedRealityCount(false) + 1;
+    const ampFactor = new Decimal(simulatedRealityCount(false)).add(1);
 
     const rmProc = MachineHandler.gainedRealityMachines.times(ampFactor).gte(this.rm);
 

@@ -20,7 +20,7 @@ export default {
       currentShardsRate: new Decimal(0),
       bestShardRate: new Decimal(0),
       bestShardRateVal: new Decimal(0),
-      ppGained: 0,
+      ppGained: new Decimal(0),
       celestialRunText: ["", "", "", "", ""]
     };
   },
@@ -101,7 +101,7 @@ export default {
         return result;
       }
 
-      const multiplier = simulatedRealityCount(false) + 1;
+      const multiplier = new Decimal(simulatedRealityCount(false)).add(1);
       this.projectedRM = MachineHandler.gainedRealityMachines.times(multiplier)
         .clampMax(MachineHandler.hardcapRM);
       this.newIMCap.copyFrom(MachineHandler.projectedIMCap);
@@ -111,7 +111,7 @@ export default {
       this.glyphLevel.copyFrom(gainedGlyphLevel().actualLevel);
       this.nextGlyphPercent = this.percentToNextGlyphLevelText();
       this.nextMachineEP = EPforRM(this.machinesGained.plus(1));
-      this.ppGained = multiplier;
+      this.ppGained.copyFrom(multiplier);
       this.shardsGained.copyFrom(Effarig.shardsGained.times(multiplier));
       this.currentShardsRate.copyFrom(this.shardsGained.div(Time.thisRealityRealTime.totalMinutes));
       this.bestShardRate.copyFrom(player.records.thisReality.bestRSmin.times(multiplier));

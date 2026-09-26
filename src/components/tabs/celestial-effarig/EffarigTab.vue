@@ -18,7 +18,7 @@ export default {
       shardMaxRarityIncrease: 0,
       shardsGained: new Decimal(0),
       currentShardsRate: new Decimal(0),
-      amplification: 0,
+      amplification: new Decimal(0),
       amplifiedShards: new Decimal(0),
       amplifiedShardsRate: new Decimal(0),
       runUnlocked: false,
@@ -86,8 +86,8 @@ export default {
       this.shardMaxRarityIncrease = Effarig.rarityCapIncrease / 100;
       this.shardsGained.copyFrom(Effarig.shardsGained);
       this.currentShardsRate.copyFrom(this.shardsGained.div(Time.thisRealityRealTime.totalMinutes));
-      this.amplification = simulatedRealityCount(false);
-      this.amplifiedShards.copyFrom(this.shardsGained.times(1 + this.amplification));
+      this.amplification.copyFrom(simulatedRealityCount(false));
+      this.amplifiedShards.copyFrom(this.shardsGained.times(this.amplification.add(1)));
       this.amplifiedShardsRate.copyFrom(this.amplifiedShards.div(Time.thisRealityRealTime.totalMinutes));
       this.quote = Effarig.quote;
       this.runUnlocked = EffarigUnlock.run.isUnlocked;
@@ -135,7 +135,7 @@ export default {
         <div class="c-effarig-relic-description">
           You will gain {{ quantify("Relic Shard", shardsGained, 2) }} next Reality
           ({{ format(currentShardsRate, 2) }}/min).
-          <span v-if="amplification !== 0">
+          <span v-if="amplification.gt(0)">
             <br>
             Due to amplification of your current Reality,
             <br>
