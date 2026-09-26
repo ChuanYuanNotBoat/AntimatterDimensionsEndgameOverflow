@@ -412,8 +412,8 @@ export function addRealityTime(time, realTime, rm, level, realities, ampFactor, 
   }
   const shards = Effarig.shardsGained;
   player.records.recentRealities.pop();
-  player.records.recentRealities.unshift([time, realTime, rm.times(ampFactor),
-    realities, reality, level, shards.times(ampFactor), projIM]);
+  player.records.recentRealities.unshift([time, realTime, boundedPositiveProduct(rm, ampFactor),
+    realities, reality, level, boundedPositiveProduct(shards, ampFactor), projIM]);
 }
 
 export function addEndgameTime(time, realTime, cp, dp, endgames) {

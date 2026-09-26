@@ -1,3 +1,5 @@
+import { boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+
 /**
  * Object that manages the selection of glyphs offered to the player
  */
@@ -124,13 +126,21 @@ export function isRealityAvailable() {
 // Returns the number of "extra" realities from stored real time or Multiversal effects, should be called
 // with false for checking and true for actual usage, and only "used" once per reality.
 export function simulatedRealityCount(advancePartSimCounters) {
-  const amplifiedSim = Enslaved.boostReality ? Enslaved.realityBoostRatio - 1 : 0;
-  const multiversalSim = AlchemyResource.multiversal.effectValue;
-  const simCount = (multiversalSim + 1) * (amplifiedSim + 1) + player.partSimulatedReality - 1;
+  // Both Multiversal Alchemy and stored-real-time amplification can exceed native Number range in the late game.
+  // Keep the whole count as Decimal; only the fractional carry is Number-backed player state.
+  const multiversalFactor = boundedPositiveSum(AlchemyResource.multiversal.effectValue, 1);
+  const amplifiedFactor = Enslaved.boostReality ? new Decimal(Enslaved.realityBoostRatio) : DC.D1;
+  const combined = boundedPositiveProduct(multiversalFactor, amplifiedFactor);
+  const simCount = boundedPositiveSum(Decimal.max(combined.sub(1), 0), player.partSimulatedReality);
+  const whole = Decimal.floor(simCount);
   if (advancePartSimCounters) {
-    player.partSimulatedReality = simCount - Math.floor(simCount);
+    const fraction = simCount.sub(whole);
+    const fractionNumber = fraction.toNumber();
+    player.partSimulatedReality = Number.isFinite(fractionNumber)
+      ? Math.clamp(fractionNumber, 0, 1 - Number.EPSILON)
+      : 0;
   }
-  return Math.floor(simCount);
+  return whole;
 }
 
 /**
@@ -303,21 +313,26 @@ function updateRealityRecords(realityProps) {
 }
 
 function giveRealityRewards(realityProps) {
-  const multiplier = new Decimal(realityProps.simulatedRealities).add(1).toNumber();
-  const realityAndPPMultiplier = new Decimal(multiplier + binomialDistribution(multiplier, Achievement(154).effectOrDefault(0)));
+  const multiplier = boundedPositiveSum(realityProps.simulatedRealities, 1);
+  const achievementRealities = binomialDistribution(multiplier, Achievement(154).effectOrDefault(0));
+  const realityAndPPMultiplier = boundedPositiveSum(multiplier, achievementRealities);
   const gainedRM = Currency.realityMachines.gte(MachineHandler.hardcapRM) ? DC.D0 : realityProps.gainedRM;
-  Currency.realityMachines.add(gainedRM.times(multiplier));
+  const rmGain = boundedPositiveProduct(gainedRM, multiplier);
+  Currency.realityMachines.value = boundedPositiveSum(Currency.realityMachines.value, rmGain);
   updateRealityRecords(realityProps);
   addRealityTime(
     player.records.thisReality.time, player.records.thisReality.realTime, gainedRM,
     realityProps.gainedGlyphLevel.actualLevel, realityAndPPMultiplier, multiplier,
     MachineHandler.projectedIMCap);
-  Currency.realities.add(realityAndPPMultiplier);
-  Currency.perkPoints.add(realityAndPPMultiplier.toNumber());
+  Currency.realities.value = boundedPositiveSum(Currency.realities.value, realityAndPPMultiplier);
+  // Perk Points are legacy Number-backed state. Preserve all Decimal-backed Reality rewards and saturate only this field.
+  const ppGain = Decimal.min(realityAndPPMultiplier, Number.MAX_VALUE).toNumber();
+  Currency.perkPoints.value = Math.min(Number.MAX_VALUE, Currency.perkPoints.value + ppGain);
   if (TeresaUnlocks.effarig.canBeApplied) {
-    Currency.relicShards.add(realityProps.gainedShards.times(multiplier));
+    const shardGain = boundedPositiveProduct(realityProps.gainedShards, multiplier);
+    Currency.relicShards.value = boundedPositiveSum(Currency.relicShards.value, shardGain);
   }
-  if (multiplier > 1 && Enslaved.boostReality) {
+  if (multiplier.gt(1) && Enslaved.boostReality) {
     // Real time amplification is capped at 1 second of reality time; if it's faster then using all time at once would
     // be wasteful. Being faster than 1 second will only use as much time as needed to get the 1-second factor instead.
     if (Time.thisRealityRealTime.totalSeconds.lt(1)) {
@@ -375,9 +390,14 @@ export function beginProcessReality(realityProps) {
   // Save a few important props before resetting all resources. We need to do this before processing glyphs so
   // that we don't try to reality again while async is running, but we need to retain RNG and level or else
   // glyphs will be generated with values based on post-reset values
-  const glyphsToProcess = (Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost.canBeApplied && Ra.unlocks.glyphEffectCount.canBeApplied
-    ? Decimal.min(new Decimal(realityProps.simulatedRealities).add(realityProps.alreadyGotGlyph ? 0 : 1), 99).toNumber()
-    : new Decimal(realityProps.simulatedRealities).add(realityProps.alreadyGotGlyph ? 0 : 1).toNumber());
+  const rawGlyphsToProcess = boundedPositiveSum(
+    realityProps.simulatedRealities, realityProps.alreadyGotGlyph ? 0 : 1);
+  // Async.run uses native integer iteration counters; values above MAX_SAFE_INTEGER no longer advance reliably.
+  // Other Reality rewards keep the full Decimal multiplier, while Glyph processing stays at its representable loop limit.
+  const glyphsToProcess = (Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost.canBeApplied &&
+    Ra.unlocks.glyphEffectCount.canBeApplied)
+    ? Decimal.min(rawGlyphsToProcess, 99).toNumber()
+    : Decimal.min(rawGlyphsToProcess, Number.MAX_SAFE_INTEGER).toNumber();
   const rng = GlyphGenerator.getRNG(false);
   const glyphLevel = gainedGlyphLevel();
   finishProcessReality(realityProps);

@@ -389,7 +389,9 @@ export const alchemyResources = {
     name: "Multiversal",
     symbol: "Σ",
     isBaseResource: false,
-    effect: amount => 32 * Math.pow(amount / 20000, 2),
+    // This can exceed Number.MAX_VALUE once the expanded alchemy cap becomes very large.
+    // Simulated Reality count is Decimal-aware, so keep this effect in Decimal too.
+    effect: amount => Decimal.pow(new Decimal(amount).div(20000), 2).times(32),
     tier: 4,
     uiOrder: 5,
     unlockedAt: 16,
