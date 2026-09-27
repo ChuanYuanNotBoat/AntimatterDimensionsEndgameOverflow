@@ -635,7 +635,7 @@ export const normalTimeStudies = [
     reqType: TS_REQUIREMENT_TYPE.AT_LEAST_ONE,
     requiresST: [231],
     description: "All Galaxies are stronger based on Antimatter Galaxies",
-    effect: () => Decimal.pow(player.galaxies.div(500).add(1), 0.25).toNumber(),
+    effect: () => Decimal.pow(player.galaxies.div(500).add(1), 0.25),
     formatEffect: value => `+${formatPercents(value - 1, 3)}`
   },
   {

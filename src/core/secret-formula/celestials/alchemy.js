@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
+
 export const alchemyResources = {
   // T1 resources (Non-Effarig "base" resources)
   "power": {
@@ -119,7 +121,10 @@ export const alchemyResources = {
     name: "Dimensionality",
     symbol: "ρ",
     isBaseResource: false,
-    effect: amount => Decimal.pow10(6 * amount),
+    // Expanded alchemy caps can push amount above ~3e307, where native
+    // multiplication (6 * amount) becomes Infinity before Decimal ever sees it.
+    // Keep the exponent in Decimal space so the mathematically finite value survives.
+    effect: amount => boundedPositivePower(10, new Decimal(amount).times(6)),
     tier: 2,
     uiOrder: 1,
     unlockedAt: 10,
@@ -142,7 +147,10 @@ export const alchemyResources = {
     name: "Inflation",
     symbol: "λ",
     isBaseResource: false,
-    effect: amount => Decimal.pow10(6e9 - 3e5 * amount),
+    // Keep the subtraction and product in Decimal space. At expanded caps,
+    // 3e5 * amount overflows a native Number to Infinity, which used to feed
+    // -Infinity into pow10 and poison downstream multiplier comparisons.
+    effect: amount => boundedPositivePower(10, new Decimal(6e9).minus(new Decimal(amount).times(3e5))),
     tier: 2,
     uiOrder: 5,
     unlockedAt: 11,
@@ -293,7 +301,9 @@ export const alchemyResources = {
     name: "Exponential",
     symbol: "Γ",
     isBaseResource: false,
-    effect: amount => 10 * Math.pow(amount / 10000, 3),
+    // This exceeds Number.MAX_VALUE once advanced Alchemy reactions are allowed
+    // to use the expanded cap. Returning Decimal is safe for all consumers.
+    effect: amount => boundedPositiveProduct(boundedPositivePower(new Decimal(amount).div(10000), 3), 10),
     tier: 4,
     uiOrder: 2,
     unlockedAt: 18,
@@ -316,7 +326,9 @@ export const alchemyResources = {
     name: "Force",
     symbol: "Φ",
     isBaseResource: false,
-    effect: amount => 10 * amount,
+    // Native 10 * amount overflows for high expanded-cap values. Preserve the
+    // actual finite multiplier instead of letting Effect coerce Infinity.
+    effect: amount => boundedPositiveProduct(amount, 10),
     tier: 4,
     uiOrder: 2,
     unlockedAt: 17,

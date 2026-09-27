@@ -1,5 +1,5 @@
 import { GameMechanicState, RebuyableMechanicState, SetPurchasableMechanicState } from "../game-mechanics";
-import { boundedPositivePower, boundedPositiveProduct } from "../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient } from "../finite-decimal";
 import { DimensionState } from "./dimension";
 
 // CD multipliers are strictly nonnegative. Check each source independently so a
@@ -130,7 +130,7 @@ class CelestialDimensionState extends DimensionState {
     }
     const toGain = CelestialDimension(tier + 1).productionPerSecond;
     const current = Decimal.max(this.amount, 1);
-    return toGain.times(10).dividedBy(current);
+    return boundedPositiveQuotient(boundedPositiveProduct(toGain, 10), current);
   }
 
   get productionPerSecond() {
@@ -190,7 +190,7 @@ class CelestialDimensionState extends DimensionState {
   }
 
   get purchaseCap() {
-    return player.endgame.celDimExpansion.isBroken ? new Decimal(Infinity) : DC.C2P1024;
+    return player.endgame.celDimExpansion.isBroken ? new Decimal(DC.BEMAX) : DC.C2P1024;
   }
 
   get isCapped() {
@@ -282,7 +282,7 @@ export const CelestialDimensions = {
    */
   all: CelestialDimension.index.compact(),
   get HARDCAP_PURCHASES() {
-    return player.endgame.celDimExpansion.isBroken ? new Decimal(Infinity) : DC.C2P1024;
+    return player.endgame.celDimExpansion.isBroken ? new Decimal(DC.BEMAX) : DC.C2P1024;
   },
 
   get SOFTCAP() {

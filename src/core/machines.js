@@ -1,22 +1,64 @@
-import { boundedPositivePower, boundedPositiveProduct } from "./finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+
+function imaginaryMachineBase() {
+  const rmLog = boundedPositiveSum(MachineHandler.uncappedRM, 1).log10();
+  let base = boundedPositivePower(Decimal.clampMin(rmLog.sub(1000), 0), 2);
+  base = boundedPositiveProduct(base,
+    boundedPositivePower(Decimal.clampMin(rmLog.sub(100000), 1), 0.2));
+  const adaptiveExponent = Decimal.log10(Decimal.max(rmLog, 1)).div(7.5);
+  base = boundedPositiveProduct(base,
+    boundedPositivePower(Decimal.clampMin(rmLog.div(1000000000), 1), adaptiveExponent));
+  return base;
+}
+
+function imaginaryMachineExponent() {
+  const rmLog = boundedPositiveSum(MachineHandler.uncappedRM, 1).log10();
+  let exponent = Effects.productDecimal(
+    EndgameMastery(144), Ra.unlocks.imaginaryMachines, Ra.unlocks.imaginaryMachineEternityPower);
+  const lateFactor = boundedPositiveSum(
+    Decimal.max(Decimal.log10(Decimal.max(rmLog, 1)).sub(45), 0).div(10), 1);
+  exponent = boundedPositiveProduct(exponent, lateFactor);
+  exponent = boundedPositiveProduct(exponent, EtherealStars.green.reward);
+  exponent = boundedPositiveProduct(exponent, DivineDimensions.conversionFormula2);
+  exponent = exponent.timesEffectsOf(ResurgenceUpgrade.imSurge, ResurgenceUpgrade.machineSurge);
+  return exponent;
+}
 
 export const MachineHandler = {
   get baseRMCap() { return DC.E1000; },
 
   get baseHardcapRM() {
     let effectMultipliers = DC.D1;
-    if (ExpansionPack.teresaPack.isBought && !player.disablePostReality) effectMultipliers = effectMultipliers.timesEffectsOf(PerkShopUpgrade.rmMult);
-    if (ExpansionPack.teresaPack.isBought && !player.disablePostReality && !Alpha.isDestroyed) effectMultipliers = effectMultipliers.times(Teresa.rmMultiplier);
-    if (EffarigUnlock.endgame.canBeApplied) effectMultipliers = effectMultipliers.times(getAdjustedGlyphEffect("effarigrm"));
+    if (ExpansionPack.teresaPack.isBought && !player.disablePostReality) {
+      effectMultipliers = effectMultipliers.timesEffectsOf(PerkShopUpgrade.rmMult);
+    }
+    if (ExpansionPack.teresaPack.isBought && !player.disablePostReality && !Alpha.isDestroyed) {
+      effectMultipliers = boundedPositiveProduct(effectMultipliers, Teresa.rmMultiplier);
+    }
+    if (EffarigUnlock.endgame.canBeApplied) {
+      effectMultipliers = boundedPositiveProduct(effectMultipliers, getAdjustedGlyphEffect("effarigrm"));
+    }
     const smallBoost = DC.D1.timesEffectsOf(EndgameMastery(153));
-    const largeBoost = DC.D1.timesEffectsOf(SingularityMilestone.rmCap, Ra.unlocks.realityMachineCap).times(DivineDimensions.conversionFormula2).timesEffectOf(ResurgenceUpgrade.machineSurge);
-    return Decimal.pow(this.baseRMCap.times(effectMultipliers).times(
-      Decimal.pow(ImaginaryUpgrade(6).effectOrDefault(1), smallBoost)), largeBoost).times(
-      ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality ? player.realities : 1);
+    let largeBoost = DC.D1.timesEffectsOf(SingularityMilestone.rmCap, Ra.unlocks.realityMachineCap);
+    largeBoost = boundedPositiveProduct(largeBoost, DivineDimensions.conversionFormula2);
+    largeBoost = largeBoost.timesEffectOf(ResurgenceUpgrade.machineSurge);
+    let base = boundedPositiveProduct(this.baseRMCap, effectMultipliers);
+    base = boundedPositiveProduct(base,
+      boundedPositivePower(ImaginaryUpgrade(6).effectOrDefault(1), smallBoost));
+    let result = boundedPositivePower(base, largeBoost);
+    if (ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality) {
+      result = boundedPositiveProduct(result, player.realities);
+    }
+    return result;
   },
 
   get hardcapRM() {
-    return Alpha.isDestroyed ? this.baseHardcapRM.pow(this.uncappedRM.div(this.baseHardcapRM).add(1).log10().add(1).log10().add(1).log10().add(1)).times(Teresa.rmMultiplier) : this.baseHardcapRM;
+    if (!Alpha.isDestroyed) return this.baseHardcapRM;
+    let exponent = boundedPositiveSum(this.uncappedRM.div(this.baseHardcapRM), 1).log10();
+    exponent = boundedPositiveSum(exponent, 1).log10();
+    exponent = boundedPositiveSum(exponent, 1).log10();
+    exponent = boundedPositiveSum(exponent, 1);
+    return boundedPositiveProduct(boundedPositivePower(this.baseHardcapRM, exponent), Teresa.rmMultiplier);
   },
 
   get distanceToRMCap() {
@@ -24,26 +66,29 @@ export const MachineHandler = {
   },
 
   get realityMachineMultiplier() {
-    return new Decimal(ShopPurchase.RMPurchases.currentMult).timesEffectOf(PerkShopUpgrade.rmMult).times(
-      getAdjustedGlyphEffect("effarigrm")).times(Achievement(167).effectOrDefault(1));
+    let result = new Decimal(ShopPurchase.RMPurchases.currentMult).timesEffectOf(PerkShopUpgrade.rmMult);
+    result = boundedPositiveProduct(result, getAdjustedGlyphEffect("effarigrm"));
+    return boundedPositiveProduct(result, Achievement(167).effectOrDefault(1));
   },
 
   get uncappedRM() {
-    let log10FinalEP = player.records.thisReality.maxEP.plus(gainedEternityPoints()).add(1).log10();
+    let log10FinalEP = boundedPositiveSum(
+      boundedPositiveSum(player.records.thisReality.maxEP, gainedEternityPoints()), 1).log10();
     if (!PlayerProgress.realityUnlocked()) {
       if (log10FinalEP.gt(8000)) log10FinalEP = new Decimal(8000);
       if (log10FinalEP.gt(6000)) log10FinalEP = log10FinalEP.sub((log10FinalEP.sub(6000)).times(0.75));
     }
-    let rmGain = DC.E3.pow(log10FinalEP.div(4000).sub(1));
+    let rmGain = boundedPositivePower(DC.E3, log10FinalEP.div(4000).sub(1));
     // Increase base RM gain if <10 RM
     if (rmGain.gte(1) && rmGain.lt(10)) rmGain = new Decimal(27).div(4000).times(log10FinalEP).sub(26);
-    rmGain = rmGain.times(this.realityMachineMultiplier);
-    rmGain = rmGain.times(Teresa.rmMultiplier);
+    rmGain = boundedPositiveProduct(rmGain, this.realityMachineMultiplier);
+    rmGain = boundedPositiveProduct(rmGain, Teresa.rmMultiplier);
     if (EndgameMastery(143).isBought) {
       rmGain = rmGain.powEffectsOf(EndgameMastery(143));
     }
-    rmGain = rmGain.pow(DivineDimensions.conversionFormula2);
-    rmGain = rmGain.times(ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality ? player.realities : 1);
+    rmGain = boundedPositivePower(rmGain, DivineDimensions.conversionFormula2);
+    rmGain = boundedPositiveProduct(rmGain,
+      ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality ? player.realities : 1);
     return rmGain.floor();
   },
 
@@ -57,14 +102,7 @@ export const MachineHandler = {
 
   get baseIMCap() {
     if (Pelle.isDoomed) return new Decimal(1.6e15);
-    return Decimal.min((Decimal.pow(Decimal.clampMin(new Decimal(this.uncappedRM.add(1).log10()).sub(1000), 0), 2).times(
-      Decimal.pow(Decimal.clampMin(new Decimal(this.uncappedRM.add(1).log10()).sub(100000), 1), 0.2)).times(
-      Decimal.pow(Decimal.clampMin(new Decimal(this.uncappedRM.add(1).log10()).div(1000000000), 1),
-      new Decimal(Decimal.log10(this.uncappedRM.add(1).log10())).div(7.5)))).pow(
-      new Decimal(Effects.product(EndgameMastery(144), Ra.unlocks.imaginaryMachines, Ra.unlocks.imaginaryMachineEternityPower)).times(
-      Decimal.max(Decimal.log10(this.uncappedRM.add(1).log10()).sub(45), 0).div(10).add(1)).times(
-      EtherealStars.green.reward).times(DivineDimensions.conversionFormula2).timesEffectsOf(
-      ResurgenceUpgrade.imSurge, ResurgenceUpgrade.machineSurge)), this.hardcapIM);
+    return Decimal.min(boundedPositivePower(imaginaryMachineBase(), imaginaryMachineExponent()), this.hardcapIM);
   },
 
   get baseIMHardcap() {
@@ -92,23 +130,18 @@ export const MachineHandler = {
   get uncappedIM() {
     return Pelle.isDoomed
       ? new Decimal(1.6e15)
-      : (Decimal.pow(Decimal.clampMin(new Decimal(this.uncappedRM.add(1).log10()).sub(1000), 0), 2).times(
-        Decimal.pow(Decimal.clampMin(new Decimal(this.uncappedRM.add(1).log10()).sub(100000), 1), 0.2)).times(
-        Decimal.pow(Decimal.clampMin(new Decimal(this.uncappedRM.add(1).log10()).div(1000000000), 1),
-        new Decimal(Decimal.log10(this.uncappedRM.add(1).log10())).div(7.5)))).pow(
-        new Decimal(Effects.product(EndgameMastery(144), Ra.unlocks.imaginaryMachines, Ra.unlocks.imaginaryMachineEternityPower)).times(
-        Decimal.max(Decimal.log10(this.uncappedRM.add(1).log10()).sub(45), 0).div(10).add(1)).times(
-        EtherealStars.green.reward).times(DivineDimensions.conversionFormula2).timesEffectsOf(
-        ResurgenceUpgrade.imSurge, ResurgenceUpgrade.machineSurge));
+      : boundedPositivePower(imaginaryMachineBase(), imaginaryMachineExponent());
   },
 
   get currentIMCap() {
-    return Decimal.min(player.reality.iMCap.times(ImaginaryUpgrade(13).effectOrDefault(1)), this.hardcapIM);
+    return Decimal.min(boundedPositiveProduct(player.reality.iMCap,
+      ImaginaryUpgrade(13).effectOrDefault(1)), this.hardcapIM);
   },
 
   // This is iM cap based on in-game values at that instant, may be lower than the actual cap
   get projectedIMCap() {
-    return Decimal.min(this.baseIMCap.times(ImaginaryUpgrade(13).effectOrDefault(1)), this.hardcapIM);
+    return Decimal.min(boundedPositiveProduct(this.baseIMCap,
+      ImaginaryUpgrade(13).effectOrDefault(1)), this.hardcapIM);
   },
 
   // Use iMCap to store the base cap; applying multipliers separately avoids some design issues the 3xTP upgrade has

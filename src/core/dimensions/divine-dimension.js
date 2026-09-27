@@ -1,14 +1,15 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../finite-decimal";
 import { DimensionState } from "./dimension";
 
 export function divineDimensionCommonMultiplier() {
-  let mult = DC.D1;
-  mult = mult.timesEffectsOf(DivinityUpgrade.divineL1U3, DivinityUpgrade.divineL1U6, DivinityUpgrade.divineL2U1,
+  let mult = DC.D1.timesEffectsOf(
+    DivinityUpgrade.divineL1U3, DivinityUpgrade.divineL1U6, DivinityUpgrade.divineL2U1,
     DivinityUpgrade.divineL2U9, EndgameMastery(192));
-  mult = mult.times(DivinityMilestone.hadronEmpowerment.isReached ? 77 : 1);
-  mult = mult.times(Accelerators.potency.effectValue3);
-  mult = mult.times(Decimal.pow(7, Decimal.log10(player.celestials.pelle.divinity.divineStars.add(1).min(DC.NUMMAX))).powEffectOf(
-    DivinityUpgrade.divineL3U3));
-  return mult;
+  mult = boundedPositiveProduct(mult, DivinityMilestone.hadronEmpowerment.isReached ? 77 : 1);
+  mult = boundedPositiveProduct(mult, Accelerators.potency.effectValue3);
+  let starPower = Decimal.log10(boundedPositiveSum(player.celestials.pelle.divinity.divineStars, 1).min(DC.NUMMAX));
+  starPower = starPower.powEffectOf(DivinityUpgrade.divineL3U3);
+  return boundedPositiveProduct(mult, boundedPositivePower(7, starPower));
 }
 
 export function toggleAllDivDims() {
@@ -56,25 +57,28 @@ class DivineDimensionState extends DimensionState {
     }
     const toGain = DivineDimension(tier + 1).productionPerSecond;
     const current = Decimal.max(this.amount, 1);
-    return toGain.times(10).dividedBy(current);
+    return boundedPositiveQuotient(boundedPositiveProduct(toGain, 10), current);
   }
 
   get productionPerSecond() {
-    let production = this.amount;
-    return production.times(this.multiplier);
+    return boundedPositiveProduct(this.amount, this.multiplier);
   }
 
   get multiplier() {
-    const tier = this.tier;
     let mult = GameCache.divineDimensionCommonMultiplier.value;
-    mult = mult.times(Decimal.pow(this.powerMultiplier, Decimal.floor(this.baseAmount)));
-    if (DivinityMilestone.pelleQoL.isReached && !player.disablePostReality) mult = mult.pow(1.05);
-    mult = mult.pow(Accelerators.emptiness._milestones[1].effectOrDefault(1));
-    mult = mult.powEffectsOf(DivinityUpgrade.divineL2U7, DivinityUpgrade.divineL3U5, DivinityUpgrade.divineL4U1.effects.matter,
+    mult = boundedPositiveProduct(mult,
+      boundedPositivePower(this.powerMultiplier, Decimal.floor(this.baseAmount)));
+    if (DivinityMilestone.pelleQoL.isReached && !player.disablePostReality) {
+      mult = boundedPositivePower(mult, 1.05);
+    }
+    mult = boundedPositivePower(mult, Accelerators.emptiness._milestones[1].effectOrDefault(1));
+    mult = mult.powEffectsOf(
+      DivinityUpgrade.divineL2U7, DivinityUpgrade.divineL3U5, DivinityUpgrade.divineL4U1.effects.matter,
       DivinityUpgrade.divineL4U3, DivinityUpgrade.divineL5U3, EndgameMastery(211), SingularityMilestone.singDivDimPower);
-    if (DivinityMilestone.finalRebirth.isReached && !player.disablePostReality) mult = mult.pow(1.05);
-    mult = mult.pow(Achievements.powerConv(EndgameMastery(192).effectOrDefault(1)));
-    return mult;
+    if (DivinityMilestone.finalRebirth.isReached && !player.disablePostReality) {
+      mult = boundedPositivePower(mult, 1.05);
+    }
+    return boundedPositivePower(mult, Achievements.powerConv(EndgameMastery(192).effectOrDefault(1)));
   }
 
   get isProducing() {
@@ -165,17 +169,23 @@ export const DivineDimensions = {
   all: DivineDimension.index.compact(),
 
   get HARDCAP() {
-    return DivinityUpgrade.divineL4U5.isBought ? new Decimal(Infinity) :
-      DC.NUMMAX.pow(Decimal.log10(player.celestials.pelle.divinity.divineStars.min(DC.NUMMAX).add(1)).add(1));
+    if (DivinityUpgrade.divineL4U5.isBought) return new Decimal(DC.BEMAX);
+    const exponent = boundedPositiveSum(
+      Decimal.log10(boundedPositiveSum(player.celestials.pelle.divinity.divineStars.min(DC.NUMMAX), 1)), 1);
+    return boundedPositivePower(DC.NUMMAX, exponent);
   },
 
   get energyPerSecond() {
-    const divineEnergyMults = DC.D1.timesEffectsOf(
-      DivinityUpgrade.divineL1U7, DivinityUpgrade.divineL2U2, DivinityUpgrade.divineL4U1.effects.energy, EndgameMastery(221)).times(
-      DivinityMilestone.hadronEmpowerment.isReached ? 77 : 1).times(Accelerators.potency.effectValue3);
+    let divineEnergyMults = DC.D1.timesEffectsOf(
+      DivinityUpgrade.divineL1U7, DivinityUpgrade.divineL2U2,
+      DivinityUpgrade.divineL4U1.effects.energy, EndgameMastery(221));
+    divineEnergyMults = boundedPositiveProduct(
+      divineEnergyMults, DivinityMilestone.hadronEmpowerment.isReached ? 77 : 1);
+    divineEnergyMults = boundedPositiveProduct(divineEnergyMults, Accelerators.potency.effectValue3);
     const baseEffect = DivinityUpgrade.divineL2U4.isBought ? player.records.totalDivineMatter :
       DivineDimension(1).productionPerSecond.max(1);
-    return Decimal.pow(100, Decimal.log10(baseEffect).div(100).sub(1)).times(divineEnergyMults);
+    return boundedPositiveProduct(
+      boundedPositivePower(100, Decimal.log10(baseEffect).div(100).sub(1)), divineEnergyMults);
   },
 
   resetAmount() {
@@ -211,9 +221,13 @@ export const DivineDimensions = {
     }
     if (player.celestials.pelle.divinity.isProducingEnergy || DivinityUpgrade.divineL1U8.isBought ||
       DivinityUpgrade.divineL2U10.isBought) {
-      player.celestials.pelle.divinity.divineEnergy = player.celestials.pelle.divinity.divineEnergy.add(
-        this.energyPerSecond.times(realDiff).div(1000).div(
-        (player.celestials.pelle.divinity.isProducingEnergy || DivinityUpgrade.divineL2U10.isBought) ? 1 : 10));
+      const divisor = (player.celestials.pelle.divinity.isProducingEnergy || DivinityUpgrade.divineL2U10.isBought)
+        ? 1
+        : 10;
+      const gain = boundedPositiveQuotient(
+        boundedPositiveProduct(this.energyPerSecond, new Decimal(realDiff).div(1000)), divisor);
+      player.celestials.pelle.divinity.divineEnergy = boundedPositiveSum(
+        player.celestials.pelle.divinity.divineEnergy, gain);
     }
     player.celestials.pelle.divinity.divineMatter = player.celestials.pelle.divinity.divineMatter.min(this.HARDCAP);
   },
@@ -231,9 +245,10 @@ export const DivineDimensions = {
 
   get conversionFormula1() {
     if (player.disablePostReality) return DC.D1;
-    let logD = Decimal.log10(Decimal.log10(DivinityUpgrade.divineL2U10.isBought
+    const logD = Decimal.log10(Decimal.log10(DivinityUpgrade.divineL2U10.isBought
       ? player.records.totalDivineMatter : Currency.divineMatter.value.max(10)));
-    return Decimal.pow(Decimal.pow(logD.add(1), 1.5), Decimal.pow(logD.add(1), 1.5));
+    const power = boundedPositivePower(boundedPositiveSum(logD, 1), 1.5);
+    return boundedPositivePower(power, power);
   },
 
   get conversionFormula2() {

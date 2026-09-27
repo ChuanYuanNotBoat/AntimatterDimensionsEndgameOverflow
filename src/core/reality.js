@@ -1,4 +1,5 @@
-import { boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+import { boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "./finite-decimal";
+
 
 /**
  * Object that manages the selection of glyphs offered to the player
@@ -126,20 +127,12 @@ export function isRealityAvailable() {
 // Returns the number of "extra" realities from stored real time or Multiversal effects, should be called
 // with false for checking and true for actual usage, and only "used" once per reality.
 export function simulatedRealityCount(advancePartSimCounters) {
-  // Both Multiversal Alchemy and stored-real-time amplification can exceed native Number range in the late game.
-  // Keep the whole count as Decimal; only the fractional carry is Number-backed player state.
-  const multiversalFactor = boundedPositiveSum(AlchemyResource.multiversal.effectValue, 1);
-  const amplifiedFactor = Enslaved.boostReality ? new Decimal(Enslaved.realityBoostRatio) : DC.D1;
-  const combined = boundedPositiveProduct(multiversalFactor, amplifiedFactor);
-  const simCount = boundedPositiveSum(Decimal.max(combined.sub(1), 0), player.partSimulatedReality);
-  const whole = Decimal.floor(simCount);
-  if (advancePartSimCounters) {
-    const fraction = simCount.sub(whole);
-    const fractionNumber = fraction.toNumber();
-    player.partSimulatedReality = Number.isFinite(fractionNumber)
-      ? Math.clamp(fractionNumber, 0, 1 - Number.EPSILON)
-      : 0;
-  }
+  const amplifiedSim = Enslaved.boostReality ? new Decimal(Enslaved.realityBoostRatio).sub(1) : DC.D0;
+  const multiversalSim = new Decimal(AlchemyResource.multiversal.effectValue);
+  let simCount = boundedPositiveProduct(multiversalSim.add(1), amplifiedSim.add(1));
+  simCount = boundedPositiveSum(simCount, player.partSimulatedReality).sub(1).max(0);
+  const whole = simCount.floor();
+  if (advancePartSimCounters) player.partSimulatedReality = simCount.sub(whole).toNumber();
   return whole;
 }
 

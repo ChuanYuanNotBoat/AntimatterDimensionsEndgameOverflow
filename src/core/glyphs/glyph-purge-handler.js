@@ -1,8 +1,13 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "../finite-decimal";
+
+
 // This actually deals with both sacrifice and refining, but I wasn't 100% sure what to call it
 export const GlyphSacrificeHandler = {
   // Anything scaling on sacrifice caps at this value, even though the actual sacrifice values can go higher
   get maxSacrificeForEffects() {
-    return (BreakEternityUpgrade.glyphSacrificeUncap.isBought && !player.disablePostReality) ? DC.BEMAX : new Decimal(1e100);
+    return (BreakEternityUpgrade.glyphSacrificeUncap.isBought && !player.disablePostReality)
+      ? new Decimal(DC.BEMAX)
+      : new Decimal(1e100);
   },
   // This is used for glyph UI-related things in a few places, but is handled here as a getter which is only called
   // sparingly - that is, whenever the cache is invalidated after a glyph is sacrificed. Thus it only gets recalculated
@@ -11,8 +16,12 @@ export const GlyphSacrificeHandler = {
     // We check elsewhere for this equalling zero to determine if the player has ever sacrificed. Technically this
     // should check for -Infinity, but the clampMin works in practice because the minimum possible sacrifice
     // value is greater than 1 for even the weakest possible glyph
-    return BASIC_GLYPH_TYPES.reduce(
-      (tot, type) => tot + Decimal.log10(Decimal.clampMin(player.reality.glyphs.sac[type], 1)).toNumber(), 0);
+    const total = BASIC_GLYPH_TYPES.reduce(
+      (sum, type) => boundedPositiveSum(
+        sum, Decimal.log10(Decimal.clampMin(player.reality.glyphs.sac[type], 1))), DC.D0);
+    // This value is only used as a UI/cache change token. Keep its Number contract
+    // without allowing BEMAX-scale sacrifice values to turn it into Infinity.
+    return total.gte(Number.MAX_VALUE) ? Number.MAX_VALUE : total.toNumber();
   },
   get canSacrifice() {
     return RealityUpgrade(19).isBought;
@@ -43,18 +52,32 @@ export const GlyphSacrificeHandler = {
     else Modal.glyphDelete.show({ idx: glyph.idx });
   },
   glyphSacrificeGain(glyph) {
-    if (!this.canSacrifice || (Pelle.isDoomed && !PelleRealityUpgrade.scourToEmpower.canBeApplied)) return new Decimal(0);
-    if (glyph.type === "reality") return new Decimal(glyph.level).times(0.01).times(Achievement(171).effectOrDefault(1));
-    const pre10kFactor = Decimal.pow(Decimal.clampMax(glyph.level, 10000).add(10), 2.5);
+    if (!this.canSacrifice || (Pelle.isDoomed && !PelleRealityUpgrade.scourToEmpower.canBeApplied)) return DC.D0;
+    if (glyph.type === "reality") {
+      return boundedPositiveProduct(
+        boundedPositiveProduct(glyph.level, 0.01), Achievement(171).effectOrDefault(1));
+    }
+    const pre10kFactor = boundedPositivePower(Decimal.clampMax(glyph.level, 10000).add(10), 2.5);
     const post10kFactor = Decimal.clampMin(new Decimal(glyph.level).sub(10000), 0).div(100).add(1);
-    const power = player.disablePostReality ? 1 : Effects.product(
+    let baseValue = boundedPositiveProduct(pre10kFactor, post10kFactor);
+    baseValue = boundedPositiveProduct(baseValue, glyph.strength);
+    baseValue = boundedPositiveProduct(baseValue, Teresa.runRewardMultiplier);
+    baseValue = boundedPositiveProduct(baseValue, Achievement(171).effectOrDefault(1));
+
+    let power = DC.D1;
+    if (!player.disablePostReality) {
+      for (const effectSource of [
         Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost,
         EndgameUpgrade(24),
         Ra.unlocks.sacrificePower,
         DualityUpgrade(22)
-      );
-    return Decimal.pow(pre10kFactor.times(post10kFactor).times(glyph.strength).times(
-      Teresa.runRewardMultiplier).times(Achievement(171).effectOrDefault(1)), power);
+      ]) {
+        effectSource.applyEffect(effect => {
+          power = boundedPositiveProduct(power, effect);
+        });
+      }
+    }
+    return boundedPositivePower(baseValue, power);
   },
   sacrificeGlyph(glyph, force = false) {
     if (Pelle.isDoomed && !PelleRealityUpgrade.scourToEmpower.canBeApplied) return;
@@ -66,7 +89,11 @@ export const GlyphSacrificeHandler = {
       Modal.glyphSacrifice.show({ idx: glyph.idx, gain: toGain });
       return;
     }
-    player.reality.glyphs.sac[glyph.type] = player.reality.glyphs.sac[glyph.type].add(toGain);
+    // A first amplified Reality can legitimately bring a sacrifice value to the
+    // Decimal representation boundary. A second Reality must saturate there, not
+    // evaluate BEMAX + positive gain and create a non-finite Decimal layer.
+    player.reality.glyphs.sac[glyph.type] = boundedPositiveSum(
+      player.reality.glyphs.sac[glyph.type], toGain);
     GameCache.logTotalGlyphSacrifice.invalidate();
     Glyphs.removeFromInventory(glyph);
     EventHub.dispatch(GAME_EVENT.GLYPH_SACRIFICED, glyph);

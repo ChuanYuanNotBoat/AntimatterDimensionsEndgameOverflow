@@ -1,3 +1,5 @@
+import { boundedSignedSum, finiteNumber } from "../../finite-decimal";
+
 import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "../../finite-decimal";
 
 export const GlyphCombiner = Object.freeze({
@@ -5,12 +7,12 @@ export const GlyphCombiner = Object.freeze({
    * @param {number[]} x
    * @returns {number}
    */
-  add: x => x.reduce(Number.sumReducer, 0),
+  add: x => x.reduce((sum, value) => finiteNumber(sum + finiteNumber(value, 0), sum), 0),
   /**
    * @param {number[]} x
    * @returns {number}
    */
-  multiply: x => x.reduce(Number.prodReducer, 1),
+  multiply: x => x.reduce((product, value) => finiteNumber(product * finiteNumber(value, 1), product), 1),
   /**
    * For exponents, the base value is 1, so when we add two exponents a and b we want to get a + b - 1,
    * so that if a and b are both close to 1 so is their sum. In general, when we add a list x of exponents,
@@ -19,19 +21,21 @@ export const GlyphCombiner = Object.freeze({
    * @param {number[]} x
    * @returns {number}
    */
-  addExponents: x => x.reduce(Number.sumReducer, 1 - x.length),
+  addExponents: x => x.reduce(
+    (sum, value) => finiteNumber(sum + finiteNumber(value, 1), sum), 1 - x.length),
   // The Power glyph effects can exceed Number.MAX_VALUE; preserve (sum - n + 1) in Decimal.
-  addDecimalExponents: x => x.reduce((sum, value) => sum.add(value), new Decimal(1 - x.length)),
+  addDecimalExponents: x => x.reduce(
+    (sum, value) => boundedSignedSum(sum, value), new Decimal(1 - x.length)),
   /**
    * @param {Decimal[]} x
    * @returns {Decimal}
    */
-  addDecimal: x => x.reduce(Decimal.sumReducer, DC.D0),
+  addDecimal: x => x.reduce(boundedPositiveSum, DC.D0),
   /**
    * @param {Decimal[]} x
    * @returns {Decimal}
    */
-  multiplyDecimal: x => x.reduce(Decimal.prodReducer, DC.D1)
+  multiplyDecimal: x => x.reduce(boundedPositiveProduct, DC.D1)
 });
 
 export const glyphEffects = {

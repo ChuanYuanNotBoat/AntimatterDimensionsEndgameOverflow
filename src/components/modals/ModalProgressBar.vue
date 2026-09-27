@@ -8,20 +8,32 @@ export default {
   },
   computed: {
     progress() {
-      return this.$viewModel.modal.progressBar;
+      return this.$viewModel.modal.progressBar ?? {};
+    },
+    infoText() {
+      const info = this.progress.info;
+      if (typeof info === "function") return info();
+      return info ?? "";
+    },
+    hasProgressData() {
+      return Number.isFinite(this.progress.current) && Number.isFinite(this.progress.max) &&
+        this.progress.max > 0 && this.progress.current >= 0;
     },
     foregroundStyle() {
-      return {
-        width: `${this.progress.current / this.progress.max * 100}%`,
-      };
+      const ratio = this.hasProgressData ? Math.clamp(this.progress.current / this.progress.max, 0, 1) : 0;
+      return { width: `${ratio * 100}%` };
     },
     remainingTime() {
+      if (!this.hasProgressData || this.progress.current <= 0 || !Number.isFinite(this.progress.startTime)) {
+        return "Calculating…";
+      }
       const timeSinceStart = Date.now() - this.progress.startTime;
       const ms = timeSinceStart * (this.progress.max - this.progress.current) / this.progress.current;
+      if (!Number.isFinite(ms) || ms < 0) return "Calculating…";
       return TimeSpan.fromMilliseconds(new Decimal(ms)).toStringShort();
     },
     buttons() {
-      return this.progress.buttons || [];
+      return Array.isArray(this.progress.buttons) ? this.progress.buttons : [];
     }
   },
 };
@@ -37,7 +49,7 @@ export default {
           {{ progress.label }}
         </div>
         <div>
-          {{ progress.info() }}
+          {{ infoText }}
         </div>
         <div class="modal-progress-bar__margin">
           <div>

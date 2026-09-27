@@ -1,4 +1,4 @@
-import { boundedPositiveProduct, boundedPositiveSum } from "../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../finite-decimal";
 import { DimensionState, assertDimensionFinite } from "./dimension";
 
 export function infinityDimensionCommonMultiplier() {
@@ -124,7 +124,8 @@ class InfinityDimensionState extends DimensionState {
       toGain = InfinityDimension(tier + 1).productionPerSecond;
     }
     const current = Decimal.max(this.amount, 1);
-    return toGain.times(10).dividedBy(current).times(getGameSpeedupForDisplay());
+    return boundedPositiveProduct(
+      boundedPositiveQuotient(boundedPositiveProduct(toGain, 10), current), getGameSpeedupForDisplay());
   }
 
   get productionPerSecond() {
@@ -262,14 +263,24 @@ class InfinityDimensionState extends DimensionState {
     // Normal multiplier evaluation does not allocate a diagnostic array.
     if (capDiagnostics) capDiagnostics.push({ key: "overflow1", tier, before: mult,
       threshold: InfinityDimensions.OVERFLOW, type: "softcap" });
-    if (mult.gte(InfinityDimensions.OVERFLOW)) mult = Decimal.pow(10, Decimal.pow(mult.log10().div(Decimal.log10(InfinityDimensions.OVERFLOW)), 1 / InfinityDimensions.compressionMagnitude).times(Decimal.log10(InfinityDimensions.OVERFLOW)));
+    if (mult.gte(InfinityDimensions.OVERFLOW)) {
+      const thresholdLog = Decimal.log10(InfinityDimensions.OVERFLOW);
+      const compressed = boundedPositivePower(mult.log10().div(thresholdLog),
+        boundedPositiveQuotient(1, InfinityDimensions.compressionMagnitude));
+      mult = boundedPositivePower(10, boundedPositiveProduct(compressed, thresholdLog));
+    }
     if (capDiagnostics) capDiagnostics[capDiagnostics.length - 1].after = mult;
 
     // Optional cap diagnostics are captured at the exact gameplay operation.
     // Normal multiplier evaluation does not allocate a diagnostic array.
     if (capDiagnostics) capDiagnostics.push({ key: "overflow2", tier, before: mult,
       threshold: InfinityDimensions.OVERFLOW_SQUARED, type: "softcap" });
-    if (mult.gte(InfinityDimensions.OVERFLOW_SQUARED)) mult = Decimal.pow(10, Decimal.pow(mult.log10().div(Decimal.log10(InfinityDimensions.OVERFLOW_SQUARED)), 1 / InfinityDimensions.compressionMag2).times(Decimal.log10(InfinityDimensions.OVERFLOW_SQUARED)));
+    if (mult.gte(InfinityDimensions.OVERFLOW_SQUARED)) {
+      const thresholdLog = Decimal.log10(InfinityDimensions.OVERFLOW_SQUARED);
+      const compressed = boundedPositivePower(mult.log10().div(thresholdLog),
+        boundedPositiveQuotient(1, InfinityDimensions.compressionMag2));
+      mult = boundedPositivePower(10, boundedPositiveProduct(compressed, thresholdLog));
+    }
     if (capDiagnostics) capDiagnostics[capDiagnostics.length - 1].after = mult;
 
     return mult;
@@ -583,12 +594,13 @@ export const InfinityDimensions = {
 
   get powerConversionRate() {
     const multiplier = PelleRifts.paradox.milestones[2].effectOrDefault(1);
-    const multiplier2 = Effects.product(
-      BreakEternityUpgrade.infinityPowerConversion
-    );
-    const exponent = Effects.product(EndgameMastery(102), Ra.unlocks.spaceTheoremIPowConversion);
+    const multiplier2 = Effects.productDecimal(BreakEternityUpgrade.infinityPowerConversion);
+    const exponent = Effects.productDecimal(EndgameMastery(102), Ra.unlocks.spaceTheoremIPowConversion);
     const divisor = Alpha.isRunning ? AlphaUnlocks.breakInfinity.effects.nerfC.effectOrDefault(1) : 1;
-    return Decimal.pow(new Decimal(7).add(getAdjustedGlyphEffect("infinityrate"))
-      .add(PelleUpgrade.infConversion.effectOrDefault(0)).times(multiplier).times(multiplier2), exponent).div(divisor);
+    let base = boundedPositiveSum(7, getAdjustedGlyphEffect("infinityrate"));
+    base = boundedPositiveSum(base, PelleUpgrade.infConversion.effectOrDefault(0));
+    base = boundedPositiveProduct(base, multiplier);
+    base = boundedPositiveProduct(base, multiplier2);
+    return boundedPositiveQuotient(boundedPositivePower(base, exponent), divisor);
   }
 };

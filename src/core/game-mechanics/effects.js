@@ -1,35 +1,44 @@
+import {
+  boundedPositivePower,
+  boundedPositiveProduct,
+  boundedPositiveQuotient,
+  boundedSignedProduct,
+  boundedSignedQuotient,
+  boundedSignedSum,
+  finiteNumber,
+} from "../finite-decimal";
+
 export const Effects = {
-  /**
-   * @param effectSources
-   * @return {Number}
-   */
   sum(...effectSources) {
     let result = 0;
-    applyEffectsOf(effectSources, v => result += v);
+    applyEffectsOf(effectSources, v => result = finiteNumber(result + finiteNumber(v, 0), result));
     return result;
   },
-  /**
-   * @param effectSources
-   * @return {Number}
-   */
   product(...effectSources) {
     let result = 1;
-    applyEffectsOf(effectSources, v => result *= v);
+    applyEffectsOf(effectSources, v => result = finiteNumber(result * finiteNumber(v, 1), result));
     return result;
   },
-  /**
-   * @param {Number} defaultValue
-   * @param effectSources
-   * @return {Number}
-   */
+  sumDecimal(...effectSources) {
+    let result = DC.D0;
+    applyEffectsOf(effectSources, v => result = boundedSignedSum(result, v));
+    return result;
+  },
+  productDecimal(...effectSources) {
+    let result = DC.D1;
+    applyEffectsOf(effectSources, v => {
+      result = result.gte(0) && Decimal.gte(v, 0)
+        ? boundedPositiveProduct(result, v)
+        : boundedSignedProduct(result, v);
+    });
+    return result;
+  },
   last(defaultValue, ...effectSources) {
     let result = defaultValue;
     let foundLast = false;
-    const reversedSources = effectSources
-      .filter(s => s !== null && s !== undefined)
-      .reverse();
+    const reversedSources = effectSources.filter(s => s !== null && s !== undefined).reverse();
     const reducer = v => {
-      result = v;
+      result = typeof v === "number" ? finiteNumber(v, defaultValue) : v;
       foundLast = true;
     };
     for (const effectSource of reversedSources) {
@@ -38,127 +47,82 @@ export const Effects = {
     }
     return result;
   },
-  /**
-   * @param {Number} defaultValue
-   * @param effectSources
-   * @return {Number}
-   */
   max(defaultValue, ...effectSources) {
-    let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = Math.max(result, v));
+    let result = finiteNumber(defaultValue, 0);
+    applyEffectsOf(effectSources, v => result = Math.max(result, finiteNumber(v, result)));
     return result;
   },
-  /**
-   * @param {Number} defaultValue
-   * @param effectSources
-   * @return {Number}
-   */
   min(defaultValue, ...effectSources) {
-    let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = Math.min(result, v));
+    let result = finiteNumber(defaultValue, 0);
+    applyEffectsOf(effectSources, v => result = Math.min(result, finiteNumber(v, result)));
     return result;
   }
 };
 
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.plusEffectOf = function(effectSource) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  effectSource.applyEffect(v => result = result.plus(v));
+  effectSource.applyEffect(v => result = boundedSignedSum(result, v));
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.plusEffectsOf = function(...effectSources) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  applyEffectsOf(effectSources, v => result = result.plus(v));
+  applyEffectsOf(effectSources, v => result = boundedSignedSum(result, v));
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.minusEffectOf = function(effectSource) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  effectSource.applyEffect(v => result = result.minus(v));
+  effectSource.applyEffect(v => result = boundedSignedSum(result, new Decimal(v).neg()));
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.minusEffectsOf = function(...effectSources) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  applyEffectsOf(effectSources, v => result = result.minus(v));
+  applyEffectsOf(effectSources, v => result = boundedSignedSum(result, new Decimal(v).neg()));
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.timesEffectOf = function(effectSource) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  effectSource.applyEffect(v => result = result.times(v));
+  effectSource.applyEffect(v => {
+    result = result.gte(0) && Decimal.gte(v, 0)
+      ? boundedPositiveProduct(result, v)
+      : boundedSignedProduct(result, v);
+  });
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.timesEffectsOf = function(...effectSources) {
-  // Normalize is expensive; when we multiply many things together, it's faster
-  // to get a big mantissa and then fix it at the end.
-  // eslint-disable-next-line consistent-this
   let result = this;
-  applyEffectsOf(effectSources, v => result = result.times(v));
+  applyEffectsOf(effectSources, v => {
+    result = result.gte(0) && Decimal.gte(v, 0)
+      ? boundedPositiveProduct(result, v)
+      : boundedSignedProduct(result, v);
+  });
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.dividedByEffectOf = function(effectSource) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  effectSource.applyEffect(v => result = result.dividedBy(v));
+  effectSource.applyEffect(v => {
+    result = result.gte(0) && Decimal.gte(v, 0)
+      ? boundedPositiveQuotient(result, v)
+      : boundedSignedQuotient(result, v);
+  });
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.dividedByEffectsOf = function(...effectSources) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  applyEffectsOf(effectSources, v => result = result.dividedBy(v));
+  applyEffectsOf(effectSources, v => {
+    result = result.gte(0) && Decimal.gte(v, 0)
+      ? boundedPositiveQuotient(result, v)
+      : boundedSignedQuotient(result, v);
+  });
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.powEffectOf = function(effectSource) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  effectSource.applyEffect(v => result = result.pow(v));
+  effectSource.applyEffect(v => result = result.gte(0) ? boundedPositivePower(result, v) : result.pow(v));
   return result;
 };
-
-/**
- * @returns {Decimal}
- */
 Decimal.prototype.powEffectsOf = function(...effectSources) {
-  // eslint-disable-next-line consistent-this
   let result = this;
-  applyEffectsOf(effectSources, v => result = result.pow(v));
+  applyEffectsOf(effectSources, v => result = result.gte(0) ? boundedPositivePower(result, v) : result.pow(v));
   return result;
 };
 

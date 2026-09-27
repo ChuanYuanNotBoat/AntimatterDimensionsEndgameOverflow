@@ -12,3 +12,4 @@ save
 tests/fixtures/.gitignore
 .gitignore
 *.patch
+.overflow-hardening-*-backup/

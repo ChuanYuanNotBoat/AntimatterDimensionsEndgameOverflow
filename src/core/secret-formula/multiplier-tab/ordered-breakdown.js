@@ -1,55 +1,119 @@
+import {
+  boundedPositivePower,
+  boundedPositiveProduct,
+  boundedSignedValue,
+  finiteDecimal,
+} from "../../finite-decimal";
+
+const impactLimit = () => new Decimal(DC.BEMAX).log10();
+
+function diagnosticValue(input, fallback = DC.D1) {
+  try {
+    const value = finiteDecimal(input, "multiplier breakdown");
+    return { value: Decimal.clamp(value, 0, DC.BEMAX), invalid: false };
+  } catch (error) {
+    return { value: new Decimal(fallback), invalid: true, error };
+  }
+}
+
+function impactLog(input) {
+  const checked = diagnosticValue(input);
+  if (checked.invalid) return null;
+  return Decimal.max(checked.value, DC.D1).log10();
+}
+
+function signedImpact(input) {
+  try {
+    return Decimal.clamp(finiteDecimal(input, "breakdown OoM impact"), impactLimit().neg(), impactLimit());
+  } catch {
+    return null;
+  }
+}
+
+function addImpact(total, delta) {
+  const a = signedImpact(total);
+  const b = signedImpact(delta);
+  if (a === null || b === null) return null;
+  const limit = impactLimit();
+  if (a.gte(0) && b.gte(0) && b.gte(limit.sub(a))) return limit;
+  if (a.lte(0) && b.lte(0) && b.neg().gte(limit.add(a))) return limit.neg();
+  return signedImpact(a.add(b));
+}
+
 export function addOrderedTransform(steps, key, type, before, after, options = {}) {
+  const checkedBefore = diagnosticValue(before);
+  const checkedAfter = diagnosticValue(after, checkedBefore.value);
   const transform = {
-    type,
-    before: new Decimal(before),
-    after: new Decimal(after),
+    type: checkedBefore.invalid || checkedAfter.invalid ? "diagnostic" : type,
+    before: checkedBefore.value,
+    after: checkedAfter.value,
+    invalid: checkedBefore.invalid || checkedAfter.invalid,
   };
-  if (options.value !== undefined) transform.value = options.value;
+  if (options.value !== undefined) {
+    const checkedValue = diagnosticValue(options.value);
+    transform.value = checkedValue.value;
+    transform.invalid ||= checkedValue.invalid;
+  }
   if (options.display !== undefined) transform.display = options.display;
-  if (options.alwaysShow !== undefined) transform.alwaysShow = options.alwaysShow;
+  if (transform.invalid) {
+    transform.display = `${transform.display ?? ""}${transform.display ? "; " : ""}diagnostic value was non-finite`;
+    transform.alwaysShow = true;
+  } else if (options.alwaysShow !== undefined) transform.alwaysShow = options.alwaysShow;
   steps[key] = transform;
   return transform.after;
 }
 
 export function orderedMultiplyStep(steps, key, current, multiplier, skipKey = null, display) {
   if (key === skipKey) return current;
-  const value = new Decimal(multiplier);
-  const after = current.times(value);
+  const checkedCurrent = diagnosticValue(current);
+  const checkedMultiplier = diagnosticValue(multiplier);
+  const invalid = checkedCurrent.invalid || checkedMultiplier.invalid;
+  const after = invalid ? checkedCurrent.value : boundedPositiveProduct(checkedCurrent.value, checkedMultiplier.value);
   return steps
-    ? addOrderedTransform(steps, key, "multiply", current, after, { value, display })
+    ? addOrderedTransform(steps, key, invalid ? "diagnostic" : "multiply", checkedCurrent.value, after,
+      { value: checkedMultiplier.value, display, alwaysShow: invalid })
     : after;
 }
 
 export function orderedPowerStep(steps, key, current, power, skipKey = null, display) {
   if (key === skipKey) return current;
-  const value = new Decimal(power);
-  const after = current.pow(value);
+  const checkedCurrent = diagnosticValue(current);
+  let checkedPower;
+  try {
+    checkedPower = { value: boundedSignedValue(power, "breakdown power"), invalid: false };
+  } catch {
+    checkedPower = { value: DC.D1, invalid: true };
+  }
+  const invalid = checkedCurrent.invalid || checkedPower.invalid;
+  const after = invalid ? checkedCurrent.value : boundedPositivePower(checkedCurrent.value, checkedPower.value);
   return steps
-    ? addOrderedTransform(steps, key, "power", current, after, { value, display })
+    ? addOrderedTransform(steps, key, invalid ? "diagnostic" : "power", checkedCurrent.value, after,
+      { value: checkedPower.value, display, alwaysShow: invalid })
     : after;
 }
 
 export function orderedTransformStep(steps, key, type, current, after, skipKey = null, options = {}) {
   if (key === skipKey) return current;
-  return steps
-    ? addOrderedTransform(steps, key, type, current, after, options)
-    : new Decimal(after);
+  return steps ? addOrderedTransform(steps, key, type, current, after, options) : diagnosticValue(after).value;
 }
 
 export function addOrderedFinalImpacts(steps, evaluate, finalWith, nonRemovableKeys = ["base"]) {
   const nonRemovable = new Set(nonRemovableKeys);
   for (const [key, transform] of Object.entries(steps)) {
-    if (nonRemovable.has(key) || (transform.before.eq(transform.after) && !transform.alwaysShow)) continue;
-    transform.finalWith = finalWith;
-    // Final impact is a counterfactual replay of the entire formula. Direct-mode
-    // pages must not pay for every source (and every dimension) on each refresh.
-    // A trace snapshot owns its own one-shot lazy result, so Final mode and
-    // expanded details still use the exact original calculation.
+    if (nonRemovable.has(key) || transform.type === "diagnostic" ||
+        (transform.before.eq(transform.after) && !transform.alwaysShow)) continue;
+    transform.finalWith = diagnosticValue(finalWith).value;
     Object.defineProperty(transform, "finalWithout", {
       configurable: true,
       enumerable: true,
       get() {
-        const result = evaluate(key);
+        let result;
+        try {
+          result = diagnosticValue(evaluate(key), transform.after).value;
+        } catch (error) {
+          console.warn(`Multiplier breakdown counterfactual failed for ${key}`, error);
+          result = transform.after;
+        }
         Object.defineProperty(transform, "finalWithout", {
           configurable: true, enumerable: true, value: result
         });
@@ -60,56 +124,69 @@ export function addOrderedFinalImpacts(steps, evaluate, finalWith, nonRemovableK
 }
 
 export function orderedOoMDifference(first, second) {
-  const left = new Decimal(first);
-  const right = new Decimal(second);
-  if (left.eq(right)) return DC.D0;
-  // Formula outputs are non-negative. If exactly one side is zero, this is a real mismatch and log10 is undefined.
-  if (left.lte(0) || right.lte(0)) return DC.D1;
-  return left.log10().sub(right.log10()).abs();
+  const left = diagnosticValue(first);
+  const right = diagnosticValue(second);
+  if (left.invalid || right.invalid) return impactLimit();
+  if (left.value.eq(right.value)) return DC.D0;
+  if (left.value.eq(0) || right.value.eq(0)) return impactLimit();
+  return Decimal.min(left.value.log10().sub(right.value.log10()).abs(), impactLimit());
 }
 
-export function addOrderedTraceMismatch(steps, finalWith, actual, display, tolerance = 1e-7) {
-  if (orderedOoMDifference(finalWith, actual).lte(tolerance)) return null;
-  return addOrderedTransform(steps, "traceMismatch", "override", finalWith, actual, { display });
+export function addOrderedTraceMismatch(steps, finalWith, actual, display,
+  absoluteTolerance = 1e-7, relativeTolerance = 1e-12) {
+  const expected = diagnosticValue(finalWith);
+  const observed = diagnosticValue(actual);
+  if (expected.invalid || observed.invalid) {
+    return addOrderedTransform(steps, "traceMismatch", "diagnostic", DC.D1, DC.D1, {
+      display: `${display}; diagnostic replay produced a non-finite value`, alwaysShow: true
+    });
+  }
+  if (expected.value.eq(observed.value)) return null;
+  const difference = orderedOoMDifference(expected.value, observed.value);
+  if (difference.lte(absoluteTolerance)) return null;
+  if (!expected.value.eq(0) && !observed.value.eq(0)) {
+    const scale = Decimal.max(expected.value.log10().abs(), observed.value.log10().abs(), 1);
+    if (difference.div(scale).lte(relativeTolerance)) return null;
+  }
+  return addOrderedTransform(steps, "traceMismatch", "diagnostic", expected.value, observed.value,
+    { display, alwaysShow: true });
 }
 
 export function aggregateOrderedTransforms(items, resourceLabel, includeFinal = true) {
-  const active = items.filter(item => item.transform !== null && item.transform !== undefined);
+  const active = items.filter(item => item.transform !== null && item.transform !== undefined &&
+    item.transform.type !== "diagnostic");
   if (active.length === 0) return null;
 
-  const impactLog = value => Decimal.max(value, DC.D1).log10();
-  const directImpact = active.reduce((sum, item) => {
-    const transform = item.transform;
-    return sum.add(impactLog(transform.after).sub(impactLog(transform.before)));
-  }, DC.D0);
+  let hadInvalid = false;
+  const delta = (before, after) => {
+    const a = impactLog(before);
+    const b = impactLog(after);
+    if (a === null || b === null) { hadInvalid = true; return DC.D0; }
+    return signedImpact(b.sub(a)) ?? DC.D0;
+  };
+  const directImpact = active.reduce((sum, item) => addImpact(sum,
+    delta(item.transform.before, item.transform.after)) ?? sum, DC.D0);
   const finalImpact = active.reduce((sum, item) => {
     const transform = item.transform;
-    if (includeFinal && transform.finalWithout !== undefined && transform.finalWithout !== null) {
-      return sum.add(impactLog(transform.finalWith ?? transform.after).sub(impactLog(transform.finalWithout)));
-    }
-    return sum.add(impactLog(transform.after).sub(impactLog(transform.before)));
+    const d = includeFinal && transform.finalWithout !== undefined && transform.finalWithout !== null
+      ? delta(transform.finalWithout, transform.finalWith ?? transform.after)
+      : delta(transform.before, transform.after);
+    return addImpact(sum, d) ?? sum;
   }, DC.D0);
 
   const tiers = active.map(item => item.tier).filter(tier => tier !== undefined);
-  const tierText = tiers.length === 1
-    ? `${resourceLabel}${tiers[0]}`
-    : `${tiers.length} producing ${resourceLabel} tiers`;
-
-  // The UI clamps values below 1 before taking log10, so encode negative impacts as before > 1 -> after = 1
-  // rather than as a synthetic value below 1. This preserves the sign in both Direct and Final modes.
-  const directBefore = directImpact.lt(0) ? Decimal.pow10(directImpact.neg()) : DC.D1;
-  const directAfter = directImpact.lt(0) ? DC.D1 : Decimal.pow10(directImpact);
-  const finalWith = finalImpact.lt(0) ? DC.D1 : Decimal.pow10(finalImpact);
-  const finalWithout = finalImpact.lt(0) ? Decimal.pow10(finalImpact.neg()) : DC.D1;
+  const tierText = tiers.length === 1 ? `${resourceLabel}${tiers[0]}` : `${tiers.length} producing ${resourceLabel} tiers`;
+  const directBefore = directImpact.lt(0) ? boundedPositivePower(10, directImpact.neg()) : DC.D1;
+  const directAfter = directImpact.lt(0) ? DC.D1 : boundedPositivePower(10, directImpact);
+  const finalWith = finalImpact.lt(0) ? DC.D1 : boundedPositivePower(10, finalImpact);
+  const finalWithout = finalImpact.lt(0) ? boundedPositivePower(10, finalImpact.neg()) : DC.D1;
 
   return {
     type: "formula",
     before: directBefore,
     after: directAfter,
-    // A direct-only aggregate must not present direct impact as a verified
-    // counterfactual Final impact. Real Final impacts remain available in tier details.
     ...(includeFinal ? { finalWith, finalWithout } : {}),
-    display: "",
+    display: hadInvalid ? "Some tier diagnostics were non-finite and were excluded." : "",
     aggregateScope: `Overall across ${tierText}`,
     alwaysShow: active.some(item => item.transform.alwaysShow) || directImpact.neq(0) || finalImpact.neq(0),
     aggregate: true,
@@ -119,18 +196,18 @@ export function aggregateOrderedTransforms(items, resourceLabel, includeFinal = 
 export function createOrderedTransformCache(builder, maxAge = 120) {
   let cached;
   let cachedAt = -Infinity;
+  let lastError = null;
   return key => {
-    // A single Vue update asks every visible entry for the same trace separately. Rebuilding on an exact millisecond
-    // boundary can therefore replay the whole formula several times in one render and make diagnostic rows flicker.
-    // Reuse one snapshot for a short window instead; this avoids redundant O(entries^2) impact replays.
     const now = Date.now();
     if (cached === undefined || now < cachedAt || now - cachedAt >= maxAge) {
-      // Commit the timestamp ONLY after the builder succeeds. A thrown formula must never
-      // leave an empty, apparently fresh cache behind for other entry updates to consume.
-      const next = builder();
-      cached = next;
-      // Budget the next rebuild from completion, not from a potentially
-      // expensive builder's start (which caused consecutive cache misses).
+      try {
+        cached = builder();
+        lastError = null;
+      } catch (error) {
+        if (error !== lastError) console.warn("Multiplier breakdown builder failed; keeping the last finite snapshot", error);
+        lastError = error;
+        cached ??= {};
+      }
       cachedAt = Date.now();
     }
     if (key === undefined) return cached;

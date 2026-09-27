@@ -1,5 +1,5 @@
 import { DimensionState } from "./dimension";
-import { boundedPositivePower } from "../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct } from "../finite-decimal";
 
 // Multiplier applied to all Antimatter Dimensions, regardless of tier. This is cached using a Lazy
 // and invalidated every update.
@@ -533,13 +533,14 @@ class AntimatterDimensionState extends DimensionState {
 
     let toGain;
     if (tier === 7 && EternityChallenge(7).isRunning) {
-      toGain = InfinityDimension(1).productionPerSecond.times(10);
+      toGain = boundedPositiveProduct(InfinityDimension(1).productionPerSecond, 10);
     } else if (NormalChallenge(12).isRunning) {
       toGain = AntimatterDimension(tier + 2).productionPerSecond;
     } else {
       toGain = AntimatterDimension(tier + 1).productionPerSecond;
     }
-    return toGain.times(10).dividedBy(this.amount.max(1)).times(getGameSpeedupForDisplay());
+    return boundedPositiveProduct(
+      boundedPositiveProduct(toGain, 10).div(this.amount.max(1)), getGameSpeedupForDisplay());
   }
 
   /**
@@ -697,7 +698,9 @@ class AntimatterDimensionState extends DimensionState {
       if (tier === 4) amount = amount.pow(1.4);
       if (tier === 6) amount = amount.pow(1.2);
     }
-    let production = amount.times(multiplier ?? this.multiplier).times(Tickspeed.perSecond);
+    let production = boundedPositiveProduct(
+      boundedPositiveProduct(amount, multiplier ?? this.multiplier),
+      Tickspeed.perSecond);
     // An optional, read-only diagnostic records the *gameplay* production path.
     // It is never allocated by normal ticks; statistics can inspect actual cap losses
     // without maintaining a second approximation of this extremely nonlinear formula.

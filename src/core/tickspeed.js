@@ -1,36 +1,78 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+
+// Tickspeed is stored as an interval. A mathematically tiny positive interval must never
+// underflow to literal zero, because 1000 / 0 would turn the production rate non-finite.
+const MIN_TICKSPEED_INTERVAL = () => new Decimal(DC.BEMAX).recip();
+
+function clampTickspeedInterval(value) {
+  const interval = new Decimal(value);
+  if (Decimal.isNaN(interval)) throw new Error("Invalid Tickspeed interval");
+  return Decimal.clamp(interval, MIN_TICKSPEED_INTERVAL(), DC.BEMAX);
+}
+
+function boundedEffectProduct(initial, sources) {
+  let result = new Decimal(initial);
+  for (const source of sources) {
+    if (!source) continue;
+    source.applyEffect(effect => {
+      result = boundedPositiveProduct(result, effect);
+    });
+  }
+  return result;
+}
+
 // Optional source exclusion is used only by the stats breakdown for exact marginal
 // effective-count comparisons; the default path is unchanged for gameplay.
 export function effectiveBaseGalaxies(excludedSource = null, details = null) {
-  let alternation = Decimal.max(0, Replicanti.amount.add(1).log10().div(1e6)).times(AlchemyResource.alternation.effectValue).add(1);
+  const alternationBase = Decimal.max(0, boundedPositiveSum(Replicanti.amount, 1).log10().div(1e6));
+  const alternation = boundedPositiveSum(
+    boundedPositiveProduct(alternationBase, AlchemyResource.alternation.effectValue), 1);
+
   let galaxies = excludedSource === "antimatter" ? DC.D0 : player.galaxies;
-  if (!player.disablePostReality && Alpha.currentStage >= 3) galaxies = galaxies.times(alternation);
+  if (!player.disablePostReality && Alpha.currentStage >= 3) {
+    galaxies = boundedPositiveProduct(galaxies, alternation);
+  }
+
   let generatedGalaxies = excludedSource === "generated" ? DC.D0 : GalaxyGenerator.galaxies;
-  if (!player.disablePostReality && Alpha.currentStage >= 3) generatedGalaxies = generatedGalaxies.times(alternation);
+  if (!player.disablePostReality && Alpha.currentStage >= 3) {
+    generatedGalaxies = boundedPositiveProduct(generatedGalaxies, alternation);
+  }
+
   // Note that this already includes the "50% more" active path effect
   let replicantiGalaxies = Replicanti.galaxies.bought;
-  replicantiGalaxies = replicantiGalaxies.times(1 + Effects.sum(
-    TimeStudy(132),
-    TimeStudy(133)
-  ));
+  const activePathFactor = boundedPositiveSum(1, Effects.sum(TimeStudy(132), TimeStudy(133)));
+  replicantiGalaxies = boundedPositiveProduct(replicantiGalaxies, activePathFactor);
+
   // "extra" galaxies unaffected by the passive/idle boosts come from studies 225/226 and Effarig Infinity
-  replicantiGalaxies = replicantiGalaxies.add(Replicanti.galaxies.extra);
+  replicantiGalaxies = boundedPositiveSum(replicantiGalaxies, Replicanti.galaxies.extra);
   const nonActivePathReplicantiGalaxies = Decimal.min(Replicanti.galaxies.bought,
     ReplicantiUpgrade.galaxies.value);
+
   // Effects.sum is intentional here - if EC8 is not completed,
   // this value should not be contributed to total replicanti galaxies
-  replicantiGalaxies = replicantiGalaxies.add(nonActivePathReplicantiGalaxies.times(Effects.sum(EternityChallenge(8).reward)));
-  if (!player.disablePostReality && Alpha.currentStage >= 3) replicantiGalaxies = replicantiGalaxies.times(alternation);
+  replicantiGalaxies = boundedPositiveSum(replicantiGalaxies,
+    boundedPositiveProduct(nonActivePathReplicantiGalaxies, Effects.sum(EternityChallenge(8).reward)));
+
+  if (!player.disablePostReality && Alpha.currentStage >= 3) {
+    replicantiGalaxies = boundedPositiveProduct(replicantiGalaxies, alternation);
+  }
   if (excludedSource === "replicanti") replicantiGalaxies = DC.D0;
+
   // Source detail is collected only on demand by the statistics page. It uses the
   // values produced by this exact gameplay path, not independently reproduced formulas.
   if (details !== null) {
     details.replicantiBought = new Decimal(Replicanti.galaxies.bought);
     details.replicantiExtra = new Decimal(Replicanti.galaxies.extra);
   }
+
   let freeGalaxies = excludedSource === "tachyon" ? DC.D0 : player.dilation.totalTachyonGalaxies;
-  freeGalaxies = freeGalaxies.times(alternation);
+  freeGalaxies = boundedPositiveProduct(freeGalaxies, alternation);
+
   let extraGalaxies = excludedSource === "galactic" ? DC.D0 : GalacticPower.freeGalaxies;
-  if (!player.disablePostReality && Alpha.currentStage >= 3) extraGalaxies = extraGalaxies.times(alternation);
+  if (!player.disablePostReality && Alpha.currentStage >= 3) {
+    extraGalaxies = boundedPositiveProduct(extraGalaxies, alternation);
+  }
+
   if (details !== null) {
     details.ascension = GalacticPowers.galacticAscension.isUnlocked;
     details.sources = [
@@ -42,17 +84,20 @@ export function effectiveBaseGalaxies(excludedSource = null, details = null) {
         unlocked: GalacticPowers.freeGalaxies.isUnlocked },
     ];
   }
-  return GalacticPowers.galacticAscension.isUnlocked ?
-    Decimal.max(galaxies.max(1).times(generatedGalaxies.max(1)).times(replicantiGalaxies.max(1)).times(
-    freeGalaxies.max(1)).times(extraGalaxies.max(1)), 0) : Decimal.max(galaxies.add(generatedGalaxies).add(
-    replicantiGalaxies).add(freeGalaxies).add(extraGalaxies), 0);
+
+  const sources = [galaxies, generatedGalaxies, replicantiGalaxies, freeGalaxies, extraGalaxies];
+  if (GalacticPowers.galacticAscension.isUnlocked) {
+    return sources.reduce((total, value) => boundedPositiveProduct(total, new Decimal(value).max(1)), DC.D1);
+  }
+  return sources.reduce((total, value) => boundedPositiveSum(total, value), DC.D0);
 }
 
 export function getTickSpeedMultiplier(galaxyCount = null) {
   if (InfinityChallenge(3).isRunning) return DC.D1;
   if (Ra.isRunning) return DC.C1D1_1245;
-  let galaxies = galaxyCount === null ? effectiveBaseGalaxies() : galaxyCount;
-  const effects = DC.D1.timesEffectsOf(
+
+  let galaxies = galaxyCount === null ? effectiveBaseGalaxies() : new Decimal(galaxyCount);
+  const effects = boundedEffectProduct(DC.D1, [
     InfinityUpgrade.galaxyBoost,
     InfinityUpgrade.galaxyBoost.chargedEffect,
     BreakInfinityUpgrade.galaxyBoost,
@@ -66,7 +111,8 @@ export function getTickSpeedMultiplier(galaxyCount = null) {
     PelleUpgrade.galaxyPower,
     PelleRifts.decay.milestones[1],
     BreakInfinityUpgrade.galaxyBoost.chargedEffect
-  );
+  ]);
+
   if (galaxies.lt(3)) {
     // Magic numbers are to retain balancing from before while displaying
     // them now as positive multipliers rather than negative percentages
@@ -78,30 +124,59 @@ export function getTickSpeedMultiplier(galaxyCount = null) {
       if (player.galaxies.eq(1)) baseMultiplier = DC.D1.div(1.07632);
       if (player.galaxies.eq(2)) baseMultiplier = DC.D1.div(1.072);
     }
-    const perGalaxy = new Decimal(0.02).times(effects);
-    if (Pelle.isDoomed && !PelleDestructionUpgrade.disableGalaxyNerf.canBeApplied) galaxies = galaxies.times(0.5);
-
-    galaxies = galaxies.times(Pelle.specialGlyphEffect.power);
-    return DC.D0_01.clampMin(baseMultiplier.sub(galaxies.times(perGalaxy)));
+    const perGalaxy = boundedPositiveProduct(0.02, effects);
+    if (Pelle.isDoomed && !PelleDestructionUpgrade.disableGalaxyNerf.canBeApplied) {
+      galaxies = boundedPositiveProduct(galaxies, 0.5);
+    }
+    galaxies = boundedPositiveProduct(galaxies, Pelle.specialGlyphEffect.power);
+    return DC.D0_01.clampMin(baseMultiplier.sub(boundedPositiveProduct(galaxies, perGalaxy)));
   }
+
   let baseMultiplier = new Decimal(0.8);
   if (NormalChallenge(5).isRunning) baseMultiplier = new Decimal(0.83);
+
   galaxies = galaxies.sub(2);
-  galaxies = galaxies.times(effects);
-  galaxies = galaxies.times(getAdjustedGlyphEffect("cursedgalaxies"));
-  galaxies = galaxies.times(getAdjustedGlyphEffect("realitygalaxies"));
-  galaxies = galaxies.times(1 + ImaginaryUpgrade(9).effectOrDefault(0));
-  if (Pelle.isDoomed && !PelleDestructionUpgrade.disableGalaxyNerf.canBeApplied) galaxies = galaxies.times(0.5);
-  if (Pelle.isDoomed) galaxies = galaxies.timesEffectOf(EndgameMastery(51));
-  if (GalacticPowers.galaxyStrength.isUnlocked) galaxies = galaxies.times(GalacticPowers.galaxyStrength.reward);
-  galaxies = galaxies.timesEffectsOf(DualityUpgrade(9), DualityUpgrade(23), DualityUpgrade(24));
-  if (LHC.voidRunning) galaxies = galaxies.timesEffectOf(Accelerators.cosmic._milestones[0]);
-  galaxies = galaxies.timesEffectOf(ResurgenceUpgrade.synergy4);
-  galaxies = galaxies.times(Pelle.specialGlyphEffect.power);
-  if (Alpha.isRunning) galaxies = galaxies.times(AlphaUnlocks.firstGalaxy.effects.nerf.effectOrDefault(1));
-  if (Alpha.isRunning && Alpha.currentStage >= 6) galaxies = galaxies.times(2);
+  galaxies = boundedPositiveProduct(galaxies, effects);
+  galaxies = boundedPositiveProduct(galaxies, getAdjustedGlyphEffect("cursedgalaxies"));
+  galaxies = boundedPositiveProduct(galaxies, getAdjustedGlyphEffect("realitygalaxies"));
+  galaxies = boundedPositiveProduct(galaxies,
+    boundedPositiveSum(1, ImaginaryUpgrade(9).effectOrDefault(0)));
+
+  if (Pelle.isDoomed && !PelleDestructionUpgrade.disableGalaxyNerf.canBeApplied) {
+    galaxies = boundedPositiveProduct(galaxies, 0.5);
+  }
+  if (Pelle.isDoomed) {
+    EndgameMastery(51).applyEffect(effect => {
+      galaxies = boundedPositiveProduct(galaxies, effect);
+    });
+  }
+  if (GalacticPowers.galaxyStrength.isUnlocked) {
+    galaxies = boundedPositiveProduct(galaxies, GalacticPowers.galaxyStrength.reward);
+  }
+
+  galaxies = boundedEffectProduct(galaxies, [DualityUpgrade(9), DualityUpgrade(23), DualityUpgrade(24)]);
+
+  if (LHC.voidRunning) {
+    Accelerators.cosmic._milestones[0].applyEffect(effect => {
+      galaxies = boundedPositiveProduct(galaxies, effect);
+    });
+  }
+
+  ResurgenceUpgrade.synergy4.applyEffect(effect => {
+    galaxies = boundedPositiveProduct(galaxies, effect);
+  });
+  galaxies = boundedPositiveProduct(galaxies, Pelle.specialGlyphEffect.power);
+
+  if (Alpha.isRunning) {
+    galaxies = boundedPositiveProduct(galaxies, AlphaUnlocks.firstGalaxy.effects.nerf.effectOrDefault(1));
+  }
+  if (Alpha.isRunning && Alpha.currentStage >= 6) {
+    galaxies = boundedPositiveProduct(galaxies, 2);
+  }
+
   const perGalaxy = DC.D0_965;
-  return perGalaxy.pow(galaxies.sub(2)).times(baseMultiplier);
+  const galaxyInterval = boundedPositivePower(perGalaxy, galaxies.sub(2));
+  return clampTickspeedInterval(boundedPositiveProduct(galaxyInterval, baseMultiplier));
 }
 
 export function buyTickSpeed() {
@@ -179,14 +254,24 @@ export const Tickspeed = {
   },
 
   get current() {
-    let tickspeed = Effarig.isRunning
-      ? Effarig.tickspeed
-      : this.baseValue.powEffectOf(DilationUpgrade.tickspeedPower);
-    tickspeed = (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) ? dilatedValueOf(tickspeed) : tickspeed;
-    if (player.endgame.overcharge.isRunning) {
-      tickspeed = dilateMultiplier(tickspeed, Math.pow(0.72, player.endgame.overcharge.level));
+    let tickspeed;
+    if (Effarig.isRunning) {
+      tickspeed = clampTickspeedInterval(Effarig.tickspeed);
+    } else {
+      tickspeed = this.baseValue;
+      DilationUpgrade.tickspeedPower.applyEffect(power => {
+        tickspeed = clampTickspeedInterval(boundedPositivePower(tickspeed, power));
+      });
     }
-    return tickspeed;
+
+    if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
+      tickspeed = clampTickspeedInterval(dilatedValueOf(tickspeed));
+    }
+    if (player.endgame.overcharge.isRunning) {
+      tickspeed = clampTickspeedInterval(
+        dilateMultiplier(tickspeed, Math.pow(0.72, player.endgame.overcharge.level)));
+    }
+    return clampTickspeedInterval(tickspeed);
   },
 
   get cost() {
@@ -208,13 +293,20 @@ export const Tickspeed = {
   },
 
   get baseValue() {
-    return DC.E3.timesEffectsOf(
+    const baseInterval = boundedEffectProduct(DC.E3, [
       Achievement(36),
       Achievement(45),
       Achievement(66),
       Achievement(83)
-    )
-      .times(getTickSpeedMultiplier().pow(this.totalUpgrades).powEffectOf(Ra.unlocks.tickspeedPower));
+    ]);
+
+    let upgradeInterval = boundedPositivePower(getTickSpeedMultiplier(), this.totalUpgrades);
+    upgradeInterval = clampTickspeedInterval(upgradeInterval);
+    Ra.unlocks.tickspeedPower.applyEffect(power => {
+      upgradeInterval = clampTickspeedInterval(boundedPositivePower(upgradeInterval, power));
+    });
+
+    return clampTickspeedInterval(boundedPositiveProduct(baseInterval, upgradeInterval));
   },
 
   get totalUpgrades() {
@@ -225,7 +317,7 @@ export const Tickspeed = {
   },
 
   get perSecond() {
-    return Decimal.divide(1000, this.current);
+    return boundedPositiveProduct(DC.E3, this.current.recip());
   },
 
   multiplySameCosts() {
@@ -275,7 +367,7 @@ export const FreeTickspeed = {
     // so, for example, if the cost is 1 that means it's actually exp(priceToCap) * tickmult.
     const desiredCost = logShards.sub(priceToCap).div(logTickmult);
     const costFormulaCoefficient = new Decimal(FreeTickspeed.GROWTH_RATE).div(exponentIncrease).div(logTickmult).times(
-      Decimal.pow(Effects.product(EndgameMastery(103)), 2));
+      boundedPositivePower(Effects.productDecimal(EndgameMastery(103)), 2));
     // In the following we're implicitly subtracting softcap from bought,
     // so, for example, if bought is 1 that means it's actually softcap + 1.
     // The first term (the big one) is the asymptotically more important term (since FreeTickspeed.GROWTH_EXP > 1),

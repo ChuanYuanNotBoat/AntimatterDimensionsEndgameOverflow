@@ -1,4 +1,4 @@
-import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "../../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "../../finite-decimal";
 import { GameMechanicState } from "../../game-mechanics";
 import { Quotes } from "../quotes";
 
@@ -138,7 +138,7 @@ class RaPetState extends GameMechanicState {
   get memoryChunksPerSecond() {
     if (!this.canGetMemoryChunks) return DC.D0;
     let res = boundedPositiveProduct(this.rawMemoryChunksPerSecond, this.chunkUpgradeCurrentMult);
-    res = boundedPositiveProduct(res, Effects.product(Ra.unlocks.continuousTTBoost.effects.memoryChunks));
+    res = boundedPositiveProduct(res, Effects.productDecimal(Ra.unlocks.continuousTTBoost.effects.memoryChunks));
     res = boundedPositiveProduct(res, GlyphSacrifice.reality.effectValue);
     if (this.hasRemembrance) res = boundedPositiveProduct(res, Ra.remembrance.multiplier);
     else if (Ra.petWithRemembrance) res = boundedPositiveProduct(res, Ra.remembrance.nerf);
@@ -271,7 +271,7 @@ export const Ra = {
     for (const pet of Ra.pets.all) pet.tick(realDiff, generateChunks);
   },
   get productionPerMemoryChunk() {
-    let res = new Decimal(Effects.product(Ra.unlocks.continuousTTBoost.effects.memories, Achievement(168), Achievement(236)));
+    let res = Effects.productDecimal(Ra.unlocks.continuousTTBoost.effects.memories, Achievement(168), Achievement(236));
     for (const pet of Ra.pets.all) {
       if (pet.isUnlocked) res = boundedPositiveProduct(res, pet.memoryProductionMultiplier);
     }
@@ -321,7 +321,8 @@ export const Ra = {
   },
   get levelCap() {
     if (!ExpansionPack.raPack.isBought || player.disablePostReality) return 25;
-    return Math.floor(Math.max(25, Decimal.log10(player.records.bestAntimatterExponentOutsideDoom).toNumber()));
+    const logarithm = Decimal.log10(player.records.bestAntimatterExponentOutsideDoom);
+    return Math.floor(Math.max(25, finiteNumber(logarithm, 25, Number.MAX_SAFE_INTEGER)));
   },
   get maxTotalPetLevel() {
     return this.levelCap * this.pets.all.length;

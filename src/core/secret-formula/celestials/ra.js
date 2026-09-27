@@ -1,3 +1,5 @@
+import { boundedPositivePower } from "../../finite-decimal";
+
 export const ra = {
   pets: {
     teresa: {
@@ -178,7 +180,7 @@ export const ra = {
     enslavedXP: {
       id: 16,
       reward: "All Memory Chunks produce more Memories based on total time played",
-      effect: () => player.disablePostReality ? 1 : 1 + Decimal.log10(player.records.totalTimePlayed).div(200).toNumber(),
+      effect: () => player.disablePostReality ? DC.D1 : Decimal.log10(player.records.totalTimePlayed).div(200).add(1),
       pet: "enslaved",
       level: 5,
       displayIcon: `<span class="fas fa-stopwatch"></span>`
@@ -202,7 +204,7 @@ export const ra = {
     peakGamespeedDT: {
       id: 19,
       reward: "Gain more Dilated Time based on peak game speed in each Reality",
-      effect: () => player.disablePostReality ? 1 : Decimal.max(Decimal.pow(Decimal.log10(player.celestials.ra.peakGamespeed).sub(90), 3), 1).toNumber(),
+      effect: () => player.disablePostReality ? DC.D1 : Decimal.max(Decimal.pow(Decimal.log10(player.celestials.ra.peakGamespeed).sub(90), 3), 1),
       pet: "enslaved",
       level: 15,
       displayIcon: `<span class="fas fa-tachometer-alt"></span>`,
@@ -471,7 +473,7 @@ export const ra = {
     imaginaryMachineEternityPower: {
       id: 47,
       reward: "Gain a power to Imaginary Machines based on Eternities",
-      effect: () => player.disablePostReality ? 1 : 1 + Decimal.log10(Decimal.log10(player.eternities.add(1)).add(1)).div(20).toNumber(),
+      effect: () => player.disablePostReality ? DC.D1 : Decimal.log10(Decimal.log10(player.eternities.add(1)).add(1)).div(20).add(1),
       pet: "enslaved",
       level: 100,
       displayIcon: `<span class="fas fa-lightbulb"></span>`,
@@ -498,7 +500,7 @@ export const ra = {
     allDimPowTT: {
       id: 50,
       reward: "Time Theorems empower the first three Dimension types",
-      effect: () => player.disablePostReality ? 1 : Math.pow(1 + Decimal.log10(Decimal.log10(Currency.timeTheorems.value.add(1)).add(1)).div(10).toNumber(), 5),
+      effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(Decimal.log10(Decimal.log10(Currency.timeTheorems.value.add(1)).add(1)).div(10).add(1), 5),
       pet: "v",
       level: 40,
       displayIcon: `<span class="fas fa-brain"></span>`,

@@ -1,3 +1,5 @@
+import { boundedPositiveProduct, boundedPositiveSum } from "../finite-decimal";
+
 // Diagnostic-only safety check: do not cap a failed calculation or rewrite a save.
 // Keep raw Decimal components: calling toNumber() or format() here loses the evidence.
 function dimensionNumberDetails(value) {
@@ -57,14 +59,13 @@ export class DimensionState {
   get productionPerSecond() { throw new NotImplementedError(); }
 
   get productionPerRealSecond() {
-    return this.productionPerSecond.times(getGameSpeedupForDisplay());
+    return boundedPositiveProduct(this.productionPerSecond, getGameSpeedupForDisplay());
   }
 
   productionForDiff(diff) {
     const rate = assertDimensionFinite(this.productionPerSecond, this, "productionPerSecond", diff);
-    assertDimensionFinite(diff, this, "diff", diff);
-    const product = assertDimensionFinite(rate.times(diff), this, "rate * diff", diff);
-    return assertDimensionFinite(product.div(1000), this, "rate * diff / 1000", diff);
+    const elapsed = assertDimensionFinite(new Decimal(diff), this, "diff", diff);
+    return boundedPositiveProduct(rate, elapsed.div(1000));
   }
 
   produceCurrency(currency, diff) {
@@ -74,8 +75,7 @@ export class DimensionState {
   produceDimensions(dimension, diff) {
     const gain = this.productionForDiff(diff);
     const before = assertDimensionFinite(dimension.amount, this, "destination amount before production", diff, dimension);
-    const after = assertDimensionFinite(before.plus(gain), this, "destination amount + gain", diff, dimension);
-    dimension.amount = after;
+    dimension.amount = boundedPositiveSum(before, gain);
   }
 
   static get dimensionCount() { return 8; }

@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../../finite-decimal";
+
 import { RebuyableMechanicState } from "../../game-mechanics/rebuyable";
 
 import { PelleRifts } from "./rifts";
@@ -26,9 +28,15 @@ export const GalaxyGenerator = {
   },
 
   get gainPerSecondPreCap() {
-    let extraGain = 1;
-    if (EndgameMilestone.moreFasterGalaxies.isReached && !player.disablePostReality) extraGain = Decimal.pow(10, Math.min(Currency.endgames.value / 200, 50)).times(Decimal.pow(10, Math.max((Math.log10(Currency.endgames.value + 1) - 4) * 50, 0)));
-    if (!Pelle.hasGalaxyGenerator) return new Decimal(0);
+    let extraGain = DC.D1;
+    if (EndgameMilestone.moreFasterGalaxies.isReached && !player.disablePostReality) {
+      const early = boundedPositivePower(10, Math.min(Currency.endgames.value / 200, 50));
+      const late = boundedPositivePower(10,
+        Math.max((Math.log10(Currency.endgames.value + 1) - 4) * 50, 0));
+      extraGain = boundedPositiveProduct(early, late);
+    }
+    if (!Pelle.hasGalaxyGenerator) return DC.D0;
+
     let galaxyGen = new Decimal(GalaxyGeneratorUpgrades.additive.effectValue).timesEffectsOf(
       GalaxyGeneratorUpgrades.multiplicative,
       GalaxyGeneratorUpgrades.antimatterMult,
@@ -36,11 +44,17 @@ export const GalaxyGenerator = {
       GalaxyGeneratorUpgrades.EPMult,
       GalaxyGeneratorUpgrades.RSMult,
       GalaxyGeneratorUpgrades.DTMult
-    ).times(extraGain).powEffectsOf(GalaxyGeneratorUpgrades.remnantPow, GalaxyGeneratorUpgrades.exponential).pow(Accelerators.cosmic.effectValue1).pow(
-      GalacticPowers.galaxyGenerationEmpowerment.isUnlocked ? GalacticPowers.galaxyGenerationEmpowerment.reward : 1);
+    );
+    galaxyGen = boundedPositiveProduct(galaxyGen, extraGain)
+      .powEffectsOf(GalaxyGeneratorUpgrades.remnantPow, GalaxyGeneratorUpgrades.exponential);
+    galaxyGen = boundedPositivePower(galaxyGen, Accelerators.cosmic.effectValue1);
+    galaxyGen = boundedPositivePower(galaxyGen,
+      GalacticPowers.galaxyGenerationEmpowerment.isUnlocked
+        ? GalacticPowers.galaxyGenerationEmpowerment.reward
+        : 1);
     if (galaxyGen.gt(10)) {
-      let logGal = galaxyGen.log10();
-      galaxyGen = Decimal.pow10(logGal.powEffectOf(GalaxyGeneratorUpgrades.superExponential));
+      const logGal = galaxyGen.log10().powEffectOf(GalaxyGeneratorUpgrades.superExponential);
+      galaxyGen = boundedPositivePower(10, logGal);
     }
     return galaxyGen;
   },
@@ -58,9 +72,14 @@ export const GalaxyGenerator = {
   },
 
   harshGalGenInstabilityByGalaxies(currGalaxies) {
-    const extremePower = GalacticPowers.galGenInstability2.isUnlocked ? GalacticPowers.galGenInstability2.reward : 1;
-    const power = (Decimal.log10(Decimal.clamp(currGalaxies.div(this.harshInstabilityStart), 1, 1e50)).div(1000)).times(Effects.product(EndgameUpgrade(14))).times(1 / extremePower).toNumber();
-    return Math.pow(1 + power, Decimal.log10(Decimal.clamp(currGalaxies.div(this.harshInstabilityStart), 1, 1e50)).toNumber());
+    const extremePower = GalacticPowers.galGenInstability2.isUnlocked
+      ? GalacticPowers.galGenInstability2.reward
+      : 1;
+    const logGalaxies = Decimal.log10(
+      Decimal.clamp(currGalaxies.div(this.harshInstabilityStart), 1, 1e50));
+    let power = boundedPositiveProduct(logGalaxies.div(1000), Effects.productDecimal(EndgameUpgrade(14)));
+    power = boundedPositiveQuotient(power, extremePower);
+    return boundedPositivePower(boundedPositiveSum(1, power), logGalaxies);
   },
 
   get harshGalGenInstability() {
@@ -74,8 +93,13 @@ export const GalaxyGenerator = {
   },
 
   gainPerSecondPostCapByGalaxies(currGalaxies) {
-    if (!Pelle.hasGalaxyGenerator) return new Decimal(1);
-    return Decimal.max(1, Decimal.pow(Decimal.pow(this.galGenInstability, this.harshGalGenInstabilityByGalaxies(currGalaxies)), Decimal.log10(Decimal.max(Decimal.pow(currGalaxies.div(this.instabilityStart), 0.75), 1))));
+    if (!Pelle.hasGalaxyGenerator) return DC.D1;
+    const instabilityPower = boundedPositivePower(
+      this.galGenInstability, this.harshGalGenInstabilityByGalaxies(currGalaxies));
+    const scaledGalaxies = Decimal.max(
+      boundedPositivePower(currGalaxies.div(this.instabilityStart), 0.75), 1);
+    return Decimal.max(1,
+      boundedPositivePower(instabilityPower, Decimal.log10(scaledGalaxies)));
   },
 
   get gainPerSecondPostCap() {
@@ -85,8 +109,8 @@ export const GalaxyGenerator = {
   },
 
   get gainPerSecond() {
-    if (!Pelle.hasGalaxyGenerator) return new Decimal(0);
-    return this.gainPerSecondPreCap.div(this.gainPerSecondPostCap);
+    if (!Pelle.hasGalaxyGenerator) return DC.D0;
+    return boundedPositiveQuotient(this.gainPerSecondPreCap, this.gainPerSecondPostCap);
   },
 
   gainPerSecondDisplay(neededCount) {
@@ -165,7 +189,10 @@ export const GalaxyGenerator = {
         Glyphs.refreshActive();
       }
     }
-    player.celestials.pelle.galaxyGenerator.generatedGalaxies = player.celestials.pelle.galaxyGenerator.generatedGalaxies.add(Decimal.max(this.gainPerSecond.times(diff).div(1000), 0));
+    const generatedThisTick = boundedPositiveQuotient(
+      boundedPositiveProduct(this.gainPerSecond, diff), 1000);
+    player.celestials.pelle.galaxyGenerator.generatedGalaxies = boundedPositiveSum(
+      player.celestials.pelle.galaxyGenerator.generatedGalaxies, generatedThisTick);
     player.celestials.pelle.galaxyGenerator.generatedGalaxies = Decimal.min(
       player.celestials.pelle.galaxyGenerator.generatedGalaxies,
       this.generationCap

@@ -1,3 +1,22 @@
+import {
+  boundedPositivePower,
+  boundedPositiveProduct,
+  boundedPositiveQuotient,
+  boundedPositiveSum,
+} from "../../finite-decimal";
+
+function hadronEffectivenessCap() {
+  return boundedPositiveSum(
+    boundedPositiveProduct(100, Accelerators.emptiness.effectValue2),
+    EndgameMastery(251).effectOrDefault(0));
+}
+
+function softenedHadronTime(baseTime, divisor = 1) {
+  let time = boundedPositiveProduct(new Decimal(baseTime).div(divisor), Hadrons.speedFactor);
+  time = time.gte(100) ? boundedPositiveSum(time.sub(100).sqrt(), 100) : time;
+  return time;
+}
+
 export const Hadrons = {
   get hadrons() {
     return player.celestials.laitela.hadrons;
@@ -6,46 +25,60 @@ export const Hadrons = {
     return DualityUpgrade(15).isBought ? Time.thisEndgameRealTime._ms.div(36000) : DC.D0;
   },
   get speedFactor() {
-    return DC.D1.timesEffectsOf(Achievement(235), Achievement(247)).times(
-      DivinityMilestone.firstDivine.isReached && !player.disablePostReality ? 1.25 : 1).times(
-      DivinityMilestone.divineDimensions.isReached && !player.disablePostReality ? 1.25 : 1).div(
-      1 - DivineDimensions.conversionFormula3).times(
-      Decimal.pow(DivinityMilestone.finalRebirth.isReached && !player.disablePostReality ? 1.05 :
-      (DivinityMilestone.pelleQoL.isReached && !player.disablePostReality ? 1.04 : 1.025), this.hadrons.exotic)).times(
-      DivinityMilestone.celestialSurge.isReached && !player.disablePostReality ? 4 : 1).times(
-      DivinityMilestone.finalRebirth.isReached && !player.disablePostReality ? 2 : 1).times(
+    let factor = Effects.productDecimal(Achievement(235), Achievement(247));
+    factor = boundedPositiveProduct(factor,
+      DivinityMilestone.firstDivine.isReached && !player.disablePostReality ? 1.25 : 1);
+    factor = boundedPositiveProduct(factor,
+      DivinityMilestone.divineDimensions.isReached && !player.disablePostReality ? 1.25 : 1);
+
+    const conversionDenominator = new Decimal(1).sub(DivineDimensions.conversionFormula3);
+    factor = boundedPositiveQuotient(factor, conversionDenominator);
+
+    const exoticBase = DivinityMilestone.finalRebirth.isReached && !player.disablePostReality
+      ? 1.05
+      : (DivinityMilestone.pelleQoL.isReached && !player.disablePostReality ? 1.04 : 1.025);
+    factor = boundedPositiveProduct(factor, boundedPositivePower(exoticBase, this.hadrons.exotic));
+    factor = boundedPositiveProduct(factor,
+      DivinityMilestone.celestialSurge.isReached && !player.disablePostReality ? 4 : 1);
+    factor = boundedPositiveProduct(factor,
+      DivinityMilestone.finalRebirth.isReached && !player.disablePostReality ? 2 : 1);
+    factor = boundedPositiveProduct(factor,
       DivinityMilestone.ascendedSurge.isReached && !player.disablePostReality ? 4 : 1);
+    return factor;
   },
   get singularityMultiplier() {
-    let time = this.timeFactor.times(4).times(this.speedFactor);
-    time = time.gte(100) ? time.sub(100).sqrt().add(100) : time;
-    return DualityUpgrade(15).isBought && !player.disablePostReality ? Decimal.pow10(new Decimal(this.hadrons.light).times(
-      time.min(100 * Accelerators.emptiness.effectValue2 + EndgameMastery(251).effectOrDefault(0))).times(10)) : DC.D1;
+    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 4));
+    if (!DualityUpgrade(15).isBought || player.disablePostReality) return DC.D1;
+    let exponent = boundedPositiveProduct(this.hadrons.light, time.min(hadronEffectivenessCap()));
+    exponent = boundedPositiveProduct(exponent, 10);
+    return boundedPositivePower(10, exponent);
   },
   get darkMatterCapMultiplier() {
-    let time = this.timeFactor.times(2).times(this.speedFactor);
-    time = time.gte(100) ? time.sub(100).sqrt().add(100) : time;
-    return DualityUpgrade(16).isBought && !player.disablePostReality ? Decimal.pow10(new Decimal(this.hadrons.light).times(
-      time.min(100 * Accelerators.emptiness.effectValue2 + EndgameMastery(251).effectOrDefault(0))).times(100)) : DC.D1;
+    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 2));
+    if (!DualityUpgrade(16).isBought || player.disablePostReality) return DC.D1;
+    let exponent = boundedPositiveProduct(this.hadrons.light, time.min(hadronEffectivenessCap()));
+    exponent = boundedPositiveProduct(exponent, 100);
+    return boundedPositivePower(10, exponent);
   },
   get darkEnergyAscensionBoost() {
-    let time = this.timeFactor.times(this.speedFactor);
-    time = time.gte(100) ? time.sub(100).sqrt().add(100) : time;
-    return DualityUpgrade(17).isBought && !player.disablePostReality ? new Decimal(this.hadrons.light).times(
-      time.min(100 * Accelerators.emptiness.effectValue2 + EndgameMastery(251).effectOrDefault(0))) : DC.D0;
+    const time = softenedHadronTime(this.timeFactor);
+    return DualityUpgrade(17).isBought && !player.disablePostReality
+      ? boundedPositiveProduct(this.hadrons.light, time.min(hadronEffectivenessCap()))
+      : DC.D0;
   },
   get entropyFormulaBoost() {
-    let time = this.timeFactor.div(2).times(this.speedFactor);
-    time = time.gte(100) ? time.sub(100).sqrt().add(100) : time;
-    return DualityUpgrade(18).isBought && !player.disablePostReality ? Decimal.pow(Decimal.log10(
-      time.max(1).min(100 * Accelerators.emptiness.effectValue2 + EndgameMastery(251).effectOrDefault(0)))
-      .times(2).add(1), this.hadrons.light) : DC.D1;
+    const time = softenedHadronTime(this.timeFactor, 2);
+    if (!DualityUpgrade(18).isBought || player.disablePostReality) return DC.D1;
+    const base = boundedPositiveSum(
+      boundedPositiveProduct(Decimal.log10(time.max(1).min(hadronEffectivenessCap())), 2), 1);
+    return boundedPositivePower(base, this.hadrons.light);
   },
   get continuumMultiplier() {
-    let time = this.timeFactor.div(5).times(this.speedFactor);
-    time = time.gte(100) ? time.sub(100).sqrt().add(100) : time;
-    return DualityUpgrade(19).isBought && !player.disablePostReality ? Decimal.pow(Decimal.log10(
-      time.max(1).min(100 * Accelerators.emptiness.effectValue2 + EndgameMastery(251).effectOrDefault(0))).div(10).times(
-      1 + DualityUpgrade(21).effectOrDefault(0)).add(1), this.hadrons.dark) : DC.D1;
+    const time = softenedHadronTime(this.timeFactor, 5);
+    if (!DualityUpgrade(19).isBought || player.disablePostReality) return DC.D1;
+    const darkHadronFactor = boundedPositiveSum(1, DualityUpgrade(21).effectOrDefault(0));
+    const logFactor = Decimal.log10(time.max(1).min(hadronEffectivenessCap())).div(10);
+    const base = boundedPositiveSum(boundedPositiveProduct(logFactor, darkHadronFactor), 1);
+    return boundedPositivePower(base, this.hadrons.dark);
   }
 };

@@ -296,7 +296,8 @@ export const endgameUpgrades = [
     checkRequirement: () => BreakEternityUpgrade.glyphSacrificeUncap.isBought,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "All Glyph Sacrifice Values are increased based on Celestial Matter",
-    effect: () => player.disablePostReality ? 1 : Decimal.pow(Decimal.max(Decimal.log10(Decimal.log10(player.endgame.celestialMatter.add(1)).add(1)).div(2), 1), 1.5).toNumber(),
+    effect: () => player.disablePostReality ? DC.D1 : Decimal.pow(
+      Decimal.max(Decimal.log10(Decimal.log10(player.endgame.celestialMatter.add(1)).add(1)).div(2), 1), 1.5),
     formatEffect: value => formatPow(value, 2, 3)
   },
   {

@@ -1,3 +1,4 @@
+import { boundedPositivePower } from "../../finite-decimal";
 import { MultiplierTabHelper } from "./helper-functions";
 import { MultiplierTabIcons } from "./icons";
 import { TickspeedBreakdown } from "./tickspeed-breakdown";
@@ -8,9 +9,9 @@ export const tickspeed = {
     displayOverride: () => {
       const tickRate = Tickspeed.perSecond;
       const count = MultiplierTabHelper.activeDimCount("AD");
-      return `${format(tickRate, 2, 2)}/sec on ${formatInt(count)} producing Dimensions → ${formatX(tickRate.pow(count), 2, 2)}`;
+      return `${format(tickRate, 2, 2)}/sec on ${formatInt(count)} producing Dimensions → ${formatX(boundedPositivePower(tickRate, count), 2, 2)}`;
     },
-    multValue: () => Tickspeed.perSecond.pow(MultiplierTabHelper.activeDimCount("AD")),
+    multValue: () => boundedPositivePower(Tickspeed.perSecond, MultiplierTabHelper.activeDimCount("AD")),
     isActive: () => Tickspeed.isUnlocked,
     isOrdered: true,
     overlay: ["<i class='fa-solid fa-clock' />"],

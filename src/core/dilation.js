@@ -1,7 +1,7 @@
 import { RebuyableMechanicState, SetPurchasableMechanicState } from "./game-mechanics";
 import FullScreenAnimationHandler from "./full-screen-animation-handler";
 import { SpeedrunMilestones } from "./speedrun";
-import { boundedPositivePower, boundedPositiveProduct } from "./finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "./finite-decimal";
 
 export function animateAndDilate() {
   FullScreenAnimationHandler.display("a-dilate", 2);
@@ -73,6 +73,9 @@ export function buyDilationUpgrade(id, bulk = 1) {
   if (GameEnd.creditsEverClosed) return false;
   // Upgrades 1-3 are rebuyable, and can be automatically bought in bulk with a perk shop upgrade
   const upgrade = DilationUpgrade[DIL_UPG_NAMES[id]];
+  // Pelle-only dilation upgrades persist in the save after leaving Pelle, but
+  // they must neither be purchasable nor affect gameplay outside Pelle.
+  if (upgrade.config.pelleOnly && !Pelle.isDoomed) return false;
   if (id > 3 && id < 11) {
     if (player.dilation.upgrades.has(id)) return false;
     if (!Currency.dilatedTime.purchase(upgrade.cost)) return false;
@@ -165,30 +168,48 @@ export function buyDilationUpgrade(id, bulk = 1) {
 
 export function getTachyonGalaxyMultForDisplay(thresholdUpgrade) {
   // This specifically needs to be an undefined check because sometimes thresholdUpgrade is zero
-  const upgrade = thresholdUpgrade === undefined ? DilationUpgrade.galaxyThreshold.effectValue : thresholdUpgrade;
-  const thresholdMult = (BreakEternityUpgrade.tgThresholdUncap.isBought && !player.disablePostReality)
-    ? upgrade.times(3.65).add(Decimal.pow(upgrade, 0.001).times(0.35)) : upgrade.times(3.65).add(0.35);
+  const upgrade = new Decimal(
+    thresholdUpgrade === undefined ? DilationUpgrade.galaxyThreshold.effectValue : thresholdUpgrade);
+  let thresholdMult = boundedPositiveProduct(upgrade, 3.65);
+  thresholdMult = boundedPositiveSum(thresholdMult,
+    BreakEternityUpgrade.tgThresholdUncap.isBought && !player.disablePostReality
+      ? boundedPositiveProduct(boundedPositivePower(upgrade, 0.001), 0.35)
+      : 0.35);
   const glyphEffect = getAdjustedGlyphEffect("dilationgalaxyThreshold");
-  const glyphReduction = glyphEffect === 0 ? 1 : glyphEffect;
-  const pelleExclusivePower = DilationUpgrade.galaxyThresholdPelle.canBeApplied ? DilationUpgrade.galaxyThresholdPelle.effectValue : 1;
-  const extraPower = GalacticPowers.tachyonGalaxies.isUnlocked ? 1 / GalacticPowers.tachyonGalaxies.reward : 1;
-  const power = pelleExclusivePower * EndgameUpgrade(22).effectOrDefault(1) * extraPower;
-  return Decimal.pow(thresholdMult.times(glyphReduction).add(1), power);
+  const glyphReduction = Decimal.eq(glyphEffect, 0) ? DC.D1 : new Decimal(glyphEffect);
+  const pelleExclusivePower = DilationUpgrade.galaxyThresholdPelle.canBeApplied
+    ? DilationUpgrade.galaxyThresholdPelle.effectValue
+    : DC.D1;
+  const extraPower = GalacticPowers.tachyonGalaxies.isUnlocked
+    ? boundedPositiveQuotient(1, GalacticPowers.tachyonGalaxies.reward)
+    : DC.D1;
+  const power = boundedPositiveProduct(
+    boundedPositiveProduct(pelleExclusivePower, EndgameUpgrade(22).effectOrDefault(1)), extraPower);
+  const base = boundedPositiveSum(boundedPositiveProduct(thresholdMult, glyphReduction), 1);
+  return boundedPositivePower(base, power);
 }
 
 export function getBaseTachyonGalaxyMult() {
-  const thresholdMult = (BreakEternityUpgrade.tgThresholdUncap.isBought && !player.disablePostReality)
-    ? DilationUpgrade.galaxyThreshold.effectValue.times(3.65).add(Decimal.pow(DilationUpgrade.galaxyThreshold.effectValue, 0.001).times(0.35))
-    : DilationUpgrade.galaxyThreshold.effectValue.times(3.65).add(0.35);
+  const upgrade = new Decimal(DilationUpgrade.galaxyThreshold.effectValue);
+  let thresholdMult = boundedPositiveProduct(upgrade, 3.65);
+  thresholdMult = boundedPositiveSum(thresholdMult,
+    BreakEternityUpgrade.tgThresholdUncap.isBought && !player.disablePostReality
+      ? boundedPositiveProduct(boundedPositivePower(upgrade, 0.001), 0.35)
+      : 0.35);
   const glyphEffect = getAdjustedGlyphEffect("dilationgalaxyThreshold");
-  const glyphReduction = glyphEffect === 0 ? 1 : glyphEffect;
-  return thresholdMult.times(glyphReduction);
+  const glyphReduction = Decimal.eq(glyphEffect, 0) ? DC.D1 : new Decimal(glyphEffect);
+  return boundedPositiveProduct(thresholdMult, glyphReduction);
 }
 
 export function getTachyonGalaxyPowers() {
-  const pelleExclusivePower = DilationUpgrade.galaxyThresholdPelle.canBeApplied ? DilationUpgrade.galaxyThresholdPelle.effectValue : 1;
-  const extraPower = GalacticPowers.tachyonGalaxies.isUnlocked ? 1 / GalacticPowers.tachyonGalaxies.reward : 1;
-  return pelleExclusivePower * EndgameUpgrade(22).effectOrDefault(1) * extraPower;
+  const pelleExclusivePower = DilationUpgrade.galaxyThresholdPelle.canBeApplied
+    ? DilationUpgrade.galaxyThresholdPelle.effectValue
+    : DC.D1;
+  const extraPower = GalacticPowers.tachyonGalaxies.isUnlocked
+    ? boundedPositiveQuotient(1, GalacticPowers.tachyonGalaxies.reward)
+    : DC.D1;
+  return boundedPositiveProduct(
+    boundedPositiveProduct(pelleExclusivePower, EndgameUpgrade(22).effectOrDefault(1)), extraPower);
 }
 
 // EM271 disables the softcap. Using Decimal(Infinity) as its threshold
@@ -397,6 +418,14 @@ class DilationUpgradeState extends SetPurchasableMechanicState {
     return Currency.dilatedTime;
   }
 
+  get isAvailableForPurchase() {
+    return (!this.config.pelleOnly || Pelle.isDoomed) && super.isAvailableForPurchase;
+  }
+
+  get isEffectActive() {
+    return (!this.config.pelleOnly || Pelle.isDoomed) && super.isEffectActive;
+  }
+
   get set() {
     return player.dilation.upgrades;
   }
@@ -414,9 +443,18 @@ class DilationUpgradeState extends SetPurchasableMechanicState {
 }
 
 class RebuyableDilationUpgradeState extends RebuyableMechanicState {
+  get isAvailableForPurchase() {
+    return (!this.config.pelleOnly || Pelle.isDoomed) && super.isAvailableForPurchase;
+  }
+
+  get isEffectActive() {
+    return (!this.config.pelleOnly || Pelle.isDoomed) && super.isEffectActive;
+  }
+
   get currency() {
     return Currency.dilatedTime;
   }
+
 
   get boughtAmount() {
     return player.dilation.rebuyables[this.id];

@@ -12,7 +12,7 @@ export class AscensionState {
   }
 
   get timeToReach() {
-    if (Currency.divineEnergy.value.lte(1)) return new Decimal(Infinity);
+    if (Currency.divineEnergy.value.lte(1)) return new Decimal(DC.BEMAX);
     const indexValue = Decimal.log(Currency.divineEnergy.value.max(1).log10().div(this.zeroIndex.log10()), 1.04);
     const indexRaise = Decimal.pow(0.5, indexValue);
     return indexRaise.times(86400000);

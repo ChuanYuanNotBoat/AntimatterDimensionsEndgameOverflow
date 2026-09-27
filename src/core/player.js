@@ -1864,8 +1864,12 @@ export function guardFromNaNValues(obj) {
           if (typeof newValue !== "number") {
             throw new Error("Non-Number assignment to Number player property");
           }
-          if (!isFinite(newValue)) {
-            throw new Error("NaN player property assignment (numerical overflow)");
+          if (Number.isNaN(newValue)) {
+            throw new Error("NaN player property assignment");
+          }
+          if (!Number.isFinite(newValue)) {
+            value = newValue < 0 ? -Number.MAX_VALUE : Number.MAX_VALUE;
+            return;
           }
           value = newValue;
         }
@@ -1887,22 +1891,18 @@ export function guardFromNaNValues(obj) {
           if (!(newValue instanceof Decimal)) {
             throw new Error("Non-Decimal assignment to Decimal player property");
           }
-          if (!isFinite(newValue.sign)) {
-            throw new Error("NaN player property assignment (new decimal sign value) this usually means a log10 property has failed");
+          if ([newValue.sign, newValue.layer, newValue.mag].some(Number.isNaN)) {
+            throw new Error("NaN player Decimal assignment");
           }
-          if (!isFinite(newValue.layer)) {
-            throw new Error("NaN player property assignment (new decimal layer value) this usually means you exceeded Infinity");
+          if (!Number.isFinite(newValue.sign)) {
+            throw new Error("Invalid player Decimal sign assignment");
           }
-          if (!isFinite(newValue.mag)) {
-            throw new Error("NaN player property assignment (new decimal mag value) this usually means Layer failed to work properly");
+          if (!Number.isFinite(newValue.layer) || !Number.isFinite(newValue.mag)) {
+            value = newValue.sign < 0 ? new Decimal(DC.BEMAX).neg() : new Decimal(DC.BEMAX);
+            return;
           }
-          if (!isFinite(newValue.mantissa) && player.DEV) {
-            console.log("NaN player property assignment (old decimal value) old log10 failed ignore this error");
-          }
-          if (!isFinite(newValue.exponent) && player.DEV) {
-            console.log("NaN player property assignment (old decimal value) number exceeded ee308 on some end ignore this error");
-          }
-          value = newValue;
+          const boundary = new Decimal(DC.BEMAX);
+          value = Decimal.clamp(newValue, boundary.neg(), boundary);
         }
       });
     }

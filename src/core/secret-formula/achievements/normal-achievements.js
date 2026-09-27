@@ -1107,7 +1107,7 @@ export const normalAchievements = [
     checkRequirement: () => player.galaxies.gte(569) && player.requirementChecks.eternity.noRG,
     checkEvent: GAME_EVENT.GALAXY_RESET_AFTER,
     reward: "Gain a multiplier to Tachyon Particle and Dilated Time gain based on Antimatter Galaxies.",
-    effect: () => player.disablePostReality ? 1 : Decimal.max(Decimal.pow(player.galaxies, 0.04), 1).times(1.22).toNumber(),
+    effect: () => player.disablePostReality ? DC.D1 : Decimal.max(Decimal.pow(player.galaxies, 0.04), 1).times(1.22),
     formatEffect: value => `${formatX(value, 2, 2)}`,
     progress: () => Achievement(132).isUnlocked ? DC.D1 : (!player.requirementChecks.eternity.noRG ? DC.DM1 : Decimal.clamp(player.galaxies.div(569), 0, 1))
   },
@@ -1748,7 +1748,7 @@ export const normalAchievements = [
     get reward() {
       return `Gain a small multiplier to the Celestial Matter Conversion Exponent based on unnerfed Celestial Matter.`;
     },
-    effect: () => player.disablePostReality ? 1 : Decimal.pow(Decimal.log10(Currency.unnerfedCelestialMatter.value.add(1).log10().add(1)).add(1), 0.1).toNumber(),
+    effect: () => player.disablePostReality ? DC.D1 : Decimal.pow(Decimal.log10(Currency.unnerfedCelestialMatter.value.add(1).log10().add(1)).add(1), 0.1),
     formatEffect: value => `${formatX(value, 2, 3)}`,
     progress: () => Achievement(208).isUnlocked ? DC.D1 : Decimal.clamp(Currency.imaginaryMachines.value.add(1).log10().div(Decimal.log10(DC.NUMMAX)), 0, 1)
   },
@@ -1947,7 +1947,7 @@ export const normalAchievements = [
     get reward() {
       return `Gain a small power to Eternity Points based on Penteracts.`;
     },
-    effect: () => player.disablePostReality ? 1 : Decimal.log10(Penteracts.effectiveCount + 1).div(10).add(1).toNumber(),
+    effect: () => player.disablePostReality ? DC.D1 : Decimal.log10(Penteracts.effectiveCount + 1).div(10).add(1),
     formatEffect: value => `${formatPow(value, 2, 3)}`,
     progress: () => Achievement(232).isUnlocked ? DC.D1 : Decimal.clamp(new Decimal(Tesseracts.extra * Tesseracts.totalMult).div(1000), 0, 1)
   },

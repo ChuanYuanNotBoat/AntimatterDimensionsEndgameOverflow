@@ -1,5 +1,5 @@
 import { DimensionState } from "./dimension";
-import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../finite-decimal";
 
 export function buySingleTimeDimension(tier, auto = false) {
   if (tier === 4 && Alpha.isRunning && Alpha.currentStage < 13) return;
@@ -358,14 +358,24 @@ class TimeDimensionState extends DimensionState {
     // Normal multiplier evaluation does not allocate a diagnostic array.
     if (capDiagnostics) capDiagnostics.push({ key: "overflow1", tier, before: mult,
       threshold: TimeDimensions.OVERFLOW, type: "softcap" });
-    if (mult.gte(TimeDimensions.OVERFLOW)) mult = Decimal.pow(10, Decimal.pow(mult.log10().div(Decimal.log10(TimeDimensions.OVERFLOW)), 1 / TimeDimensions.compressionMagnitude).times(Decimal.log10(TimeDimensions.OVERFLOW)));
+    if (mult.gte(TimeDimensions.OVERFLOW)) {
+      const thresholdLog = Decimal.log10(TimeDimensions.OVERFLOW);
+      const compressed = boundedPositivePower(mult.log10().div(thresholdLog),
+        boundedPositiveQuotient(1, TimeDimensions.compressionMagnitude));
+      mult = boundedPositivePower(10, boundedPositiveProduct(compressed, thresholdLog));
+    }
     if (capDiagnostics) capDiagnostics[capDiagnostics.length - 1].after = mult;
 
     // Optional cap diagnostics are captured at the exact gameplay operation.
     // Normal multiplier evaluation does not allocate a diagnostic array.
     if (capDiagnostics) capDiagnostics.push({ key: "overflow2", tier, before: mult,
       threshold: TimeDimensions.OVERFLOW_SQUARED, type: "softcap" });
-    if (mult.gte(TimeDimensions.OVERFLOW_SQUARED)) mult = Decimal.pow(10, Decimal.pow(mult.log10().div(Decimal.log10(TimeDimensions.OVERFLOW_SQUARED)), 1 / TimeDimensions.compressionMag2).times(Decimal.log10(TimeDimensions.OVERFLOW_SQUARED)));
+    if (mult.gte(TimeDimensions.OVERFLOW_SQUARED)) {
+      const thresholdLog = Decimal.log10(TimeDimensions.OVERFLOW_SQUARED);
+      const compressed = boundedPositivePower(mult.log10().div(thresholdLog),
+        boundedPositiveQuotient(1, TimeDimensions.compressionMag2));
+      mult = boundedPositivePower(10, boundedPositiveProduct(compressed, thresholdLog));
+    }
     if (capDiagnostics) capDiagnostics[capDiagnostics.length - 1].after = mult;
 
     return mult;
@@ -417,7 +427,8 @@ class TimeDimensionState extends DimensionState {
     }
     const toGain = TimeDimension(tier + 1).productionPerSecond;
     const current = Decimal.max(this.totalAmount, 1);
-    return toGain.times(10).dividedBy(current).times(getGameSpeedupForDisplay());
+    return boundedPositiveProduct(
+      boundedPositiveQuotient(boundedPositiveProduct(toGain, 10), current), getGameSpeedupForDisplay());
   }
 
   get isProducing() {

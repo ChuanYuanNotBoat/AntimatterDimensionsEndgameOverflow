@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
+
 import {
   addOrderedFinalImpacts,
   addOrderedTraceMismatch,
@@ -24,7 +26,7 @@ function multiplyGroup(steps, key, current, items, skipKey, display = undefined)
     }
     if (skipKey === item.key) continue;
     const mult = valueOf(item.value);
-    const after = value.times(mult);
+    const after = boundedPositiveProduct(value, mult);
     if (steps) addOrderedTransform(steps, item.key, "multiply", value, after, { value: mult, display: item.display });
     value = after;
   }
@@ -43,10 +45,10 @@ function powerGroup(steps, key, current, items, skipKey, display = undefined) {
   for (const item of items) {
     if (skipKey === item.key) continue;
     const power = valueOf(item.value);
-    const after = value.pow(power);
+    const after = boundedPositivePower(value, power);
     if (steps) addOrderedTransform(steps, item.key, "power", value, after, { value: power, display: item.display });
     value = after;
-    combinedPower = combinedPower.times(power);
+    combinedPower = boundedPositiveProduct(combinedPower, power);
   }
   if (steps) addOrderedTransform(steps, key, "power", before, value, { value: combinedPower, display });
   return value;
@@ -163,32 +165,32 @@ function applyPurchase(steps, tier, current, skipKey) {
     : SingularityMilestone.perPurchaseDimMult.effectOrDefault(1);
 
   let factor = DC.D1;
-  const baseAfter = factor.times(Decimal.pow(rawBase, count));
+  const baseAfter = boundedPositiveProduct(factor, boundedPositivePower(rawBase, count));
   if (steps) addOrderedTransform(steps, "purchaseBase", "multiply", factor, baseAfter, {
-    value: Decimal.pow(rawBase, count),
+    value: boundedPositivePower(rawBase, count),
     display: `${format(count, 2, 2)} × ${formatX(rawBase, 2, 2)} per purchase`
   });
   factor = baseAfter;
 
-  const glyphAfter = factor.times(Decimal.pow(glyph, count));
+  const glyphAfter = boundedPositiveProduct(factor, boundedPositivePower(glyph, count));
   if (steps) addOrderedTransform(steps, "purchaseGlyphSacrifice", "multiply", factor, glyphAfter, {
-    value: Decimal.pow(glyph, count)
+    value: boundedPositivePower(glyph, count)
   });
   factor = glyphAfter;
 
-  const imaginaryAfter = factor.pow(imaginaryPow);
+  const imaginaryAfter = boundedPositivePower(factor, imaginaryPow);
   if (steps) addOrderedTransform(steps, "purchaseImaginaryPower", "power", factor, imaginaryAfter, {
     value: imaginaryPow
   });
   factor = imaginaryAfter;
 
-  const singularityAfter = factor.pow(singularityPow);
+  const singularityAfter = boundedPositivePower(factor, singularityPow);
   if (steps) addOrderedTransform(steps, "purchaseSingularityPower", "power", factor, singularityAfter, {
     value: singularityPow
   });
   factor = singularityAfter;
 
-  const after = current.times(factor);
+  const after = boundedPositiveProduct(current, factor);
   if (steps) addOrderedTransform(steps, "purchase", "multiply", current, after, {
     value: factor,
     display: purchaseDisplay(tier)
@@ -338,7 +340,7 @@ function evaluateTimeDimension(tier, skipKey = null, steps = null) {
     display: `Second overflow at ${format(TimeDimensions.OVERFLOW_SQUARED, 2, 2)}`
   });
 
-  let production = amount.times(mult);
+  let production = boundedPositiveProduct(amount, mult);
   if (EternityChallenge(7).isRunning) {
     production = orderedMultiplyStep(
       steps, "tickspeed", production, Tickspeed.perSecond, skipKey, "EC7 production rate"

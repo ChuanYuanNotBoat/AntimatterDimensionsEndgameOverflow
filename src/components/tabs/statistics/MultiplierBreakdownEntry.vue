@@ -357,19 +357,29 @@ export default {
       const maxImpact = impacts
         .map(delta => delta.abs())
         .reduce((max, delta) => Decimal.max(max, delta), DC.D0);
-      const directPathTotal = directImpacts
+      // Normalize direct-path segments by the largest impact before summing.
+      // Raw OoM deltas can be near the Decimal representation boundary, where
+      // adding several of them can overflow even though the final shares are <= 1.
+      const maxDirectImpact = directImpacts
         .map(delta => delta.abs())
-        .reduce((sum, delta) => sum.add(delta), DC.D0);
+        .reduce((max, delta) => Decimal.max(max, delta), DC.D0);
+      const directPathScaled = directImpacts.map(delta => {
+        if (delta.eq(0) || maxDirectImpact.eq(0)) return DC.D0;
+        return delta.abs().div(maxDirectImpact);
+      });
+      const directPathTotal = directPathScaled.reduce((sum, value) => sum.add(value), DC.D0);
       const hasVisibleTransforms = this.entries.some(entry => entry.data.hasTransform && entry.data.isVisible);
       if (hasVisibleTransforms) this.lastNotEmptyAt = Date.now();
 
       const relativeImpacts = impacts.map(delta => {
         if (delta.eq(0) || maxImpact.eq(0)) return 0;
-        return delta.div(maxImpact).toNumber();
+        const relative = delta.div(maxImpact);
+        return Decimal.isFinite(relative) ? relative.toNumber() : 0;
       });
-      this.orderedPathPercentList = directImpacts.map(delta => {
-        if (delta.eq(0) || directPathTotal.eq(0)) return 0;
-        return delta.abs().div(directPathTotal).toNumber();
+      this.orderedPathPercentList = directPathScaled.map(value => {
+        if (value.eq(0) || directPathTotal.eq(0)) return 0;
+        const share = value.div(directPathTotal);
+        return Decimal.isFinite(share) ? share.toNumber() : 0;
       });
       this.orderedDirectNerfs = directImpacts.map(delta => delta.lt(0));
       let offset = 0;
@@ -386,20 +396,39 @@ export default {
       this.totalPositivePower = DC.D1;
     },
     orderedImpactDelta(index, finalMode = this.orderedFinalImpact) {
-      const data = this.entries[index].data;
+      const entry = this.entries[index];
+      const data = entry.data;
       if (!data.hasTransform || !data.isVisible) return DC.D0;
-      if (finalMode && data.transformHasFinalWithout) {
-        return this.log10ForImpact(data.transformFinalWith).sub(this.log10ForImpact(data.transformFinalWithout));
-      }
-      return this.log10ForImpact(data.transformAfter).sub(this.log10ForImpact(data.transformBefore));
+      // A trace mismatch is a residual/debugging signal, not a gameplay source.
+      // Keep the row visible, but never let it consume contribution/path percentage.
+      if (entry.key.endsWith("traceMismatch")) return DC.D0;
+      const before = new Decimal(finalMode && data.transformHasFinalWithout
+        ? data.transformFinalWithout
+        : data.transformBefore);
+      const after = new Decimal(finalMode && data.transformHasFinalWithout
+        ? data.transformFinalWith
+        : data.transformAfter);
+      // Once both sides have saturated at the same gameplay boundary, this step
+      // has no observable direct impact. Avoid subtracting two boundary-scale logs.
+      if (before.eq(after)) return DC.D0;
+      const delta = this.log10ForImpact(after).sub(this.log10ForImpact(before));
+      return Decimal.isFinite(delta) ? delta : DC.D0;
     },
     log10ForImpact(value) {
+      let decimal = new Decimal(value);
+      // The statistics page must never propagate Number/Decimal Infinity into
+      // percentage normalization. Gameplay values at or beyond the representable
+      // boundary are displayed as the existing BEMAX saturation point.
+      if ([decimal.sign, decimal.layer, decimal.mag].some(Number.isNaN)) return DC.D0;
+      if (![decimal.sign, decimal.layer, decimal.mag].every(Number.isFinite)) {
+        decimal = decimal.sign > 0 ? new Decimal(DC.BEMAX) : DC.D0;
+      }
       // Speed can genuinely be below x1 (inverted BH, storage, EC12). Clamping
       // those values to x1 hides the magnitude and even the sign of a nerf.
       if (this.resource.key.startsWith("gamespeed") || this.resource.key === "AM_tickRate") {
-        return Decimal.max(value, new Decimal(1e-300)).log10();
+        return Decimal.max(decimal, new Decimal(1e-300)).log10();
       }
-      return Decimal.max(value, DC.D1).log10();
+      return Decimal.max(decimal, DC.D1).log10();
     },
     orderedImpactStyle(index) {
       const impact = this.averagedPercentList[index] ?? 0;

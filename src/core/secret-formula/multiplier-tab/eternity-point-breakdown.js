@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../../finite-decimal";
+
 import {
   addOrderedFinalImpacts,
   addOrderedTraceMismatch,
@@ -7,20 +9,23 @@ import {
   orderedPowerStep,
   orderedTransformStep,
 } from "./ordered-breakdown";
-import { boundedPositivePower } from "../../finite-decimal";
 
 function epPositivePowers(skipKey = null) {
   let value = DC.D1;
   if (skipKey !== "glyphPower" && GlyphAlteration.isAdded("time")) {
-    value = value.times(getSecondaryGlyphEffect("timeEP"));
+    value = boundedPositiveProduct(value, getSecondaryGlyphEffect("timeEP"));
   }
   if (skipKey !== "endgameMastery142" && EndgameMastery(142).isBought) {
-    value = value.timesEffectsOf(EndgameMastery(142));
+    EndgameMastery(142).applyEffect(effect => { value = boundedPositiveProduct(value, effect); });
   }
-  if (skipKey !== "raPower") value = value.timesEffectOf(Ra.unlocks.eternityPointPower);
-  if (skipKey !== "achievement232") value = value.timesEffectOf(Achievement(232));
+  if (skipKey !== "raPower") {
+    Ra.unlocks.eternityPointPower.applyEffect(effect => { value = boundedPositiveProduct(value, effect); });
+  }
+  if (skipKey !== "achievement232") {
+    Achievement(232).applyEffect(effect => { value = boundedPositiveProduct(value, effect); });
+  }
   if (skipKey !== "ascensionEPPower" && Ascensions.epA.isUnlocked) {
-    value = value.timesEffectOf(EternityUpgrade.epMult);
+    EternityUpgrade.epMult.applyEffect(effect => { value = boundedPositiveProduct(value, effect); });
   }
   return value;
 }
@@ -31,19 +36,15 @@ function epDivisors(skipKey = null) {
     : new Decimal(308).sub(PelleRifts.recursion.effectValue);
   const final = skipKey === "powerCompensation"
     ? improved
-    : Decimal.max(improved, epPositivePowers(skipKey).times(2));
+    : Decimal.max(improved, boundedPositiveProduct(epPositivePowers(skipKey), 2));
   return { improved, final, formulaFinal: final };
 }
 
 function epFromDivisor(divisor) {
-  return boundedPositivePower(DC.D5,
-    player.records.thisEternity.maxIP
-      .plus(gainedInfinityPoints())
-      .add(1)
-      .log10()
-      .div(divisor)
-      .sub(0.7)
-  );
+  const maxIP = boundedPositiveSum(player.records.thisEternity.maxIP, gainedInfinityPoints());
+  const maxIPLog = boundedPositiveSum(maxIP, 1).log10();
+  const exponent = boundedPositiveQuotient(maxIPLog, divisor).sub(0.7);
+  return boundedPositivePower(DC.D5, exponent);
 }
 
 function pelleTimeStudyMult() {

@@ -1,4 +1,12 @@
-import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+import {
+  boundedPositivePower,
+  boundedPositiveProduct,
+  boundedPositiveQuotient,
+  boundedPositiveSum,
+  boundedPositiveValue,
+  isFiniteDecimal,
+  minimumPositiveDecimal,
+} from "./finite-decimal";
 
 // Slowdown parameters for replicanti growth, interval will increase by scaleFactor for every scaleLog10
 // OoM past the cap (default is 308.25 (log10 of 1.8e308), 1.2, Number.MAX_VALUE)
@@ -33,7 +41,9 @@ export const ReplicantiMultipliers = {
     return replicantiMultToPower(this.tdMult);
   },
   get dtMult() {
-    return Decimal.clampMin(Decimal.log10(Replicanti.amount.add(1)).times(getAdjustedGlyphEffect("replicationdtgain")), 1);
+    return Decimal.clampMin(
+      boundedPositiveProduct(Decimal.log10(boundedPositiveSum(Replicanti.amount, 1)),
+        getAdjustedGlyphEffect("replicationdtgain")), 1);
   },
   get dtPow() {
     return replicantiMultToPower(this.dtMult);
@@ -85,7 +95,8 @@ export function replicantiGalaxy(auto) {
   if (galaxyGain.lt(1)) return;
   player.replicanti.timer = 0;
   Replicanti.amount = Achievement(126).isUnlocked
-    ? Decimal.pow10(Replicanti.amount.add(1).log10().sub(new Decimal(LOG10_MAX_VALUE).times(galaxyGain)))
+    ? boundedPositivePower(10, boundedPositiveSum(Replicanti.amount, 1).log10()
+      .sub(new Decimal(LOG10_MAX_VALUE).times(galaxyGain)))
     : DC.D1;
   addReplicantiGalaxies(galaxyGain);
 }
@@ -117,7 +128,7 @@ function fastReplicantiBelow308(log10GainFactor, isAutobuyerActive) {
   // non-finite before the old post-calculation check gets a chance to run.
   if (log10GainFactor.gt(Number.MAX_VALUE)) return capAtCurrentLimit();
 
-  const currentLog = Replicanti.amount.add(1).log10();
+  const currentLog = boundedPositiveSum(Replicanti.amount, 1).log10();
   if (!Decimal.isFinite(currentLog)) throw new Error("Invalid Replicanti amount logarithm");
   const uncappedExponent = log10GainFactor.plus(currentLog);
   if (!Decimal.isFinite(uncappedExponent) || uncappedExponent.gt(Number.MAX_VALUE)) {
@@ -154,45 +165,41 @@ function fastReplicantiBelow308(log10GainFactor, isAutobuyerActive) {
 // (in which case interval should be as if not over cap). This is why we have
 // the overCapOverride parameter, to tell us which case we are in.
 export function getReplicantiInterval(overCapOverride, intervalIn) {
-  let interval = intervalIn || player.replicanti.interval;
+  let interval = new Decimal(intervalIn || player.replicanti.interval);
   const amount = Replicanti.amount;
   const overCap = overCapOverride === undefined ? amount.gt(replicantiCap()) : overCapOverride;
-  interval = new Decimal(interval);
+
   if ((TimeStudy(133).isBought && !Achievement(138).isUnlocked) || overCap) {
-    interval = interval.times(10);
+    interval = boundedPositiveProduct(interval, 10);
   }
 
   if (overCap) {
-    let increases = (amount.log10().sub(replicantiCap().log10())).div(ReplicantiGrowth.scaleLog10);
+    let increases = amount.log10().sub(replicantiCap().log10()).div(ReplicantiGrowth.scaleLog10);
     if (PelleStrikes.eternity.hasStrike && !PelleStrikes.eternity.isDestroyed() && amount.gte(DC.E2000)) {
-      // The above code assumes in this case there's 10x scaling for every 1e308 increase;
-      // in fact, before e2000 it's only 2x.
-      increases = increases.sub(Decimal.log10(5).times(new Decimal(2000).sub(replicantiCap().log10())).div(ReplicantiGrowth.scaleLog10));
+      increases = increases.sub(
+        Decimal.log10(5).times(new Decimal(2000).sub(replicantiCap().log10())).div(ReplicantiGrowth.scaleLog10));
     }
-    interval = interval.times(Decimal.pow(ReplicantiGrowth.scaleFactor, increases));
+    interval = boundedPositiveProduct(interval,
+      boundedPositivePower(ReplicantiGrowth.scaleFactor, increases));
   }
 
-  interval = interval.divide(totalReplicantiSpeedMult(overCap));
-
-  if (V.isRunning) {
-    // This is a boost if interval < 1, but that only happens in EC12
-    // and handling it would make the replicanti code a lot more complicated.
-    interval = interval.pow(2);
+  interval = boundedPositiveQuotient(interval, totalReplicantiSpeedMult(overCap));
+  if (V.isRunning) interval = boundedPositivePower(interval, 2);
+  BreakEternityUpgrade.replicantiIntervalPow.applyEffect(power => {
+    interval = boundedPositivePower(interval, power);
+  });
+  if (Alpha.isRunning) {
+    interval = boundedPositivePower(interval, AlphaUnlocks.replicanti.effects.nerf.effectOrDefault(1));
+  }
+  if (!player.disablePostReality) {
+    interval = boundedPositivePower(interval, AlphaUnlocks.replicanti.effects.buff.effectOrDefault(1));
+  }
+  if (getSecondaryGlyphEffect("replicationdtgain").neq(0) && ResurgenceUpgrade.repSurge.isBought &&
+      !player.disablePostReality) {
+    interval = boundedPositivePower(interval, boundedPositiveQuotient(1, ReplicantiMultipliers.dtPow));
   }
 
-  interval = interval.powEffectsOf(
-    BreakEternityUpgrade.replicantiIntervalPow
-  );
-
-  if (Alpha.isRunning) interval = interval.pow(AlphaUnlocks.replicanti.effects.nerf.effectOrDefault(1));
-
-  if (!player.disablePostReality) interval = interval.pow(AlphaUnlocks.replicanti.effects.buff.effectOrDefault(1));
-
-  if (getSecondaryGlyphEffect("replicationdtgain").neq(0) && ResurgenceUpgrade.repSurge.isBought && !player.disablePostReality) {
-    interval = interval.pow(1 / ReplicantiMultipliers.dtPow);
-  }
-  
-  return interval;
+  return Decimal.clamp(interval, minimumPositiveDecimal(), DC.BEMAX);
 }
 
 // This only counts the "external" multipliers - that is, it doesn't count any speed changes due to being over the cap.
@@ -242,7 +249,7 @@ export function totalReplicantiSpeedMult(overCap) {
     return totalMult;
   }
 
-  const preRealityEffects = Effects.product(
+  const preRealityEffects = Effects.productDecimal(
     Achievement(81),
     TimeStudy(62),
     TimeStudy(213),
@@ -271,12 +278,10 @@ export function totalReplicantiSpeedMult(overCap) {
 }
 
 export function replicantiCap() {
-  return EffarigUnlock.infinity.canBeApplied || (Pelle.isDoomed && PelleCelestialUpgrade.replicantiCapIncrease.canBeApplied)
-    ? Currency.infinitiesTotal.value
-      .pow(TimeStudy(31).isBought ? 120 : 30)
-      .clampMin(1)
-      .times(DC.NUMMAX)
-    : DC.NUMMAX;
+  if (!(EffarigUnlock.infinity.canBeApplied ||
+      (Pelle.isDoomed && PelleCelestialUpgrade.replicantiCapIncrease.canBeApplied))) return DC.NUMMAX;
+  const powered = boundedPositivePower(Currency.infinitiesTotal.value, TimeStudy(31).isBought ? 120 : 30).clampMin(1);
+  return boundedPositiveProduct(powered, DC.NUMMAX);
 }
 
 // eslint-disable-next-line complexity
@@ -363,8 +368,9 @@ export function replicantiLoop(diff) {
 
   if (!isUncapped) Replicanti.amount = Decimal.min(replicantiCap(), Replicanti.amount);
 
-  if (Pelle.isDoomed && Replicanti.amount.add(1).log10().sub(replicantiBeforeLoop.log10()).gt(308)) {
-    Replicanti.amount = replicantiBeforeLoop.times(1e308);
+  if (Pelle.isDoomed && boundedPositiveSum(Replicanti.amount, 1).log10()
+    .sub(replicantiBeforeLoop.clampMin(1).log10()).gt(308)) {
+    Replicanti.amount = boundedPositiveProduct(replicantiBeforeLoop, 1e308);
   }
 
   if (Replicanti.amount.lt(DC.E9E15)) Replicanti.amount = Decimal.min(DC.E9E15, Replicanti.amount);
@@ -437,7 +443,16 @@ class ReplicantiUpgradeState {
   purchase() {
     if (!this.canBeBought) return;
     Currency.infinityPoints.subtract(this.cost);
-    this.baseCost = this.rawValue.gte(this.costThreshold) ? Decimal.times(this.baseCost, Decimal.pow(this.costIncrease, Decimal.pow(this.costExponent, this.rawValue.sub(this.costThreshold).add(1)).times(Decimal.pow(this.costExponent, this.rawValue.sub(this.costThreshold))))) : Decimal.times(this.baseCost, this.costIncrease);
+    if (this.rawValue.gte(this.costThreshold)) {
+      const scaledCount = this.rawValue.sub(this.costThreshold);
+      const currentExponent = boundedPositivePower(this.costExponent, scaledCount);
+      const nextExponent = boundedPositivePower(this.costExponent, boundedPositiveSum(scaledCount, 1));
+      const exponent = boundedPositiveProduct(currentExponent, nextExponent);
+      this.baseCost = boundedPositiveProduct(this.baseCost,
+        boundedPositivePower(this.costIncrease, exponent));
+    } else {
+      this.baseCost = boundedPositiveProduct(this.baseCost, this.costIncrease);
+    }
     this.value = this.nextValue;
     if (EternityChallenge(8).isRunning) player.eterc8repl--;
     GameUI.update();
@@ -493,28 +508,52 @@ export const ReplicantiUpgrade = {
     }
 
     autobuyerTick() {
-      // Fixed price increase of 1e15; so total cost for N upgrades is:
-      // cost + cost * 1e15 + cost * 1e30 + ... + cost * 1e15^(N-1) == cost * (1e15^N - 1) / (1e15 - 1)
-      // N = log(IP * (1e15 - 1) / cost + 1) / log(1e15)
-      let N = Currency.infinityPoints.value.times(this.costIncrease - 1)
-        .dividedBy(this.cost).plus(1).log(this.costIncrease);
-      N = Decimal.round((Decimal.min(Decimal.floor(N).times(0.01).add(this.value.min(this.costThreshold / 100)), this.costThreshold / 100).sub(this.value.min(this.costThreshold / 100))).times(100));
-      let totalCost = DC.E150.times(Decimal.pow(this.costIncrease, this.rawValue.min(this.costThreshold).sub(1))).times(Decimal.pow(this.costIncrease, N).minus(1).dividedBy(this.costIncrease - 1).max(1));
-      const threshold = DC.E150.times(Decimal.pow(this.costIncrease, this.costThreshold - 2)).dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
+      // Fixed price increase of 1e15. Keep the affordability estimate and all
+      // geometric-cost terms inside the finite Decimal domain.
+      let affordableRatio = boundedPositiveProduct(Currency.infinityPoints.value, this.costIncrease - 1);
+      affordableRatio = boundedPositiveQuotient(affordableRatio, this.cost);
+      affordableRatio = boundedPositiveSum(affordableRatio, 1);
+      let N = affordableRatio.log(this.costIncrease);
+      N = Decimal.round((Decimal.min(Decimal.floor(N).times(0.01)
+        .add(this.value.min(this.costThreshold / 100)), this.costThreshold / 100)
+        .sub(this.value.min(this.costThreshold / 100))).times(100));
+
+      const preThresholdPower = boundedPositivePower(this.costIncrease,
+        this.rawValue.min(this.costThreshold).sub(1).max(0));
+      const seriesPower = boundedPositivePower(this.costIncrease, N);
+      const seriesFactor = boundedPositiveQuotient(seriesPower.sub(1).max(0), this.costIncrease - 1).max(1);
+      let totalCost = boundedPositiveProduct(
+        boundedPositiveProduct(DC.E150, preThresholdPower), seriesFactor);
+
+      let threshold = boundedPositiveProduct(DC.E150,
+        boundedPositivePower(this.costIncrease, this.costThreshold - 2));
+      PelleRifts.vacuum.milestones[1].applyEffect(effect => {
+        threshold = boundedPositiveQuotient(threshold, effect);
+      });
       const aboveThreshold = this.cost.gt(threshold) && Alpha.isDestroyed;
-      const affordableAboveThreshold = Decimal.floor(Currency.infinityPoints.value.div(threshold).max(1e15).log(this.costIncrease).log(this.costExponent).add(1));
+      const affordableAboveThreshold = Decimal.floor(
+        boundedPositiveQuotient(Currency.infinityPoints.value, threshold).max(1e15)
+          .log(this.costIncrease).log(this.costExponent).add(1));
       if (aboveThreshold) {
         N = N.add(affordableAboveThreshold.add(1).sub(this.value.times(100).sub(this.costThreshold - 1)));
-        totalCost = threshold.times(Decimal.pow(this.costIncrease, Decimal.pow(this.costExponent, affordableAboveThreshold)));
+        totalCost = boundedPositiveProduct(threshold,
+          boundedPositivePower(this.costIncrease,
+            boundedPositivePower(this.costExponent, affordableAboveThreshold)));
       }
-      if (N.lte(0)) return;
+      if (!isFiniteDecimal(N) || N.lte(0)) return;
       Currency.infinityPoints.subtract(totalCost);
-      let costGain = DC.E150.times(Decimal.pow(this.costIncrease, this.rawValue.add(N).min(this.costThreshold).sub(1)));
+
+      let costGain = boundedPositiveProduct(DC.E150,
+        boundedPositivePower(this.costIncrease,
+          boundedPositiveSum(this.rawValue, N).min(this.costThreshold).sub(1).max(0)));
       if (aboveThreshold) {
-        costGain = costGain.times(Decimal.pow(this.costIncrease, Decimal.pow(this.costExponent, affordableAboveThreshold)));
+        costGain = boundedPositiveProduct(costGain,
+          boundedPositivePower(this.costIncrease,
+            boundedPositivePower(this.costExponent, affordableAboveThreshold)));
       }
       this.baseCost = costGain;
-      this.value = this.decimalNearestPercent(N.times(0.01).add(this.value)).min(this.cap);;
+      this.value = this.decimalNearestPercent(
+        boundedPositiveSum(N.times(0.01), this.value)).min(this.cap);
     }
 
     // Rounding errors suck
@@ -566,28 +605,50 @@ export const ReplicantiUpgrade = {
     }
 
     autobuyerTick() {
-      // Fixed price increase of 1e10; so total cost for N upgrades is:
-      // cost + cost * 1e10 + cost * 1e20 + ... + cost * 1e10^(N-1) == cost * (1e10^N - 1) / (1e10 - 1)
-      // N = log(IP * (1e10 - 1) / cost + 1) / log(1e10)
-      let N = Currency.infinityPoints.value.times(this.costIncrease - 1)
-        .dividedBy(this.cost).plus(1).log(this.costIncrease);
-      N = Decimal.round((Decimal.min(Decimal.floor(N).add(this.rawValue.min(this.costThreshold)), this.costThreshold).sub(this.rawValue.min(this.costThreshold))));
-      let totalCost = DC.E140.times(Decimal.pow(this.costIncrease, this.rawValue.min(this.costThreshold))).times(Decimal.pow(this.costIncrease, N).minus(1).dividedBy(this.costIncrease - 1).max(1));
-      const threshold = DC.E140.times(Decimal.pow(this.costIncrease, this.costThreshold - 1)).dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
+      // Fixed price increase of 1e10. Use bounded arithmetic so a BEMAX IP
+      // balance cannot turn the inverse estimate into Infinity/NaN after Reality.
+      let affordableRatio = boundedPositiveProduct(Currency.infinityPoints.value, this.costIncrease - 1);
+      affordableRatio = boundedPositiveQuotient(affordableRatio, this.cost);
+      affordableRatio = boundedPositiveSum(affordableRatio, 1);
+      let N = affordableRatio.log(this.costIncrease);
+      N = Decimal.round(Decimal.min(Decimal.floor(N).add(this.rawValue.min(this.costThreshold)),
+        this.costThreshold).sub(this.rawValue.min(this.costThreshold)));
+
+      const preThresholdPower = boundedPositivePower(this.costIncrease,
+        this.rawValue.min(this.costThreshold));
+      const seriesPower = boundedPositivePower(this.costIncrease, N);
+      const seriesFactor = boundedPositiveQuotient(seriesPower.sub(1).max(0), this.costIncrease - 1).max(1);
+      let totalCost = boundedPositiveProduct(
+        boundedPositiveProduct(DC.E140, preThresholdPower), seriesFactor);
+
+      let threshold = boundedPositiveProduct(DC.E140,
+        boundedPositivePower(this.costIncrease, this.costThreshold - 1));
+      PelleRifts.vacuum.milestones[1].applyEffect(effect => {
+        threshold = boundedPositiveQuotient(threshold, effect);
+      });
       const aboveThreshold = this.cost.gt(threshold) && Alpha.isDestroyed;
-      const affordableAboveThreshold = Decimal.floor(Currency.infinityPoints.value.div(threshold).max(1e10).log(this.costIncrease).log(this.costExponent).add(1));
+      const affordableAboveThreshold = Decimal.floor(
+        boundedPositiveQuotient(Currency.infinityPoints.value, threshold).max(1e10)
+          .log(this.costIncrease).log(this.costExponent).add(1));
       if (aboveThreshold) {
         N = N.add(affordableAboveThreshold.add(1).sub(this.rawValue.sub(this.costThreshold)));
-        totalCost = threshold.times(Decimal.pow(this.costIncrease, Decimal.pow(this.costExponent, affordableAboveThreshold)));
+        totalCost = boundedPositiveProduct(threshold,
+          boundedPositivePower(this.costIncrease,
+            boundedPositivePower(this.costExponent, affordableAboveThreshold)));
       }
-      if (N.lte(0)) return;
+      if (!isFiniteDecimal(N) || N.lte(0)) return;
       Currency.infinityPoints.subtract(totalCost);
-      let costGain = DC.E140.times(Decimal.pow(this.costIncrease, this.rawValue.add(N).min(this.costThreshold)));
+
+      let costGain = boundedPositiveProduct(DC.E140,
+        boundedPositivePower(this.costIncrease,
+          boundedPositiveSum(this.rawValue, N).min(this.costThreshold)));
       if (aboveThreshold) {
-        costGain = costGain.times(Decimal.pow(this.costIncrease, Decimal.pow(this.costExponent, affordableAboveThreshold)));
+        costGain = boundedPositiveProduct(costGain,
+          boundedPositivePower(this.costIncrease,
+            boundedPositivePower(this.costExponent, affordableAboveThreshold)));
       }
       this.baseCost = costGain;
-      this.value = this.value.times(Decimal.pow(0.9, N));
+      this.value = boundedPositiveProduct(this.value, boundedPositivePower(0.9, N));
     }
 
     applyModifiers(value) {
@@ -616,11 +677,15 @@ export const ReplicantiUpgrade = {
     set baseCost(value) { player.replicanti.galCost = value; }
 
     get distantRGStart() {
-      return (100 + GlyphSacrifice.replication.effectValue.toNumber()) * Effects.product(BreakEternityUpgrade.replicantiGalaxyPower);
+      return boundedPositiveProduct(
+        boundedPositiveSum(100, GlyphSacrifice.replication.effectValue),
+        Effects.productDecimal(BreakEternityUpgrade.replicantiGalaxyPower));
     }
 
     get remoteRGStart() {
-      return (1000 + GlyphSacrifice.replication.effectValue.toNumber()) * Effects.product(BreakEternityUpgrade.replicantiGalaxyPower);
+      return boundedPositiveProduct(
+        boundedPositiveSum(1000, GlyphSacrifice.replication.effectValue),
+        Effects.productDecimal(BreakEternityUpgrade.replicantiGalaxyPower));
     }
 
     get contingentRGStart() {
@@ -628,18 +693,22 @@ export const ReplicantiUpgrade = {
     }
 
     get costIncrease() {
-      const galaxies = this.value;
+      const galaxies = boundedPositiveValue(this.value, "Replicanti Galaxy count");
       let increase = EternityChallenge(6).isRunning
-        ? DC.E2.pow(galaxies).times(DC.E2)
-        : DC.E5.pow(galaxies).times(DC.E25);
+        ? boundedPositiveProduct(boundedPositivePower(2, galaxies), 2)
+        : boundedPositiveProduct(boundedPositivePower(5, galaxies), 25);
       if (galaxies.gte(this.distantRGStart)) {
-        increase = increase.times(DC.E50.pow(galaxies.sub(this.distantRGStart).add(5)));
+        increase = boundedPositiveProduct(increase,
+          boundedPositivePower(50, boundedPositiveSum(galaxies.sub(this.distantRGStart), 5)));
       }
       if (galaxies.gte(this.remoteRGStart)) {
-        increase = increase.times(DC.E5.pow(Decimal.pow(galaxies.sub(this.remoteRGStart).add(1), 2)));
+        const remoteCount = boundedPositiveSum(galaxies.sub(this.remoteRGStart), 1);
+        increase = boundedPositiveProduct(increase,
+          boundedPositivePower(5, boundedPositivePower(remoteCount, 2)));
       }
       if (galaxies.gte(this.contingentRGStart)) {
-        increase = increase.pow(Decimal.pow(1.0002, galaxies.sub(this.contingentRGStart)));
+        const contingentPower = boundedPositivePower(1.0002, galaxies.sub(this.contingentRGStart));
+        increase = boundedPositivePower(increase, contingentPower);
       }
       return increase;
     }
@@ -661,15 +730,22 @@ export const ReplicantiUpgrade = {
       const logBase = new Decimal(170);
       const logBaseIncrease = EternityChallenge(6).isRunning ? DC.D2 : new Decimal(25);
       const logCostScaling = EternityChallenge(6).isRunning ? DC.D2 : DC.D5;
-      const distantReplicatedGalaxyStart = GlyphSacrifice.replication.effectValue.add(100).timesEffectOf(BreakEternityUpgrade.replicantiGalaxyPower);
-      const remoteReplicatedGalaxyStart = GlyphSacrifice.replication.effectValue.add(1000).timesEffectOf(BreakEternityUpgrade.replicantiGalaxyPower);
+      // Reuse the bounded gameplay thresholds instead of reproducing them with raw
+      // add/times chains; at extreme sacrifice values those duplicate formulas can overflow.
+      const distantReplicatedGalaxyStart = this.distantRGStart;
+      const remoteReplicatedGalaxyStart = this.remoteRGStart;
       const contingentReplicatedGalaxyStart = DC.E6;
       const logDistantScaling = new Decimal(50);
       const logRemoteScaling = DC.D5;
       const extraIncrements = DC.D5;
       const contingentScalingFactor = 1.0002;
 
-      const cur = new Decimal(Currency.infinityPoints.value.times(TimeStudy(233).effectOrDefault(1)).timesEffectOf(PelleRifts.vacuum.milestones[1]).max(1).log10());
+      let availableIP = boundedPositiveProduct(
+        Currency.infinityPoints.value, TimeStudy(233).effectOrDefault(1));
+      PelleRifts.vacuum.milestones[1].applyEffect(effect => {
+        availableIP = boundedPositiveProduct(availableIP, effect);
+      });
+      const cur = availableIP.max(1).log10();
 
       if (logBase.gt(cur)) return;
       let a = logCostScaling.div(2);
@@ -714,34 +790,66 @@ export const ReplicantiUpgrade = {
         (contingentReplicatedGalaxyStart.times(contingentReplicatedGalaxyStart.sub(1)).div(2)).times(logCostScaling)).add(
         logDistantScaling.times(numDistant).times(numDistant.add(extraIncrements.times(2)).sub(1)).div(2)).add(
         logRemoteScaling.times(numRemote).times(numRemote.add(1)).times(numRemote.times(2).add(1)).div(6));
-      let simpleEstimate = new Decimal(Decimal.log(cur.div(logCostAtContingent), contingentScalingFactor)).add(contingentReplicatedGalaxyStart);
-      let estimatedCost = new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1])));
+      const adjustedCostLog = count => {
+        let cost = this.baseCostAfterCount(count);
+        TimeStudy(233).applyEffect(effect => {
+          cost = boundedPositiveQuotient(cost, effect);
+        });
+        PelleRifts.vacuum.milestones[1].applyEffect(effect => {
+          cost = boundedPositiveQuotient(cost, effect);
+        });
+        return cost.max(1).log10();
+      };
+      const onePurchaseFallback = () => (this.canBeBought ? this.value.add(1) : undefined);
+
+      const initialRatio = boundedPositiveQuotient(cur.max(1), logCostAtContingent.max(1)).max(1);
+      let simpleEstimate = new Decimal(Decimal.log(initialRatio, contingentScalingFactor))
+        .add(contingentReplicatedGalaxyStart);
+      if (!isFiniteDecimal(simpleEstimate)) {
+        console.warn("Replicanti Galaxy bulk inverse produced a non-finite initial estimate; buying one safely");
+        return onePurchaseFallback();
+      }
+
+      let estimatedCost = adjustedCostLog(simpleEstimate);
       let n = 0;
-      while (n < 25 && (cur.gte(new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate.add(1)).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1])))) || cur.lt(estimatedCost))) {
-        simpleEstimate = simpleEstimate.add(new Decimal(Decimal.log(cur.div(estimatedCost), contingentScalingFactor)));
-        estimatedCost = new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1])));
+      while (n < 25 && (cur.gte(adjustedCostLog(simpleEstimate.add(1))) || cur.lt(estimatedCost))) {
+        const correctionRatio = boundedPositiveQuotient(cur.max(minimumPositiveDecimal()),
+          estimatedCost.max(minimumPositiveDecimal()));
+        const correction = new Decimal(Decimal.log(correctionRatio.max(minimumPositiveDecimal()),
+          contingentScalingFactor));
+        if (!isFiniteDecimal(correction)) {
+          console.warn("Replicanti Galaxy bulk inverse correction became non-finite; buying one safely");
+          return onePurchaseFallback();
+        }
+        simpleEstimate = simpleEstimate.add(correction);
+        if (!isFiniteDecimal(simpleEstimate) || simpleEstimate.lt(0)) return onePurchaseFallback();
+        estimatedCost = adjustedCostLog(simpleEstimate);
         n++;
       }
+
       let x = 0;
-      // eslint-disable-next-line consistent-return
-      if (cur.gte(estimatedCost) && cur.lt(new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate.add(1)).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1]))))) return simpleEstimate.add(1);
+      if (cur.gte(estimatedCost) && cur.lt(adjustedCostLog(simpleEstimate.add(1)))) return simpleEstimate.add(1);
       if (cur.lt(estimatedCost)) {
         while (x < 50 && cur.lt(estimatedCost)) {
           simpleEstimate = simpleEstimate.sub(1);
-          estimatedCost = new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1])));
+          if (simpleEstimate.lt(0)) return onePurchaseFallback();
+          estimatedCost = adjustedCostLog(simpleEstimate);
           x++;
         }
         return simpleEstimate.add(1);
       }
-      if (cur.gte(new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate.add(1)).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1]))))) {
-        while (x < 50 && cur.gte(new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate.add(1)).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1]))))) {
+      if (cur.gte(adjustedCostLog(simpleEstimate.add(1)))) {
+        while (x < 50 && cur.gte(adjustedCostLog(simpleEstimate.add(1)))) {
           simpleEstimate = simpleEstimate.add(1);
-          estimatedCost = new Decimal(Decimal.log10(this.baseCostAfterCount(simpleEstimate).dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1])));
+          if (!isFiniteDecimal(simpleEstimate)) return onePurchaseFallback();
+          estimatedCost = adjustedCostLog(simpleEstimate);
           x++;
         }
         return simpleEstimate.add(1);
       }
-      throw new Error("Failed to calculate a finite value for Max Replicanti Galaxy Purchases.");
+
+      console.warn("Replicanti Galaxy bulk inverse did not converge; buying one safely");
+      return onePurchaseFallback();
     }
 
     autobuyerTick() {
@@ -754,34 +862,53 @@ export const ReplicantiUpgrade = {
     }
 
     baseCostAfterCount(countNum) {
-      let count = new Decimal(countNum);
+      const count = boundedPositiveValue(countNum, "Replicanti Galaxy purchase count");
       const logBase = 170;
       const logBaseIncrease = EternityChallenge(6).isRunning ? 2 : 25;
       const logCostScaling = EternityChallenge(6).isRunning ? 2 : 5;
-      const distantReplicatedGalaxyStart = (100 + GlyphSacrifice.replication.effectValue.toNumber()) * Effects.product(BreakEternityUpgrade.replicantiGalaxyPower);
-      const remoteReplicatedGalaxyStart = (1000 + GlyphSacrifice.replication.effectValue.toNumber()) * Effects.product(BreakEternityUpgrade.replicantiGalaxyPower);
+      const distantReplicatedGalaxyStart = this.distantRGStart;
+      const remoteReplicatedGalaxyStart = this.remoteRGStart;
       const contingentReplicatedGalaxyStart = 1000000;
-      let logCost = new Decimal(logBase).add(count.times(logBaseIncrease)).add((count.times(count.sub(1)).div(2)).times(logCostScaling));
+
+      let logCost = new Decimal(logBase);
+      logCost = boundedPositiveSum(logCost, boundedPositiveProduct(count, logBaseIncrease));
+      const triangular = boundedPositiveQuotient(
+        boundedPositiveProduct(count, count.sub(1).max(0)), 2);
+      logCost = boundedPositiveSum(logCost, boundedPositiveProduct(triangular, logCostScaling));
+
       if (count.gt(distantReplicatedGalaxyStart)) {
         const logDistantScaling = 50;
         // When distant scaling kicks in, the price increase jumps by a few extra steps.
         // So, the difference between successive scales goes 5, 5, 5, 255, 55, 55, ...
         const extraIncrements = 5;
         const numDistant = count.sub(distantReplicatedGalaxyStart);
-        logCost = logCost.add(new Decimal(logDistantScaling).times(numDistant).times(numDistant.add(2 * extraIncrements).sub(1)).div(2));
+        const distantSeries = boundedPositiveQuotient(
+          boundedPositiveProduct(numDistant,
+            boundedPositiveSum(numDistant, 2 * extraIncrements - 1)), 2);
+        logCost = boundedPositiveSum(logCost,
+          boundedPositiveProduct(logDistantScaling, distantSeries));
       }
+
       if (count.gt(remoteReplicatedGalaxyStart)) {
         const logRemoteScaling = 5;
         const numRemote = count.sub(remoteReplicatedGalaxyStart);
-        // The formula x * (x + 1) * (2 * x + 1) / 6 is the sum of the first n squares.
-        logCost = logCost.add(new Decimal(logRemoteScaling).times(numRemote).times(numRemote.add(1)).times(numRemote.times(2).add(1)).div(6));
+        // x(x+1)(2x+1)/6, evaluated with bounded factors so an intermediate
+        // product cannot poison the final exponent with NaN/Infinity.
+        let remoteSeries = boundedPositiveProduct(numRemote, boundedPositiveSum(numRemote, 1));
+        remoteSeries = boundedPositiveProduct(remoteSeries,
+          boundedPositiveSum(boundedPositiveProduct(numRemote, 2), 1));
+        remoteSeries = boundedPositiveQuotient(remoteSeries, 6);
+        logCost = boundedPositiveSum(logCost,
+          boundedPositiveProduct(logRemoteScaling, remoteSeries));
       }
+
       if (count.gt(contingentReplicatedGalaxyStart)) {
-        const contingentScalingFactor = 1.0002;
         const numContingent = count.sub(contingentReplicatedGalaxyStart);
-        logCost = logCost.times(Decimal.pow(contingentScalingFactor, numContingent));
+        const contingentScale = boundedPositivePower(1.0002, numContingent);
+        logCost = boundedPositiveProduct(logCost, contingentScale);
       }
-      return Decimal.pow10(logCost);
+
+      return boundedPositivePower(10, logCost);
     }
   }(),
 };

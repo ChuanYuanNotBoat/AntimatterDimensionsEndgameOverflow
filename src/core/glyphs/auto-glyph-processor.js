@@ -38,14 +38,14 @@ export const AutoGlyphProcessor = {
   // on only the glyph itself and not external factors.
   filterValue(glyph) {
     const typeCfg = this.types[glyph.type];
-    if (["companion", "reality"].includes(glyph.type)) return new Decimal(Infinity);
-    if (glyph.type === "cursed") return new Decimal(-Infinity);
+    if (["companion", "reality"].includes(glyph.type)) return new Decimal(DC.BEMAX);
+    if (glyph.type === "cursed") return new Decimal(DC.BEMAX).neg();
     switch (this.scoreMode) {
       case AUTO_GLYPH_SCORE.LOWEST_SACRIFICE:
         // Picked glyphs are never kept in this mode. Sacrifice cap needs to be checked since effarig caps
         // at a lower value than the others and we don't want to uselessly pick that to sacrifice all the time
         return player.reality.glyphs.sac[glyph.type].gte(GlyphSacrifice[glyph.type].cap)
-          ? new Decimal(-Infinity)
+          ? new Decimal(DC.BEMAX).neg()
           : player.reality.glyphs.sac[glyph.type].mul(-1);
       case AUTO_GLYPH_SCORE.EFFECT_COUNT:
         // Effect count, plus a very small rarity term to break ties in favor of rarer glyphs
@@ -87,12 +87,12 @@ export const AutoGlyphProcessor = {
         const refinementGain = GlyphSacrificeHandler.glyphRefinementGain(glyph);
         return resource.isUnlocked && refinementGain > 0
           ? new Decimal(-resource.amount)
-          : new Decimal(-Infinity);
+          : new Decimal(DC.BEMAX).neg();
       }
       case AUTO_GLYPH_SCORE.ALCHEMY_VALUE:
         return AlchemyResource[glyph.type].isUnlocked
           ? new Decimal(GlyphSacrificeHandler.glyphRefinementGain(glyph))
-          : new Decimal(-Infinity);
+          : new Decimal(DC.BEMAX).neg();
       default:
         throw new Error("Unknown glyph score mode in score assignment");
     }
@@ -355,7 +355,7 @@ export function getGlyphLevelInputs() {
   const incAfterInstability = staticFactors.realityUpgrades + staticFactors.achievements;
   baseLevel = baseLevel.add(incAfterInstability);
   scaledLevel = scaledLevel.add(incAfterInstability);
-  const postInstabilityMult = Effects.product(EndgameUpgrade(25), Ra.unlocks.glyphLevelBuff);
+  const postInstabilityMult = Effects.productDecimal(EndgameUpgrade(25), Ra.unlocks.glyphLevelBuff);
   baseLevel = baseLevel.times(postInstabilityMult);
   scaledLevel = scaledLevel.times(postInstabilityMult);
   return {

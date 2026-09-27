@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../../finite-decimal";
+
 import {
   addOrderedFinalImpacts,
   addOrderedTraceMismatch,
@@ -7,26 +9,25 @@ import {
   orderedPowerStep,
   orderedTransformStep,
 } from "./ordered-breakdown";
-import { boundedPositivePower } from "../../finite-decimal";
 
 function ipPositivePowers(skipKey = null) {
   let value = DC.D1;
   if (skipKey !== "glyphPower" &&
       ((Pelle.isDoomed && PelleCelestialUpgrade.raTeresa3.canBeApplied) || GlyphAlteration.isAdded("infinity"))) {
-    value = value.times(getSecondaryGlyphEffect("infinityIP"));
+    value = boundedPositiveProduct(value, getSecondaryGlyphEffect("infinityIP"));
   }
   if (skipKey !== "endgameMastery141" && EndgameMastery(141).isBought) {
-    value = value.timesEffectsOf(EndgameMastery(141));
+    EndgameMastery(141).applyEffect(effect => { value = boundedPositiveProduct(value, effect); });
   }
   if (skipKey !== "alphaPower" && !player.disablePostReality) {
-    value = value.times(AlphaUnlocks.infinity.effects.buff.effectOrDefault(1));
+    value = boundedPositiveProduct(value, AlphaUnlocks.infinity.effects.buff.effectOrDefault(1));
   }
   if (skipKey !== "replicantiSurge" && AlchemyResource.exponential.amount > 0 &&
       ResurgenceUpgrade.repSurge.isBought && !player.disablePostReality) {
-    value = value.times(ReplicantiMultipliers.ipPow);
+    value = boundedPositiveProduct(value, ReplicantiMultipliers.ipPow);
   }
   if (skipKey !== "ascensionIPPower" && Ascensions.ipA.isUnlocked) {
-    value = value.timesEffectOf(InfinityUpgrade.ipMult);
+    InfinityUpgrade.ipMult.applyEffect(effect => { value = boundedPositiveProduct(value, effect); });
   }
   return value;
 }
@@ -42,16 +43,16 @@ function ipDivisors(skipKey = null) {
     ));
   const final = skipKey === "powerCompensation"
     ? improved
-    : Decimal.max(improved, ipPositivePowers(skipKey).times(2));
+    : Decimal.max(improved, boundedPositiveProduct(ipPositivePowers(skipKey), 2));
   return { improved, final, formulaFinal: final };
 }
 
 function ipFromDivisor(divisor) {
-  // The Pelle-disabled IP multiplier branch always uses the post-Break-Infinity formula, regardless of player.break.
   const useBrokenInfinityFormula = Pelle.isDisabled("IPMults") || player.break;
-  return useBrokenInfinityFormula
-    ? boundedPositivePower(10, player.records.thisInfinity.maxAM.add(1).log10().div(divisor).sub(0.75))
-    : new Decimal(308).div(divisor);
+  if (!useBrokenInfinityFormula) return boundedPositiveQuotient(308, divisor);
+  const maxAMLog = boundedPositiveSum(player.records.thisInfinity.maxAM, 1).log10();
+  const exponent = boundedPositiveQuotient(maxAMLog, divisor).sub(0.75);
+  return boundedPositivePower(10, exponent);
 }
 
 function pelleTimeStudyMult() {

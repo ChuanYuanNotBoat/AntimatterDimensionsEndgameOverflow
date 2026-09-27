@@ -4,7 +4,34 @@ import {
   addOrderedTransform,
   createOrderedTransformCache,
 } from "./ordered-breakdown";
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
 import { MultiplierTabHelper } from "./helper-functions";
+
+const MIN_TICKSPEED_INTERVAL = () => new Decimal(DC.BEMAX).recip();
+
+function clampTickspeedInterval(value) {
+  const interval = new Decimal(value);
+  if ([interval.sign, interval.layer, interval.mag].some(Number.isNaN)) return new Decimal(DC.BEMAX);
+  if (![interval.sign, interval.layer, interval.mag].every(Number.isFinite)) {
+    return interval.sign > 0 ? new Decimal(DC.BEMAX) : MIN_TICKSPEED_INTERVAL();
+  }
+  return Decimal.clamp(interval, MIN_TICKSPEED_INTERVAL(), DC.BEMAX);
+}
+
+function boundedEffectProduct(initial, sources) {
+  let result = new Decimal(initial);
+  for (const source of sources) {
+    if (!source) continue;
+    source.applyEffect(effect => {
+      result = boundedPositiveProduct(result, effect);
+    });
+  }
+  return result;
+}
+
+function rateFromInterval(interval) {
+  return boundedPositiveProduct(DC.E3, clampTickspeedInterval(interval).recip());
+}
 
 // A diagnostic reproduction of Tickspeed.baseValue/current, in src/core/tickspeed.js.
 // Only the statistics tool calls the optional galaxy-count argument to the game function.
@@ -18,7 +45,8 @@ function snapshot() {
     galaxyDetails,
     noGalaxyMultiplier: getTickSpeedMultiplier(DC.D0),
     galaxyMultiplier: getTickSpeedMultiplier(galaxyCount),
-    baseInterval: DC.E3.timesEffectsOf(Achievement(36), Achievement(45), Achievement(66), Achievement(83)),
+    baseInterval: boundedEffectProduct(DC.E3,
+      [Achievement(36), Achievement(45), Achievement(66), Achievement(83)]),
   };
 }
 
@@ -28,16 +56,17 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
     : (Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought);
   const free = skipKey === "free" || skipKey === "upgrades" ? DC.D0 : player.totalTickGained;
   const totalUpgrades = bought.add(free);
-  let interval = baseInterval;
-  let rate = Decimal.divide(1000, interval);
+  let interval = clampTickspeedInterval(baseInterval);
+  let rate = rateFromInterval(interval);
 
   function intervalStep(key, type, nextInterval, display = "") {
     if (skipKey === key) return;
-    const nextRate = Decimal.divide(1000, nextInterval);
+    const safeInterval = clampTickspeedInterval(nextInterval);
+    const nextRate = rateFromInterval(safeInterval);
     if (steps) addOrderedTransform(steps, key, type, rate, nextRate, {
       display: typeof display === "function" ? display() : display
     });
-    interval = nextInterval;
+    interval = safeInterval;
     rate = nextRate;
   }
 
@@ -46,9 +75,11 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
   });
 
   const rateBeforeUpgrades = rate;
-  intervalStep("purchased", "formula", interval.times(noGalaxyMultiplier.pow(bought)),
+  intervalStep("purchased", "formula",
+    boundedPositiveProduct(interval, boundedPositivePower(noGalaxyMultiplier, bought)),
     () => `${format(bought, 2, 2)} purchased or continuum upgrades; no-galaxy factor ${format(noGalaxyMultiplier, 2, 3)}`);
-  intervalStep("free", "formula", interval.times(noGalaxyMultiplier.pow(free)),
+  intervalStep("free", "formula",
+    boundedPositiveProduct(interval, boundedPositivePower(noGalaxyMultiplier, free)),
     () => `${format(free, 2, 2)} free upgrades from Time Shards`);
   if (steps) addOrderedTransform(steps, "upgrades", "formula", rateBeforeUpgrades, rate, {
     display: `${Laitela.continuumActive ? "Continuum" : "Purchased"}: ${format(bought, 2, 2)}; ` +
@@ -60,11 +91,15 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
   // Keep the current purchases when removing galaxies; galaxy strength changes the
   // multiplier applied by EVERY upgrade, not the number of upgrades.
   const currentGalaxyMultiplier = skipKey === "galaxies" ? noGalaxyMultiplier : galaxyMultiplier;
-  intervalStep("galaxies", "formula", baseInterval.times(currentGalaxyMultiplier.pow(totalUpgrades)),
+  intervalStep("galaxies", "formula",
+    boundedPositiveProduct(baseInterval, boundedPositivePower(currentGalaxyMultiplier, totalUpgrades)),
     () => `${format(galaxyCount, 2, 2)} effective galaxies; per-upgrade interval ${format(noGalaxyMultiplier, 2, 3)} → ${format(galaxyMultiplier, 2, 3)}`);
 
-  const poweredMultiplier = currentGalaxyMultiplier.pow(totalUpgrades).powEffectOf(Ra.unlocks.tickspeedPower);
-  intervalStep("raPower", "formula", baseInterval.times(poweredMultiplier),
+  let poweredMultiplier = boundedPositivePower(currentGalaxyMultiplier, totalUpgrades);
+  Ra.unlocks.tickspeedPower.applyEffect(power => {
+    poweredMultiplier = boundedPositivePower(poweredMultiplier, power);
+  });
+  intervalStep("raPower", "formula", boundedPositiveProduct(baseInterval, poweredMultiplier),
     "Ra Tickspeed Power applies to the upgrade multiplier, not the base interval");
 
   if (Effarig.isRunning && skipKey !== "effarig") {
@@ -72,7 +107,11 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
     // does not apply during this branch of the gameplay getter.
     intervalStep("effarig", "override", Effarig.tickspeed);
   } else {
-    intervalStep("dilationPower", "power", interval.powEffectOf(DilationUpgrade.tickspeedPower));
+    let poweredInterval = interval;
+    DilationUpgrade.tickspeedPower.applyEffect(power => {
+      poweredInterval = boundedPositivePower(poweredInterval, power);
+    });
+    intervalStep("dilationPower", "power", poweredInterval);
   }
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
     intervalStep("dilation", "formula", dilatedValueOf(interval));
@@ -82,7 +121,7 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
       Math.pow(0.72, player.endgame.overcharge.level)));
   }
   const count = producingTiers ?? MultiplierTabHelper.activeDimCount("AD");
-  const result = rate.pow(count);
+  const result = boundedPositivePower(rate, count);
   if (steps) addOrderedTransform(steps, "dimensionExponent", "power", rate, result, {
     value: count, display: `${count} producing AD tiers`, alwaysShow: true
   });
@@ -94,14 +133,15 @@ function build() {
   const inputs = snapshot();
   const result = trace(null, steps, inputs);
   addOrderedFinalImpacts(steps, skip => trace(skip, null, inputs), result, ["base", "dimensionExponent"]);
-  addOrderedTraceMismatch(steps, result, Tickspeed.perSecond.pow(MultiplierTabHelper.activeDimCount("AD")),
+  addOrderedTraceMismatch(steps, result,
+    boundedPositivePower(Tickspeed.perSecond, MultiplierTabHelper.activeDimCount("AD")),
     "Gameplay Tickspeed differs from the diagnostic formula; inspect src/core/tickspeed.js");
   return steps;
 }
 
 const getTrace = createOrderedTransformCache(build, 150);
 const sourceCache = createOrderedTransformCache(() => {
-  const total = Tickspeed.perSecond.pow(MultiplierTabHelper.activeDimCount("AD"));
+  const total = boundedPositivePower(Tickspeed.perSecond, MultiplierTabHelper.activeDimCount("AD"));
   const result = {};
   const inputs = snapshot();
   for (const key of ["antimatter", "generated", "replicanti", "tachyon", "galactic"]) {

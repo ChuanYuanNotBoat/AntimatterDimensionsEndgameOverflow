@@ -3,6 +3,7 @@ import { GameDatabase } from "../secret-formula/game-database";
 
 import { SpeedrunMilestones } from "../speedrun";
 
+import { boundedPositiveProduct, finiteNumber } from "../finite-decimal";
 import { Quotes } from "./quotes";
 
 /**
@@ -225,8 +226,14 @@ export const V = {
       if (i < 6) sum += player.celestials.v.runUnlocks[i];
       else sum += player.celestials.v.runUnlocks[i] * 2;
     }
-    this.spaceTheorems = player.disablePostReality ? 0 : new Decimal(sum).times(ExpansionPack.vPack.isBought ? 2 : 1).times(
-      Ra.unlocks.spaceTheoremBoost.effectOrDefault(1)).times(Effects.product(ResurgenceUpgrade.synergy3)).toNumber();
+    this.spaceTheorems = player.disablePostReality ? 0 : finiteNumber(
+      boundedPositiveProduct(
+        boundedPositiveProduct(
+          boundedPositiveProduct(sum, ExpansionPack.vPack.isBought ? 2 : 1),
+          Ra.unlocks.spaceTheoremBoost.effectOrDefault(1)),
+        Effects.productDecimal(ResurgenceUpgrade.synergy3)),
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER);
   },
   reset() {
     player.celestials.v = {

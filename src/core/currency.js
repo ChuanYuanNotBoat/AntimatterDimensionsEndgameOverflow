@@ -1,3 +1,5 @@
+import { boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum, finiteNumber } from "./finite-decimal";
+
 /**
  * @abstract
  */
@@ -70,10 +72,10 @@ class MathOperations {
 }
 
 MathOperations.number = new class NumberMathOperations extends MathOperations {
-  add(left, right) { return left + right; }
-  subtract(left, right) { return left - right; }
-  multiply(left, right) { return left * right; }
-  divide(left, right) { return left / right; }
+  add(left, right) { return finiteNumber(left + right, left); }
+  subtract(left, right) { return finiteNumber(left - right, left); }
+  multiply(left, right) { return finiteNumber(left * right, left); }
+  divide(left, right) { return finiteNumber(left / right, left); }
   max(left, right) { return Math.max(left, right); }
   min(left, right) { return Math.min(left, right); }
   eq(left, right) { return left === right; }
@@ -84,10 +86,10 @@ MathOperations.number = new class NumberMathOperations extends MathOperations {
 }();
 
 MathOperations.decimal = new class DecimalMathOperations extends MathOperations {
-  add(left, right) { return Decimal.add(left, right); }
-  subtract(left, right) { return Decimal.subtract(left, right); }
-  multiply(left, right) { return Decimal.multiply(left, right); }
-  divide(left, right) { return Decimal.divide(left, right); }
+  add(left, right) { return boundedPositiveSum(left, right); }
+  subtract(left, right) { return Decimal.max(Decimal.subtract(left, right), 0); }
+  multiply(left, right) { return boundedPositiveProduct(left, right); }
+  divide(left, right) { return boundedPositiveQuotient(left, right); }
   max(left, right) { return Decimal.max(left, right); }
   min(left, right) { return Decimal.min(left, right); }
   eq(left, right) { return Decimal.eq(left, right); }

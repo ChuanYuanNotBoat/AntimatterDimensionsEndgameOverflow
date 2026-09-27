@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum, finiteNumber } from "./core/finite-decimal";
+
 import TWEEN from "tween.js";
 
 import { ElectronRuntime, SteamRuntime } from "@/steam";
@@ -5,7 +7,6 @@ import { ElectronRuntime, SteamRuntime } from "@/steam";
 import { deepmergeAll } from "@/utility/deepmerge";
 import { DEV } from "@/env";
 import { SpeedrunMilestones } from "./core/speedrun";
-import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./core/finite-decimal";
 import { Cloud } from "./core/storage";
 import { supportedBrowsers } from "./supported-browsers";
 
@@ -159,7 +160,7 @@ export function gainedInfinityPoints() {
     EndgameMastery(151)
   )).max(boundedPositiveProduct(positiveIPPowers, 2));
   if (Pelle.isDisabled("IPMults")) {
-    let ip = boundedPositivePower(10, player.records.thisInfinity.maxAM.add(1).log10().div(div).sub(0.75))
+    let ip = boundedPositivePower(10, boundedPositiveQuotient(boundedPositiveSum(player.records.thisInfinity.maxAM, 1).log10(), div).sub(0.75))
       .timesEffectsOf(PelleRifts.vacuum)
       .times(Pelle.specialGlyphEffect.infinity);
     if (PelleDestructionUpgrade.timestudy41.canBeApplied) ip = ip.timesEffectOf(TimeStudy(41));
@@ -184,7 +185,7 @@ export function gainedInfinityPoints() {
     return ip.floor();
   }
   let ip = player.break
-    ? boundedPositivePower(10, player.records.thisInfinity.maxAM.add(1).log10().div(div).sub(0.75))
+    ? boundedPositivePower(10, boundedPositiveQuotient(boundedPositiveSum(player.records.thisInfinity.maxAM, 1).log10(), div).sub(0.75))
     : new Decimal(308).div(div);
   if (Effarig.isRunning && Effarig.currentStage === EFFARIG_STAGES.ETERNITY) {
     ip = ip.min(DC.E200);
@@ -271,8 +272,9 @@ export function gainedEternityPoints() {
   // can turn this divisor into +/-Infinity and poison the reward formula.
   const div = new Decimal(308).sub(PelleRifts.recursion.effectValue)
     .max(boundedPositiveProduct(positiveEPPowers, 2));
-  let ep = boundedPositiveProduct(boundedPositivePower(DC.D5, player.records.thisEternity.maxIP.plus(
-    gainedInfinityPoints()).add(1).log10().div(div).sub(0.7)), totalEPMult());
+  const maxIPForEP = boundedPositiveSum(player.records.thisEternity.maxIP, gainedInfinityPoints());
+  const epExponent = boundedPositiveQuotient(boundedPositiveSum(maxIPForEP, 1).log10(), div).sub(0.7);
+  let ep = boundedPositiveProduct(boundedPositivePower(DC.D5, epExponent), totalEPMult());
 
   if (Teresa.isRunning) {
     ep = boundedPositivePower(ep, 0.55);
@@ -1308,14 +1310,25 @@ function globalPassivePrestigeGen(realDiff) {
 
   let endgamedGain = 0;
   let endgameMult = 1;
-  endgameMult *= ((ExpansionPack.enslavedPack.isBought && !player.disablePostReality)
-    ? Math.floor(1 + Math.pow(Math.log10(Math.min(Tesseracts.effectiveCount, 1000) * Math.max(Math.log10(Tesseracts.effectiveCount) - 2, 1) + 1), Math.log10(player.endgames + 1)))
-    : 1);
-  endgameMult *= Math.pow(1.33, Alpha.currentStage);
-  if (DivinityMilestone.firstDivine.isReached && !player.disablePostReality) endgameMult *= 10;
-  endgameMult *= DivineDimensions.conversionFormula1.toNumber();
+  const tesseractMult = (ExpansionPack.enslavedPack.isBought && !player.disablePostReality)
+    ? Math.floor(1 + Math.pow(
+      Math.log10(Math.min(Tesseracts.effectiveCount, 1000) *
+        Math.max(Math.log10(Tesseracts.effectiveCount) - 2, 1) + 1),
+      Math.log10(player.endgames + 1)))
+    : 1;
+  endgameMult = finiteNumber(endgameMult * finiteNumber(tesseractMult, 1), endgameMult);
+  endgameMult = finiteNumber(endgameMult * finiteNumber(Math.pow(1.33, Alpha.currentStage), 1), endgameMult);
+  if (DivinityMilestone.firstDivine.isReached && !player.disablePostReality) {
+    endgameMult = finiteNumber(endgameMult * 10, endgameMult);
+  }
+  endgameMult = finiteNumber(
+    endgameMult * finiteNumber(DivineDimensions.conversionFormula1, 1), endgameMult);
   if (EndgameUpgrade(8).isBought) {
-    endgamedGain = endgameMult * Time.unscaledDeltaTime.totalMilliseconds.div(Alpha.isDestroyed ? Decimal.clampMin(330, EndgameUpgrade(8).effectValue) : Decimal.clampMin(1000, EndgameUpgrade(8).effectValue)).toNumber();
+    const generationTick = Time.unscaledDeltaTime.totalMilliseconds.div(
+      Alpha.isDestroyed
+        ? Decimal.clampMin(330, EndgameUpgrade(8).effectValue)
+        : Decimal.clampMin(1000, EndgameUpgrade(8).effectValue));
+    endgamedGain = finiteNumber(endgameMult * finiteNumber(generationTick, 0), 0);
     player.endgame.partEndgamed += endgamedGain;
     Currency.endgames.add(Math.floor(player.endgame.partEndgamed));
     player.endgame.partEndgamed = (player.endgame.partEndgamed - Math.floor(player.endgame.partEndgamed));
@@ -1573,55 +1586,96 @@ function updateGalaxyPeakRecords() {
 
 function updateTachyonGalaxies() {
   const tachyonGalaxyMult = Effects.max(1, DilationUpgrade.doubleGalaxies);
-  const tachyonGalaxyThreshold = Alpha.isDestroyed ? Infinity : 1000;
   const galaxiesPerOoM = decimalInfinitesimalLogarithmSolution(getBaseTachyonGalaxyMult());
-  player.dilation.baseTachyonGalaxies = Decimal.max(player.dilation.baseTachyonGalaxies,
-    Decimal.floor(Currency.dilatedTime.value.dividedBy(1000).log10().times(galaxiesPerOoM).div(getTachyonGalaxyPowers())).add(1));
-  player.dilation.nextThreshold = new Decimal(getTachyonGalaxyMultForDisplay()).eq(1)
-    ? Currency.dilatedTime.value : DC.E3.times(new Decimal(getTachyonGalaxyMultForDisplay()).pow(player.dilation.baseTachyonGalaxies));
-  player.dilation.totalTachyonGalaxies =
-    Decimal.min(player.dilation.baseTachyonGalaxies.times(tachyonGalaxyMult), tachyonGalaxyThreshold).add(
-    Decimal.max(player.dilation.baseTachyonGalaxies.times(tachyonGalaxyMult).sub(tachyonGalaxyThreshold), 0).div(tachyonGalaxyMult));
 
-  player.dilation.totalTachyonGalaxies = player.dilation.totalTachyonGalaxies.times(DilationUpgrade.galaxyMultiplier.effectValue);
+  // Below 1000 DT the original logarithmic candidate is <= 0. Computing log10(0)
+  // immediately after Reality produces a non-finite Decimal before the later max()
+  // can discard it, so short-circuit that mathematically irrelevant branch to zero.
+  let nextBaseGalaxies = DC.D0;
+  if (Currency.dilatedTime.value.gte(1000)) {
+    const dtLog = Currency.dilatedTime.value.dividedBy(1000).log10();
+    const rawCount = boundedPositiveProduct(dtLog, galaxiesPerOoM);
+    const adjustedCount = boundedPositiveQuotient(rawCount, getTachyonGalaxyPowers());
+    nextBaseGalaxies = boundedPositiveSum(Decimal.floor(adjustedCount), 1);
+  }
+  player.dilation.baseTachyonGalaxies = Decimal.max(
+    player.dilation.baseTachyonGalaxies, nextBaseGalaxies);
+
+  const tachyonThresholdMult = getTachyonGalaxyMultForDisplay();
+  player.dilation.nextThreshold = tachyonThresholdMult.eq(1)
+    ? Currency.dilatedTime.value
+    : boundedPositiveProduct(DC.E3, boundedPositivePower(tachyonThresholdMult,
+      player.dilation.baseTachyonGalaxies));
+
+  const doubledBase = boundedPositiveProduct(player.dilation.baseTachyonGalaxies, tachyonGalaxyMult);
+  let totalGalaxies;
+  if (Alpha.isDestroyed) {
+    // The softcap is disabled. Avoid the old x - Infinity branch entirely;
+    // at extreme values it can create a non-finite intermediate even though
+    // the mathematical result is simply x.
+    totalGalaxies = doubledBase;
+  } else {
+    const preSoftcap = Decimal.min(doubledBase, 1000);
+    const postSoftcap = boundedPositiveQuotient(Decimal.max(doubledBase.sub(1000), 0), tachyonGalaxyMult);
+    totalGalaxies = boundedPositiveSum(preSoftcap, postSoftcap);
+  }
+
+  player.dilation.totalTachyonGalaxies = boundedPositiveProduct(
+    totalGalaxies, DilationUpgrade.galaxyMultiplier.effectValue);
 }
 
 export function getTTPerSecond() {
   // All TT multipliers (note that this is equal to 1 pre-Ra)
-  let ttMult = new Decimal(Effects.product(
+  let ttMult = Effects.productDecimal(
     Ra.unlocks.continuousTTBoost.effects.ttGen,
     Achievement(137),
     Achievement(156),
-  ));
+  );
   ttMult = ttMult.timesEffectOf(Ra.unlocks.achievementTTMult);
-  if (GlyphAlteration.isAdded("dilation")) ttMult = ttMult.times(getSecondaryGlyphEffect("dilationTTgen"));
+  if (GlyphAlteration.isAdded("dilation")) {
+    ttMult = boundedPositiveProduct(ttMult, getSecondaryGlyphEffect("dilationTTgen"));
+  }
 
   let pelleTTMult = DC.D1;
-  if (PelleCelestialUpgrade.raV3.canBeApplied) pelleTTMult = pelleTTMult.times(Effects.product(Ra.unlocks.continuousTTBoost.effects.ttGen));
+  if (PelleCelestialUpgrade.raV3.canBeApplied) {
+    pelleTTMult = boundedPositiveProduct(pelleTTMult,
+      Effects.productDecimal(Ra.unlocks.continuousTTBoost.effects.ttGen));
+  }
   if (PelleCelestialUpgrade.raV4.canBeApplied) pelleTTMult = pelleTTMult.timesEffectOf(Ra.unlocks.achievementTTMult);
-  if (PelleAchievementUpgrade.achievement137.canBeApplied) pelleTTMult = pelleTTMult.times(Effects.product(Achievement(137)));
-  if (PelleAchievementUpgrade.achievement156.canBeApplied) pelleTTMult = pelleTTMult.times(Effects.product(Achievement(156)));
-  if (PelleCelestialUpgrade.raTeresa3.canBeApplied) pelleTTMult = pelleTTMult.times(getSecondaryGlyphEffect("dilationTTgen"));
+  if (PelleAchievementUpgrade.achievement137.canBeApplied) {
+    pelleTTMult = boundedPositiveProduct(pelleTTMult, Effects.productDecimal(Achievement(137)));
+  }
+  if (PelleAchievementUpgrade.achievement156.canBeApplied) {
+    pelleTTMult = boundedPositiveProduct(pelleTTMult, Effects.productDecimal(Achievement(156)));
+  }
+  if (PelleCelestialUpgrade.raTeresa3.canBeApplied) {
+    pelleTTMult = boundedPositiveProduct(pelleTTMult, getSecondaryGlyphEffect("dilationTTgen"));
+  }
 
-  // Glyph TT generation
-  const glyphTT = Teresa.isRunning || Enslaved.isRunning || (Pelle.isDoomed && !PelleDestructionUpgrade.destroyedGlyphEffects.canBeApplied)
+  const activeMult = Pelle.isDoomed ? pelleTTMult : ttMult;
+  const glyphTT = Teresa.isRunning || Enslaved.isRunning ||
+    (Pelle.isDoomed && !PelleDestructionUpgrade.destroyedGlyphEffects.canBeApplied)
     ? DC.D0
-    : new Decimal(getAdjustedGlyphEffect("dilationTTgen")).times(Pelle.isDoomed ? pelleTTMult : ttMult);
-
-  // Dilation TT generation
+    : boundedPositiveProduct(getAdjustedGlyphEffect("dilationTTgen"), activeMult);
   const dilationTT = DilationUpgrade.ttGenerator.isBought
-    ? DilationUpgrade.ttGenerator.effectValue.times(Pelle.isDoomed ? pelleTTMult : ttMult)
+    ? boundedPositiveProduct(DilationUpgrade.ttGenerator.effectValue, activeMult)
     : DC.D0;
 
-  // Lai'tela TT power
-  let finalTT = dilationTT.add(glyphTT);
+  let finalTT = boundedPositiveSum(dilationTT, glyphTT);
   if (finalTT.gt(1)) {
     if (!Pelle.isDoomed || PelleDestructionUpgrade.singularityMilestones.canBeApplied) {
-      finalTT = finalTT.pow(SingularityMilestone.theoremPowerFromSingularities.effectOrDefault(1));
+      finalTT = boundedPositivePower(finalTT,
+        SingularityMilestone.theoremPowerFromSingularities.effectOrDefault(1));
     }
-    finalTT = finalTT.pow(player.disablePostReality ? 1 : AlphaUnlocks.timeTheoremGeneration.effects.buff.effectOrDefault(1));
-    if (ResurgenceUpgrade.achSurge.isBought && !player.disablePostReality) finalTT = finalTT.pow(Achievements.powerConv(Ra.unlocks.achievementTTMult.effectOrDefault(1)));
-    if (ResurgenceUpgrade.curr1Surge.isBought && !player.disablePostReality) finalTT = finalTT.pow(player.timestudy.theorem.max(1e10).log10().log10());
+    finalTT = boundedPositivePower(finalTT,
+      player.disablePostReality ? 1 : AlphaUnlocks.timeTheoremGeneration.effects.buff.effectOrDefault(1));
+    if (ResurgenceUpgrade.achSurge.isBought && !player.disablePostReality) {
+      finalTT = boundedPositivePower(finalTT,
+        Achievements.powerConv(Ra.unlocks.achievementTTMult.effectOrDefault(1)));
+    }
+    if (ResurgenceUpgrade.curr1Surge.isBought && !player.disablePostReality) {
+      finalTT = boundedPositivePower(finalTT, player.timestudy.theorem.max(1e10).log10().log10());
+    }
     finalTT = finalTT.powEffectOf(ResurgenceUpgrade.synergy1);
   }
 
@@ -1642,9 +1696,9 @@ export function gainedCelestialPoints() {
 
 export function gainedDoomedParticles() {
   if (!player.break2) return DC.D1;
-  let dp = Alpha.isDestroyed
-    ? player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10().div(9e15)
-    : Decimal.max(Decimal.min(player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10().div(9e15), new Decimal(1e100 - player.endgame.doomedParticles.toNumber())), 0);
+  const rawDP = player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10().div(9e15);
+  const remainingDP = new Decimal(1e100).sub(player.endgame.doomedParticles).max(0);
+  let dp = Alpha.isDestroyed ? rawDP : Decimal.max(Decimal.min(rawDP, remainingDP), 0);
   dp = Decimal.pow(dp, Decimal.pow(2, player.celestials.pelle.divinities));
   return dp.floor();
 }

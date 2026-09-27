@@ -29,8 +29,12 @@ window.decimalInfinitesimalLogarithmSolution = function decimalInfinitesimalLoga
    * The function uses no rounding, so round the answer off as you see fit.
    * We can eventually add an extra variable for how much currency you actually have, but I feel this is good for now.
    */
-  if (new Decimal(logD).gte(1e-9)) {
-    return Decimal.log(10, new Decimal(logD).add(1));
+  const decimalLogD = new Decimal(logD);
+  if (decimalLogD.gte(1e-9)) {
+    // log_(1+x)(10) = 1 / log10(1+x). At huge x, constructing x+1 can
+    // cross the Decimal representation boundary even though the logarithm is well-defined.
+    if (decimalLogD.gte(DC.NUMMAX)) return DC.D1.div(decimalLogD.log10());
+    return DC.D1.div(decimalLogD.add(1).log10());
   }
   const goldenLog = Math.log(10);
   const errorMargin = 0.5 * goldenLog;

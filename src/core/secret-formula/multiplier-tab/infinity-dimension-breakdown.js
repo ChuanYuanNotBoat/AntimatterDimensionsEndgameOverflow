@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
+
 import {
   addOrderedFinalImpacts,
   addOrderedTraceMismatch,
@@ -24,12 +26,12 @@ function multiplyGroup(steps, key, current, items, skipKey, display = undefined)
     }
     if (skipKey === item.key) continue;
     const mult = valueOf(item.value);
-    const after = value.times(mult);
+    const after = boundedPositiveProduct(value, mult);
     if (steps) addOrderedTransform(steps, item.key, "multiply", value, after, { value: mult, display: item.display });
     value = after;
   }
   if (steps) {
-    const factor = before.eq(0) ? DC.D1 : value.div(before);
+    const factor = before.eq(0) ? DC.D1 : boundedPositiveProduct(value, before.recip());
     addOrderedTransform(steps, key, "multiply", before, value, { value: factor, display });
   }
   return value;
@@ -43,10 +45,10 @@ function powerGroup(steps, key, current, items, skipKey, display = undefined) {
   for (const item of items) {
     if (skipKey === item.key) continue;
     const power = valueOf(item.value);
-    const after = value.pow(power);
+    const after = boundedPositivePower(value, power);
     if (steps) addOrderedTransform(steps, item.key, "power", value, after, { value: power, display: item.display });
     value = after;
-    combinedPower = combinedPower.times(power);
+    combinedPower = boundedPositiveProduct(combinedPower, power);
   }
   if (steps) addOrderedTransform(steps, key, "power", before, value, { value: combinedPower, display });
   return value;
@@ -151,32 +153,34 @@ function applyPurchase(steps, tier, current, skipKey) {
     : SingularityMilestone.perPurchaseDimMult.effectOrDefault(1);
 
   let factor = DC.D1;
-  const baseAfter = factor.times(Decimal.pow(rawBase, count));
+  const basePurchase = boundedPositivePower(rawBase, count);
+  const baseAfter = boundedPositiveProduct(factor, basePurchase);
   if (steps) addOrderedTransform(steps, "purchaseBase", "multiply", factor, baseAfter, {
-    value: Decimal.pow(rawBase, count),
+    value: basePurchase,
     display: `${format(count, 2, 2)} × ${formatX(rawBase, 2, 2)} per purchase`
   });
   factor = baseAfter;
 
-  const glyphAfter = factor.times(Decimal.pow(glyph, count));
+  const glyphPurchase = boundedPositivePower(glyph, count);
+  const glyphAfter = boundedPositiveProduct(factor, glyphPurchase);
   if (steps) addOrderedTransform(steps, "purchaseGlyphSacrifice", "multiply", factor, glyphAfter, {
-    value: Decimal.pow(glyph, count)
+    value: glyphPurchase
   });
   factor = glyphAfter;
 
-  const imaginaryAfter = factor.pow(imaginaryPow);
+  const imaginaryAfter = boundedPositivePower(factor, imaginaryPow);
   if (steps) addOrderedTransform(steps, "purchaseImaginaryPower", "power", factor, imaginaryAfter, {
     value: imaginaryPow
   });
   factor = imaginaryAfter;
 
-  const singularityAfter = factor.pow(singularityPow);
+  const singularityAfter = boundedPositivePower(factor, singularityPow);
   if (steps) addOrderedTransform(steps, "purchaseSingularityPower", "power", factor, singularityAfter, {
     value: singularityPow
   });
   factor = singularityAfter;
 
-  const after = current.times(factor);
+  const after = boundedPositiveProduct(current, factor);
   if (steps) addOrderedTransform(steps, "purchase", "multiply", current, after, {
     value: factor,
     display: purchaseDisplay(tier)
@@ -246,9 +250,9 @@ function postDilationPowers(tier) {
 function overflow(value, threshold, magnitude) {
   if (value.lt(threshold)) return value;
   const thresholdLog = Decimal.log10(threshold);
-  return Decimal.pow10(
-    Decimal.pow(value.log10().div(thresholdLog), new Decimal(1).div(magnitude)).times(thresholdLog)
-  );
+  const ratio = value.log10().div(thresholdLog);
+  const compressed = boundedPositivePower(ratio, new Decimal(1).div(magnitude));
+  return boundedPositivePower(10, boundedPositiveProduct(compressed, thresholdLog));
 }
 
 function evaluateInfinityDimension(tier, skipKey = null, steps = null) {
@@ -335,7 +339,7 @@ function evaluateInfinityDimension(tier, skipKey = null, steps = null) {
     display: `Second overflow at ${format(InfinityDimensions.OVERFLOW_SQUARED, 2, 2)}`
   });
 
-  let production = amount.times(mult);
+  let production = boundedPositiveProduct(amount, mult);
   if (EternityChallenge(7).isRunning) {
     production = orderedMultiplyStep(
       steps, "tickspeed", production, Tickspeed.perSecond, skipKey, "EC7 production rate"
