@@ -62,20 +62,18 @@ export class BulkSingularityAutobuyerState extends AutobuyerState {
       }
 
       if (Singularity.timePerCondense.lt(this.lowerBound) && this.data.hasLowerBound) {
-        const time = Singularity.timePerCondense;
-        // log10(0) is NaN in break_eternity. A zero duration means the exact
-        // count exceeds the Decimal type's representable range, so use its
-        // existing representation boundary instead of evaluating that log.
-        const bulk = time.eq(0) ? DC.BEMAX : (() => {
-          const ratio = time.div(this.lowerBound).recip();
-          // Retain the original ratio calculation whenever it is representable.
-          // At extreme rates it can underflow to zero before reciprocal(), even
-          // though the logarithmic ratio still has a valid Decimal value.
-          const logRatio = Decimal.isFinite(ratio)
-            ? Decimal.log10(ratio)
-            : Decimal.log10(this.lowerBound).sub(Decimal.log10(time));
-          return Decimal.floor(logRatio).add(1);
-        })();
+        // Do not derive the bulk amount from timePerCondense itself here. At extreme production rates
+        // cap / production can underflow to zero even though both operands and the required adjustment
+        // are still representable. In particular, treating that zero as "buy BEMAX increases" instantly
+        // saturates Singularity cap increases and then poisons game speed on the following tick.
+        //
+        // We want floor(log10(lowerBound / timePerCondense)) + 1. Since
+        // timePerCondense = cap / production, evaluate the same expression entirely in log space:
+        // log10(lowerBound) + log10(production) - log10(cap).
+        const logRatio = Decimal.log10(this.lowerBound)
+          .add(Decimal.log10(Currency.darkEnergy.productionPerSecond))
+          .sub(Decimal.log10(Singularity.cap));
+        const bulk = Decimal.max(Decimal.floor(logRatio).add(1), 0);
         player.celestials.laitela.singularityCapIncreases = boundedPositiveSum(
           player.celestials.laitela.singularityCapIncreases, bulk);
       }
