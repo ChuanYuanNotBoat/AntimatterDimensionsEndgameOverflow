@@ -207,7 +207,7 @@ export const Achievements = {
   },
 
   powerConv(power) {
-    return Decimal.log10(Decimal.log10(power).add(1)).div(20).add(1).toNumber();
+    return Decimal.log10(Decimal.log10(power).add(1)).div(20).add(1);
   },
 
   updateSteamStatus() {

@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
+
 const rebuyable = props => {
   props.cost = () => getHybridCostScaling(
     player.reality.rebuyables[props.id],
@@ -10,13 +12,13 @@ const rebuyable = props => {
     props.initialCost * props.costMult
   );
   const { effect } = props;
-  props.effect = () => player.disablePostReality ? DC.D1 : Decimal.pow(
-    effect + ImaginaryUpgrade(props.id).effectOrDefault(0),
-    player.reality.rebuyables[props.id] * getAdjustedGlyphEffect("realityrow1pow"));
+  props.effect = () => (player.disablePostReality ? DC.D1 : boundedPositivePower(
+    new Decimal(effect).add(ImaginaryUpgrade(props.id).effectOrDefault(0)),
+    boundedPositiveProduct(player.reality.rebuyables[props.id], getAdjustedGlyphEffect("realityrow1pow"))));
   props.description = () => props.textTemplate.replace("{value}",
     ImaginaryUpgrade(props.id).effectValue === 0
       ? formatInt(effect)
-      : format(effect + ImaginaryUpgrade(props.id).effectOrDefault(0), 2, 2));
+      : format(new Decimal(effect).add(ImaginaryUpgrade(props.id).effectOrDefault(0)), 2, 2));
   props.formatEffect = value => formatX(value, 2, 0);
   props.formatCost = value => format(value, 2, 0);
   return props;

@@ -450,7 +450,8 @@ export const GlyphAlteration = {
   },
   sacrificeBoost(type) {
     const capped = Decimal.clampMax(this.getSacrificePower(type), GlyphSacrificeHandler.maxSacrificeForEffects);
-    return Decimal.log10(Decimal.clampMin(capped.div(this.boostingThreshold), 1)).div(2).toNumber();
+    // Reality can sacrifice Glyphs whose logarithm already exceeds native Number storage.
+    return Decimal.log10(Decimal.clampMin(capped.div(this.boostingThreshold), 1)).div(2);
   },
   baseAdditionColor(isDark = Theme.current().isDark()) {
     return isDark ? "#CCCCCC" : "black";

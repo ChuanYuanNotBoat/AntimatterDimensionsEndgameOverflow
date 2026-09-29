@@ -24,8 +24,8 @@ export const ReplicantiGrowth = {
 };
 
 export function replicantiMultToPower(value) {
-  return Decimal.log10(Decimal.log10(value.max(1)).add(1)).div(100).add(1).toNumber();
-};
+  return Decimal.log10(Decimal.log10(value.max(1)).add(1)).div(100).add(1);
+}
 
 export const ReplicantiMultipliers = {
   get idMult() {
@@ -790,16 +790,10 @@ export const ReplicantiUpgrade = {
         (contingentReplicatedGalaxyStart.times(contingentReplicatedGalaxyStart.sub(1)).div(2)).times(logCostScaling)).add(
         logDistantScaling.times(numDistant).times(numDistant.add(extraIncrements.times(2)).sub(1)).div(2)).add(
         logRemoteScaling.times(numRemote).times(numRemote.add(1)).times(numRemote.times(2).add(1)).div(6));
-      const adjustedCostLog = count => {
-        let cost = this.baseCostAfterCount(count);
-        TimeStudy(233).applyEffect(effect => {
-          cost = boundedPositiveQuotient(cost, effect);
-        });
-        PelleRifts.vacuum.milestones[1].applyEffect(effect => {
-          cost = boundedPositiveQuotient(cost, effect);
-        });
-        return cost.max(1).log10();
-      };
+      // The cur value already includes the cost discounts in availableIP. Applying those
+      // discounts again here makes the estimated cost collapse to 1 at extreme
+      // Replicanti values; log(1) then causes an enormous inverse correction.
+      const adjustedCostLog = count => this.baseCostAfterCount(count).max(1).log10();
       const onePurchaseFallback = () => (this.canBeBought ? this.value.add(1) : undefined);
 
       const initialRatio = boundedPositiveQuotient(cur.max(1), logCostAtContingent.max(1)).max(1);

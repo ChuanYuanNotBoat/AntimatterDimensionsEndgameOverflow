@@ -62,9 +62,9 @@ export default {
         : this.glyphSet.filter(x => x);
       this.sortGlyphs();
       this.gainedLevel.copyFrom(gainedGlyphLevel().actualLevel);
-      let totalRealityGlyphBoost = 0;
-      for (let r = 0; r < getActiveGlyphEffects().length; r++) {
-        if (getActiveGlyphEffects()[r].id === "realityglyphlevel") totalRealityGlyphBoost += getActiveGlyphEffects()[r].value.value;
+      let totalRealityGlyphBoost = DC.D0;
+      for (const effect of getActiveGlyphEffects()) {
+        if (effect.id === "realityglyphlevel") totalRealityGlyphBoost = totalRealityGlyphBoost.add(effect.value.value);
       }
       this.realityGlyphBoost = totalRealityGlyphBoost;
     },
