@@ -41,22 +41,24 @@ export function boundedPositivePower(base, exponent) {
   if (power.eq(0) || value.eq(1)) return DC.D1;
   if (value.eq(0)) return power.lt(0) ? ceiling() : DC.D0;
 
+  // Determine overflow from log10(result) = log10(base) * exponent. The previous
+  // implementation compared the exponent against maxLog / abs(baseLog); at very
+  // high break_eternity layers that division can underflow to zero. This made any
+  // positive fractional power (notably Teresa's ^0.55 nerf) look like an overflow
+  // and incorrectly return BEMAX even though powers between 0 and 1 only shrink a
+  // base >= 1.
   const baseLog = value.log10();
   if (baseLog.eq(0)) return DC.D1;
-  const absLog = baseLog.abs();
-  const absPower = power.abs();
+  const resultLog = boundedSignedProduct(baseLog, power);
   const maxLog = ceiling().log10();
-  if (absPower.gte(maxLog.div(absLog))) {
-    return baseLog.lt(0) === power.lt(0) ? ceiling() : DC.D0;
-  }
+  if (resultLog.gte(maxLog)) return ceiling();
+  if (resultLog.lte(maxLog.neg())) return DC.D0;
 
-  const result = value.pow(power);
+  const result = Decimal.pow10(resultLog);
   if ([result.sign, result.layer, result.mag].some(Number.isNaN)) {
     throw new Error("Invalid Decimal result in boundedPositivePower");
   }
-  if (!isFiniteDecimal(result)) {
-    return baseLog.lt(0) === power.lt(0) ? ceiling() : DC.D0;
-  }
+  if (!isFiniteDecimal(result)) return resultLog.gt(0) ? ceiling() : DC.D0;
   return Decimal.min(result, ceiling());
 }
 

@@ -470,6 +470,12 @@ export const GameStorage = {
       player = migrations.patchPostReality(player);
     }
 
+    // `player` has now switched to the imported/selected save. Any Lazy value
+    // computed for the previous player must be discarded before *any* mechanics
+    // are recalculated; otherwise load-time recalculation can read stale BEMAX
+    // values and write them into the newly loaded save.
+    Lazy.invalidateAll();
+
     decimalMigration(player);
 
     let s1 = player.reality.glyphs.active;
@@ -553,11 +559,24 @@ export const GameStorage = {
     ui.view.tutorialState = player.tutorialState;
     ui.view.tutorialActive = player.tutorialActive;
 
+    // Reset module-level transient state which is intentionally not serialized.
+    // Without this, importing another save in the same browser session can retain
+    // state from the previous save even though `player` itself was replaced.
+    Teresa.timePoured = DC.D0;
+    Enslaved.boostReality = false;
+    Enslaved.nextTickDiff = new Decimal(player.options.updateRate);
+    Enslaved.isReleaseTick = false;
+    Enslaved.autoReleaseTick = 0;
+    Enslaved.autoReleaseSpeed = DC.D0;
+    Enslaved.currentBlackHoleStoreAmountPerMs = DC.D0;
+
     ECTimeStudyState.invalidateCachedRequirements();
+    // V.spaceTheorems is module-level state too. Recompute it from the newly-loaded
+    // player before glyph recalculation, because glyph/Ra effects may consult it.
+    V.spaceTheorems = 0;
+    V.updateTotalRunUnlocks();
     recalculateAllGlyphs();
     checkPerkValidity();
-    V.updateTotalRunUnlocks();
-    Enslaved.boostReality = false;
     GameEnd.additionalEnd = 0;
     Theme.set(Theme.currentName());
     Glyphs.unseen = [];
