@@ -22,6 +22,8 @@ function boundedEffectProduct(initial, sources) {
   let result = new Decimal(initial);
   for (const source of sources) {
     if (!source) continue;
+    // The callback is synchronous and deliberately folds each effect into the product.
+    // eslint-disable-next-line no-loop-func
     source.applyEffect(effect => {
       result = boundedPositiveProduct(result, effect);
     });
@@ -52,19 +54,19 @@ function snapshot() {
 
 function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers = null) {
   const { galaxyCount, noGalaxyMultiplier, galaxyMultiplier, baseInterval } = inputs;
-  const bought = skipKey === "purchased" || skipKey === "upgrades" ? DC.D0
-    : (Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought);
+  const boughtValue = Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought;
+  const bought = skipKey === "purchased" || skipKey === "upgrades" ? DC.D0 : boughtValue;
   const free = skipKey === "free" || skipKey === "upgrades" ? DC.D0 : player.totalTickGained;
   const totalUpgrades = bought.add(free);
   let interval = clampTickspeedInterval(baseInterval);
   let rate = rateFromInterval(interval);
 
-  function intervalStep(key, type, nextInterval, display = "") {
+  function intervalStep(key, type, nextInterval, display = "", value = undefined) {
     if (skipKey === key) return;
     const safeInterval = clampTickspeedInterval(nextInterval);
     const nextRate = rateFromInterval(safeInterval);
     if (steps) addOrderedTransform(steps, key, type, rate, nextRate, {
-      display: typeof display === "function" ? display() : display
+      display: typeof display === "function" ? display() : display, value
     });
     interval = safeInterval;
     rate = nextRate;
@@ -75,32 +77,36 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
   });
 
   const rateBeforeUpgrades = rate;
-  intervalStep("purchased", "formula",
+  intervalStep("purchased", "multiply",
     boundedPositiveProduct(interval, boundedPositivePower(noGalaxyMultiplier, bought)),
-    () => `${format(bought, 2, 2)} purchased or continuum upgrades; no-galaxy factor ${format(noGalaxyMultiplier, 2, 3)}`);
-  intervalStep("free", "formula",
+    () => `${format(bought, 2, 2)} purchased or continuum upgrades; no-galaxy factor ${format(noGalaxyMultiplier, 2, 3)}`,
+    boundedPositivePower(noGalaxyMultiplier.recip(), bought));
+  intervalStep("free", "multiply",
     boundedPositiveProduct(interval, boundedPositivePower(noGalaxyMultiplier, free)),
-    () => `${format(free, 2, 2)} free upgrades from Time Shards`);
-  if (steps) addOrderedTransform(steps, "upgrades", "formula", rateBeforeUpgrades, rate, {
+    () => `${format(free, 2, 2)} free upgrades from Time Shards`,
+    boundedPositivePower(noGalaxyMultiplier.recip(), free));
+  if (steps) addOrderedTransform(steps, "upgrades", "multiply", rateBeforeUpgrades, rate, {
     display: `${Laitela.continuumActive ? "Continuum" : "Purchased"}: ${format(bought, 2, 2)}; ` +
       `free: ${format(free, 2, 2)}; total: ${format(totalUpgrades, 2, 2)}; ` +
       `per-upgrade interval without galaxies: ${format(noGalaxyMultiplier, 2, 3)}`,
-    alwaysShow: true
+    value: boundedPositivePower(noGalaxyMultiplier.recip(), totalUpgrades), alwaysShow: true
   });
 
   // Keep the current purchases when removing galaxies; galaxy strength changes the
   // multiplier applied by EVERY upgrade, not the number of upgrades.
   const currentGalaxyMultiplier = skipKey === "galaxies" ? noGalaxyMultiplier : galaxyMultiplier;
-  intervalStep("galaxies", "formula",
+  intervalStep("galaxies", "multiply",
     boundedPositiveProduct(baseInterval, boundedPositivePower(currentGalaxyMultiplier, totalUpgrades)),
-    () => `${format(galaxyCount, 2, 2)} effective galaxies; per-upgrade interval ${format(noGalaxyMultiplier, 2, 3)} → ${format(galaxyMultiplier, 2, 3)}`);
+    () => `${format(galaxyCount, 2, 2)} effective galaxies; per-upgrade interval ${format(noGalaxyMultiplier, 2, 3)} → ${format(galaxyMultiplier, 2, 3)}`,
+    boundedPositivePower(noGalaxyMultiplier.div(currentGalaxyMultiplier), totalUpgrades));
 
   let poweredMultiplier = boundedPositivePower(currentGalaxyMultiplier, totalUpgrades);
   Ra.unlocks.tickspeedPower.applyEffect(power => {
     poweredMultiplier = boundedPositivePower(poweredMultiplier, power);
   });
-  intervalStep("raPower", "formula", boundedPositiveProduct(baseInterval, poweredMultiplier),
-    "Ra Tickspeed Power applies to the upgrade multiplier, not the base interval");
+  intervalStep("raPower", "power", boundedPositiveProduct(baseInterval, poweredMultiplier),
+    "Ra Tickspeed Power applies to the upgrade multiplier, not the base interval",
+    Ra.unlocks.tickspeedPower.effectOrDefault(1));
 
   if (Effarig.isRunning && skipKey !== "effarig") {
     // Effarig overrides the powered base interval entirely. The dilation upgrade
@@ -111,7 +117,8 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
     DilationUpgrade.tickspeedPower.applyEffect(power => {
       poweredInterval = boundedPositivePower(poweredInterval, power);
     });
-    intervalStep("dilationPower", "power", poweredInterval);
+    intervalStep("dilationPower", "power", poweredInterval, "",
+      DilationUpgrade.tickspeedPower.effectOrDefault(1));
   }
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
     intervalStep("dilation", "formula", dilatedValueOf(interval));
@@ -149,10 +156,18 @@ const sourceCache = createOrderedTransformCache(() => {
     const omitted = effectiveBaseGalaxies(key);
     const without = { ...inputs, galaxyCount: omitted,
       galaxyMultiplier: getTickSpeedMultiplier(omitted) };
+    const sourceWithout = trace(null, null, without);
     result[key] = {
-      type: "formula",
-      before: trace(null, null, without),
+      type: "multiply",
+      before: sourceWithout,
       after: total,
+      value: boundedPositivePower(10, total.clampMin(MIN_TICKSPEED_INTERVAL()).log10()
+        .sub(sourceWithout.clampMin(MIN_TICKSPEED_INTERVAL()).log10())),
+      // The count is a real source even when removing it rounds to the same
+      // total beside a much larger Galaxy Generator. Do not use impact as a visibility gate.
+      alwaysShow: source.raw.gt(0) || source.effective.gt(0),
+      finalWith: total,
+      finalWithout: sourceWithout,
       display: `${source.name}: raw ${format(source.raw, 2, 2)}, adjusted ${format(source.effective, 2, 2)}; count without source ${format(omitted, 2, 2)} → ${format(inputs.galaxyCount, 2, 2)}.`,
     };
   }

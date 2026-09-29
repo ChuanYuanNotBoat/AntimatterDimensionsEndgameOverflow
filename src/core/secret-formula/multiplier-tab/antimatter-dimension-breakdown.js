@@ -1,6 +1,7 @@
 import {
   addOrderedTraceMismatch,
   addOrderedTransform,
+  isOrderedSourceSkipped,
   aggregateOrderedTransforms,
   createOrderedTransformCache,
   orderedMultiplyStep,
@@ -119,7 +120,9 @@ function trace(tier, skipKey = null, steps = null) {
   if (tier < 1 || tier > 8) return DC.D1;
   let value = DC.D1;
   if (steps) addOrderedTransform(steps, "base", "formula", DC.D1, value, { alwaysShow: true });
-  const mul = (key, factor) => { value = orderedMultiplyStep(steps, key, value, factor, skipKey); };
+  const mul = (key, factor) => {
+    value = orderedMultiplyStep(steps, key, value, factor, skipKey);
+  };
   const pow = (key, exponent) => {
     if (key !== "dilationGlyphPower") {
       value = orderedPowerStep(steps, key, value, exponent, skipKey);
@@ -127,20 +130,20 @@ function trace(tier, skipKey = null, steps = null) {
     }
     // Match the guarded gameplay D-glyph power instead of overflowing the
     // diagnostic trace while the game itself remains representable.
-    if (key === skipKey) return;
+    if (isOrderedSourceSkipped(skipKey, key)) return;
     const before = value;
     const after = boundedPositivePower(value, exponent);
     value = steps ? addOrderedTransform(steps, key, "power", before, after,
       { value: new Decimal(exponent) }) : after;
   };
   const transform = (key, type, fn, display) => {
-    if (skipKey === key) return;
+    if (isOrderedSourceSkipped(skipKey, key)) return;
     const before = value;
     const after = fn(before);
     value = steps ? addOrderedTransform(steps, key, type, before, after, { display }) : after;
   };
   const group = (key, fn) => {
-    if (skipKey === key) return;
+    if (isOrderedSourceSkipped(skipKey, key)) return;
     const before = value;
     fn();
     if (steps) addOrderedTransform(steps, key, "formula", before, value);
@@ -191,13 +194,13 @@ function trace(tier, skipKey = null, steps = null) {
   mul("dimboost", DimBoost.multiplierToNDTier(tier));
 
   group("tierEffects", () => {
-    // effectOrDefault() may legitimately return a primitive number when an upgrade is inactive.
+    // EffectOrDefault() may legitimately return a primitive number when an upgrade is inactive.
     // Gameplay starts this product from DC.D1; normalize the individual factors too, because
     // the analysis needs to recompute the product for TS31 counterfactual attribution.
     const rawTier = new Decimal(effect(AntimatterDimension(tier).infinityUpgrade));
     const rawBreak = new Decimal(effect(BreakInfinityUpgrade.infinitiedMult));
-    const tierFactor = skipKey === "tierInfinityUpgrade" ? DC.D1 : rawTier;
-    const breakFactor = skipKey === "breakInfinitiedMult" ? DC.D1 : rawBreak;
+    const tierFactor = isOrderedSourceSkipped(skipKey, "tierInfinityUpgrade") ? DC.D1 : rawTier;
+    const breakFactor = isOrderedSourceSkipped(skipKey, "breakInfinitiedMult") ? DC.D1 : rawBreak;
     mul("tierInfinityUpgrade", rawTier);
     mul("breakInfinitiedMult", rawBreak);
     // The gameplay powers the PRODUCT of the above two multipliers by TS31; only the extra
@@ -252,8 +255,8 @@ function trace(tier, skipKey = null, steps = null) {
     if (PelleStrikes.infinity.hasStrike && !PelleStrikes.infinity.isDestroyed()) pow("pelleStrikePower", 0.5);
     if (Ascensions.dbA.isUnlocked) pow("ascensionDimboostPower", DimBoost.powerToND);
     if (Ascensions.b10mA.isUnlocked) {
-      const oom = (Laitela.continuumActive ? AntimatterDimension(tier).continuumValue :
-        Decimal.floor(AntimatterDimension(tier).bought.div(10))).max(1).log10();
+      const oom = (Laitela.continuumActive ? AntimatterDimension(tier).continuumValue
+        : Decimal.floor(AntimatterDimension(tier).bought.div(10))).max(1).log10();
       pow("ascensionPurchasePower", AntimatterDimensions.buyOoMPower.times(oom).add(1));
     }
     if (Ascensions.sacA.isUnlocked && tier === 8) pow("ascensionSacrificePower", Sacrifice.totalPower);
@@ -310,8 +313,8 @@ function build(tier) {
   return steps;
 }
 
-const caches = Array.from({ length: 9 }, (_, tier) => tier === 0
-  ? null : createOrderedTransformCache(() => build(tier), 100));
+const caches = Array.from({ length: 9 }, (_, tier) => (tier === 0
+  ? null : createOrderedTransformCache(() => build(tier), 100)));
 
 function attachTierCounterfactual(tier, steps, key) {
   const transform = steps[key];
@@ -319,7 +322,8 @@ function attachTierCounterfactual(tier, steps, key) {
   // Source removal is calculated only if the UI asks for this row. Expanding a category
   // calculates its children on demand, while collapsed categories stay O(visible sources).
   if (key !== "base" && key !== "traceMismatch" && !Object.hasOwn(transform, "finalWithout") &&
-      (transform.alwaysShow || transform.before.neq(transform.after))) {
+      (transform.alwaysShow || transform.before.neq(transform.after) ||
+        (transform.value !== undefined && Decimal.neq(transform.value, 1)))) {
     transform.finalWith = steps.finalWithMultiplier;
     Object.defineProperty(transform, "finalWithout", {
       configurable: true,
@@ -377,6 +381,8 @@ function aggregateTransform(key) {
 }
 
 export const AntimatterDimensionBreakdown = {
+  evaluate: trace,
+  tierTrace: tier => caches[tier]?.() ?? {},
   transform: tierTransform,
   aggregateTransform,
   summary: tier => ({ type: "formula", before: DC.D1, after: AntimatterDimension(tier).multiplier,

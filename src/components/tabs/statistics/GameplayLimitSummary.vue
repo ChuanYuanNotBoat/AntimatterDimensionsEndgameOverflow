@@ -36,6 +36,13 @@ export default {
 
 <template>
   <div class="c-gameplay-limits">
+    <div v-if="snapshot.groups.length" class="c-gameplay-limit-bar" aria-label="Retained output and production losses">
+      <div v-for="(share, index) in snapshot.shares" :key="index"
+        :style="{ height: `${100 * share}%` }" :class="{ 'c-gameplay-limit-loss': index > 0 }"
+        :title="index === 0 ? 'Retained output (OoM)' : snapshot.groups[index - 1].label">
+        <i :class="index === 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'" />
+      </div>
+    </div>
     <button type="button" class="c-gameplay-limits-title" :aria-expanded="expanded" @click="toggle">
       <i :class="expanded ? 'far fa-minus-square' : 'far fa-plus-square'" />
       Gameplay production / overflow limits
@@ -43,7 +50,8 @@ export default {
       <span v-else>None currently reducing output</span>
     </button>
     <div v-if="expanded" class="c-gameplay-limits-body">
-      <p>{{ snapshot.endpoint }}. Each reduction is measured immediately before and after the game's own
+      <p>{{ snapshot.endpoint }}. The vertical bar separates retained output from losses in OoM.
+        Each reduction is measured immediately before and after the game's own
         cap operation. These losses are NOT independently additive resource production gains.</p>
       <div v-if="!snapshot.groups.length">No binding gameplay cap or compression was detected in currently
         producing tiers.</div>
@@ -68,7 +76,14 @@ export default {
 
 <style scoped>
 .c-gameplay-limits { box-sizing: border-box; width: 100%; max-width: 100rem; margin-top: 0.6rem;
-  padding: 0.4rem; border: 0.2rem solid var(--color-text); color: var(--color-text); background: var(--color-base); }
+  padding: 0.4rem; border: 0.2rem solid var(--color-text); color: var(--color-text); background: var(--color-base);
+  position: relative; padding-left: 3.5rem; }
+.c-gameplay-limit-bar { position: absolute; display: flex; flex-direction: column;
+  left: 0.4rem; top: 0.4rem; bottom: 0.4rem; width: 2.5rem; border: 0.1rem solid var(--color-text); }
+.c-gameplay-limit-bar > div { display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: var(--color-accent); color: var(--color-text); }
+.c-gameplay-limit-bar > .c-gameplay-limit-loss {
+  background: repeating-linear-gradient(-45deg, var(--color-bad), transparent 0.8rem); }
 .c-gameplay-limits-title, .c-gameplay-limit-row-title { display: flex; flex-wrap: wrap; align-items: center;
   gap: 0.6rem; width: 100%; padding: 0.5rem; border: 0; color: inherit; background: transparent;
   text-align: left; font-family: Typewriter; font-size: 1.12rem; cursor: pointer; }

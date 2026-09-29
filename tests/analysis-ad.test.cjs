@@ -9,38 +9,16 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, 'src', file), 'utf8');
 
-class D {
-  constructor(x = 0) { this.n = Number(x instanceof D ? x.n : x); }
-  valueOf() { return this.n; }
-  times(x) { return new D(this.n * Number(x)); }
-  div(x) { return new D(this.n / Number(x)); }
-  dividedBy(x) { return this.div(x); }
-  add(x) { return new D(this.n + Number(x)); }
-  plus(x) { return this.add(x); }
-  sub(x) { return new D(this.n - Number(x)); }
-  pow(x) { return new D(Math.pow(this.n, Number(x))); }
-  log10() { return new D(Math.log10(this.n)); }
-  abs() { return new D(Math.abs(this.n)); }
-  max(x) { return new D(Math.max(this.n, Number(x))); }
-  clampMin(x) { return this.max(x); }
-  gte(x) { return this.n >= Number(x); }
-  gt(x) { return this.n > Number(x); }
-  lte(x) { return this.n <= Number(x); }
-  lt(x) { return this.n < Number(x); }
-  eq(x) { return this.n === Number(x); }
-  neq(x) { return !this.eq(x); }
-  timesEffectOf(x) { return this.times(x?.effectOrDefault?.(1) ?? 1); }
-  timesEffectsOf(...xs) { return xs.reduce((v, x) => v.timesEffectOf(x), this); }
-  dividedByEffectOf(x) { return this.div(x?.effectOrDefault?.(1) ?? 1); }
-  powEffectOf(x) { return this.pow(x?.effectOrDefault?.(1) ?? 1); }
-  powEffectsOf(...xs) { return xs.reduce((v, x) => v.powEffectOf(x), this); }
-  static floor(x) { return new D(Math.floor(Number(x))); }
-  static pow(x, y) { return new D(Math.pow(Number(x), Number(y))); }
-  static pow10(x) { return D.pow(10, x); }
-  static log10(x) { return new D(Math.log10(Number(x))); }
-  static abs(x) { return new D(Math.abs(Number(x))); }
-  static sign(x) { return Math.sign(Number(x)); }
-}
+const D = require('break_eternity.js');
+D.prototype.toDecimal = function() { return this; };
+D.prototype.timesEffectOf = function(effect) { return this.times(effect?.effectOrDefault?.(1) ?? 1); };
+D.prototype.timesEffectsOf = function(...effects) { return effects.reduce((v,e) => v.timesEffectOf(e), this); };
+D.prototype.dividedByEffectOf = function(effect) { return this.div(effect?.effectOrDefault?.(1) ?? 1); };
+D.prototype.powEffectOf = function(effect) { return this.pow(effect?.effectOrDefault?.(1) ?? 1); };
+D.prototype.powEffectsOf = function(...effects) { return effects.reduce((v,e) => v.powEffectOf(e), this); };
+D.prototype.pLog10 = function() { return this.clampMin(1).log10(); };
+const stripModule = s => s.replace(/^import[\s\S]*?;\s*/gm, '').replace(/^export /gm, '');
+
 const e = (n = 1.01) => ({ effectValue: new D(n), effectOrDefault: () => new D(n),
   chargedEffect: { effectValue: new D(1.02), effectOrDefault: () => new D(1.02),
     applyEffect(apply) { return apply(this.effectValue); } },
@@ -55,7 +33,7 @@ function world(options = {}) {
     isCompleted: options.icCompleted === id, reward: e(1.04), effectValue: new D(1.03) });
   const challenge = id => ({ ...any(id), isRunning: options.ec === id, reward: e(1.05) });
   const scenarios = {
-    D, Decimal: D, DC: { D0: new D(0), D1: new D(1) },
+    D, Decimal: D, DC: { D0: new D(0), D1: new D(1), BEMAX: new D('10^^9000000000000000') },
     // The gameplay formula and the AD shadow trace share the finite-guard helpers; in this
     // fully finite mocked world the plain arithmetic forms are exactly equivalent to them.
     boundedPositivePower: (base, exponent) => new D(Math.pow(Number(base), Number(exponent))),
@@ -126,7 +104,8 @@ function load(options) {
   for (let tier = 1; tier <= 8; tier++) {
     Object.defineProperty(c.AntimatterDimension(tier), 'multiplier', { get() { return c.getDimensionFinalMultiplierUncached(tier); } });
   }
-  vm.runInContext(read('core/secret-formula/multiplier-tab/ordered-breakdown.js').replace(/^export /gm, ''), c);
+  vm.runInContext(stripModule(read('core/finite-decimal.js')), c);
+  vm.runInContext(stripModule(read('core/secret-formula/multiplier-tab/ordered-breakdown.js')), c);
   const source = read('core/secret-formula/multiplier-tab/antimatter-dimension-breakdown.js')
     .replace(/^import\s*\{[\s\S]*?\}\s*from\s*"[^"]+";\s*/gm, '').replace(/^export /gm, '');
   vm.runInContext(source + '\nglobalThis.__audit = { trace, build, AD_ORDERED_LABELS, AD_ORDERED_KEYS, AD_ORDERED_GROUPS, tierTransform };', c);
@@ -172,8 +151,8 @@ test('AD tree only uses ordered sources, with each source represented exactly on
   assert.equal(new Set(all).size, all.length, 'Duplicated effect key');
   for (const key of all) assert.ok(c.__audit.AD_ORDERED_LABELS[key], `Missing label ${key}`);
   const tree = read('core/secret-formula/multiplier-tab/tree.js');
-  assert.match(tree, /multiplierTabTree\.AD_total = \[AD_ORDERED_KEYS\.map/);
-  assert.match(tree, /multiplierTabTree\[`AD_total_\$\{tier\}`\] = \[AD_ORDERED_KEYS\.map/);
+  assert.match(tree, /multiplierTabTree\.AD_total = \[\s*AD_ORDERED_KEYS\.map/);
+  assert.match(tree, /multiplierTabTree\[`AD_total_\$\{tier\}`\] = \[\s*AD_ORDERED_KEYS\.map/);
 });
 
 test('AD counterfactual replay is lazy: collapsed sources do not trigger all source replays', () => {

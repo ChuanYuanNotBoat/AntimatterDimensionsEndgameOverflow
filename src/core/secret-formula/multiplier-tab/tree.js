@@ -3,6 +3,7 @@
 import { AD_ORDERED_GROUPS, AD_ORDERED_KEYS } from "./antimatter-dimension-breakdown";
 import { MultiplierTabHelper } from "./helper-functions";
 import { multiplierTabValues } from "./values";
+import { installDimensionSourceGroups } from "./dimension-source-groups";
 
 const dynamicGenProps = ["TP", "DT", "infinities", "eternities", "gamespeed", "replicanti"];
 const propList = {
@@ -306,8 +307,8 @@ const idOverallParents = idOrderedParents.filter(prop => prop !== "baseAmount");
 const tdOverallParents = tdOrderedParents.filter(prop => prop !== "baseAmount");
 // Match the original grouping control: the SAME root can be displayed by source or
 // by dimension, and each tier can be expanded inline. These are not separate tabs.
-multiplierTabTree.ID_total = [orderedKeys("ID", idOverallParents), append8("ID_total")];
-multiplierTabTree.TD_total = [orderedKeys("TD", tdOverallParents), append8("TD_total")];
+multiplierTabTree.ID_total = [orderedKeys("ID", idOverallParents), append8("ID_total"), getProps("ID")];
+multiplierTabTree.TD_total = [orderedKeys("TD", tdOverallParents), append8("TD_total"), getProps("TD")];
 
 multiplierTabTree.ID_commonEffects = [[
   "ID_commonIAP",
@@ -417,8 +418,8 @@ multiplierTabTree.TD_postDilationPowers = [[
 ]];
 
 for (let dim = 1; dim <= 8; dim++) {
-  multiplierTabTree[`ID_total_${dim}`] = [orderedDimKeys("ID", idOrderedParents, dim)];
-  multiplierTabTree[`TD_total_${dim}`] = [orderedDimKeys("TD", tdOrderedParents, dim)];
+  multiplierTabTree[`ID_total_${dim}`] = [orderedDimKeys("ID", idOrderedParents, dim), getProps("ID", dim)];
+  multiplierTabTree[`TD_total_${dim}`] = [orderedDimKeys("TD", tdOrderedParents, dim), getProps("TD", dim)];
 
   multiplierTabTree[`ID_commonEffects_${dim}`] = [[
     `ID_commonIAP_${dim}`,
@@ -556,11 +557,24 @@ for (let dim = 1; dim <= 8; dim++) {
   ]];
 }
 
-// Replace the legacy AD graph with the tier-accurate formula tree. In particular, do not
-// mix amount/production with dimension multipliers or display the old duplicated sources.
-multiplierTabTree.AD_total = [AD_ORDERED_KEYS.map(key => `AD_${key}`), append8("AD_total")];
+function classicADKey(key) {
+  return key.replace(/^AD_/u, "AD_classic");
+}
+
+// Snapshot the original AD tree before ordered step names replace overlapping source names.
+for (const [key, groups] of Object.entries(multiplierTabTree)) {
+  if (!key.startsWith("AD_")) continue;
+  multiplierTabTree[classicADKey(key)] = groups?.map(group => group.map(classicADKey));
+}
+
+// Formula and classic source groups share the same resource and tier selection.
+multiplierTabTree.AD_total = [
+  AD_ORDERED_KEYS.map(key => `AD_${key}`), append8("AD_total"), getProps("AD").map(classicADKey)
+];
 for (let tier = 1; tier <= 8; tier++) {
-  multiplierTabTree[`AD_total_${tier}`] = [AD_ORDERED_KEYS.map(key => `AD_${key}_${tier}`)];
+  multiplierTabTree[`AD_total_${tier}`] = [
+    AD_ORDERED_KEYS.map(key => `AD_${key}_${tier}`), getProps("AD", tier).map(classicADKey)
+  ];
 }
 for (const [key, , children] of AD_ORDERED_GROUPS) {
   if (children.length === 0) continue;
@@ -568,4 +582,8 @@ for (const [key, , children] of AD_ORDERED_GROUPS) {
   for (let tier = 1; tier <= 8; tier++) {
     multiplierTabTree[`AD_${key}_${tier}`] = [children.map(([child]) => `AD_${child}_${tier}`)];
   }
+}
+
+for (const resource of ["AD", "ID", "TD"]) {
+  installDimensionSourceGroups(resource, multiplierTabValues[resource], multiplierTabTree);
 }

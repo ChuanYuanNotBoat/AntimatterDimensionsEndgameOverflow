@@ -10,7 +10,8 @@ export default {
     resource: {
       type: BreakdownEntryInfo,
       required: true,
-    }
+    },
+    presentation: { type: String, default: "formula" }
   },
   data() {
     return { text: "" };

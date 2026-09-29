@@ -10,6 +10,7 @@ function orderedTDEntry(name, key, icon, isOrdered = true) {
     : TimeDimensionBreakdown.aggregateTransform(key));
   return {
     name,
+    sourceKey: key,
     transformValue: transform,
     displayOverride: dim => {
       const data = transform(dim);
@@ -249,7 +250,7 @@ export const TD = {
     name: "Glyph Alchemy",
     multValue: dim => Decimal.pow(AlchemyResource.dimensionality.effectOrDefault(1),
       dim ? 1 : MultiplierTabHelper.activeDimCount("TD")),
-    powValue: () => AlchemyResource.time.effectOrDefault(1) * Ra.momentumValue,
+    powValue: () => new Decimal(AlchemyResource.time.effectOrDefault(1)).times(Ra.momentumValue),
     isActive: () => Ra.unlocks.unlockGlyphAlchemy.canBeApplied,
     icon: MultiplierTabIcons.ALCHEMY,
   },
@@ -263,7 +264,7 @@ export const TD = {
     name: "Pelle Rift Effects",
     multValue: dim => Decimal.pow(PelleRifts.chaos.effectOrDefault(1),
       dim ? 1 : MultiplierTabHelper.activeDimCount("TD")),
-    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1).toNumber(),
+    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1),
     isActive: () => Pelle.isDoomed,
     icon: MultiplierTabIcons.PELLE,
   },

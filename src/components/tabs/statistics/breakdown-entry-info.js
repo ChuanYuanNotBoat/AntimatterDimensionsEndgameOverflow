@@ -1,5 +1,28 @@
 import Vue from "vue";
 
+function finiteDisplayDecimal(input, fallback = 1) {
+  try {
+    const value = new Decimal(input);
+    if (Decimal.isFinite(value)) {
+      return { value: Decimal.clamp(value, new Decimal(DC.BEMAX).neg(), DC.BEMAX), invalid: false };
+    }
+    if (Number.isNaN(value.sign) || Number.isNaN(value.layer) || Number.isNaN(value.mag)) {
+      return { value: new Decimal(fallback), invalid: true };
+    }
+    return { value: value.sign > 0 ? new Decimal(DC.BEMAX) : new Decimal(fallback), invalid: true };
+  } catch {
+    return { value: new Decimal(fallback), invalid: true };
+  }
+}
+
+function readDisplayDecimal(getter) {
+  try {
+    return finiteDisplayDecimal(getter() ?? 1);
+  } catch {
+    return { value: new Decimal(1), invalid: true };
+  }
+}
+
 export class BreakdownEntryInfo {
   constructor(key) {
     this.key = key;
@@ -38,37 +61,42 @@ export class BreakdownEntryInfo {
       transformFinalWithout: new Decimal(1),
       transformHasFinalWithout: false,
       transformAggregate: false,
-      transformAggregateScope: ""
+      transformAggregateScope: "",
+      transformPositiveImpact: new Decimal(0),
+      transformNegativeImpact: new Decimal(0),
+      transformHasImpactBudget: false,
+      invalidValue: false
     });
   }
 
-  update(includeFinal = false) {
+  update(includeFinal = false, valueMode = "all") {
     const active = this.isActive;
-    const transform = active ? this.getTransform(includeFinal) : null;
+    const transform = active ? this.getTransform(includeFinal, valueMode) : null;
     // Cache the values locally. The old code evaluated both the multiplier and power
     // once for visibility and again when writing the observed data, multiplied across
     // every expanded row on each UI update.
     let mult = DC.D1;
     let pow = 1;
     let isVisible = false;
+    let invalidValue = false;
     if (active) {
+      const multResult = readDisplayDecimal(this._multValue);
+      const powResult = readDisplayDecimal(this._powValue);
+      mult = multResult.value;
+      pow = powResult.value;
+      invalidValue = multResult.invalid || powResult.invalid;
       if (this._hasTransform) {
-        isVisible = transform !== null && (transform.alwaysShow || transform.before.neq(transform.after));
-        // Legacy consumers can still read mult/pow from transform-backed entries.
-        // Keep their previous behavior while avoiding evaluation for invisible entries.
-        if (isVisible) {
-          mult = this.mult;
-          pow = this.pow;
-        }
+        isVisible = transform !== null && (transform.alwaysShow || transform.before.neq(transform.after) ||
+          (transform.value !== null && transform.value.neq(1)));
       } else {
-        mult = this.mult;
-        pow = this.pow;
-        isVisible = pow !== 1 || mult.neq(1);
+        isVisible = pow.neq(1) || mult.neq(1);
       }
+      isVisible ||= invalidValue;
     }
     this.data.mult.fromDecimal(isVisible ? mult : DC.D1);
     this.data.pow = isVisible ? pow : 1;
     this.data.isVisible = isVisible;
+    this.data.invalidValue = invalidValue;
 
     this.data.hasTransform = transform !== null;
     if (transform) {
@@ -83,6 +111,9 @@ export class BreakdownEntryInfo {
       this.data.transformFinalWithout.fromDecimal(transform.finalWithout ?? transform.after);
       this.data.transformAggregate = transform.aggregate;
       this.data.transformAggregateScope = transform.aggregateScope;
+      this.data.transformHasImpactBudget = transform.positiveImpact !== null;
+      this.data.transformPositiveImpact.fromDecimal(transform.positiveImpact ?? DC.D0);
+      this.data.transformNegativeImpact.fromDecimal(transform.negativeImpact ?? DC.D0);
     } else {
       this.data.transformType = "";
       this.data.transformBefore.fromDecimal(DC.D1);
@@ -95,6 +126,9 @@ export class BreakdownEntryInfo {
       this.data.transformHasFinalWithout = false;
       this.data.transformAggregate = false;
       this.data.transformAggregateScope = "";
+      this.data.transformHasImpactBudget = false;
+      this.data.transformPositiveImpact.fromDecimal(DC.D0);
+      this.data.transformNegativeImpact.fromDecimal(DC.D0);
     }
 
     if (isVisible) this.data.lastVisibleAt = Date.now();
@@ -105,44 +139,59 @@ export class BreakdownEntryInfo {
   }
 
   get mult() {
-    return new Decimal(this._multValue() ?? 1);
+    return readDisplayDecimal(this._multValue).value;
   }
 
   get pow() {
-    return this._powValue() ?? 1;
+    return readDisplayDecimal(this._powValue).value;
   }
 
   get transform() {
     return this.getTransform(false);
   }
 
-  getTransform(includeFinal = false) {
+  getTransform(includeFinal = false, valueMode = "all") {
     if (!this._hasTransform) return null;
-    const raw = this._transformValue();
+    let raw;
+    try {
+      raw = this._transformValue();
+      if (raw?.forMode) raw = raw.forMode(valueMode);
+    } catch {
+      raw = { type: "diagnostic", before: 1, after: 1, alwaysShow: true,
+        display: "Diagnostic formula unavailable" };
+    }
     if (raw === undefined || raw === null) return null;
 
-    const before = new Decimal(raw.before ?? 1);
-    const after = new Decimal(raw.after ?? before);
+    const checkedBefore = finiteDisplayDecimal(raw.before ?? 1);
+    const checkedAfter = finiteDisplayDecimal(raw.after ?? checkedBefore.value, checkedBefore.value);
+    const before = checkedBefore.value;
+    const after = checkedAfter.value;
     // Each lazy getter must be read at most once per update.
     const finalWith = includeFinal ? raw.finalWith : null;
     const finalWithout = includeFinal && Object.hasOwn(raw, "finalWithout") ? raw.finalWithout : null;
+    const checkedValue = raw.value === undefined || raw.value === null
+      ? null : finiteDisplayDecimal(raw.value);
+    const invalid = checkedBefore.invalid || checkedAfter.invalid || checkedValue?.invalid;
     return {
       type: raw.type ?? "override",
       before,
       after,
-      value: raw.value === undefined || raw.value === null ? null : new Decimal(raw.value),
-      display: raw.display ?? "",
-      alwaysShow: raw.alwaysShow ?? false,
-      finalWith: finalWith === undefined || finalWith === null ? null : new Decimal(finalWith),
+      value: checkedValue?.value ?? null,
+      display: invalid ? "Diagnostic value unavailable" : (raw.display ?? ""),
+      alwaysShow: (raw.alwaysShow ?? false) || invalid,
+      finalWith: finalWith === undefined || finalWith === null ? null : finiteDisplayDecimal(finalWith).value,
       // Do not access lazy finalWithout while displaying only Direct impact.
-      finalWithout: finalWithout === undefined || finalWithout === null ? null : new Decimal(finalWithout),
+      finalWithout: finalWithout === undefined || finalWithout === null ? null : finiteDisplayDecimal(finalWithout).value,
       aggregate: raw.aggregate ?? false,
       aggregateScope: raw.aggregateScope ?? "",
+      positiveImpact: raw.positiveImpact === undefined ? null : finiteDisplayDecimal(raw.positiveImpact, 0).value,
+      negativeImpact: raw.negativeImpact === undefined ? null : finiteDisplayDecimal(raw.negativeImpact, 0).value,
     };
   }
 
   get dilationEffect() {
-    return this._dilationEffect() ?? 1;
+    const value = finiteDisplayDecimal(this._dilationEffect() ?? 1).value.toNumber();
+    return Number.isFinite(value) ? value : 1;
   }
 
   get isActive() {
@@ -150,7 +199,8 @@ export class BreakdownEntryInfo {
   }
 
   get fakeValue() {
-    return this._fakeValue();
+    const value = this._fakeValue();
+    return value === undefined || value === null ? value : finiteDisplayDecimal(value).value;
   }
 
   get icon() {
@@ -158,7 +208,16 @@ export class BreakdownEntryInfo {
   }
 
   get displayOverride() {
-    return this._displayOverride();
+    let value;
+    try {
+      value = this._displayOverride();
+    } catch {
+      return "Diagnostic value unavailable";
+    }
+    if (typeof value !== "string") return value;
+    if (/NaN/u.test(value)) return "Diagnostic value unavailable";
+    if (/^[×^]?[+-]?Infinity(?:\/sec)?$/u.test(value)) return "Beyond display limit";
+    return value;
   }
 
   get isDilated() {
@@ -180,7 +239,7 @@ export class BreakdownEntryInfo {
     if (!this._hasTransform) return false;
     const groups = GameDatabase.multiplierTabTree[this.key];
     if (groups === undefined) return true;
-    // multiplierTabTree contains arrays of key strings, not BreakdownEntryInfoGroup objects.
+    // MultiplierTabTree contains arrays of key strings, not BreakdownEntryInfoGroup objects.
     // Use the cached entries to inspect static transform metadata without evaluating formulas.
     return groups.every(keys => keys.every(key => createEntryInfo(key)._hasTransform));
   }
@@ -192,9 +251,10 @@ export class BreakdownEntryInfo {
   isVisibleWithTransform(transform) {
     if (!this.isActive) return false;
     if (this._hasTransform) {
-      return transform !== null && (transform.alwaysShow || transform.before.neq(transform.after));
+      return transform !== null && (transform.alwaysShow || transform.before.neq(transform.after) ||
+        (transform.value !== null && transform.value.neq(1)));
     }
-    return this.pow !== 1 || this.mult.neq(1);
+    return this.pow.neq(1) || this.mult.neq(1);
   }
 
   get isVisible() {

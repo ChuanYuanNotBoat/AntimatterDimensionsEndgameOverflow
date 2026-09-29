@@ -7,20 +7,20 @@ import { MultiplierTabIcons } from "./icons";
 // See index.js for documentation
 export const AD = {
   total: {
-    name: dim => dim ? `AD ${dim} Multiplier` : "Combined AD Multipliers (not production)",
-    displayOverride: dim => dim
+    name: dim => (dim ? `AD ${dim} Multiplier` : "Combined AD Multipliers (not production)"),
+    displayOverride: dim => (dim
       ? formatX(AntimatterDimension(dim).multiplier, 2, 2)
       : formatX(AntimatterDimensions.all.filter(ad => ad.isProducing)
-        .reduce((product, ad) => product.times(ad.multiplier), DC.D1), 2, 2),
-    multValue: dim => dim
+        .reduce((product, ad) => product.times(ad.multiplier), DC.D1), 2, 2)),
+    multValue: dim => (dim
       ? AntimatterDimension(dim).multiplier
       : AntimatterDimensions.all.filter(ad => ad.isProducing)
-        .reduce((product, ad) => product.times(ad.multiplier), DC.D1),
-    transformValue: dim => dim
+        .reduce((product, ad) => product.times(ad.multiplier), DC.D1)),
+    transformValue: dim => (dim
       ? AntimatterDimensionBreakdown.summary(dim)
-      : AntimatterDimensionBreakdown.totalSummary(),
+      : AntimatterDimensionBreakdown.totalSummary()),
     isOrdered: true,
-    isActive: dim => dim ? AntimatterDimension(dim).isProducing : true,
+    isActive: dim => (dim ? AntimatterDimension(dim).isProducing : true),
     overlay: ["Ω", "<i class='fas fa-cube' />"],
     icon: dim => MultiplierTabIcons.DIMENSION("AD", dim),
   },
@@ -161,20 +161,23 @@ export const AD = {
       return totalMult;
     },
     powValue: dim => {
-      const allPow = InfinityUpgrade.totalTimeMult.chargedEffect.effectOrDefault(1) *
-          InfinityUpgrade.thisInfinityTimeMult.chargedEffect.effectOrDefault(1);
+      const allPow = new Decimal(InfinityUpgrade.totalTimeMult.chargedEffect.effectOrDefault(1))
+        .times(InfinityUpgrade.thisInfinityTimeMult.chargedEffect.effectOrDefault(1));
 
       const dimPow = Array.repeat(1, 9);
       for (let tier = 1; tier <= 8; tier++) {
         dimPow[tier] = AntimatterDimension(tier).infinityUpgrade.chargedEffect.effectOrDefault(1);
       }
 
-      if (dim) return allPow * dimPow[dim];
+      if (dim) return allPow.times(dimPow[dim]);
       // This isn't entirely accurate because you can't return a power for all ADs if only some of them actually have
       // it, so we cheat somewhat by returning the geometric mean of all actively producing dimensions (this should
       // be close to the same value if all the base multipliers are similar in magnitude)
-      return allPow * Math.exp(dimPow.slice(1)
-        .map(n => Math.log(n)).sum() / MultiplierTabHelper.activeDimCount("AD"));
+      const active = AntimatterDimensions.all.filter(ad => ad.isProducing);
+      if (active.length === 0) return DC.D1;
+      const geometricMean = active.reduce((product, ad) => product.times(dimPow[ad.tier]), DC.D1)
+        .pow(1 / active.length);
+      return allPow.times(geometricMean);
     },
     isActive: () => PlayerProgress.infinityUnlocked() && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.UPGRADE("infinity"),
@@ -301,7 +304,7 @@ export const AD = {
       return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     powValue: dim => {
-      const basePow = AlchemyResource.power.effectOrDefault(1) * Ra.momentumValue;
+      const basePow = new Decimal(AlchemyResource.power.effectOrDefault(1)).times(Ra.momentumValue);
       // Not entirely accurate, but returns the geometric mean of all producing dimensions (which should be close)
       // Set to default value of 1 in non-unlocked case (arguably some sort of effect-or-default would be better,
       // but I don't want to risk breaking things).
@@ -312,10 +315,11 @@ export const AD = {
         } else {
           const inflated = AntimatterDimensions.all
             .countWhere(ad => ad.isProducing && ad.multiplier.gte(AlchemyResource.inflation.effectValue));
-          inflationPow = Math.pow(1.05, inflated / AntimatterDimensions.all.countWhere(ad => ad.isProducing));
+          const activeCount = AntimatterDimensions.all.countWhere(ad => ad.isProducing);
+          inflationPow = activeCount === 0 ? 1 : Math.pow(1.05, inflated / activeCount);
         }
       }
-      return basePow * inflationPow;
+      return basePow.times(inflationPow);
     },
     isActive: () => Ra.unlocks.unlockGlyphAlchemy.canBeApplied && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.ALCHEMY,
@@ -324,7 +328,7 @@ export const AD = {
     name: "Pelle Upgrades",
     multValue: dim => Decimal.pow(PelleUpgrade.antimatterDimensionMult.effectOrDefault(1),
       dim ? 1 : MultiplierTabHelper.activeDimCount("AD")),
-    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1).toNumber(),
+    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1),
     isActive: () => Pelle.isDoomed && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.PELLE,
   },
@@ -350,7 +354,7 @@ export const AD = {
   },
   breakEternityPower: {
     name: "Break Eternity - AD power (raw exponent)",
-    powValue: () => new Decimal(BreakEternityUpgrade.antimatterDimensionPow.effectOrDefault(1)).toNumber(),
+    powValue: () => BreakEternityUpgrade.antimatterDimensionPow.effectOrDefault(1),
     isActive: () => !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.UPGRADE("eternity"),
   },
@@ -363,8 +367,8 @@ export const AD = {
   },
   alphaPower: {
     name: "Alpha - Time Study 181 AD powers (raw exponent)",
-    powValue: () => (Alpha.isRunning ? AlphaUnlocks.timestudy181.effects.nerf.effectOrDefault(1) : 1) *
-      (!player.disablePostReality ? AlphaUnlocks.timestudy181.effects.buff.effectOrDefault(1) : 1),
+    powValue: () => new Decimal(Alpha.isRunning ? AlphaUnlocks.timestudy181.effects.nerf.effectOrDefault(1) : 1)
+      .times(player.disablePostReality ? 1 : AlphaUnlocks.timestudy181.effects.buff.effectOrDefault(1)),
     isActive: () => !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.TIME_STUDY,
   },
@@ -483,8 +487,12 @@ export const AD = {
   }
 };
 
-// Only the ordered entries are connected to the AD root. The legacy entries above remain
-// temporarily for compatibility with historical IDs, but are NOT used for attribution.
+// Ordered step names overlap some original source names (for example dimboost).
+// Preserve the original getters under separate keys before installing the exact trace.
+for (const [key, entry] of Object.entries(AD)) AD[`classic${key}`] = entry;
+
+// The formula presentation uses the exact ordered entries; the classic presentation
+// retains the original categories and raw multiplier/power getters.
 function orderedADEntry(name, key) {
   const transform = tier => (tier
     ? AntimatterDimensionBreakdown.transform(tier, key)
@@ -500,7 +508,7 @@ function orderedADEntry(name, key) {
       if (data.type === "power" && data.value !== undefined) return formatPow(data.value, 2, 3);
       return `${format(data.before, 2, 2)} ➜ ${format(data.after, 2, 2)}`;
     },
-    isActive: tier => tier ? AntimatterDimension(tier).isProducing : true,
+    isActive: tier => (tier ? AntimatterDimension(tier).isProducing : true),
     icon: MultiplierTabIcons.DIMENSION("AD"),
     isOrdered: AD_ORDERED_GROUPS.some(([group, , children]) => group === key && children.length > 0),
   };

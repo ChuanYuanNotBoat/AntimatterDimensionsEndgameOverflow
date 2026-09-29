@@ -23,6 +23,8 @@ export default {
       // Inline Overall/tier analysis view for dimension resources; UI state only and never a
       // new saved tab ID (player.options.multiplierTab.currTab keeps the dimension's own ID).
       dimensionTier: 0,
+      dimensionPresentation: "classic",
+      valueMode: "all",
       // Navigation memory is local UI state, not a new save field. Existing numeric IDs are preserved.
       lastSelectedTabs: {},
     };
@@ -77,6 +79,7 @@ export default {
     },
     analysisModeLabel() {
       if (this.currentKey === "AM") return "Production sources and gameplay limits";
+      if (this.isDimensionBreakdown && this.dimensionPresentation === "classic") return "Classic source breakdown";
       if (!this.resource?.isOrdered) return "Multiplier breakdown";
       if (this.isDimensionBreakdown && this.dimensionTier === 0) return "Combined source impacts";
       return "Ordered formula";
@@ -136,6 +139,10 @@ export default {
       if (!this.isDimensionBreakdown) return;
       if (tier !== 0 && !this.dimensionOptions.some(option => option.tier === tier)) return;
       this.dimensionTier = tier;
+    },
+    selectValueMode(mode) {
+      if (!["all", "multiplier", "exponent"].includes(mode)) return;
+      this.valueMode = mode;
     },
     stepDimension(delta) {
       if (!this.isDimensionBreakdown) return;
@@ -258,12 +265,30 @@ export default {
         v-if="currentKey === 'AD'"
         class="c-multiplier-coverage-warning"
       >
-        AD analyzes individual dimension multipliers, not production. The inline switch in the analysis header
-        moves between the combined view and AD1–AD8 without opening another tab; the grouping button inside the
-        panel additionally switches between source and dimension grouping. Expand a dimension to inspect its
-        ordered formula.
-        The combined multiplier is NOT Antimatter/sec. Source overview defaults to exact Direct-step impacts
-        for speed, and the Impact toggle can opt into counterfactual Final impacts when needed.
+        AD analyzes individual dimension multipliers. Overall combines producing tiers;
+        select AD1–AD8 for a single tier. Antimatter/sec is shown under Antimatter Production.
+      </p>
+      <div v-if="currentKey !== 'AM'" class="l-breakdown-view-controls">
+        <div class="l-breakdown-view-group" role="group" aria-label="Effect calculation">
+          <button
+            v-for="mode in [
+              { key: 'all', text: 'Overall' },
+              { key: 'multiplier', text: 'Multipliers' },
+              { key: 'exponent', text: 'Exponents' }
+            ]"
+            :key="mode.key"
+            type="button"
+            class="c-multiplier-nav-btn"
+            :class="{ 'c-multiplier-nav-btn--active': valueMode === mode.key }"
+            :aria-pressed="valueMode === mode.key"
+            @click="selectValueMode(mode.key)"
+          >
+            {{ mode.text }}
+          </button>
+        </div>
+      </div>
+      <p v-if="isDimensionBreakdown && dimensionPresentation === 'classic'" class="c-multiplier-tab-text-line">
+        Sources follow the original categories. Expand a category to inspect its individual formula steps.
       </p>
       <p v-if="currentKey === 'AM'" class="c-multiplier-coverage-warning">
         Antimatter production attribution remains approximate.
@@ -286,9 +311,11 @@ export default {
       />
       <MultiplierBreakdownEntry
         v-else-if="currentKey !== 'AM'"
-        :key="resource.key"
+        :key="`${resource.key}-${dimensionPresentation}-${valueMode}`"
         :resource="resource"
         :is-root="true"
+        :presentation="dimensionPresentation"
+        :value-mode="valueMode"
       />
       <div class="c-multiplier-tab-text-line">
         Note: Entries are only expandable if they contain multiple sources which can be different values.
@@ -306,11 +333,21 @@ export default {
 </template>
 
 <style scoped>
+.l-breakdown-view-controls,
+.l-breakdown-view-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+
+.l-breakdown-view-controls {
+  justify-content: space-between;
+}
+
 .c-multiplier-coverage-warning {
   margin: 0.7rem 0;
-  padding: 0.7rem;
-  border: 0.1rem solid var(--color-text);
-  border-radius: var(--var-border-radius, 0.4rem);
+  padding: 0.2rem;
   line-height: 1.4;
   font-size: 1.05rem;
   text-align: left;
@@ -331,6 +368,18 @@ export default {
   width: 100%;
   max-width: 100rem;
   margin-bottom: 0.7rem;
+}
+
+.l-multiplier-subtab-btn-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0;
+}
+
+.l-multiplier-subtab-btn-container .c-multiplier-nav-btn {
+  flex: 1;
+  border-radius: var(--var-border-radius, 0.5rem) var(--var-border-radius, 0.5rem) 0 0;
 }
 
 .l-dimension-inline-switch {

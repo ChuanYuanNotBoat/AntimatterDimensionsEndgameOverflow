@@ -35,6 +35,7 @@ function setup() {
   };
   const context = vm.createContext({
     multiplierTabValues: values,
+    installDimensionSourceGroups: () => {},
     MultiplierTabHelper: {
       achievementDimCheck: () => true,
       timeStudyDimCheck: () => true,
@@ -67,6 +68,16 @@ test('IP/EP root keeps ordered calculation, including full original tree', () =>
   const { createEntryInfo } = setup();
   assert.equal(createEntryInfo('IP_total').isOrdered, true);
   assert.equal(createEntryInfo('EP_total').isOrdered, true);
+});
+
+test('classic dimension groups preserve the original source categories and AD aliases', () => {
+  const { tree } = setup();
+  assert.ok(tree.AD_total[2].includes('AD_classicpurchase'));
+  assert.ok(tree.AD_total[2].includes('AD_classicdimboost'));
+  assert.ok(tree.AD_total_1[1].includes('AD_classicachievement_1'));
+  assert.ok(tree.AD_classicpurchase[0].includes('AD_classicpurchase_8'));
+  assert.ok(tree.ID_total[2].includes('ID_purchase'));
+  assert.ok(tree.TD_total_1[1].includes('TD_timeStudy_1'));
 });
 
 test('IP/EP base breakdowns with legacy display-only children retain percent view', () => {

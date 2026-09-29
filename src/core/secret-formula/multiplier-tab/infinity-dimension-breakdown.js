@@ -4,6 +4,7 @@ import {
   addOrderedFinalImpacts,
   addOrderedTraceMismatch,
   addOrderedTransform,
+  isOrderedSourceSkipped,
   aggregateOrderedTransforms,
   createOrderedTransformCache,
   orderedMultiplyStep,
@@ -16,7 +17,7 @@ function valueOf(effect) {
 }
 
 function multiplyGroup(steps, key, current, items, skipKey, display = undefined) {
-  if (skipKey === key) return current;
+  if (isOrderedSourceSkipped(skipKey, key)) return current;
   const before = current;
   let value = current;
   for (const item of items) {
@@ -24,7 +25,7 @@ function multiplyGroup(steps, key, current, items, skipKey, display = undefined)
       value = multiplyGroup(steps, item.key, value, item.items, skipKey, item.display);
       continue;
     }
-    if (skipKey === item.key) continue;
+    if (isOrderedSourceSkipped(skipKey, item.key)) continue;
     const mult = valueOf(item.value);
     const after = boundedPositiveProduct(value, mult);
     if (steps) addOrderedTransform(steps, item.key, "multiply", value, after, { value: mult, display: item.display });
@@ -38,12 +39,12 @@ function multiplyGroup(steps, key, current, items, skipKey, display = undefined)
 }
 
 function powerGroup(steps, key, current, items, skipKey, display = undefined) {
-  if (skipKey === key) return current;
+  if (isOrderedSourceSkipped(skipKey, key)) return current;
   const before = current;
   let value = current;
   let combinedPower = DC.D1;
   for (const item of items) {
-    if (skipKey === item.key) continue;
+    if (isOrderedSourceSkipped(skipKey, item.key)) continue;
     const power = valueOf(item.value);
     const after = boundedPositivePower(value, power);
     if (steps) addOrderedTransform(steps, item.key, "power", value, after, { value: power, display: item.display });
@@ -120,7 +121,7 @@ function tierItems(tier) {
   ];
 }
 
-function usesContinuum(tier) {
+function usesContinuum() {
   return Laitela.continuumActive && !EternityChallenge(8).isRunning && Alpha.currentStage >= 9 &&
     !player.disablePostReality;
 }
@@ -139,16 +140,16 @@ function purchaseDisplay(tier) {
 }
 
 function applyPurchase(steps, tier, current, skipKey) {
-  if (skipKey === "purchase") return current;
+  if (isOrderedSourceSkipped(skipKey, "purchase")) return current;
 
   const dim = InfinityDimension(tier);
   const count = purchaseValue(tier);
-  const rawBase = skipKey === "purchaseBase" ? DC.D1 : new Decimal(dim._powerMultiplier);
-  const glyph = skipKey === "purchaseGlyphSacrifice" || tier !== 8
+  const rawBase = isOrderedSourceSkipped(skipKey, "purchaseBase") ? DC.D1 : new Decimal(dim._powerMultiplier);
+  const glyph = isOrderedSourceSkipped(skipKey, "purchaseGlyphSacrifice") || tier !== 8
     ? DC.D1
     : GlyphSacrifice.infinity.effectValue;
-  const imaginaryPow = skipKey === "purchaseImaginaryPower" ? DC.D1 : ImaginaryUpgrade(14).effectOrDefault(1);
-  const singularityPow = skipKey === "purchaseSingularityPower"
+  const imaginaryPow = isOrderedSourceSkipped(skipKey, "purchaseImaginaryPower") ? DC.D1 : ImaginaryUpgrade(14).effectOrDefault(1);
+  const singularityPow = isOrderedSourceSkipped(skipKey, "purchaseSingularityPower")
     ? DC.D1
     : SingularityMilestone.perPurchaseDimMult.effectOrDefault(1);
 
@@ -404,6 +405,8 @@ function buildAggregateBreakdown() {
 const aggregateCache = createOrderedTransformCache(buildAggregateBreakdown);
 
 export const InfinityDimensionBreakdown = {
+  evaluate: evaluateInfinityDimension,
+  tierTrace: tier => caches[tier]?.() ?? {},
   transform: (tier, key) => caches[tier]?.(key) ?? null,
   aggregateTransform: key => aggregateCache(key),
   summary: tier => {

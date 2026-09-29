@@ -40,6 +40,7 @@ function setup(selected = 2) {
   }
   const globals = {
     player,
+    PlayerProgress: { endgameUnlocked: () => false },
     GameDatabase: { multiplierTabValues },
     createEntryInfo: key => ({ key, isOrdered: /^(IP|EP|AD|ID|TD)_total/.test(key) }),
     availableMultiplierTabGroups: navigation.availableMultiplierTabGroups,
@@ -73,7 +74,7 @@ test('existing numeric tab IDs and saved category selections remain intact', () 
 test('inline switch goes Overall → AD1 → AD8 → Overall without changing saved tab', () => {
   const { instance, player } = setup();
   assert.equal(instance.resource.key, 'AD_total');
-  assert.equal(instance.analysisModeLabel, 'Combined source impacts');
+  assert.equal(instance.analysisModeLabel, 'Classic source breakdown');
   assert.deepEqual(Array.from(instance.dimensionOptions, option => option.tier), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
   instance.stepDimension(-1); // Previous is disabled at Overall, even when called directly.
   assert.equal(instance.dimensionTier, 0);
@@ -96,11 +97,11 @@ test('switching AD / ID / TD resets inline view to Overall; detail remains in sa
   const id = instance.availableGroups.find(group => group.key === 'dimensions').options.find(o => o.key === 'ID');
   instance.selectTab(id);
   assert.equal(instance.resource.key, 'ID_total');
-  assert.equal(instance.analysisModeLabel, 'Combined source impacts');
+  assert.equal(instance.analysisModeLabel, 'Classic source breakdown');
   instance.stepDimension(1);
   instance.selectDimension(2);
   assert.equal(instance.resource.key, 'ID_total_2');
-  assert.equal(instance.analysisModeLabel, 'Ordered formula');
+  assert.equal(instance.analysisModeLabel, 'Classic source breakdown');
   assert.equal(player.options.multiplierTab.currTab, 4);
   const td = instance.availableGroups.find(group => group.key === 'dimensions').options.find(o => o.key === 'TD');
   instance.selectTab(td);
@@ -167,6 +168,22 @@ test('UI switches within the same analysis header, not via dimension tabs', () =
   assert.match(source, /stepDimension\(1\)/);
   assert.match(source, /\{ tier: 0, text: "Overall" \}/);
   assert.doesNotMatch(source, /selectDimensionMode|By dimension|<button\s+v-for="option in dimensionOptions"/);
+});
+
+test('classic source presentation and independent effect views keep the saved resource', () => {
+  const { instance, player } = setup();
+  assert.equal(instance.dimensionPresentation, 'classic');
+  instance.selectValueMode('multiplier');
+  assert.equal(instance.valueMode, 'multiplier');
+  instance.selectValueMode('exponent');
+  assert.equal(instance.valueMode, 'exponent');
+  instance.selectValueMode('all');
+  instance.dimensionPresentation = 'formula';
+  assert.equal(instance.analysisModeLabel, 'Combined source impacts');
+  instance.selectDimension(1);
+  assert.equal(instance.analysisModeLabel, 'Ordered formula');
+  assert.equal(instance.resource.key, 'AD_total_1');
+  assert.equal(player.options.multiplierTab.currTab, 2);
 });
 
 test('AD explains traced multiplier scope; AM retains honest approximate-production caveat', () => {

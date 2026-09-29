@@ -8,33 +8,16 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, 'src', file), 'utf8');
 
-class D {
-  constructor(value = 0) { this.n = Number(value instanceof D ? value.n : value); }
-  valueOf() { return this.n; }
-  toDecimal() { return this; }
-  times(value) { return new D(this.n * Number(value)); }
-  div(value) { return new D(this.n / Number(value)); }
-  add(value) { return new D(this.n + Number(value)); }
-  plus(value) { return this.add(value); }
-  sub(value) { return new D(this.n - Number(value)); }
-  pow(value) { return new D(Math.pow(this.n, Number(value))); }
-  log10() { return new D(Math.log10(this.n)); }
-  max(value) { return new D(Math.max(this.n, Number(value))); }
-  gte(value) { return this.n >= Number(value); }
-  gt(value) { return this.n > Number(value); }
-  lte(value) { return this.n <= Number(value); }
-  lt(value) { return this.n < Number(value); }
-  eq(value) { return Math.abs(this.n - Number(value)) <= Math.max(1, this.n, Number(value)) * 1e-12; }
-  neq(value) { return !this.eq(value); }
-  abs() { return new D(Math.abs(this.n)); }
-  timesEffectOf(effect) { return this.times(effect?.effectOrDefault?.(1) ?? 1); }
-  timesEffectsOf(...effects) { return effects.reduce((value, effect) => value.timesEffectOf(effect), this); }
-  powEffectOf(effect) { return this.pow(effect?.effectOrDefault?.(1) ?? 1); }
-  static clampMin(value, min) { return new D(Math.max(Number(value), Number(min))); }
-  static pow(a, b) { return new D(Math.pow(Number(a), Number(b))); }
-  static pow10(value) { return D.pow(10, value); }
-  static log10(value) { return new D(Math.log10(Number(value))); }
-}
+const D = require('break_eternity.js');
+D.prototype.toDecimal = function() { return this; };
+D.prototype.timesEffectOf = function(effect) { return this.times(effect?.effectOrDefault?.(1) ?? 1); };
+D.prototype.timesEffectsOf = function(...effects) { return effects.reduce((v,e) => v.timesEffectOf(e), this); };
+D.prototype.dividedByEffectOf = function(effect) { return this.div(effect?.effectOrDefault?.(1) ?? 1); };
+D.prototype.powEffectOf = function(effect) { return this.pow(effect?.effectOrDefault?.(1) ?? 1); };
+D.prototype.powEffectsOf = function(...effects) { return effects.reduce((v,e) => v.powEffectOf(e), this); };
+D.prototype.pLog10 = function() { return this.clampMin(1).log10(); };
+const stripModule = s => s.replace(/^import[\s\S]*?;\s*/gm, '').replace(/^export /gm, '');
+
 const e = (value = 1.12) => ({ effectValue: new D(value), effectOrDefault: () => new D(value),
   canBeApplied: true, isBought: true, isUnlocked: true,
   // Real gameplay effects expose applyEffect; the finite-guarded formulas rely on it.
@@ -45,7 +28,7 @@ function world(options = {}) {
   const disabled = !!options.disablePostReality;
   const allow = restoration;
   const scenarios = {
-    Decimal: D, DC: { D0: new D(0), D1: new D(1), E20000: new D(1e20000) },
+    Decimal: D, DC: { D0: new D(0), D1: new D(1), BEMAX: new D('10^^9000000000000000'), E20000: new D('1e20000') },
     // The gameplay formulas and the diagnostic traces share the finite-guard helpers; in this
     // fully finite mocked world the plain arithmetic forms are exactly equivalent to them.
     boundedPositivePower: (base, exponent) => new D(Math.pow(Number(base), Number(exponent))),
@@ -62,7 +45,8 @@ function world(options = {}) {
     Achievement: id => ({ ...e(1.11 + (id % 3) / 100), effects: { infinitiesGain: e(1.13) } }),
     TimeStudy: id => ({ ...e(1.1 + (id % 4) / 100), effects: { infinitiesGain: e(1.17) } }),
     RealityUpgrade: id => e(1.12 + id / 1000),
-    Effects: { product: (...effects) => effects.reduce((v, effect) => v.timesEffectOf(effect), new D(1)),
+    Effects: { productDecimal: (...effects) => effects.reduce((v, effect) => v.timesEffectOf(effect), new D(1)),
+      product: (...effects) => effects.reduce((v, effect) => v.timesEffectOf(effect), new D(1)),
       max: (v, effect) => new D(Math.max(Number(v), Number(effect.effectOrDefault(1)))) },
     Ra: { unlocks: { continuousTTBoost: { effects: {
       replicanti: e(1.17), dilatedTime: e(1.15), infinity: e(1.18) } }, peakGamespeedDT: e(1.2) } },
@@ -117,7 +101,8 @@ function execute(resource, options) {
   const end = source.indexOf(resource.end, start + resource.begin.length);
   assert.ok(start >= 0 && end > start, `Could not extract ${resource.fn}`);
   vm.runInContext(source.slice(start, end).replace(/^export /gm, ''), context, { filename: resource.source });
-  const helper = read('core/secret-formula/multiplier-tab/ordered-breakdown.js').replace(/^export /gm, '');
+  vm.runInContext(stripModule(read('core/finite-decimal.js')), context);
+  const helper = stripModule(read('core/secret-formula/multiplier-tab/ordered-breakdown.js'));
   vm.runInContext(helper, context);
   const trace = read(resource.trace).replace(/^import\s*\{[\s\S]*?\}\s*from\s*"[^"]+";\s*/gm, '')
     .replace(/^export /gm, '') + '\nglobalThis.__audit = { trace, build };';

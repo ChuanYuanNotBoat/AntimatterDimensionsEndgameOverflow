@@ -10,6 +10,7 @@ function orderedIDEntry(name, key, icon, isOrdered = true) {
     : InfinityDimensionBreakdown.aggregateTransform(key));
   return {
     name,
+    sourceKey: key,
     transformValue: transform,
     displayOverride: dim => {
       const data = transform(dim);
@@ -260,7 +261,7 @@ export const ID = {
     name: "Glyph Alchemy",
     multValue: dim => Decimal.pow(AlchemyResource.dimensionality.effectOrDefault(1),
       dim ? 1 : MultiplierTabHelper.activeDimCount("ID")),
-    powValue: () => AlchemyResource.infinity.effectOrDefault(1) * Ra.momentumValue,
+    powValue: () => new Decimal(AlchemyResource.infinity.effectOrDefault(1)).times(Ra.momentumValue),
     isActive: () => Ra.unlocks.unlockGlyphAlchemy.canBeApplied,
     icon: MultiplierTabIcons.ALCHEMY,
   },
@@ -282,7 +283,7 @@ export const ID = {
         : DC.D1);
       return Decimal.pow(mult, dim ? 1 : maxActiveDim).times(decayMult);
     },
-    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1).toNumber(),
+    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1),
     isActive: () => Pelle.isDoomed,
     icon: MultiplierTabIcons.PELLE,
   },

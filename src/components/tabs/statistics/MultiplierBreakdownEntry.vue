@@ -22,6 +22,24 @@ function padPercents(percents) {
   return percents.padStart(7, "\xa0");
 }
 
+function finiteDecimal(value, fallback = DC.D1) {
+  try {
+    const decimal = new Decimal(value);
+    if (Decimal.isFinite(decimal)) return Decimal.clamp(decimal, new Decimal(DC.BEMAX).neg(), DC.BEMAX);
+    if (Number.isNaN(decimal.sign) || Number.isNaN(decimal.layer) || Number.isNaN(decimal.mag)) {
+      return new Decimal(fallback);
+    }
+    return decimal.sign > 0 ? new Decimal(DC.BEMAX) : new Decimal(fallback);
+  } catch {
+    return new Decimal(fallback);
+  }
+}
+
+function finiteShare(value) {
+  const result = finiteDecimal(value, DC.D0).toNumber();
+  return Number.isFinite(result) ? Math.max(-1, Math.min(1, result)) : 0;
+}
+
 export default {
   name: "MultiplierBreakdownEntry",
   components: {
@@ -42,6 +60,14 @@ export default {
     depth: {
       type: Number,
       default: 0,
+    },
+    presentation: {
+      type: String,
+      default: "formula",
+    },
+    valueMode: {
+      type: String,
+      default: "all",
     }
   },
   data() {
@@ -53,6 +79,7 @@ export default {
       legacyBarHeights: [],
       orderedPathPercentList: [],
       orderedPathOffsets: [],
+      orderedPathNerfPercentList: [],
       orderedDirectNerfs: [],
       showGroup: [],
       showDetails: [],
@@ -68,6 +95,9 @@ export default {
       now: Date.now(),
       totalMultiplier: DC.D1,
       totalPositivePower: 1,
+      selectedEffect: DC.D1,
+      selectedRawEffect: DC.D1,
+      selectedRawEffectAvailable: false,
       replacePowers: player.options.multiplierTab.replacePowers,
       // Start with the exact, inexpensive step delta. Final is opt-in because
       // it must replay the complete formula once for each visible source.
@@ -78,13 +108,15 @@ export default {
   },
   computed: {
     groups() {
-      return getResourceEntryInfoGroups(this.resource.key);
+      const groups = getResourceEntryInfoGroups(this.resource.key);
+      if (!this.isRoot || this.presentation !== "classic" || !this.isDimensionRoot) return groups;
+      return [groups[this.resource.key.endsWith("_total") ? 2 : 1]].filter(Boolean);
     },
     /**
      * @returns {BreakdownEntryInfo[]}
      */
     entries() {
-      return this.groups[this.selected].entries;
+      return this.groups[this.selected]?.entries ?? [];
     },
     rollingAverage() {
       return new PercentageRollingAverage();
@@ -96,7 +128,7 @@ export default {
       };
     },
     isEmpty() {
-      return !this.isRecent(this.lastNotEmptyAt);
+      return this.entries.length === 0 || !this.isRecent(this.lastNotEmptyAt);
     },
     disabledText() {
       if (!this.resource.isBase) return `Total effect inactive, disabled, or reduced to ${formatX(1)}`;
@@ -114,8 +146,8 @@ export default {
     // to tickspeed/galaxies because we already mostly hack those with fake values and should thus not allow those
     // to be changed either.
     allowPowerToggle() {
-      if (this.resource.isOrdered) return false;
-      const forbiddenEntries = ["AD_infinityPower", "galaxies", "tickspeed"];
+      if (this.usesOrdered) return false;
+      const forbiddenEntries = ["AD_infinityPower", "AD_classicinfinityPower", "galaxies", "tickspeed"];
       // Uses startsWith instead of String equality since it has to match both the top-level entry and any
       // related children entries further down the tree.
       return !forbiddenEntries.some(key => this.resource.key.startsWith(key));
@@ -123,48 +155,57 @@ export default {
     isDimensionOverall() {
       return ["AD_total", "ID_total", "TD_total"].includes(this.resource.key);
     },
-    isDimensionRoot() {
-      return this.isRoot && /^(AD|ID|TD)_total$/.test(this.resource.key);
-    },
     canShowFinalImpact() {
-      return this.resource.isOrdered;
+      return this.usesOrdered;
+    },
+    impactMode() {
+      return this.orderedFinalImpact;
     },
     // AD/ID/TD root panels (Overall and per-tier views) get their Overall/by-dimension grouping
     // from the analysis header's inline switch instead of the legacy grouping button.
     isDimensionRoot() {
-      return this.isRoot && /^(AD|ID|TD)_total(_\d+)?$/.test(this.resource.key);
+      return this.isRoot && /^(AD|ID|TD)_total(_\d+)?$/u.test(this.resource.key);
+    },
+    usesOrdered() {
+      return this.resource.isOrdered;
     },
     // Explanatory footnote for ordered panels, data-driven instead of a template branch chain.
     orderedNoteText() {
-      const addUpTo = `do not add up to ${formatPercents(1)}`;
+      const addUpTo = `are not additive shares of the final value`;
+      if (this.valueMode !== "all") {
+        return `This view selects ${this.valueMode === "exponent" ? "power" : "multiplication"} sources.
+          Direct measures them at their current inputs; Final removes each selected source from the full formula.
+          Products include only this view's operations. The left bar shows Direct gain and loss;
+          Final impacts ${addUpTo}.`;
+      }
       if (this.resource.key === "tickspeed_galaxies") {
-        return `Each source is measured by removing only that source's effective galaxy count while keeping all other
-          sources and upgrades fixed. These are counterfactual impacts, not additive percentages; Galactic Ascension
-          can multiply galaxy sources instead of adding them.`;
+        return `Each source removes only its effective galaxy count, keeping other sources and upgrades fixed.
+          Small sources remain listed when their impact rounds to zero. Impacts are not additive;
+          Galactic Ascension can multiply galaxy sources.`;
       }
       if (this.isDimensionOverall && this.selected === 0) {
-        return `Sources are aggregated across all producing dimensions. This overview defaults to Direct OoM impact for
-          responsiveness, but the Impact toggle can opt into Final when you specifically need the counterfactual
-          full-formula result. Use the grouping button to show individual dimensions and expand a dimension for its
-          ordered formula details. Bars are relative strengths, not contribution shares, and ${addUpTo}.`;
+        return `Original source categories combine producing tiers; expand a category for its sources.
+          Direct measures each operation at its current inputs; Final removes the category from the full formula.
+          The left bar separates surviving gain from nerfs. Final impacts ${addUpTo}.`;
       }
       if (this.isDimensionOverall) {
         return `Grouped by dimension, as in the original breakdown: expand AD1–AD8 (or the corresponding ID/TD tiers)
           here without opening a different tab. The overall value describes combined multipliers, not AM/sec.`;
       }
-      return `Left bar shows the direct ordered formula path, split by absolute OoM change at each step.
-        Row bars show relative impact strength normalized to the largest absolute effect on this page; they are not
-        contribution shares and ${addUpTo}.
-        Final Impact includes all later formula steps; Direct Impact only measures the selected step itself.`;
+      return `The left bar and Direct percentages separate surviving OoM gain from losses to nerfs.
+        Final includes later formula steps and compares each impact with the largest effect;
+        these ${addUpTo}.`;
     },
   },
   watch: {
     replacePowers(newValue) {
-      player.options.multiplierTab.replacePowers = newValue;
+      if (this.allowPowerToggle && this.valueMode === "all") {
+        player.options.multiplierTab.replacePowers = newValue;
+      }
     },
     orderedFinalImpact() {
       sessionImpactFinal.value = this.orderedFinalImpact;
-      if (!this.resource.isOrdered) return;
+      if (!this.usesOrdered) return;
       this.lastLayoutChange = Date.now();
       this.rollingAverage.clear();
       // Switching to Final must first populate on-demand counterfactuals.
@@ -178,6 +219,7 @@ export default {
     this._lastChildScan = [];
     this._cachedChildAvailability = [];
     this._lastStarAuditAt = -Infinity;
+    this._modeMatches = new Map();
   },
   created() {
     // Dimension roots suppress the obsolete all-tiers grouping button (the analysis header's
@@ -188,7 +230,7 @@ export default {
     const remembered = sessionGroupSelection.get(this.resource.key);
     if (remembered !== undefined) {
       const maxIndex = this.groups.length - 1;
-      this.selected = remembered < 0 ? 0 : (remembered > maxIndex ? maxIndex : remembered);
+      this.selected = Math.max(0, Math.min(remembered, maxIndex));
       return;
     }
     if (player.options.multiplierTab.showAltGroup) this.changeGroup();
@@ -196,14 +238,42 @@ export default {
   methods: {
     // Vue templates resolve helpers on the component instance.
     starResourceForEntry,
+    entryMatchesMode(entry, seen = new Set()) {
+      const cached = this._modeMatches.get(entry.key);
+      if (cached !== undefined) return cached;
+      if (seen.has(entry.key)) return false;
+      seen.add(entry.key);
+      if (!entry.isActive) {
+        this._modeMatches.set(entry.key, false);
+        return false;
+      }
+      if (entry._hasTransform) {
+        const transform = entry.getTransform(false, this.valueMode);
+        if (transform?.type === (this.valueMode === "multiplier" ? "multiply" : "power")) {
+          this._modeMatches.set(entry.key, true);
+          return true;
+        }
+      } else {
+        const activeValue = this.valueMode === "multiplier" ? entry.mult : entry.pow;
+        if (Decimal.neq(activeValue, 1)) {
+          this._modeMatches.set(entry.key, true);
+          return true;
+        }
+      }
+      const matches = getResourceEntryInfoGroups(entry.key)
+        .some(group => group.entries.some(child => this.entryMatchesMode(child, new Set(seen))));
+      this._modeMatches.set(entry.key, matches);
+      return matches;
+    },
     update(force = false) {
       const now = Date.now();
       // Recompute just the displayed trace, not all counterfactuals. Keep the
       // visible page near the game's UI cadence; deeper expansions get a small
       // budget so opening a large tree does not block gameplay.
-      const interval = this.depth >= 3 ? 240 : (this.depth === 2 ? 160 :
-        (this.depth === 1 ? 100 : 80));
+      const intervals = [80, 100, 160, 240];
+      const interval = intervals[Math.min(this.depth, 3)];
       if (!force && now - this._lastMultiplierRefresh < interval) return;
+      this._modeMatches.clear();
       for (let i = 0; i < this.entries.length; i++) {
         const entry = this.entries[i];
         // Full formula replays are only needed for Final mode or an expanded
@@ -211,8 +281,8 @@ export default {
         const starScope = this.showDetails[i] && starResourceForEntry(entry.key);
         // The Star-specific detail uses gameplay methods, not the costly
         // statistics counterfactual (and its synthetic eight-tier product).
-        entry.update(!this.resource.isOrdered || this.orderedFinalImpact ||
-          (Boolean(this.showDetails[i]) && !starScope));
+        entry.update(!this.usesOrdered || this.impactMode ||
+          (Boolean(this.showDetails[i]) && !starScope), this.valueMode);
         if (starScope && now - this._lastStarAuditAt >= 750) {
           // Only the open Star detail needs the gameplay counterfactual;
           // never run it for collapsed rows or ordinary statistics refreshes.
@@ -257,7 +327,7 @@ export default {
       this.update(true);
     },
     toggleBar(index) {
-      if (this.resource.isOrdered && this.entries[index]?.data?.hasTransform) {
+      if (this.usesOrdered && this.entries[index]?.data?.hasTransform) {
         this.toggleDetails(index);
         return;
       }
@@ -279,29 +349,38 @@ export default {
       this.update(true);
     },
     calculatePercents() {
-      if (this.resource.isOrdered) {
+      if (this.usesOrdered) {
         this.calculateOrderedImpacts();
         return;
       }
 
+      if (this.valueMode !== "all") {
+        this.calculateSingleTypeImpacts();
+        return;
+      }
+
       const powList = this.entries.map(e => new Decimal(e.data.pow));
-      const totalPosPow = powList.filter(p => p.gt(1)).reduce((x, y) => x.times(y), DC.D1);
-      const totalNegPow = powList.filter(p => p.lt(1)).reduce((x, y) => x.times(y), DC.D1);
-      const log10Mult = (this.resource.fakeValue ?? this.resource.mult).log10().div(totalPosPow);
-      const isEmpty = log10Mult.eq(0);
-      if (!isEmpty) {
+      const totalPosPow = powList.filter(p => p.gt(1))
+        .reduce((x, y) => finiteDecimal(x.times(y)), DC.D1);
+      const totalNegPow = powList.filter(p => p.lt(1))
+        .reduce((x, y) => finiteDecimal(x.times(y)), DC.D1);
+      const totalValue = finiteDecimal(this.resource.fakeValue ?? this.resource.mult);
+      const log10Mult = finiteDecimal(totalValue.log10().div(totalPosPow), DC.D0);
+      const hasActiveEntries = this.entries.some(entry => entry.data.isVisible);
+      if (hasActiveEntries) {
         this.lastNotEmptyAt = Date.now();
       }
       let percentList = [];
       for (const entry of this.entries) {
         const pow = new Decimal(entry.data.pow);
-        const multFrac = isEmpty ? DC.D0 : Decimal.log10(entry.data.mult).div(log10Mult);
-        const powFrac = totalPosPow.eq(1) ? DC.D0 : pow.log10().div(totalPosPow.log10());
+        const multFrac = log10Mult.eq(0) ? DC.D0 : finiteDecimal(Decimal.log10(entry.data.mult).div(log10Mult), DC.D0);
+        const powFrac = totalPosPow.eq(1) ? DC.D0 : finiteDecimal(pow.log10().div(totalPosPow.log10()), DC.D0);
 
         // Handle nerf powers differently from everything else in order to render them with the correct bar percentage
-        const perc = pow.gte(1)
+        const rawPerc = pow.gte(1)
           ? multFrac.div(totalPosPow).add(powFrac.times(DC.D1.sub(DC.D1.div(totalPosPow))))
-          : pow.log10().div(totalNegPow.log10()).times(totalNegPow.sub(1));
+          : finiteDecimal(pow.log10().div(totalNegPow.log10()).times(totalNegPow.sub(1)), DC.D0);
+        const perc = finiteDecimal(rawPerc, DC.D0);
 
         // Keep these as Decimals until after normalization; individual contributions can be far outside Number range
         // in Endgame even though the final percentages are always small finite values.
@@ -325,34 +404,66 @@ export default {
       percentList = percentList.map(p => {
         if (p[1].gt(0)) {
           if (nerfedPerc.eq(0)) return 0;
-          return (p[0] ? p[1] : p[1].times(totalNegPow)).div(nerfedPerc).toNumber();
+          return finiteShare((p[0] ? p[1] : p[1].times(totalNegPow)).div(nerfedPerc));
         }
-        if (totalPerc.eq(0) || totalNegPow.eq(0)) return Decimal.max(p[1], -1).toNumber();
-        return Decimal.max(
+        if (totalPerc.eq(0) || totalNegPow.eq(0)) return finiteShare(Decimal.max(p[1], -1));
+        return finiteShare(Decimal.max(
           p[1].times(totalPerc.sub(nerfedPerc)).div(totalPerc).div(totalNegPow),
           -1
-        ).toNumber();
+        ));
       });
       this.percentList = percentList;
-      this.rollingAverage.add(isEmpty ? undefined : percentList);
+      this.rollingAverage.add(hasActiveEntries ? percentList : undefined);
       this.averagedPercentList = this.rollingAverage.average;
-      // Precompute the legacy stacked bar positions once, instead of slicing and
-      // summing the whole prefix on every render of every nested panel.
-      const netPercent = this.averagedPercentList.reduce((sum, value) => sum + value, 0);
+      this.updateLegacyBars();
+      this.totalMultiplier = finiteDecimal(Decimal.pow10(log10Mult));
+      this.totalPositivePower = totalPosPow;
+    },
+    calculateSingleTypeImpacts() {
+      const selectedValues = this.entries.map(entry => {
+        if (!entry.data.isVisible || !this.entryMatchesMode(entry)) return DC.D1;
+        const value = this.valueMode === "multiplier" ? entry.data.mult : entry.data.pow;
+        return finiteDecimal(value);
+      });
+      const values = selectedValues.map(value => (value.eq(0)
+        ? new Decimal(DC.BEMAX).log10().neg()
+        : finiteDecimal(value.abs().log10(), DC.D0)));
+      const max = values.reduce((result, value) => Decimal.max(result, value.abs()), DC.D0);
+      const scaled = values.map(value => (max.eq(0) ? DC.D0 : value.div(max)));
+      const weight = scaled.reduce((sum, value) => sum.add(value.abs()), DC.D0);
+      const shares = scaled.map(value => (weight.eq(0) ? 0 : finiteShare(value.div(weight))));
+      const totalLog = values.reduce((result, value) => finiteDecimal(result.add(value), DC.D0), DC.D0);
+      const sign = selectedValues.reduce((product, value) => product * value.sign, 1);
+      this.selectedEffect = sign === 0 ? DC.D0 : finiteDecimal(Decimal.pow10(totalLog).times(sign));
+      if (this.entries.some(entry => entry.data.isVisible && this.entryMatchesMode(entry))) {
+        this.lastNotEmptyAt = Date.now();
+      }
+      this.percentList = shares;
+      this.rollingAverage.add(shares);
+      this.averagedPercentList = this.rollingAverage.average;
+      this.updateLegacyBars();
+      this.totalMultiplier = this.selectedEffect;
+      this.totalPositivePower = DC.D1;
+    },
+    updateLegacyBars() {
+      const netPercent = Math.max(0, this.averagedPercentList.reduce((sum, value) => sum + value, 0));
+      const heights = this.averagedPercentList.map(value => {
+        if (this.valueMode === "all" && value > 0) return value * netPercent;
+        return Math.abs(value);
+      });
+      const scale = Math.max(1, heights.reduce((sum, height) => sum + height, 0));
       let position = 0;
       this.legacyBarOffsets = [];
       this.legacyBarHeights = [];
-      for (const value of this.averagedPercentList) {
-        const height = value > 0 ? value * netPercent : -value;
+      for (const rawHeight of heights) {
+        const height = rawHeight / scale;
         this.legacyBarOffsets.push(position);
         this.legacyBarHeights.push(height);
         position += height;
       }
-      this.totalMultiplier = Decimal.pow10(log10Mult);
-      this.totalPositivePower = totalPosPow;
     },
     calculateOrderedImpacts() {
-      const impacts = this.entries.map((entry, index) => this.orderedImpactDelta(index, this.orderedFinalImpact));
+      const impacts = this.entries.map((entry, index) => this.orderedImpactDelta(index, this.impactMode));
       const directImpacts = this.entries.map((entry, index) => this.orderedImpactDelta(index, false));
       const maxImpact = impacts
         .map(delta => delta.abs())
@@ -360,26 +471,43 @@ export default {
       // Normalize direct-path segments by the largest impact before summing.
       // Raw OoM deltas can be near the Decimal representation boundary, where
       // adding several of them can overflow even though the final shares are <= 1.
-      const maxDirectImpact = directImpacts
-        .map(delta => delta.abs())
-        .reduce((max, delta) => Decimal.max(max, delta), DC.D0);
-      const directPathScaled = directImpacts.map(delta => {
-        if (delta.eq(0) || maxDirectImpact.eq(0)) return DC.D0;
-        return delta.abs().div(maxDirectImpact);
-      });
-      const directPathTotal = directPathScaled.reduce((sum, value) => sum.add(value), DC.D0);
-      const hasVisibleTransforms = this.entries.some(entry => entry.data.hasTransform && entry.data.isVisible);
+      const gains = directImpacts.map((delta, i) => (this.entries[i].data.transformHasImpactBudget
+        ? this.entries[i].data.transformPositiveImpact : delta.clampMin(0)));
+      const losses = directImpacts.map((delta, i) => (this.entries[i].data.transformHasImpactBudget
+        ? this.entries[i].data.transformNegativeImpact : delta.neg().clampMin(0)));
+      const maxDirectImpact = [...gains, ...losses].reduce((max, delta) => Decimal.max(max, delta), DC.D0);
+      const scale = value => (maxDirectImpact.eq(0) ? DC.D0 : value.div(maxDirectImpact));
+      const scaledGains = gains.map(scale);
+      const scaledLosses = losses.map(scale);
+      const positive = scaledGains.reduce((sum, value) => sum.add(value), DC.D0);
+      const loss = scaledLosses.reduce((sum, value) => sum.add(value), DC.D0);
+      const budget = Decimal.max(positive, loss);
+      const surviving = positive.sub(loss).clampMin(0);
+      const hasVisibleTransforms = this.entries.some(entry => entry.data.isVisible &&
+        (this.valueMode === "all" || this.entryMatchesMode(entry)));
       if (hasVisibleTransforms) this.lastNotEmptyAt = Date.now();
+      if (this.valueMode !== "all") {
+        const selectedLog = directImpacts.reduce((sum, delta) => finiteDecimal(sum.add(delta), DC.D0), DC.D0);
+        this.selectedEffect = finiteDecimal(Decimal.pow10(selectedLog));
+        const desired = this.valueMode === "multiplier" ? "multiply" : "power";
+        const selected = this.entries.filter(entry => entry.data.isVisible && this.entryMatchesMode(entry));
+        this.selectedRawEffectAvailable = selected.length > 0 && selected.every(entry =>
+          entry.data.transformType === desired && entry.data.transformHasValue);
+        this.selectedRawEffect = selected.reduce((product, entry) =>
+          finiteDecimal(product.times(entry.data.transformValue)), DC.D1);
+      }
 
       const relativeImpacts = impacts.map(delta => {
-        if (delta.eq(0) || maxImpact.eq(0)) return 0;
-        const relative = delta.div(maxImpact);
-        return Decimal.isFinite(relative) ? relative.toNumber() : 0;
+        if (delta.eq(0)) return 0;
+        if (this.impactMode) return maxImpact.eq(0) ? 0 : finiteShare(delta.div(maxImpact));
+        if (maxDirectImpact.eq(0) || budget.eq(0)) return 0;
+        return finiteShare(delta.div(maxDirectImpact).div(budget));
       });
-      this.orderedPathPercentList = directPathScaled.map(value => {
-        if (value.eq(0) || directPathTotal.eq(0)) return 0;
-        const share = value.div(directPathTotal);
-        return Decimal.isFinite(share) ? share.toNumber() : 0;
+      this.orderedPathNerfPercentList = scaledLosses.map(value => (budget.eq(0) ? 0 : finiteShare(value.div(budget))));
+      this.orderedPathPercentList = scaledGains.map((value, i) => {
+        let share = new Decimal(this.orderedPathNerfPercentList[i]);
+        if (positive.neq(0) && budget.neq(0)) share = share.add(value.div(positive).times(surviving.div(budget)));
+        return finiteShare(share);
       });
       this.orderedDirectNerfs = directImpacts.map(delta => delta.lt(0));
       let offset = 0;
@@ -395,9 +523,24 @@ export default {
       this.totalMultiplier = this.resource.mult;
       this.totalPositivePower = DC.D1;
     },
-    orderedImpactDelta(index, finalMode = this.orderedFinalImpact) {
+    orderedImpactDelta(index, finalMode = this.impactMode) {
       const entry = this.entries[index];
+      return this.orderedEntryDelta(entry, finalMode);
+    },
+    orderedEntryDelta(entry, finalMode) {
       const data = entry.data;
+      if (this.valueMode !== "all") {
+        const desiredType = this.valueMode === "multiplier" ? "multiply" : "power";
+        if (data.transformType !== desiredType) {
+          // Groups are alternative presentations of the same sources, not additive lists.
+          const children = getResourceEntryInfoGroups(entry.key)[0]?.entries ?? [];
+          return children.reduce((sum, child) => {
+            if (!this.entryMatchesMode(child)) return sum;
+            child.update(finalMode, this.valueMode);
+            return finiteDecimal(sum.add(this.orderedEntryDelta(child, finalMode)), DC.D0);
+          }, DC.D0);
+        }
+      }
       if (!data.hasTransform || !data.isVisible) return DC.D0;
       // A trace mismatch is a residual/debugging signal, not a gameplay source.
       // Keep the row visible, but never let it consume contribution/path percentage.
@@ -423,12 +566,9 @@ export default {
       if (![decimal.sign, decimal.layer, decimal.mag].every(Number.isFinite)) {
         decimal = decimal.sign > 0 ? new Decimal(DC.BEMAX) : DC.D0;
       }
-      // Speed can genuinely be below x1 (inverted BH, storage, EC12). Clamping
-      // those values to x1 hides the magnitude and even the sign of a nerf.
-      if (this.resource.key.startsWith("gamespeed") || this.resource.key === "AM_tickRate") {
-        return Decimal.max(decimal, new Decimal(1e-300)).log10();
-      }
-      return Decimal.max(decimal, DC.D1).log10();
+      // Values below x1 are still real effects. Use the Decimal display floor only
+      // for zero, rather than erasing sub-unit multipliers or speeds.
+      return Decimal.max(decimal, new Decimal(DC.BEMAX).recip()).log10();
     },
     orderedImpactStyle(index) {
       const impact = this.averagedPercentList[index] ?? 0;
@@ -445,7 +585,8 @@ export default {
     },
     orderedPathStyle(index) {
       const share = this.orderedPathPercentList[index] ?? 0;
-      const isNerf = this.orderedDirectNerfs[index] ?? false;
+      const nerf = this.orderedPathNerfPercentList[index] ?? 0;
+      const positiveHeight = share === 0 ? 100 : 100 * Math.max(0, share - nerf) / share;
       const iconObj = this.entries[index].icon ?? this.resource.icon;
       return {
         position: "absolute",
@@ -455,8 +596,10 @@ export default {
         "transition-duration": this.isRecent(this.lastLayoutChange) ? undefined : "0.2s",
         border: share === 0 ? "" : "0.1rem solid var(--color-text)",
         color: iconObj?.textColor ?? "black",
-        background: isNerf
-          ? `repeating-linear-gradient(-45deg, var(--color-bad), ${iconObj?.color ?? "var(--color-bad)"} 0.8rem)`
+        background: nerf > 0
+          ? `linear-gradient(to bottom, ${iconObj?.color ?? "var(--color-accent)"} ${positiveHeight}%,
+            transparent ${positiveHeight}%),
+            repeating-linear-gradient(-45deg, var(--color-bad), ${iconObj?.color ?? "var(--color-bad)"} 0.8rem)`
           : iconObj?.color ?? this.resource.icon?.color ?? "var(--color-accent)",
       };
     },
@@ -483,7 +626,9 @@ export default {
       };
     },
     shouldShowEntry(entry) {
-      return entry.data.isVisible || this.isRecent(entry.data.lastVisibleAt);
+      if (this.valueMode !== "all" && !this.entryMatchesMode(entry)) return false;
+      return entry.isActive && (entry.data.isVisible ||
+        (!entry._hasTransform && this.isRecent(entry.data.lastVisibleAt)));
     },
     barSymbol(index) {
       return this.entries[index].icon?.symbol ?? null;
@@ -504,12 +649,12 @@ export default {
     },
     detailIconStyle(index) {
       return {
-        opacity: this.resource.isOrdered && this.entries[index].data.hasTransform ? 1 : 0
+        opacity: this.usesOrdered && this.entries[index].data.hasTransform ? 1 : 0
       };
     },
     entryString(index) {
-      if (this.resource.isOrdered) return this.orderedEntryString(index);
-      const percents = this.percentList[index];
+      if (this.usesOrdered) return this.orderedEntryString(index);
+      const percents = this.percentList[index] ?? 0;
       if (percents < 0 && !nerfBlacklist.includes(this.entries[index].key)) {
         return this.nerfString(index);
       }
@@ -529,14 +674,15 @@ export default {
       if (!entry.data.isVisible) {
         return `${percString}: ${entry.name}`;
       }
-      const overrideStr = entry.displayOverride;
+      if (entry.data.invalidValue) return `${percString}: ${entry.name} (Diagnostic value unavailable)`;
+      const overrideStr = this.valueMode === "all" ? entry.displayOverride : null;
       let valueStr;
       if (overrideStr) valueStr = `(${overrideStr})`;
       else {
         const values = [];
         const formatFn = x => {
           const isDilated = entry.isDilated;
-          if (isDilated && this.dilationExponent !== 1) {
+          if (isDilated && this.dilationExponent !== 1 && this.dilationExponent !== 0) {
             const undilated = this.applyDilationExp(x, 1 / this.dilationExponent);
             return `${formatX(undilated, 2, 2)} ➜ ${formatX(x, 2, 2)}`;
           }
@@ -544,18 +690,22 @@ export default {
             ? format(x, 2, 2)
             : formatX(x, 2, 2);
         };
-        if (this.replacePowers && Decimal.neq(entry.data.pow, 1)) {
+        if (this.valueMode === "all" && this.replacePowers && Decimal.neq(entry.data.pow, 1)) {
           // For replacing powers with equivalent multipliers, we calculate what the total additional multiplier
           // from ALL power effects taken together would be, and then we split up that additional multiplier
           // proportionally to this individual power's contribution to all positive powers
           const pow = new Decimal(entry.data.pow);
           const totalPositivePower = new Decimal(this.totalPositivePower);
           const powFrac = totalPositivePower.eq(1) ? DC.D0 : pow.log10().div(totalPositivePower.log10());
-          const equivMult = this.totalMultiplier.pow(totalPositivePower.sub(1).times(powFrac));
-          values.push(formatFn(entry.data.mult.times(equivMult)));
+          const equivMult = finiteDecimal(this.totalMultiplier.pow(totalPositivePower.sub(1).times(powFrac)));
+          values.push(formatFn(finiteDecimal(entry.data.mult.times(equivMult))));
         } else {
-          if (Decimal.neq(entry.data.mult, 1)) values.push(formatFn(entry.data.mult));
-          if (Decimal.neq(entry.data.pow, 1)) values.push(formatPow(entry.data.pow, 2, 3));
+          if (this.valueMode !== "exponent" && Decimal.neq(entry.data.mult, 1)) {
+            values.push(formatFn(entry.data.mult));
+          }
+          if (this.valueMode !== "multiplier" && Decimal.neq(entry.data.pow, 1)) {
+            values.push(formatPow(entry.data.pow, 2, 3));
+          }
         }
         valueStr = values.length === 0 ? "" : `(${values.join(", ")})`;
       }
@@ -572,15 +722,22 @@ export default {
       } else {
         impactString = formatPercents(impact, 1);
       }
-      const mode = this.orderedFinalImpact ? "final" : "direct";
+      const mode = this.impactMode ? "final" : "direct";
       const pathShare = this.resource.key === "tickspeed_total" && entry.key === "tickspeed_galaxies"
         ? ` | ${formatPercents(this.orderedPathPercentList[index] ?? 0, 1)} of Direct path`
         : "";
-      return `${padPercents(impactString)} rel. (${mode})${pathShare}: ${entry.name} ${this.transformValueString(entry)}`;
+      const value = entry.data.invalidValue ? "(Diagnostic value unavailable)" : this.transformValueString(entry);
+      return `${padPercents(impactString)} rel. (${mode})${pathShare}: ${entry.name} ${value}`;
     },
     transformValueString(entry) {
       const data = entry.data;
-      if (data.transformAggregate) return "";
+      if (data.transformAggregate) {
+        if (data.transformDisplay) return `(${data.transformDisplay})`;
+        if (!data.transformHasValue) return "";
+        return data.transformType === "power"
+          ? `(${formatPow(data.transformValue, 2, 3)} per tier)`
+          : `(${formatX(data.transformValue, 2, 2)})`;
+      }
       if (!data.hasTransform) {
         // Informational rows without an ordered trace (e.g. ID_highestDim, ID_tickspeed) can
         // appear inside ordered panels; show their actual effect instead of a fake "1 ➜ 1".
@@ -625,6 +782,12 @@ export default {
     },
     transformImpactString(entry, finalImpact) {
       const data = entry.data;
+      const before = finalImpact && data.transformHasFinalWithout
+        ? data.transformFinalWithout : data.transformBefore;
+      const after = finalImpact && data.transformHasFinalWithout
+        ? data.transformFinalWith : data.transformAfter;
+      if (after.eq(0) && before.gt(0)) return "Output reduced to zero";
+      if (before.eq(0) && after.gt(0)) return "Output restored from zero";
       let delta;
       if (finalImpact && data.transformHasFinalWithout) {
         delta = this.log10ForImpact(data.transformFinalWith).sub(this.log10ForImpact(data.transformFinalWithout));
@@ -640,23 +803,25 @@ export default {
       const percString = padPercents(formatPercents(this.percentList[index], 1));
 
       // Display both multiplier and powers, but make sure to give an empty string if there's neither
-      const overrideStr = entry.displayOverride;
+      const overrideStr = this.valueMode === "all" ? entry.displayOverride : null;
       let valueStr;
       const formatFn = entry.isBase
         ? x => format(x, 2, 2)
-        : x => `/${format(x.reciprocal(), 2, 2)}`;
+        : x => `/${format(finiteDecimal(x.reciprocal()), 2, 2)}`;
 
       if (overrideStr) valueStr = `(${overrideStr})`;
       else {
         const values = [];
-        if (this.replacePowers && entry.data.pow !== 1) {
+        if (this.valueMode === "all" && this.replacePowers && Decimal.neq(entry.data.pow, 1)) {
           const finalMult = this.resource.fakeValue ?? this.resource.mult;
-          values.push(formatFn(finalMult.pow(DC.D1.sub(DC.D1.div(entry.data.pow)))));
+          values.push(formatFn(finiteDecimal(finalMult.pow(DC.D1.sub(DC.D1.div(entry.data.pow))))));
         } else {
-          if (Decimal.neq(entry.data.mult, 1)) {
+          if (this.valueMode !== "exponent" && Decimal.neq(entry.data.mult, 1)) {
             values.push(formatFn(entry.data.mult));
           }
-          if (entry.data.pow !== 1) values.push(formatPow(entry.data.pow, 2, 3));
+          if (this.valueMode !== "multiplier" && Decimal.neq(entry.data.pow, 1)) {
+            values.push(formatPow(entry.data.pow, 2, 3));
+          }
         }
         valueStr = values.length === 0 ? "" : `(${values.join(", ")})`;
       }
@@ -675,7 +840,11 @@ export default {
         : `${name}: ${formatX(val, 2, 2)}`;
     },
     applyDilationExp(value, exp) {
-      return Decimal.pow10(value.log10().pow(exp));
+      const checked = finiteDecimal(value);
+      if (checked.eq(0)) return DC.D0;
+      const log = checked.log10();
+      const transformed = log.abs().pow(exp).times(log.sign);
+      return finiteDecimal(Decimal.pow10(transformed));
     },
     dilationString() {
       const resource = this.resource;
@@ -687,7 +856,7 @@ export default {
       // the dilation function not being linear (ie. multiply=>dilate gives a different result than dilate=>multiply).
       // In that case we check for isDilated one level down and combine the actual multipliers together instead.
       let beforeMult, afterMult;
-      if (this.isDilated && resource.isDilated) {
+      if (this.isDilated && resource.isDilated && this.dilationExponent !== 0) {
         const dilProd = this.entries
           .filter(entry => entry.isVisible && entry.isDilated)
           .map(entry => entry.mult)
@@ -716,7 +885,7 @@ export default {
 <template>
   <div :class="containerClass">
     <div
-      v-if="resource.isOrdered && !isEmpty"
+      v-if="usesOrdered && !isEmpty"
       class="c-stacked-bars c-ordered-path-bars"
     >
       <div
@@ -757,21 +926,25 @@ export default {
     <div class="c-info-list">
       <div class="c-total-mult">
         <b>
-          <MultiplierBreakdownTotal v-if="isRoot" :resource="resource" />
+          <MultiplierBreakdownTotal
+            v-if="isRoot"
+            :resource="resource"
+            :presentation="presentation"
+          />
           <template v-else>{{ totalString() }}</template>
         </b>
         <span
           class="c-display-settings"
-          :class="{ 'c-ordered-display-settings': resource.isOrdered }"
+          :class="{ 'c-ordered-display-settings': usesOrdered }"
         >
           <span
-            v-if="resource.isOrdered"
+            v-if="usesOrdered"
             class="c-impact-display-label"
           >
             Impact
           </span>
           <PrimaryToggleButton
-            v-if="resource.isOrdered && canShowFinalImpact"
+            v-if="usesOrdered && canShowFinalImpact"
             v-model="orderedFinalImpact"
             v-tooltip="'Final includes amplification or reduction from later formula steps; Direct only measures this step itself'"
             off="Direct"
@@ -779,7 +952,7 @@ export default {
             class="o-primary-btn c-impact-display-btn"
           />
           <PrimaryToggleButton
-            v-else-if="hasSeenPowers && allowPowerToggle"
+            v-else-if="valueMode === 'all' && hasSeenPowers && allowPowerToggle"
             v-model="replacePowers"
             v-tooltip="'Change Display for Power effects'"
             off="^N"
@@ -794,14 +967,29 @@ export default {
           />
         </span>
       </div>
+      <div v-if="valueMode !== 'all' && !isEmpty" class="c-selected-effect">
+        <template v-if="usesOrdered">
+          <div v-if="selectedRawEffectAvailable">
+            Product of source {{ valueMode === 'exponent' ? 'exponents (per tier)' : 'multipliers' }}:
+            {{ valueMode === 'exponent' ? formatPow(selectedRawEffect, 2, 3) : formatX(selectedRawEffect, 2, 2) }}
+          </div>
+          Product of selected direct step ratios: {{ formatX(selectedEffect, 2, 2) }}
+        </template>
+        <template v-else-if="valueMode === 'exponent'">
+          Product of source exponents: {{ formatPow(selectedEffect, 2, 3) }}
+        </template>
+        <template v-else>
+          Product of source multipliers: {{ formatX(selectedEffect, 2, 2) }}
+        </template>
+      </div>
       <div
         v-if="isEmpty"
         class="c-no-effect"
       >
-        No Active Effects
+        No Active {{ valueMode === 'all' ? 'Effects' : (valueMode === 'exponent' ? 'Exponents' : 'Multipliers') }}
         <br>
         <br>
-        {{ disabledText }}
+        <template v-if="valueMode === 'all'">{{ disabledText }}</template>
       </div>
       <div
         v-for="(entry, index) in entries"
@@ -816,7 +1004,7 @@ export default {
         >
           <div class="c-entry-click-target">
             <span
-              v-if="resource.isOrdered"
+              v-if="usesOrdered"
               class="c-ordered-impact-bar"
               :style="orderedImpactStyle(index)"
             />
@@ -835,7 +1023,7 @@ export default {
                   />
                 </button>
                 <button
-                  v-if="resource.isOrdered && entry.data.hasTransform"
+                  v-if="usesOrdered && entry.data.hasTransform"
                   type="button"
                   class="c-inline-expander c-inline-expander--details"
                   v-tooltip="'Show or hide detail box'"
@@ -847,11 +1035,16 @@ export default {
                   />
                 </button>
               </span>
-              <span @click="toggleBar(index)">{{ entryString(index) }}</span>
+              <button
+                type="button"
+                class="c-entry-name"
+                :aria-expanded="!!(showGroup[index] || showDetails[index])"
+                @click="toggleBar(index)"
+              >{{ entryString(index) }}</button>
             </span>
           </div>
           <div
-            v-if="resource.isOrdered && showDetails[index] && entry.data.hasTransform"
+            v-if="usesOrdered && showDetails[index] && entry.data.hasTransform"
             class="c-ordered-transform-details"
           >
             <div
@@ -899,6 +1092,10 @@ export default {
               <template v-if="entry.data.transformAggregate">
                 <span>Scope</span>
                 <b>{{ entry.data.transformAggregateScope || 'Producing dimension tiers' }}</b>
+                <template v-if="entry.data.transformHasValue">
+                  <span>Source value</span>
+                  <b>{{ transformValueString(entry) }}</b>
+                </template>
                 <span>Combined Direct impact</span>
                 <b>{{ transformImpactString(entry, false) }}</b>
                 <template v-if="entry.data.transformHasFinalWithout">
@@ -941,6 +1138,8 @@ export default {
             v-if="showGroup[index] && hasChildEntries(index)"
             :resource="entry"
             :depth="depth + 1"
+            :presentation="presentation"
+            :value-mode="valueMode"
           />
         </div>
       </div>
@@ -952,7 +1151,7 @@ export default {
         v-if="isRoot && isDimensionOverall"
         :resource-key="resource.key.slice(0, 2)"
       />
-      <div v-if="isDilated && !isEmpty && !resource.isOrdered">
+      <div v-if="isDilated && !isEmpty && !usesOrdered">
         <div class="c-single-entry c-dilation-entry">
           <div>
             {{ dilationString() }}
@@ -960,7 +1159,7 @@ export default {
         </div>
       </div>
       <div
-        v-if="resource.isOrdered && !isEmpty"
+        v-if="usesOrdered && !isEmpty"
         class="c-no-effect c-ordered-note"
       >
         {{ orderedNoteText }}
@@ -1091,6 +1290,12 @@ export default {
   user-select: none;
 }
 
+.c-selected-effect {
+  margin: 0.5rem;
+  color: var(--color-text);
+  text-align: left;
+}
+
 .c-single-entry {
   position: relative;
   text-align: left;
@@ -1111,6 +1316,22 @@ export default {
 .c-entry-text {
   position: relative;
   z-index: 1;
+}
+
+.c-entry-name {
+  padding: 0;
+  border: none;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.c-entry-name:focus-visible,
+.c-inline-expander:focus-visible {
+  outline: 0.2rem solid var(--color-accent);
+  outline-offset: 0.1rem;
 }
 
 .c-entry-expanders {
@@ -1170,6 +1391,7 @@ export default {
 .c-ordered-note {
   margin: 0.8rem 0.5rem 0;
   font-size: 1.05rem;
+  line-height: 1.4;
 }
 
 .c-single-entry-highlight {
