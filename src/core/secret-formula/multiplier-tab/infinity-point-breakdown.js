@@ -35,12 +35,12 @@ function ipPositivePowers(skipKey = null) {
 function ipDivisors(skipKey = null) {
   const improved = skipKey === "divisor"
     ? new Decimal(308)
-    : new Decimal(Effects.min(
+    : Effects.minDecimal(
       308,
       Achievement(103),
       TimeStudy(111),
       EndgameMastery(151)
-    ));
+    );
   const final = skipKey === "powerCompensation"
     ? improved
     : Decimal.max(improved, boundedPositiveProduct(ipPositivePowers(skipKey), 2));

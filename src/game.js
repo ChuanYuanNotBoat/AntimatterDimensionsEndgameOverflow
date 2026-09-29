@@ -153,12 +153,12 @@ export function gainedInfinityPoints() {
   if (Ascensions.ipA.isUnlocked) InfinityUpgrade.ipMult.applyEffect(power => { positiveIPPowers = boundedPositiveProduct(positiveIPPowers, power); });
   // Keep the divisor in Decimal space: its late-game power compensation can
   // exceed Number.MAX_VALUE, for which toNumber() would return Infinity.
-  const div = new Decimal(Effects.min(
+  const div = Effects.minDecimal(
     308,
     Achievement(103),
     TimeStudy(111),
     EndgameMastery(151)
-  )).max(boundedPositiveProduct(positiveIPPowers, 2));
+  ).max(boundedPositiveProduct(positiveIPPowers, 2));
   if (Pelle.isDisabled("IPMults")) {
     let ip = boundedPositivePower(10, boundedPositiveQuotient(boundedPositiveSum(player.records.thisInfinity.maxAM, 1).log10(), div).sub(0.75))
       .timesEffectsOf(PelleRifts.vacuum)

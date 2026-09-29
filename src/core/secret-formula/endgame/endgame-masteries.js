@@ -271,8 +271,12 @@ export const endgameMasteries = [
     requirement: [141],
     reqType: EM_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: () => `Make the Infinity Point formula better`,
-    effect: () => player.disablePostReality ? Effects.min(308, Achievement(103), TimeStudy(111)) : Effects.min(308, Achievement(103), TimeStudy(111)) / ((Decimal.log10(Decimal.log10(Currency.celestialPoints.value.plus(1)).add(1)).div(20)).add(1)).toNumber(),
-    formatEffect: value => `log(x)/${format(Effects.min(308, Achievement(103), TimeStudy(111)), 2, 2)} ➜ log(x)/${format(value, 2, 2)}`
+    effect: () => {
+      const base = Effects.minDecimal(308, Achievement(103), TimeStudy(111));
+      return player.disablePostReality ? base : base.div(
+        Currency.celestialPoints.value.plus(1).log10().add(1).log10().div(20).add(1));
+    },
+    formatEffect: value => `log(x)/${format(Effects.minDecimal(308, Achievement(103), TimeStudy(111)), 2, 2)} ➜ log(x)/${format(value, 2, 2)}`
   },
   {
     id: 152,

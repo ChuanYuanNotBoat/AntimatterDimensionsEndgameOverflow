@@ -10,8 +10,13 @@ window.format = function format(value, places = 0, placesUnder1000 = 0) {
   if (isEND()) return "END";
   if (!(value instanceof Decimal)) value = new Decimal(value);
   if (!Decimal.isFinite(value)) return value.toString();
-  if (value.lt("e9e15")) return Notations.current.format(value, places, placesUnder1000, 3);
-  return LNotations.current.formatLDecimal(value, 3);
+  const magnitude = value.abs();
+  const sign = value.lt(0) ? "-" : "";
+  if (magnitude.gt(0) && magnitude.lt("1e-300")) {
+    return `${sign}1/(${format(magnitude.recip(), places, placesUnder1000)})`;
+  }
+  if (magnitude.lt("e9e15")) return Notations.current.format(value, places, placesUnder1000, 3);
+  return `${sign}${LNotations.current.formatLDecimal(magnitude, 3)}`;
 };
 
 window.formatInt = function formatInt(value) {

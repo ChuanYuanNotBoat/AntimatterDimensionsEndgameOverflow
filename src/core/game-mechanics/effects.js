@@ -56,6 +56,13 @@ export const Effects = {
     let result = finiteNumber(defaultValue, 0);
     applyEffectsOf(effectSources, v => result = Math.min(result, finiteNumber(v, result)));
     return result;
+  },
+  minDecimal(defaultValue, ...effectSources) {
+    let result = new Decimal(defaultValue);
+    applyEffectsOf(effectSources, value => {
+      result = Decimal.min(result, value);
+    });
+    return result;
   }
 };
 
