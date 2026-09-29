@@ -930,6 +930,7 @@ export default {
             v-if="isRoot"
             :resource="resource"
             :presentation="presentation"
+            :value-mode="valueMode"
           />
           <template v-else>{{ totalString() }}</template>
         </b>

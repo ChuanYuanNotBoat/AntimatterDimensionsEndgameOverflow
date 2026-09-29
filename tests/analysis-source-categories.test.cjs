@@ -27,6 +27,7 @@ function setup() {
   const context = vm.createContext({ Decimal, DC, Set,
     AntimatterDimensionBreakdown: breakdown, InfinityDimensionBreakdown: {}, TimeDimensionBreakdown: {},
     MultiplierTabIcons: new Proxy({}, { get: () => () => ({}) }),
+    formatX: value => `×${value}`, formatPow: value => `^${value}`,
   });
   vm.runInContext(source('core/finite-decimal.js'), context);
   vm.runInContext(source('core/secret-formula/multiplier-tab/ordered-breakdown.js'), context);
@@ -38,8 +39,18 @@ function setup() {
   const tree = { AD_total: [Object.keys(trace).map(key => `AD_${key}`), [], []] };
   for (let tier = 1; tier <= 8; tier++) tree[`AD_total_${tier}`] = [[], []];
   context.install('AD', values, tree);
-  return { values, tree, icons, evaluate, context, DC };
+  return { values, tree, icons, evaluate, context, DC, trace };
 }
+
+test('mixed original categories retain both raw multipliers and per-tier powers', () => {
+  const { values, trace } = setup();
+  trace.infinitythisInfinityTimeMult.type = 'power';
+  const group = values.sourceinfinityUpgrade.transformValue(1).forMode('all');
+  assert.match(group.display, /×2/);
+  assert.match(group.display, /\^3 per tier/);
+  assert.ok(values.sourceinfinityUpgrade.transformValue(1).forMode('multiplier').value.eq(2));
+  assert.ok(values.sourceinfinityUpgrade.transformValue(1).forMode('exponent').value.eq(3));
+});
 
 test('top-level rows retain original categories and icons; sources are expanded beneath them', () => {
   const { values, tree, icons } = setup();

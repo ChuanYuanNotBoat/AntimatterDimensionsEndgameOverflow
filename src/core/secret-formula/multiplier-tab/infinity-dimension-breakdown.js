@@ -20,20 +20,22 @@ function multiplyGroup(steps, key, current, items, skipKey, display = undefined)
   if (isOrderedSourceSkipped(skipKey, key)) return current;
   const before = current;
   let value = current;
+  let combinedFactor = DC.D1;
   for (const item of items) {
     if (item.items) {
       value = multiplyGroup(steps, item.key, value, item.items, skipKey, item.display);
+      if (steps) combinedFactor = boundedPositiveProduct(combinedFactor, steps[item.key]?.value ?? 1);
       continue;
     }
     if (isOrderedSourceSkipped(skipKey, item.key)) continue;
     const mult = valueOf(item.value);
+    if (steps) combinedFactor = boundedPositiveProduct(combinedFactor, mult);
     const after = boundedPositiveProduct(value, mult);
     if (steps) addOrderedTransform(steps, item.key, "multiply", value, after, { value: mult, display: item.display });
     value = after;
   }
   if (steps) {
-    const factor = before.eq(0) ? DC.D1 : boundedPositiveProduct(value, before.recip());
-    addOrderedTransform(steps, key, "multiply", before, value, { value: factor, display });
+    addOrderedTransform(steps, key, "multiply", before, value, { value: combinedFactor, display });
   }
   return value;
 }

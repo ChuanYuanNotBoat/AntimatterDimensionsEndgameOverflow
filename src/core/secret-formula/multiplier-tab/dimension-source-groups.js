@@ -3,7 +3,7 @@ import { InfinityDimensionBreakdown } from "./infinity-dimension-breakdown";
 import { TimeDimensionBreakdown } from "./time-dimension-breakdown";
 import { aggregateOrderedTransforms, createOrderedTransformCache } from "./ordered-breakdown";
 import { MultiplierTabIcons } from "./icons";
-import { boundedSignedProduct } from "../../finite-decimal";
+import { boundedSignedProduct, boundedPositiveProduct } from "../../finite-decimal";
 
 const breakdowns = { AD: AntimatterDimensionBreakdown, ID: InfinityDimensionBreakdown, TD: TimeDimensionBreakdown };
 
@@ -76,6 +76,22 @@ function sourceTransform(resource, breakdown, tiers, sources, mode) {
       direct.display = `Per-tier powers: ${selected.map((item, i) =>
         `${resource}${item.tier} ${formatPow(powers[i], 2, 3)}`).join("; ")}`;
     }
+  }
+  if (direct.type === "formula") {
+    const multipliers = selected.flatMap(item => item.transforms)
+      .filter(item => item.transform.type === "multiply");
+    const powers = selected.map(item => item.transforms.filter(part => part.transform.type === "power")
+      .reduce((product, part) => boundedSignedProduct(product, part.transform.value ?? 1), DC.D1));
+    const labels = [];
+    if (multipliers.length) labels.push(formatX(multipliers.reduce((product, item) =>
+      boundedPositiveProduct(product, item.transform.value ?? 1), DC.D1), 2, 2));
+    if (powers.some(power => power.neq(1))) {
+      labels.push(powers.every(power => power.eq(powers[0]))
+        ? `${formatPow(powers[0], 2, 3)} per tier`
+        : `Per-tier powers: ${selected.map((item, i) =>
+          `${resource}${item.tier} ${formatPow(powers[i], 2, 3)}`).join("; ")}`);
+    }
+    if (labels.length) direct.display = labels.join("; ");
   }
   // A category counterfactual removes all its sources together. Adding individual
   // removals is incorrect when sources interact (TS31, purchase powers, softcaps).
