@@ -93,7 +93,7 @@ export default {
       this.realityUnlocked = this.fullCompletion || progress.isRealityUnlocked;
       this.alchemyUnlocked = this.fullCompletion || Ra.unlocks.effarigUnlock.canBeApplied;
       this.endgameUnlocked = this.fullCompletion || progress.isEndgameUnlocked;
-      this.divinityUnlocked = this.fullCompletion || player.celestials.pelle.divinities > 0;
+      this.divinityUnlocked = this.fullCompletion || player.celestials.pelle.divinities.gt(0);
       this.lhcUnlocked = this.fullCompletion || ExpansionPack.alphaPack.isBought;
 
       const options = player.options.showHintText;

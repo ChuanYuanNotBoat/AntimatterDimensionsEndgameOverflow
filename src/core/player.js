@@ -1069,7 +1069,7 @@ window.player = {
         destruction: [false, false, false, false, false, false, false, false]
       },
       showBought: false,
-      divinities: 0,
+      divinities: DC.D0,
       divinity: {
         divineMatter: DC.E1,
         divineEnergy: DC.D0,

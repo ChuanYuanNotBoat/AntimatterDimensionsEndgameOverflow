@@ -1,4 +1,6 @@
-import { boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum, finiteNumber } from "./finite-decimal";
+import {
+  boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum, boundedPositiveValue, finiteNumber
+} from "./finite-decimal";
 
 /**
  * @abstract
@@ -726,9 +728,12 @@ Currency.celestialEternityPoints = new class extends DecimalCurrency {
   }
 }();
 
-Currency.divinities = new class extends NumberCurrency {
+Currency.divinities = new class extends DecimalCurrency {
   get value() { return player.celestials.pelle.divinities; }
-  set value(value) { player.celestials.pelle.divinities = value; }
+  set value(value) {
+    // Divinity counts are saved as Decimal, just like other unbounded prestige counts.
+    player.celestials.pelle.divinities = boundedPositiveValue(value, "Divinity count").floor();
+  }
 }();
 
 Currency.divineMatter = new class extends DecimalCurrency {

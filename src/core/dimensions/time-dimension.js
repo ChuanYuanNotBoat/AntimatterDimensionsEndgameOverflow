@@ -536,8 +536,13 @@ export const TimeDimensions = {
   },
 
   get OVERFLOW_SQUARED() {
-    return Pelle.isDoomed ?
-      Decimal.pow10(Decimal.pow(DC.NUMMAX, Decimal.pow(2, Decimal.clamp(player.celestials.pelle.divinities, 0, 8)).times(Math.max(2 - player.celestials.pelle.divinities / 2, 1)).times(Decimal.pow(1.5, Decimal.max(player.celestials.pelle.divinities - 8, 0))))) : DC.ENUMMAX;
+    if (!Pelle.isDoomed) return DC.ENUMMAX;
+    const divinities = player.celestials.pelle.divinities;
+    const earlyScaling = boundedPositiveProduct(boundedPositivePower(2, Decimal.min(divinities, 8)),
+      Decimal.max(DC.D2.sub(divinities.div(2)), 1));
+    const lateScaling = boundedPositivePower(1.5, Decimal.max(divinities.sub(8), 0));
+    return boundedPositivePower(10, boundedPositivePower(DC.NUMMAX,
+      boundedPositiveProduct(earlyScaling, lateScaling)));
   },
 
   get compressionMagnitude() {

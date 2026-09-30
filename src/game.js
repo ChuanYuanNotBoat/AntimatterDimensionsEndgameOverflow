@@ -1684,12 +1684,17 @@ export function getTTPerSecond() {
 
 export function gainedCelestialPoints() {
   if (!player.break2) return DC.D1;
+  const divinities = player.celestials.pelle.divinities;
   let cp = player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10().div(9e15);
   if (Achievement(207).isUnlocked && !player.disablePostReality) {
-    cp = cp.times(Decimal.max(9e15 * (1e100 ** (0.5 ** player.celestials.pelle.divinities)), player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10()).div(9e15 * (1e100 ** (0.5 ** player.celestials.pelle.divinities))));
+    const achievementThreshold = boundedPositiveProduct(9e15,
+      boundedPositivePower(1e100, boundedPositivePower(0.5, divinities)));
+    cp = boundedPositiveProduct(cp, boundedPositiveQuotient(Decimal.max(achievementThreshold,
+      player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10()), achievementThreshold));
   }
   cp = Alpha.isDestroyed ? cp : Decimal.max(Decimal.min(cp, DC.NUMMAX.sub(player.endgame.celestialPoints)), 0);
-  cp = Decimal.pow(cp, Decimal.pow(2 * EndgameMastery(232).effectOrDefault(1), player.celestials.pelle.divinities));
+  cp = boundedPositivePower(cp,
+    boundedPositivePower(2 * EndgameMastery(232).effectOrDefault(1), divinities));
   cp = cp.powEffectsOf(EndgameMastery(212));
   return cp.floor();
 }
@@ -1699,7 +1704,7 @@ export function gainedDoomedParticles() {
   const rawDP = player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10().div(9e15);
   const remainingDP = new Decimal(1e100).sub(player.endgame.doomedParticles).max(0);
   let dp = Alpha.isDestroyed ? rawDP : Decimal.max(Decimal.min(rawDP, remainingDP), 0);
-  dp = Decimal.pow(dp, Decimal.pow(2, player.celestials.pelle.divinities));
+  dp = boundedPositivePower(dp, boundedPositivePower(2, player.celestials.pelle.divinities));
   return dp.floor();
 }
 

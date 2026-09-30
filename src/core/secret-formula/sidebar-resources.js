@@ -230,8 +230,8 @@ export const sidebarResources = [
   {
     id: 29,
     optionName: "Divinities",
-    isAvailable: () => player.celestials.pelle.divinities >= 1,
-    value: () => new Decimal(player.celestials.pelle.divinities),
+    isAvailable: () => player.celestials.pelle.divinities.gte(1),
+    value: () => player.celestials.pelle.divinities,
     formatValue: x => format(x, 2),
     formatClass: "o-sidebar-currency--pelle",
   },

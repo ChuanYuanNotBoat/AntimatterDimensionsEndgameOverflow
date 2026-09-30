@@ -741,21 +741,23 @@ class AntimatterDimensionState extends DimensionState {
       record?.("productionPowers", "power", checkpoint,
         "NC3, Accelerator potency, Synergy, glyph/mastery/endgame and Black Star effects");
       checkpoint = production;
-      if (production.gt(Decimal.pow10(1e150)) && Pelle.isDoomed && player.celestials.pelle.divinities < 1) {
+      if (production.gt(Decimal.pow10(1e150)) && Pelle.isDoomed && player.celestials.pelle.divinities.lt(1)) {
         const log10 = production.log10();
         production = Decimal.pow10(Decimal.pow(log10.div(1e150), 0.5).times(1e150));
       }
       record?.("pelleCap150", "softcap", checkpoint, "Pelle compression above 10^(1e150)");
       checkpoint = production;
-      if (production.gt(Decimal.pow10(1e225)) && Pelle.isDoomed && player.celestials.pelle.divinities < 1) {
+      if (production.gt(Decimal.pow10(1e225)) && Pelle.isDoomed && player.celestials.pelle.divinities.lt(1)) {
         const log10 = production.log10();
         production = Decimal.pow10(Decimal.pow(log10.div(1e225), 0.1).times(1e225));
       }
       record?.("pelleCap225", "softcap", checkpoint, "Pelle compression above 10^(1e225)");
       checkpoint = production;
-      if (production.gt(Decimal.pow10(9e15)) && Pelle.isDoomed && player.celestials.pelle.divinities >= 1) {
+      if (production.gt(Decimal.pow10(9e15)) && Pelle.isDoomed && player.celestials.pelle.divinities.gte(1)) {
         const log10 = production.log10();
-        production = Decimal.pow10(Decimal.pow(log10.div(9e15), 0.16 / Math.pow(2, player.celestials.pelle.divinities)).times(9e15));
+        const divinityExponent = boundedPositiveProduct(0.16,
+          boundedPositivePower(0.5, player.celestials.pelle.divinities));
+        production = Decimal.pow10(Decimal.pow(log10.div(9e15), divinityExponent).times(9e15));
       }
       record?.("pelleDivinityCap", "softcap", checkpoint, "Pelle Divinity compression above 10^(9e15)");
       checkpoint = production;

@@ -498,7 +498,7 @@ export const singularityMilestones = {
     repeat: new Decimal(0),
     limit: 1,
     description: "Divinities empower Singularity gain",
-    effect: () => Math.pow(player.celestials.pelle.divinities, 0.5),
+    effect: () => player.celestials.pelle.divinities.pow(0.5),
     effectFormat: x => formatPow(x, 2, 3),
     upgradeDirection: LAITELA_UPGRADE_DIRECTION.BOOSTS_LAITELA,
   },

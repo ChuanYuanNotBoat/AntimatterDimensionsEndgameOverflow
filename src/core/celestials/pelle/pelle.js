@@ -596,9 +596,9 @@ export const Pelle = {
   },
   
   get endTabNames() {
-    if (player.celestials.pelle.divinities >= 13) {
+    if (player.celestials.pelle.divinities.gte(13)) {
       return "Our Newest Celestial Still Traverses This Reality For Scraps Of Power Amusing Confusing Laughter".split(" ");
-    } else if (player.celestials.pelle.divinities > 0) {
+    } else if (player.celestials.pelle.divinities.gt(0)) {
       return "Thus We Go Again Rebirth Is Inevitable Surge Forward In Ω Your Divine Leadership".split(" ");
     } else if (Effarig.isRunning) {
       return "Congratulations You Have Just Beaten A Dual Celestial Reality Ω Ω Pelle Is Impressed".split(" ");

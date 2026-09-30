@@ -820,11 +820,11 @@ export const EndgameMilestone = mapGameDataToObject(
 
 export function divinityReset() {
   Endgame.newEndgame();
-  player.celestials.pelle.divinities++;
-  if (player.celestials.pelle.divinities === 3) {
+  Currency.divinities.add(1);
+  if (Currency.divinities.eq(3)) {
     player.celestials.laitela.hadrons.light = player.celestials.laitela.hadrons.total;
     player.celestials.laitela.hadrons.dark = player.celestials.laitela.hadrons.total;
   }
   player.records.bestDoomedAntimatterThisDivinity = DC.E1;
-  if (player.celestials.pelle.divinities === 1) Pelle.quotes.divinity.show();
+  if (Currency.divinities.eq(1)) Pelle.quotes.divinity.show();
 }

@@ -163,6 +163,7 @@ export function decimalMigration(player) {
   player.celestials.laitela.singularities = new Decimal(player.celestials.laitela.singularities);
   player.celestials.laitela.singularityCapIncreases = new Decimal(player.celestials.laitela.singularityCapIncreases);
   player.celestials.laitela.lastCheckedMilestones = new Decimal(player.celestials.laitela.lastCheckedMilestones);
+  player.celestials.pelle.divinities = new Decimal(player.celestials.pelle.divinities);
   player.celestials.pelle.remnants = new Decimal(player.celestials.pelle.remnants);
   player.celestials.pelle.realityShards = new Decimal(player.celestials.pelle.realityShards);
   player.celestials.pelle.records.totalAntimatter = new Decimal(player.celestials.pelle.records.totalAntimatter);

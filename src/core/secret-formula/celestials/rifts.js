@@ -1,3 +1,4 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
 import wordShift from "../../word-shift";
 
 export const pelleRifts = {
@@ -103,15 +104,18 @@ export const pelleRifts = {
     percentage: totalFill => totalFill / 10,
     percentageToFill: percentage => 10 * percentage,
     effect: totalFill => {
+      const divinities = player.celestials.pelle.divinities;
+      const capExponent = boundedPositiveProduct(
+        boundedPositivePower(2, Decimal.min(divinities, 8)),
+        boundedPositivePower(1.5, Decimal.max(divinities.sub(8), 0)));
+      const cap = boundedPositivePower(10, boundedPositivePower(DC.NUMMAX, capExponent));
       const fill = totalFill > 6.5
         ? (totalFill - 6.5) / 7 + 6.5
         : totalFill;
       return Decimal.min(Decimal.pow(6, Decimal.pow(6, Decimal.pow(6, Math.min(fill, 10) / 10 + 0.1)).minus(6))
         .div(1e5)
         .plus(Decimal.pow(10, fill / 10 + 0.1))
-        .times(Decimal.pow(6, Decimal.pow(6, Decimal.log10(Math.max(fill - 9, 1)).pow(6)).sub(1))), Decimal.pow10(Decimal.pow(
-        DC.NUMMAX, Decimal.pow(2, Math.min(player.celestials.pelle.divinities, 8)).times(
-        Decimal.pow(1.5, Math.max(player.celestials.pelle.divinities - 8, 0))))));
+        .times(Decimal.pow(6, Decimal.pow(6, Decimal.log10(Math.max(fill - 9, 1)).pow(6)).sub(1))), cap);
     },
     currency: () => ({
       get value() {

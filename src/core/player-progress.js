@@ -33,7 +33,7 @@ export class PlayerProgress {
   }
 
   get isDivinityUnlocked() {
-    return this._player.celestials.pelle.divinities > 0;
+    return this._player.celestials.pelle.divinities.gt(0);
   }
 
   get isCondenseUnlocked() {

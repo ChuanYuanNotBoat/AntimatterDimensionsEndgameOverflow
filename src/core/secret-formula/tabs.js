@@ -718,7 +718,7 @@ export const tabs = [
     hideAt: 2.4,
     UIClass: "o-tab-btn--divinity",
     id: 13,
-    condition: () => player.celestials.pelle.divinities > 0,
+    condition: () => player.celestials.pelle.divinities.gt(0),
     hidable: true,
     subtabs: [
       {
@@ -755,7 +755,7 @@ export const tabs = [
     hideAt: 2.4,
     UIClass: "o-tab-btn--universes",
     id: 14,
-    condition: () => player.celestials.pelle.divinities >= 13,
+    condition: () => player.celestials.pelle.divinities.gte(13),
     hidable: true,
     subtabs: [
       {

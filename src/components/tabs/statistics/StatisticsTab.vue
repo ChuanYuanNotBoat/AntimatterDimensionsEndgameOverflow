@@ -94,7 +94,7 @@ export default {
       },
       divinity: {
         isUnlocked: false,
-        count: 0
+        count: new Decimal(0)
       },
       condense: {
         isUnlocked: false,
@@ -164,7 +164,7 @@ export default {
         : "no Celestial Eternities";
     },
     divinityCountString() {
-      const num = new Decimal(this.divinity.count);
+      const num = this.divinity.count;
       return num.gt(0)
         ? `${this.formatDecimalAmount(num)} ${pluralize("Divinity", num.floor())}`
         : "no Divinities";
@@ -314,7 +314,7 @@ export default {
       const divinity = this.divinity;
       divinity.isUnlocked = isDivinityUnlocked;
       if (isDivinityUnlocked) {
-        divinity.count = Math.floor(player.celestials.pelle.divinities);
+        divinity.count.copyFrom(Currency.divinities.value.floor());
       }
 
       const isCondenseUnlocked = progress.isCondenseUnlocked;

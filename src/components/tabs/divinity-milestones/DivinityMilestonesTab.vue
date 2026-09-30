@@ -8,7 +8,7 @@ export default {
   },
   data() {
     return {
-      divinityCount: 0,
+      divinityCount: new Decimal(0),
       showNewFeature: false
     };
   },
@@ -24,8 +24,8 @@ export default {
   },
   methods: {
     update() {
-      this.divinityCount = Math.floor(Currency.divinities.value);
-      this.showNewFeature = this.divinityCount >= 10 && this.divinityCount < 13;
+      this.divinityCount = Currency.divinities.value.floor();
+      this.showNewFeature = this.divinityCount.gte(10) && this.divinityCount.lt(13);
     },
     getMilestone(row, column) {
       return () => this.milestones[(row - 1) + column - 1];

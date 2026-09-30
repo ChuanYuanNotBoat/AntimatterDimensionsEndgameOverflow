@@ -2008,7 +2008,7 @@ export const normalAchievements = [
     description: "Unlock Hadron Continuum.",
     checkRequirement: () => DivinityMilestone.hadronEmpowerment.isReached,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
-    progress: () => Achievement(238).isUnlocked ? DC.D1 : Decimal.clamp(new Decimal(player.celestials.pelle.divinities).div(3), 0, 1)
+    progress: () => Achievement(238).isUnlocked ? DC.D1 : Decimal.clamp(player.celestials.pelle.divinities.div(3), 0, 1)
   },
   {
     id: 241,
