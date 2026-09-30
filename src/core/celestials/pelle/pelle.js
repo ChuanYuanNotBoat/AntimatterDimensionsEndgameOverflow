@@ -1,3 +1,4 @@
+import { boundedPositiveProductMany } from "../../finite-decimal";
 import { Currency } from "../../currency";
 import { RebuyableMechanicState } from "../../game-mechanics/rebuyable";
 import { SetPurchasableMechanicState } from "../../utils";
@@ -52,6 +53,15 @@ const disabledMechanicUnlocks = {
 };
 
 export const Pelle = {
+  get antimatterProductionDilation() {
+    if (!this.isDoomed) return DC.D1;
+    return boundedPositiveProductMany([
+      DivineDimensions.conversionFormula2,
+      Accelerators.cosmic.effectValue2,
+      EndgameMastery(222).effectOrDefault(1),
+      SingularityMilestone.singAMDoomDilation.effectOrDefault(1)
+    ]);
+  },
   symbol: "♅",
   // Suppress the randomness for this form
   possessiveName: "Pelle's",

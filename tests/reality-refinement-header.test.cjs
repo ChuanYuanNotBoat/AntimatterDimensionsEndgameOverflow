@@ -122,7 +122,7 @@ test('header follows actual gameplay threshold and never takes log10 of zero on 
   const context = {
     Decimal: D,
     Currency: { endgames: { value: 0 } },
-    Pelle: { isDoomed: false },
+    Pelle: { isDoomed: false, antimatterProductionDilation: new D(1) },
     EndgameMilestone: { endgameAntimatter: { isReached: false } },
     player: { disablePostReality: false },
     getAdjustedGlyphEffect: () => 1,

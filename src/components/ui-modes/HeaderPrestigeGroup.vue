@@ -53,12 +53,11 @@ export default {
       const eg = Currency.endgames.value;
       const endgameMult = Pelle.isDoomed ? 1 + (Math.log10(Math.min(eg, 1e6) * Math.max(Math.log2(eg + 1) - Math.log2(5e5), 1) + 1) / 80) : 1 + (Math.log10(Math.min(eg, 1e6) * Math.max(Math.log2(eg + 1) - Math.log2(5e5), 1) + 1) / 200);
       const endgameMultValue = (EndgameMilestone.endgameAntimatter.isReached && !player.disablePostReality) ? endgameMult : 1;
-      const pelleOnly = Pelle.isDoomed ? DivineDimensions.conversionFormula2 * Accelerators.cosmic.effectValue2 * EndgameMastery(222).effectOrDefault(1) * SingularityMilestone.singAMDoomDilation.effectOrDefault(1) : 1;
       return boundedPositivePower(10, boundedPositivePower(log10,
           new Decimal(getAdjustedGlyphEffect("effarigantimatter"))
             .timesEffectsOf(EndgameMastery(101), EndgameUpgrade(15),
               SingularityMilestone.antimatterExponentPower, Achievement(233))
-            .times(endgameMultValue).times(EtherealStars.black.reward).times(pelleOnly)));
+            .times(endgameMultValue).times(EtherealStars.black.reward).times(Pelle.antimatterProductionDilation)));
     },
     classObject() {
       return {
