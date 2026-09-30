@@ -105,6 +105,7 @@ export const stars = {
       if (player.disablePostReality) return DC.D0;
       return Decimal.log10(Decimal.log10(amount.add(1)).add(1)).times(20);
     },
-    description: amount => `Increase the effectiveness of all other stars by ${formatPercents(amount.div(100).toNumber(), 2)}`
+    description: amount => `Increase the effectiveness of all other stars by ${
+      formatDecimalPercents(amount.div(100), 2)}`
   },
 };

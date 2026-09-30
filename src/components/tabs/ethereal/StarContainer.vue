@@ -105,6 +105,8 @@ export default {
 <style scoped>
 .o-reset-btn {
   width: 32rem;
+  height: auto;
+  min-height: 2.5rem;
   font-size: 1rem;
 }
 </style>
