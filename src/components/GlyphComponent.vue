@@ -283,7 +283,7 @@ export default {
       default: false
     },
     realityGlyphBoost: {
-      type: Number,
+      type: [Number, Decimal],
       required: false,
       default: 0
     },

@@ -152,7 +152,7 @@ export const ra = {
       id: 13,
       reward: () => `Glyphs are always generated with ${formatPercents(1)} rarity and
         Glyph Sacrifice gain is raised to a power based on Relic Shards`,
-      effect: () => 1 + Effarig.maxRarityBoost / 100,
+      effect: () => Effarig.maxRarityBoost.div(100).add(1),
       pet: "effarig",
       level: 25,
       displayIcon: `<i class="fas fa-ankh"></i>`

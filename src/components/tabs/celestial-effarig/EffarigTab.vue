@@ -13,9 +13,9 @@ export default {
   data() {
     return {
       relicShards: new Decimal(0),
-      shardRarityBoost: 0,
-      shardPower: 0,
-      shardMaxRarityIncrease: 0,
+      shardRarityBoost: new Decimal(0),
+      shardPower: new Decimal(1),
+      shardMaxRarityIncrease: new Decimal(0),
       shardsGained: new Decimal(0),
       currentShardsRate: new Decimal(0),
       amplification: new Decimal(0),
@@ -81,9 +81,10 @@ export default {
   methods: {
     update() {
       this.relicShards.copyFrom(Currency.relicShards.value);
-      this.shardRarityBoost = Effarig.maxRarityBoost / 100;
-      this.shardPower = player.disablePostReality ? 1 : Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost.effectOrDefault(1);
-      this.shardMaxRarityIncrease = Effarig.rarityCapIncrease / 100;
+      this.shardRarityBoost.copyFrom(Effarig.maxRarityBoost.div(100));
+      this.shardPower.copyFrom(new Decimal(player.disablePostReality
+        ? 1 : Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost.effectOrDefault(1)));
+      this.shardMaxRarityIncrease.copyFrom(Effarig.rarityCapIncrease.div(100));
       this.shardsGained.copyFrom(Effarig.shardsGained);
       this.currentShardsRate.copyFrom(this.shardsGained.div(Time.thisRealityRealTime.totalMinutes));
       this.amplification.copyFrom(simulatedRealityCount(false));
@@ -116,20 +117,20 @@ export default {
           You have {{ quantify("Relic Shard", relicShards, 2, 0) }}.
           <br>
           <span v-if="relicShardRarityAlwaysMax">
-            The rarity of new Glyphs is being increased by +{{ formatPercents(shardRarityBoost, 2) }}.
+            The rarity of new Glyphs is being increased by +{{ formatDecimalPercents(shardRarityBoost, 2) }}.
           </span>
           <span v-else>
             Each new Glyph will have its rarity increased
             <br>
-            by a random value between +{{ formatPercents(0) }} and +{{ formatPercents(shardRarityBoost, 2) }}.
+            by a random value between +{{ formatPercents(0) }} and +{{ formatDecimalPercents(shardRarityBoost, 2) }}.
           </span>
-          <span v-if="shardPower > 1">
+          <span v-if="shardPower.gt(1)">
             <br>
             Glyph Sacrifice gain is also being raised to {{ formatPow(shardPower, 0, 2) }}.
           </span>
-          <span v-if="shardMaxRarityIncrease > 0">
+          <span v-if="shardMaxRarityIncrease.gt(0)">
             <br>
-            The Glyph Rarity cap is also being increased by +{{ formatPercents(shardMaxRarityIncrease, 2) }}.
+            The Glyph Rarity cap is also being increased by +{{ formatDecimalPercents(shardMaxRarityIncrease, 2) }}.
           </span>
         </div>
         <div class="c-effarig-relic-description">

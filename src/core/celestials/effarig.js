@@ -123,12 +123,12 @@ export const Effarig = {
       AlchemyResource.effarig.effectValue).times(extraBoost).timesEffectOf(Ra.unlocks.relicShardBoost);
   },
   get maxRarityBoost() {
-    return 15 * (Decimal.pow(Decimal.log10(Decimal.log10(Currency.relicShards.value.plus(10))).add(1), 1.5).sub(1)).toNumber();
+    return Currency.relicShards.value.plus(10).log10().log10().add(1).pow(1.5).sub(1).times(15);
   },
   get rarityCapIncrease() {
     return EffarigUnlock.maxRarityBoost.isUnlocked && !player.disablePostReality
-      ? Decimal.pow(Decimal.log10(Decimal.log10(Currency.relicShards.value.plus(10))).add(1), 1.5).sub(1).times(15).div(100).pow(3).sub(2.5).times(40).max(0).toNumber()
-      : 0;
+      ? this.maxRarityBoost.div(100).pow(3).sub(2.5).times(40).max(0)
+      : DC.D0;
   },
   nerfFactor(power) {
     let c;
