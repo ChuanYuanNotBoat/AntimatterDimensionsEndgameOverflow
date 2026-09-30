@@ -33,7 +33,18 @@ export class Galaxy {
 
   static get remoteGalaxyStrength() {
     const reduction = GalacticPowers.remoteGalaxyPower.isUnlocked ? GalacticPowers.remoteGalaxyPower.reward : 1;
-    return 1 + (0.002 * reduction);
+    return new Decimal(reduction).times(0.002).add(1).toNumber();
+  }
+
+  static get remoteGalaxyLogStrength() {
+    const reduction = GalacticPowers.remoteGalaxyPower.isUnlocked ? GalacticPowers.remoteGalaxyPower.reward : DC.D1;
+    const increase = new Decimal(reduction).times(0.002);
+    const nativeIncrease = increase.toNumber();
+    // Adding an extremely small reduction to 1 rounds away the entire remote scaling.
+    // log1p retains it; below the Number range its continuous limit is x / ln(10).
+    return nativeIncrease === 0
+      ? increase.times(Math.LOG10E)
+      : new Decimal(Math.log1p(nativeIncrease)).times(Math.LOG10E);
   }
 
   static get requirement() {
@@ -49,81 +60,58 @@ export class Galaxy {
     const pow = GlyphAlteration.isAdded("power") ? getSecondaryGlyphEffect("powerpow") : DC.D1;
     const distantStart = Galaxy.costScalingStart;
     const scale = Galaxy.costMult;
-    // When an inverse becomes unrepresentable, buying one affordable Galaxy is
-    // preferable to assigning a NaN bulk result (and does not limit glyph level).
-    const single = new Decimal(currGal).add(1);
-    const valid = value => Decimal.isFinite(value) && new Decimal(value).gte(0);
-    const safe = value => {
-      if (valid(value)) return Decimal.max(value, single);
-      if (!Galaxy._reportedInvalidBulk) {
-        console.warn("Antimatter Galaxy bulk inverse is not finite; purchasing one Galaxy instead", value);
-        Galaxy._reportedInvalidBulk = true;
-      }
-      return single;
-    };
+    const valid = value => Decimal.isFinite(value) && Decimal.gte(value, 0);
     if (!valid(currency) || !valid(distantStart) || !valid(scale) || !valid(pow)) {
       throw new Error("Invalid input to Antimatter Galaxy bulk calculation");
     }
-    if (scale.eq(0) || pow.eq(0)) return single;
-    let base = Galaxy.baseCost.sub(Effects.sum(InfinityUpgrade.resetBoost));
-    if (InfinityChallenge(5).isCompleted) base = base.sub(1);
+    if (currency.lt(Galaxy.requirementAt(currGal).amount)) return new Decimal(currGal);
+    if (pow.eq(0)) return new Decimal(DC.BEMAX);
 
-    const firstScale = Decimal.min(Galaxy.costScalingStart, Galaxy.remoteStart);
-
+    // RequirementAt floors the final discounted cost. Invert its strict upper
+    // bound, including both discounts, rather than dividing an already floored cost.
+    const discount = Effects.sum(InfinityUpgrade.resetBoost) + (InfinityChallenge(5).isCompleted ? 1 : 0);
+    const budget = currency.floor().add(1).div(pow).add(discount);
+    const remoteStart = Galaxy.remoteStart;
+    const firstScale = Decimal.min(distantStart, remoteStart);
+    let target;
     if (currency.lt(Galaxy.requirementAt(firstScale).amount)) {
-      return safe(currency.sub(base).div(scale).floor().add(1));
+      target = budget.sub(Galaxy.baseCost).div(scale).ceil();
+    } else if (currency.lt(Galaxy.requirementAt(remoteStart).amount)) {
+      // Solve in the distance from the distant threshold. Expanding the
+      // quadratic in the total count subtracts enormous, almost equal terms.
+      const available = budget.sub(Galaxy.baseCost).sub(scale.times(distantStart.sub(1))).max(0);
+      const b = scale.add(1);
+      const distance = available.times(2).div(b.pow(2).add(available.times(4)).sqrt().add(b));
+      target = distantStart.sub(1).add(distance).ceil();
+    } else {
+      const logStrength = Galaxy.remoteGalaxyLogStrength;
+      if (logStrength.eq(0)) return new Decimal(DC.BEMAX);
+      const base = Galaxy.scalingCostAt(remoteStart);
+      const distance = budget.div(base).log10().div(logStrength);
+      target = remoteStart.sub(1).add(distance).ceil();
     }
 
-    if (currency.lt(Galaxy.requirementAt(Galaxy.remoteStart).amount)) {
-      const a = new Decimal(1);
-      const b = scale.add(1).sub(distantStart.times(2));
-      const c = base.add(distantStart.pow(2).sub(distantStart).sub(scale)).sub(currency.div(pow));
-      const quad = decimalQuadraticSolution(a, b, c).floor();
-      return safe(quad);
+    if (!valid(target)) throw new Error("Invalid Antimatter Galaxy bulk result");
+    target = Decimal.clamp(target, new Decimal(currGal).add(1), DC.BEMAX);
+    // Correct rounding at integer boundaries and check the forward price before
+    // granting any bulk purchase. Above Decimal precision, +/-1 can be unchanged.
+    for (let adjustment = 0; adjustment < 8; adjustment++) {
+      if (Galaxy.requirementAt(target.sub(1)).amount.gt(currency)) {
+        const lower = target.sub(1);
+        if (lower.eq(target)) return new Decimal(currGal).add(1);
+        target = lower;
+      } else if (target.lt(DC.BEMAX) && Galaxy.requirementAt(target).amount.lte(currency)) {
+        const higher = target.add(1);
+        if (higher.eq(target)) return target;
+        target = higher;
+      } else {
+        return target;
+      }
     }
-
-    if (Galaxy.requirementAt(Galaxy.remoteStart).amount.lt(currency)) {
-      // A remote strength rounded to exactly 1 cannot be inverted using logarithms.
-      if (new Decimal(Galaxy.remoteGalaxyStrength).lte(1)) return single;
-      let estimate = new Decimal(Decimal.log(currency.div(Galaxy.requirementAt(Galaxy.remoteStart).amount), Galaxy.remoteGalaxyStrength))
-        .add(Galaxy.remoteStart).floor();
-      if (!valid(estimate)) return single;
-      if (Galaxy.requirementAt(estimate).amount.lte(currency) && Galaxy.requirementAt(estimate.add(1)).amount.gt(currency)) {
-        return Decimal.max(estimate.add(1), currGal);
-      }
-      let n = 0;
-      while (n < 20 && !(Galaxy.requirementAt(estimate).amount.lte(currency) && Galaxy.requirementAt(estimate.add(1)).amount.gt(currency))) {
-        estimate = estimate.add(new Decimal(Decimal.log(currency.div(Galaxy.requirementAt(estimate).amount), Galaxy.remoteGalaxyStrength)));
-        if (!valid(estimate)) return single;
-        n++;
-      }
-      let x = 0;
-      if (Galaxy.requirementAt(estimate).amount.lte(currency) && Galaxy.requirementAt(estimate.add(1)).amount.gt(currency)) return Decimal.max(estimate.add(1), currGal);
-      if (Galaxy.requirementAt(estimate.add(1)).amount.lte(currency)) {
-        while (x < 50) {
-          estimate = estimate.add(1);
-          x++;
-        }
-        return Decimal.max(estimate.add(1), currGal);
-      }
-      if (Galaxy.requirementAt(estimate).amount.gt(currency)) {
-        while (x < 50) {
-          estimate = estimate.sub(1);
-          x++;
-        }
-        return Decimal.max(estimate.add(1), currGal);
-      }
-      // Iterative estimation may fail near Decimal precision limits; retain the
-      // already-checked ability to buy one instead of writing NaN to player.galaxies.
-      return single;
-    }
-
-    // Equality with the remote boundary previously passed the binary-search
-    // result object into new Decimal(), producing NaN.
-    return safe(Galaxy.remoteStart.add(1));
+    return Galaxy.requirementAt(target.sub(1)).amount.lte(currency) ? target : new Decimal(currGal).add(1);
   }
 
-  static requirementAt(galaxies) {
+  static scalingCostAt(galaxies) {
     const equivGal = Decimal.min(Galaxy.remoteStart, galaxies);
     let amount = boundedPositiveSum(Galaxy.baseCost, boundedPositiveProduct(equivGal, Galaxy.costMult));
     const type = Galaxy.typeAt(galaxies);
@@ -136,9 +124,15 @@ export class Galaxy {
       amount = boundedPositiveSum(amount, distantCost);
     }
 
-    if (type === GALAXY_TYPE.REMOTE) {
+    return amount;
+  }
+
+  static requirementAt(galaxies) {
+    let amount = Galaxy.scalingCostAt(galaxies);
+    if (Galaxy.typeAt(galaxies) === GALAXY_TYPE.REMOTE) {
       const remoteExponent = new Decimal(galaxies).sub(Galaxy.remoteStart).add(1);
-      const remoteCost = boundedPositivePower(Galaxy.remoteGalaxyStrength, remoteExponent);
+      const remoteCost = boundedPositivePower(10,
+        boundedPositiveProduct(Galaxy.remoteGalaxyLogStrength, remoteExponent));
       amount = boundedPositiveProduct(amount, remoteCost);
     }
 
@@ -157,9 +151,10 @@ export class Galaxy {
   }
 
   static get costMult() {
+    // Galactic Power may drive its multiplier arbitrarily close to zero; the base AG price must still grow.
     return boundedPositiveProduct(
       Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42)),
-      GalacticPowers.galaxyScaling.isUnlocked ? GalacticPowers.galaxyScaling.reward : 1);
+      GalacticPowers.galaxyScaling.isUnlocked ? GalacticPowers.galaxyScaling.reward : 1).max(1);
   }
 
   static get baseCost() {

@@ -59,10 +59,7 @@ export default {
       if (this.bulk) {
         const req = Galaxy.requirement;
         const dim = AntimatterDimension(req.tier);
-        const bulk = Galaxy.buyableGalaxies(Decimal.round(dim.totalAmount.toNumber())).gt(player.galaxies);
-        if (bulk) {
-          this.newGalaxies = Galaxy.buyableGalaxies(Decimal.round(dim.totalAmount.toNumber())).sub(player.galaxies);
-        }
+        this.newGalaxies = Galaxy.buyableGalaxies(Decimal.round(dim.totalAmount)).sub(player.galaxies);
       }
       this.keepAntimatter = Achievement(111).isUnlocked && (!player.disablePostReality || (Alpha.isRunning && Alpha.currentStage >= 12) ||
         (LHC.voidRunning && NullUpgrade.limerick1.isBought));

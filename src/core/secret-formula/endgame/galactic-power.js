@@ -48,7 +48,7 @@ export const galacticPowerRewards = {
     galacticPower: 1e20,
     reward: "Weaken Remote Galaxy Scaling",
     effect: () => {
-      if (player.disablePostReality) return 1;
+      if (player.disablePostReality) return DC.D1;
       const gpLog = Decimal.log10(boundedPositiveSum(Currency.galacticPower.value, 1));
       let result = DC.D1.sub(boundedPositiveProduct(boundedPositivePower(gpLog, 0.5), 0.05)).max(0.1);
       result = result.div(gpLog.div(Decimal.log10(DC.NUMMAX)).max(1));
@@ -58,9 +58,9 @@ export const galacticPowerRewards = {
       if (GalacticPowers.galaxyEmpowerment2.isUnlocked) {
         result = boundedPositivePower(result, new Decimal(GalacticPowers.galaxyEmpowerment2.reward).recip());
       }
-      return Decimal.clamp(result, 0, 1).toNumber();
+      return Decimal.clamp(result, 0, 1);
     },
-    formatEffect: value => `Remote Galaxy Scaling is ${formatPercents(1 - value, 2, 2)} weaker`
+    formatEffect: value => `Remote Galaxy Scaling is ${formatDecimalPercents(DC.D1.sub(value), 2)} weaker`
   },
   galGenInstability1: {
     id: 4,
