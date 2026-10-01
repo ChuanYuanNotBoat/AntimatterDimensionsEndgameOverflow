@@ -1573,10 +1573,11 @@ function passivePrestigeGen(realDiff) {
     let infGen = DC.D0;
     if (BreakInfinityUpgrade.infinitiedGen.isBought && (!Pelle.isDoomed || PelleDestructionUpgrade.passiveInfGen.canBeApplied)) {
       // Multipliers are done this way to explicitly exclude ach87 and TS32
-      if (Alpha.isRunning) infGen = infGen.plus(new Decimal(0.5).times(Time.unscaledDeltaTime.totalMilliseconds).div(
-        Alpha.isDestroyed ? player.records.bestInfinity.time : Decimal.clampMin(50, player.records.bestInfinity.time)));
-      if (!Alpha.isRunning) infGen = infGen.plus(new Decimal(0.5).times(Time.deltaTimeMs).div(
-        Alpha.isDestroyed ? player.records.bestInfinity.time : Decimal.clampMin(50, player.records.bestInfinity.time)));
+      const deltaMs = Alpha.isRunning ? Time.unscaledDeltaTime.totalMilliseconds : Time.deltaTimeMs;
+      const bestTime = Alpha.isDestroyed
+        ? player.records.bestInfinity.time
+        : Decimal.clampMin(50, player.records.bestInfinity.time);
+      infGen = boundedPositiveQuotient(boundedPositiveProduct(0.5, deltaMs), bestTime);
       // Preserve applyEffect unlock semantics while bounding each multiplication;
       // overflowing intermediate Decimal layers must never reach the player setter.
       for (const effect of [RealityUpgrade(5), RealityUpgrade(7), Ra.unlocks.continuousTTBoost.effects.infinity]) {

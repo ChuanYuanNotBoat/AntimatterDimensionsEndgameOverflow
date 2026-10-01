@@ -56,6 +56,12 @@ function setup({ infinityGain = 11, eternities = 20, balance = 100, part = 0.25,
     DC: { D0: new Decimal(0), D1: new Decimal(1), E9E15: new Decimal(100000) },
     boundedPositiveSum: (a, b) => bounded('sum', a, b),
     boundedPositiveProduct: (a, b) => bounded('product', a, b),
+    boundedPositiveQuotient: (a, b) => {
+      const numerator = Number(a);
+      const denominator = Number(b);
+      if (Number.isNaN(numerator) || Number.isNaN(denominator)) throw new Error('Invalid bounded division operand');
+      return new Decimal(numerator === 0 ? 0 : Math.min(MAX, denominator === 0 ? MAX : numerator / denominator));
+    },
     RealityUpgrade: id => ({ isBought: id !== 14, effectValue: new Decimal(id === 11 ? 7 : realityMultiplier),
       ...effect(id === 7 ? 3 : realityMultiplier) }),
     Achievement: () => effect(1),
