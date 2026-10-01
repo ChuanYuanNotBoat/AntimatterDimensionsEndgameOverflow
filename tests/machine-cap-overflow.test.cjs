@@ -16,9 +16,9 @@ test('Imaginary Machine hardcaps use bounded Decimal products and powers', () =>
   assert.match(hardcap, /return boundedPositivePower\(this\.baseHardcapIM, exponent\);/);
 });
 
-test('Dual Machine caps clamp only at the established Decimal representation boundary', () => {
+test('Dual Machine caps retain bounded arithmetic and apply the Chapter 3 hardcap', () => {
   const baseCap = source.split('  get baseDMCap() {')[1].split('  get currentDMCap() {')[0];
   assert.match(baseCap, /return Decimal\.min\(cap, DC\.BEMAX\);/);
-  assert.match(source, /return boundedPositiveProduct\(player\.reality\.jMCap, DualityUpgrade\(13\)\.effectOrDefault\(1\)\);/);
-  assert.match(source, /return boundedPositiveProduct\(this\.baseDMCap, DualityUpgrade\(13\)\.effectOrDefault\(1\)\);/);
+  assert.match(source, /return boundedPositiveProduct\(player\.reality\.jMCap, DualityUpgrade\(13\)\.effectOrDefault\(1\)\)\.min\(this\.hardcapDM\);/);
+  assert.match(source, /return boundedPositiveProduct\(this\.baseDMCap, DualityUpgrade\(13\)\.effectOrDefault\(1\)\)\.min\(this\.hardcapDM\);/);
 });

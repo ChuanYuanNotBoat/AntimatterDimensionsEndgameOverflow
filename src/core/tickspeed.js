@@ -10,6 +10,33 @@ function clampTickspeedInterval(value) {
   return Decimal.clamp(interval, MIN_TICKSPEED_INTERVAL(), DC.BEMAX);
 }
 
+function combineGalaxyCounts(sources) {
+  return GalacticPowers.galacticAscension.isUnlocked
+    ? sources.reduce((total, count) => boundedPositiveProduct(total, new Decimal(count).max(1)), DC.D1)
+    : sources.reduce((total, count) => boundedPositiveSum(total, count), DC.D0);
+}
+
+export function actualBaseGalaxiesBeforeOverflow() {
+  return combineGalaxyCounts([Replicanti.galaxies.total, player.galaxies, player.dilation.totalTachyonGalaxies,
+    GalaxyGenerator.galaxies, GalacticPower.freeGalaxies]);
+}
+
+export function galacticInstability() {
+  const withoutGeneration = combineGalaxyCounts([Replicanti.galaxies.total, player.galaxies,
+    player.dilation.totalTachyonGalaxies, GalacticPower.freeGalaxies]);
+  return boundedPositivePower(withoutGeneration.div(DC.NUMMAX).max(1), 2 / 3);
+}
+
+export function actualBaseGalaxies() {
+  return actualBaseGalaxiesBeforeOverflow().div(galacticInstability());
+}
+
+export function actualBaseGalaxiesWithoutGeneration() {
+  return GalacticPowers.galacticAscension.isUnlocked
+    ? actualBaseGalaxies().div(GalaxyGenerator.galaxies.max(1))
+    : actualBaseGalaxies().sub(GalaxyGenerator.galaxies);
+}
+
 function boundedEffectProduct(initial, sources) {
   let result = new Decimal(initial);
   for (const source of sources) {
@@ -29,6 +56,9 @@ export function effectiveBaseGalaxies(excludedSource = null, details = null) {
     boundedPositiveProduct(alternationBase, AlchemyResource.alternation.effectValue), 1);
 
   let galaxies = excludedSource === "antimatter" ? DC.D0 : player.galaxies;
+  if (Slabdrill.isCursed && SlabdrillUnlocks.timeStudy181.isUnlocked) {
+    galaxies = galaxies.min(100).add(galaxies.sub(100).max(0).div(10));
+  }
   if (!player.disablePostReality && Alpha.currentStage >= 3) {
     galaxies = boundedPositiveProduct(galaxies, alternation);
   }
@@ -40,6 +70,9 @@ export function effectiveBaseGalaxies(excludedSource = null, details = null) {
 
   // Note that this already includes the "50% more" active path effect
   let replicantiGalaxies = Replicanti.galaxies.bought;
+  if (Slabdrill.isCursed && SlabdrillUnlocks.timeStudy181.isUnlocked) {
+    replicantiGalaxies = replicantiGalaxies.min(100).add(replicantiGalaxies.sub(100).max(0).div(10));
+  }
   const activePathFactor = boundedPositiveSum(1, Effects.sum(TimeStudy(132), TimeStudy(133)));
   replicantiGalaxies = boundedPositiveProduct(replicantiGalaxies, activePathFactor);
 
@@ -66,6 +99,9 @@ export function effectiveBaseGalaxies(excludedSource = null, details = null) {
   }
 
   let freeGalaxies = excludedSource === "tachyon" ? DC.D0 : player.dilation.totalTachyonGalaxies;
+  if (Slabdrill.isCursed && SlabdrillUnlocks.timeStudy181.isUnlocked) {
+    freeGalaxies = freeGalaxies.min(100).add(freeGalaxies.sub(100).max(0).div(10));
+  }
   freeGalaxies = boundedPositiveProduct(freeGalaxies, alternation);
 
   let extraGalaxies = excludedSource === "galactic" ? DC.D0 : GalacticPower.freeGalaxies;
@@ -87,9 +123,10 @@ export function effectiveBaseGalaxies(excludedSource = null, details = null) {
 
   const sources = [galaxies, generatedGalaxies, replicantiGalaxies, freeGalaxies, extraGalaxies];
   if (GalacticPowers.galacticAscension.isUnlocked) {
-    return sources.reduce((total, value) => boundedPositiveProduct(total, new Decimal(value).max(1)), DC.D1);
+    return sources.reduce((total, value) => boundedPositiveProduct(total, new Decimal(value).max(1)), DC.D1)
+      .div(galacticInstability());
   }
-  return sources.reduce((total, value) => boundedPositiveSum(total, value), DC.D0);
+  return sources.reduce((total, value) => boundedPositiveSum(total, value), DC.D0).div(galacticInstability());
 }
 
 export function getTickSpeedMultiplier(galaxyCount = null) {
@@ -128,6 +165,8 @@ export function getTickSpeedMultiplier(galaxyCount = null) {
     if (Pelle.isDoomed && !PelleDestructionUpgrade.disableGalaxyNerf.canBeApplied) {
       galaxies = boundedPositiveProduct(galaxies, 0.5);
     }
+    if (Slabdrill.isCursed) galaxies = boundedPositiveProduct(galaxies, 0.5);
+    if (SlabdrillUnlocks.galaxy.isUnlocked) galaxies = boundedPositiveProduct(galaxies, Slabdrill.slabPowers.galMult());
     galaxies = boundedPositiveProduct(galaxies, Pelle.specialGlyphEffect.power);
     return DC.D0_01.clampMin(baseMultiplier.sub(boundedPositiveProduct(galaxies, perGalaxy)));
   }
@@ -174,6 +213,10 @@ export function getTickSpeedMultiplier(galaxyCount = null) {
     galaxies = boundedPositiveProduct(galaxies, 2);
   }
 
+  if (Slabdrill.isCursed) galaxies = boundedPositiveProduct(galaxies, 0.5);
+  if (SlabdrillUnlocks.galaxy.isUnlocked) galaxies = boundedPositiveProduct(galaxies, Slabdrill.slabPowers.galMult());
+  if (Slabdrill.isCursed) galaxies = boundedEffectProduct(galaxies, [EternityChallenge(5).reward, TimeStudy(223), TimeStudy(224)]);
+  galaxies = boundedPositiveProduct(galaxies, NormalChallenge(5).chargedEffect);
   const perGalaxy = DC.D0_965;
   const galaxyInterval = boundedPositivePower(perGalaxy, galaxies.sub(2));
   return clampTickspeedInterval(boundedPositiveProduct(galaxyInterval, baseMultiplier));
@@ -234,13 +277,14 @@ export function resetTickspeed() {
 export const Tickspeed = {
 
   get isUnlocked() {
-    return AntimatterDimension(2).bought.gt(0) || EternityMilestone.unlockAllND.isReached ||
-      PlayerProgress.realityUnlocked();
+    return (AntimatterDimension(2).bought.gt(0) || EternityMilestone.unlockAllND.isReached ||
+      PlayerProgress.realityUnlocked() || Slabdrill.isCursed) && !Slabdrill.coreActive;
   },
 
   get isAvailableForPurchase() {
     return this.isUnlocked &&
       !EternityChallenge(9).isRunning &&
+      player.universes.current !== 1 &&
       !Laitela.continuumActive &&
       (player.break || this.cost.lt(DC.NUMMAX));
   },
@@ -264,12 +308,15 @@ export const Tickspeed = {
       });
     }
 
+    if (SlabdrillUnlocks.infinity.isUnlocked) tickspeed = clampTickspeedInterval(boundedPositivePower(tickspeed, 0.42));
+    if (SlabdrillUnlocks.replicanti.isUnlocked) tickspeed = clampTickspeedInterval(boundedPositivePower(tickspeed, 0.42));
     if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
       tickspeed = clampTickspeedInterval(dilatedValueOf(tickspeed));
     }
+    if (player.compression.active) tickspeed = clampTickspeedInterval(compressedMultiplier(tickspeed));
     if (player.endgame.overcharge.isRunning) {
       tickspeed = clampTickspeedInterval(
-        dilateMultiplier(tickspeed, Math.pow(0.72, player.endgame.overcharge.level)));
+        dilateMultiplier(tickspeed, Ascension.overchargePenalty));
     }
     return clampTickspeedInterval(tickspeed);
   },
@@ -281,14 +328,14 @@ export const Tickspeed = {
   get costScale() {
     return new ExponentialCostScaling({
       baseCost: 1000,
-      baseIncrease: 10,
+      baseIncrease: Slabdrill.isCursed ? (InfinityChallenge(5).isRunning ? 1000 : 2) : 10,
       costScale: Player.tickSpeedMultDecrease,
       scalingCostThreshold: Number.MAX_VALUE
     });
   },
 
   get continuumValue() {
-    if (!this.isUnlocked) return DC.D0;
+    if (!this.isUnlocked || player.universes.current === 1) return DC.D0;
     return this.costScale.getContinuumValue(Currency.antimatter.value, 1).times(Laitela.matterExtraPurchaseFactor);
   },
 
@@ -313,7 +360,7 @@ export const Tickspeed = {
     let boughtTickspeed;
     if (Laitela.continuumActive) boughtTickspeed = this.continuumValue;
     else boughtTickspeed = player.totalTickBought;
-    return new Decimal(boughtTickspeed).add(player.totalTickGained);
+    return CMilestones.tickspeedEqualizer(boughtTickspeed, player.totalTickGained);
   },
 
   get perSecond() {
@@ -343,6 +390,7 @@ export const FreeTickspeed = {
     if (Enslaved.has(ENSLAVED_UNLOCKS.FREE_TICKSPEED_SOFTCAP) && !player.disablePostReality) {
       softcap += 100000;
     }
+    if (SlabdrillUnlocks.eternityChallengeTen.isUnlocked) softcap /= 10;
     return softcap;
   },
 
@@ -367,7 +415,8 @@ export const FreeTickspeed = {
     // so, for example, if the cost is 1 that means it's actually exp(priceToCap) * tickmult.
     const desiredCost = logShards.sub(priceToCap).div(logTickmult);
     const costFormulaCoefficient = new Decimal(FreeTickspeed.GROWTH_RATE).div(exponentIncrease).div(logTickmult).times(
-      boundedPositivePower(Effects.productDecimal(EndgameMastery(103)), 2));
+      boundedPositivePower(Effects.productDecimal(EndgameMastery(103)), 2))
+      .times(SlabdrillUnlocks.eternityChallengeTen.isUnlocked ? 100 : 1);
     // In the following we're implicitly subtracting softcap from bought,
     // so, for example, if bought is 1 that means it's actually softcap + 1.
     // The first term (the big one) is the asymptotically more important term (since FreeTickspeed.GROWTH_EXP > 1),

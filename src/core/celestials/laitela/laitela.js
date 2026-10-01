@@ -48,7 +48,10 @@ export const Laitela = {
     }
   },
   get matterExtraPurchaseFactor() {
-    if ((Pelle.isDoomed && !PelleDestructionUpgrade.continuumBuff.canBeApplied) || player.disablePostReality) return DC.D1;
+    if (Slabdrill.isCursed && SlabdrillUnlocks.infinityChallengeFour.isUnlocked) {
+      return boundedPositiveSum(1, Slabdrill.power.max(1).log10().div(100));
+    }
+    if ((Pelle.isDoomed && !PelleDestructionUpgrade.continuumBuff.canBeApplied) || player.disablePostReality || player.universes.current === 2) return DC.D1;
     // This factor feeds Continuum amounts directly. At extreme progression, the
     // original chained products and final Duality power can overflow Decimal's
     // *representation* before ID8's production rate gets a chance to bound it.
@@ -69,7 +72,8 @@ export const Laitela = {
     });
     factor = boundedPositivePower(factor, DualityUpgrade(14).effectOrDefault(1));
     return boundedPositiveProduct(factor,
-      BreakInfinityUpgrade.autobuyerSpeed.chargedEffect.effectOrDefault(1));
+      BreakInfinityUpgrade.autobuyerSpeed.chargedEffect.effectOrDefault(1))
+      .times(NormalChallenge(6).chargedEffect).times(NormalChallenge(9).chargedEffect);
   },
   get hadronizes() {
     return this.celestial.hadronizes;
@@ -79,11 +83,11 @@ export const Laitela = {
     const currentLaitelaProgress = Decimal.clampMin(Decimal.pow(100, this.difficultyTier).times(
       Decimal.pow(new Decimal(360).div(player.celestials.laitela.fastestCompletion), 2)), 1);
     return Decimal.pow(currentLaitelaProgress, this.hadronizes + 1).times(Decimal.pow(
-      fullLaitelaCompletion, (this.hadronizes * (this.hadronizes + 1)) / 2));
+      fullLaitelaCompletion, (this.hadronizes * (this.hadronizes + 1)) / 2)).powEffectOf(DualityUpgrade(28));
   },
   get realityRewardDE() {
     const fullDestabilization = this.isFullyDestabilized ? Decimal.pow(8, this.hadronizes + 1) : DC.D1;
-    return Decimal.pow(8, (this.hadronizes * (this.hadronizes + 1)) / 2).times(fullDestabilization);
+    return Decimal.pow(8, (this.hadronizes * (this.hadronizes + 1)) / 2).times(fullDestabilization).powEffectOf(DualityUpgrade(28));
   },
   // Note that entropy goes from 0 to 1, with 1 being completion
   get entropyGainPerSecond() {

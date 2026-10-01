@@ -95,6 +95,12 @@ export const tickspeed = {
 
 // Retained for compatibility with any non-root tree references to the old purchase entries.
 export const tickspeedUpgrades = {
+  equalizer: {
+    name: "C Hadron Tickspeed equalizer",
+    transformValue: () => TickspeedBreakdown.transform("equalizer"),
+    isActive: true,
+    icon: MultiplierTabIcons.TICKSPEED,
+  },
   purchased: {
     name: "Purchased / Continuum Tickspeed upgrades",
     transformValue: () => TickspeedBreakdown.transform("purchased"),
@@ -108,3 +114,16 @@ export const tickspeedUpgrades = {
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("time"),
   },
 };
+
+for (const [key, name] of Object.entries({
+  slabdrillInfinity: "Slabdrill Infinity Tickspeed power",
+  slabdrillReplicanti: "Slabdrill Replicanti Tickspeed power",
+  compression: "Time Compression on Tickspeed",
+})) {
+  tickspeed[key] = {
+    name,
+    transformValue: () => TickspeedBreakdown.transform(key),
+    isActive: true,
+    icon: MultiplierTabIcons.TICKSPEED,
+  };
+}

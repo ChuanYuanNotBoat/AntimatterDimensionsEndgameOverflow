@@ -48,6 +48,7 @@ export const GalaxyGenerator = {
     galaxyGen = boundedPositiveProduct(galaxyGen, extraGain)
       .powEffectsOf(GalaxyGeneratorUpgrades.remnantPow, GalaxyGeneratorUpgrades.exponential);
     galaxyGen = boundedPositivePower(galaxyGen, Accelerators.cosmic.effectValue1);
+    galaxyGen = boundedPositivePower(galaxyGen, Universes.ephemeralLightToGalGen);
     galaxyGen = boundedPositivePower(galaxyGen,
       GalacticPowers.galaxyGenerationEmpowerment.isUnlocked
         ? GalacticPowers.galaxyGenerationEmpowerment.reward

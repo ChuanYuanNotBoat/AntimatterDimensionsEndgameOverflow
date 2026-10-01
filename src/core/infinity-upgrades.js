@@ -120,6 +120,8 @@ export function totalIPMult() {
   if (LHC.voidRunning) {
     NullUpgrade.infinityPointMult.applyEffect(value => multiply("Void IP multiplier", value));
   }
+  if (SlabdrillUnlocks.breakInfinity.isUnlocked) multiply("Slabdrill IP multiplier", Slabdrill.slabPowers.ipMult());
+  if (Slabdrill.isCursed && BreakInfinityUpgrade.autobuyerSpeed.isBought) multiply("Cursed IP multiplier", 666);
   return ipMult;
 }
 

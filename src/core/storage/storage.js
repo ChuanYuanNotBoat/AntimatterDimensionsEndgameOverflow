@@ -255,7 +255,7 @@ export const GameStorage = {
     const isSelectingGlyph = GlyphSelection.active;
     const isSimulating = ui.$viewModel.modal.progressBar !== undefined && !ignoreSimulation;
     const isEnd = (GameEnd.endState >= END_STATE_MARKERS.SAVE_DISABLED && !GameEnd.removeAdditionalEnd) ||
-      GameEnd.endState >= END_STATE_MARKERS.INTERACTIVITY_DISABLED;
+      GameEnd.endState >= END_STATE_MARKERS.INTERACTIVITY_DISABLED || player.endgame.credits;
     return !isEnd && !(isSelectingGlyph || isSimulating);
   },
 

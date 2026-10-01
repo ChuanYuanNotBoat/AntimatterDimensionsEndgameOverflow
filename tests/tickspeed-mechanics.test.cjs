@@ -94,7 +94,7 @@ test('Tickspeed uses original-style expandable analysis rows, not a separate alg
   assert.match(values, /upgrades:\s*\{[\s\S]*?transformValue: \(\) => TickspeedBreakdown\.transform\("upgrades"\)/);
   assert.match(values, /tickspeedUpgrades = \{[\s\S]*?transformValue: \(\) => TickspeedBreakdown\.transform\("purchased"\)/);
   assert.match(tree, /tickspeed_total: \[\s*\["tickspeed_base", "tickspeed_upgrades", "tickspeed_galaxies"/);
-  assert.match(tree, /tickspeed_upgrades: \[\s*\["tickspeedUpgrades_purchased", "tickspeedUpgrades_free"\]/);
+  assert.match(tree, /tickspeed_upgrades: \[\s*\["tickspeedUpgrades_purchased", "tickspeedUpgrades_free", "tickspeedUpgrades_equalizer"\]/);
   assert.doesNotMatch(tab, /TickspeedMechanicsSummary/);
   assert.match(tab, /<MultiplierBreakdownEntry/);
 });

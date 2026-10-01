@@ -57,7 +57,8 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
   const boughtValue = Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought;
   const bought = skipKey === "purchased" || skipKey === "upgrades" ? DC.D0 : boughtValue;
   const free = skipKey === "free" || skipKey === "upgrades" ? DC.D0 : player.totalTickGained;
-  const totalUpgrades = bought.add(free);
+  const rawUpgrades = bought.add(free);
+  const totalUpgrades = skipKey === "equalizer" ? rawUpgrades : CMilestones.tickspeedEqualizer(bought, free);
   let interval = clampTickspeedInterval(baseInterval);
   let rate = rateFromInterval(interval);
 
@@ -85,6 +86,9 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
     boundedPositiveProduct(interval, boundedPositivePower(noGalaxyMultiplier, free)),
     () => `${format(free, 2, 2)} free upgrades from Time Shards`,
     boundedPositivePower(noGalaxyMultiplier.recip(), free));
+  intervalStep("equalizer", "formula",
+    boundedPositiveProduct(baseInterval, boundedPositivePower(noGalaxyMultiplier, totalUpgrades)),
+    () => `${format(rawUpgrades, 2, 2)} raw upgrades → ${format(totalUpgrades, 2, 2)} equalized upgrades`);
   if (steps) addOrderedTransform(steps, "upgrades", "multiply", rateBeforeUpgrades, rate, {
     display: `${Laitela.continuumActive ? "Continuum" : "Purchased"}: ${format(bought, 2, 2)}; ` +
       `free: ${format(free, 2, 2)}; total: ${format(totalUpgrades, 2, 2)}; ` +
@@ -120,12 +124,18 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
     intervalStep("dilationPower", "power", poweredInterval, "",
       DilationUpgrade.tickspeedPower.effectOrDefault(1));
   }
+  if (SlabdrillUnlocks.infinity.isUnlocked) {
+    intervalStep("slabdrillInfinity", "power", boundedPositivePower(interval, 0.42), "Slabdrill Infinity unlock", 0.42);
+  }
+  if (SlabdrillUnlocks.replicanti.isUnlocked) {
+    intervalStep("slabdrillReplicanti", "power", boundedPositivePower(interval, 0.42), "Slabdrill Replicanti unlock", 0.42);
+  }
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
     intervalStep("dilation", "formula", dilatedValueOf(interval));
   }
+  if (player.compression.active) intervalStep("compression", "formula", compressedMultiplier(interval));
   if (player.endgame.overcharge.isRunning) {
-    intervalStep("overcharge", "formula", dilateMultiplier(interval,
-      Math.pow(0.72, player.endgame.overcharge.level)));
+    intervalStep("overcharge", "formula", dilateMultiplier(interval, Ascension.overchargePenalty));
   }
   const count = producingTiers ?? MultiplierTabHelper.activeDimCount("AD");
   const result = boundedPositivePower(rate, count);

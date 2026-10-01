@@ -2,7 +2,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const vm = require('node:vm');
+const vm = require('./helpers/chapter3-vm.cjs');
 const test = require('node:test');
 const src = path.resolve(__dirname, '..', 'src');
 const read = p => fs.readFileSync(path.join(src, p), 'utf8');

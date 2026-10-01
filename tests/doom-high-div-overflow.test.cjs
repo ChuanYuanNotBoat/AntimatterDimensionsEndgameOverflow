@@ -17,7 +17,7 @@ function product(rewards, doomed) {
     DC: { D0: new Decimal(0), D1: new Decimal(1), BEMAX: new Decimal('10^^9000000000000000') },
     DivineDimensions: { conversionFormula2: rewards[0] },
     Accelerators: { cosmic: { effectValue2: rewards[1] } },
-    EndgameMastery: () => ({ effectOrDefault: () => rewards[2] }),
+    EndgameMastery: id => ({ effectOrDefault: () => id === 301 ? (rewards[4] ?? 1) : rewards[2] }),
     SingularityMilestone: { singAMDoomDilation: { effectOrDefault: () => rewards[3] } },
   });
   vm.runInContext(read('core/finite-decimal.js').replace(/^export /gm, ''), context);
@@ -29,6 +29,7 @@ function product(rewards, doomed) {
 test('Doom AD1 multiplier keeps ordinary product and huge Decimal values finite', () => {
   const ordinary = product([2, 3, 4, 5], true);
   assert.ok(ordinary.actual.eq(120));
+  assert.ok(product([2, 3, 4, 5, 7], true).actual.eq(840));
   assert.ok(product([2, 3, 4, 5], false).actual.eq(1));
   const huge = Decimal.fromComponents(1, 10, 266.31765);
   const extreme = product([huge, huge, huge, huge], true);

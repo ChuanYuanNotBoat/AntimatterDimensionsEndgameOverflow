@@ -22,11 +22,11 @@ export function toggleAllDivDims() {
 class DivineDimensionState extends DimensionState {
   constructor(tier) {
     super(() => player.dimensions.divine, tier);
-    const COST_MULTS = [null, 1e3, 1e6, 1e10, 1e15, 1e21, 1e28, 1e36, 1e45];
+    const COST_MULTS = [null, 1e3, 1e6, 1e10, 1e15, 1e21, 1e28, 1e36, 1e45, 1e55];
     this._costMultiplier = COST_MULTS[tier];
-    const POWER_MULTS = [null, 7, 7, 7, 7, 7, 7, 7, 7];
+    const POWER_MULTS = [null, 7, 7, 7, 7, 7, 7, 7, 7, 7];
     this._powerMultiplier = POWER_MULTS[tier];
-    const BASE_COSTS = [null, 10, 1e3, 1e6, 1e10, 1e15, 1e21, 1e28, 1e36];
+    const BASE_COSTS = [null, 10, 1e3, 1e6, 1e10, 1e15, 1e21, 1e28, 1e36, DC.BEMAX];
     this._baseCost = new Decimal(BASE_COSTS[tier]);
   }
 
@@ -74,7 +74,7 @@ class DivineDimensionState extends DimensionState {
     mult = boundedPositivePower(mult, Accelerators.emptiness._milestones[1].effectOrDefault(1));
     mult = mult.powEffectsOf(
       DivinityUpgrade.divineL2U7, DivinityUpgrade.divineL3U5, DivinityUpgrade.divineL4U1.effects.matter,
-      DivinityUpgrade.divineL4U3, DivinityUpgrade.divineL5U3, EndgameMastery(211), SingularityMilestone.singDivDimPower);
+      DivinityUpgrade.divineL4U3, DivinityUpgrade.divineL5U3, EndgameMastery(211), SingularityMilestone.singDivDimPower, DualityUpgrade(26), EndgameMastery(303));
     if (DivinityMilestone.finalRebirth.isReached && !player.disablePostReality) {
       mult = boundedPositivePower(mult, 1.05);
     }
@@ -294,6 +294,8 @@ function giveCondenseRewards(auto) {
 }
 
 export function resetForDivineStars(nova = false) {
+  if (Slabdrill.isCursed) return;
+  if (GameEnd.creditsEverClosed) return;
   if (Currency.divineMatter.lt(DC.NUMMAX) && !nova) return;
   EventHub.dispatch(GAME_EVENT.CONDENSE_RESET_BEFORE);
   if (!nova) giveCondenseRewards();
@@ -360,6 +362,7 @@ function giveSupernovaRewards(auto) {
 
 export function supernovaResetRequest() {
   if (player.celestials.pelle.divinity.divineStars.lt(DC.NUMMAX)) return;
+  if (Slabdrill.isCursed) return;
   if (GameEnd.creditsEverClosed) return;
   supernova();
 }

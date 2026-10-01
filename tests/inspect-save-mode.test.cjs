@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const vm = require('node:vm');
+const vm = require('./helpers/chapter3-vm.cjs');
 const path = require('node:path');
 const code = fs.readFileSync(path.join(__dirname, '../src/core/storage/storage.js'), 'utf8').replace(/\r\n/g, '\n');
 const functionStart = code.indexOf('function isInspectSaveMode() {');

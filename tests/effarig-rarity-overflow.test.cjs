@@ -2,7 +2,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const vm = require('node:vm');
+const vm = require('./helpers/chapter3-vm.cjs');
 const test = require('node:test');
 const Decimal = require('break_eternity.js');
 

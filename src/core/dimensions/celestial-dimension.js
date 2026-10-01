@@ -72,14 +72,15 @@ class CelestialDimensionState extends DimensionState {
       DC.E10,
       DC.E30,
       DC.E100,
-      DC.E300
+      DC.E300,
+      DC.BEMAX
     ];
     this._unlockRequirement = UNLOCK_REQUIREMENTS[tier];
-    const COST_MULTS = [null, 1e3, 1e4, 1e5, 1e6, 1e8, 1e10, 1e12, 1e15];
+    const COST_MULTS = [null, 1e3, 1e4, 1e5, 1e6, 1e8, 1e10, 1e12, 1e15, 1e100];
     this._costMultiplier = COST_MULTS[tier];
-    const POWER_MULTS = [null, 2, 2, 2, 2, 2, 2, 2, 2];
+    const POWER_MULTS = [null, 2, 2, 2, 2, 2, 2, 2, 2, 2];
     this._powerMultiplier = POWER_MULTS[tier];
-    const BASE_COSTS = [null, 1, 10, 100, 1e4, 1e10, 1e30, 1e100, 1e300];
+    const BASE_COSTS = [null, 1, 10, 100, 1e4, 1e10, 1e30, 1e100, 1e300, DC.E1000];
     this._baseCost = new Decimal(BASE_COSTS[tier]);
   }
 
@@ -140,6 +141,9 @@ class CelestialDimensionState extends DimensionState {
 
   get multiplier() {
     const tier = this.tier;
+    if (SlabdrillUnlocks.dimboost.isUnlocked) return Slabdrill.power.times(
+      SlabdrillUnlocks.replicanti.isUnlocked ? Ethereal.sectorBoost : 1);
+    if (Slabdrill.isCursed) return DC.D1;
     let mult = checkedCelestialFactor(GameCache.celestialDimensionCommonMultiplier.value, "common multiplier");
     mult = celestialProduct(mult,
       celestialPower(this.powerMultiplier, Decimal.floor(this.baseAmount), `CD${tier} purchases`),
@@ -153,7 +157,7 @@ class CelestialDimensionState extends DimensionState {
     mult = celestialEffects(mult, [
       ["Celestial Infinity antimatter buff", CelestialInfinityUpgrade.antimatterCelestialDimBuff]
     ]);
-    mult = celestialEffects(mult, [["Resurgence synergy 2", ResurgenceUpgrade.synergy2]], true);
+    mult = celestialEffects(mult, [["Resurgence synergy 2", ResurgenceUpgrade.synergy2], ["Mastery 302", EndgameMastery(302)]], true);
     // Decimal equivalent of Achievements.powerConv(). The Number-returning
     // helper can overflow when Mastery 191 itself is still finite.
     const mastery = checkedCelestialFactor(EndgameMastery(191).effectOrDefault(1), "Mastery 191 achievement effect");
@@ -296,7 +300,7 @@ export const CelestialDimensions = {
     if (overflowMagnitude.eq(0)) throw new Error("Zero Celestial Dimension softcap overflow magnitude");
     const overflow = celestialPower(base.div(DC.NUMMAX).max(1), DC.D1.div(overflowMagnitude),
       "softcap overflow exponent");
-    return celestialProduct(Decimal.min(base, DC.NUMMAX), overflow, "softcap result");
+    return celestialProduct(Decimal.min(base, DC.NUMMAX), overflow, "softcap result").min(DC.E9E15);
   },
 
   get OVERFLOW() {
@@ -394,6 +398,10 @@ export const CelestialDimensions = {
   },
 
   get conversionExponent() {
+    if (SlabdrillUnlocks.dimboost.isUnlocked && !Slabdrill.coreActive) {
+      return new Decimal(Slabdrill.currentStage).div(100).timesEffectsOf(EndgameMastery(104));
+    }
+    if (Slabdrill.isCursed) return DC.D0;
     if (player.disablePostReality && !Alpha.isRunning) return DC.D0;
     let base = new Decimal(CelestialInfinityUpgrade.celestialMatterConversionBuff.effectOrDefault(2));
     if (Pelle.isDoomed) base = base.div(10);
@@ -447,7 +455,7 @@ export function resetCelestialTickspeed() {
 
 export const CelestialTickspeed = {
   get isUnlocked() {
-    return Achievement(221).isUnlocked;
+    return Achievement(221).isUnlocked && !player.disablePostReality;
   },
 
   get isAvailableForPurchase() {
@@ -517,6 +525,7 @@ export class CelestialDimBoost {
   }
 
   static get canBeBought() {
+    if (player.disablePostReality) return false;
     if (CelestialDimBoost.purchasedBoosts.gte(this.maxBoosts)) return false;
     if (player.endgame.celestialMatter.gt(DC.NUMMAX) && !player.endgame.celDimExpansion.isBroken) return false;
     return true;
@@ -753,6 +762,7 @@ export class CelestialGalaxy {
   }
 
   static get canBeBought() {
+    if (player.disablePostReality) return false;
     if (EternityChallenge(6).isRunning && !Enslaved.isRunning) return false;
     if (NormalChallenge(8).isRunning || InfinityChallenge(7).isRunning) return false;
     if (Currency.celestialMatter.value.gt(DC.NUMMAX) && !player.endgame.celDimExpansion.isBroken) return false;
@@ -843,6 +853,7 @@ export function manualCelestialCrunchResetRequest() {
 
 export function celestialCrunchResetRequest() {
   if (Currency.celestialMatter.lt(DC.NUMMAX)) return;
+  if (Slabdrill.isCursed) return;
   celestialCrunchReset();
 }
 
@@ -1110,6 +1121,7 @@ function giveCelestialEternityRewards(auto) {
 
 export function celestialEternityResetRequest() {
   if (player.endgame.celDimExpansion.celestialInfinityPoints.lt(DC.NUMMAX)) return;
+  if (Slabdrill.isCursed) return;
   if (GameEnd.creditsEverClosed) return;
   askCelestialEternityConfirmation();
 }

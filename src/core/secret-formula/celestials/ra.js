@@ -94,8 +94,8 @@ export const ra = {
     },
     unlockDilationStartingTP: {
       id: 6,
-      reward: `In non-Celestial Realities, gain Tachyon Particles as if you reached the square root of your total
-        antimatter in Dilation. Any multipliers to TP gain are applied retroactively, even outside Dilation`,
+      reward: () => `In non-Celestial Realities, gain Tachyon Particles as if you reached the square root of your total
+        ${player.universes.current === 2 ? "matter" : "antimatter"} in Dilation. Any multipliers to TP gain are applied retroactively, even outside Dilation`,
       effect: () => player.records.totalEndgameAntimatter.pow(0.5),
       pet: "teresa",
       level: 25,
@@ -152,7 +152,8 @@ export const ra = {
       id: 13,
       reward: () => `Glyphs are always generated with ${formatPercents(1)} rarity and
         Glyph Sacrifice gain is raised to a power based on Relic Shards`,
-      effect: () => Effarig.maxRarityBoost.div(100).add(1),
+      effect: () => SlabdrillUnlocks.timeStudy181.isUnlocked
+        ? Currency.relicShards.value.max(1).log10().div(10).add(1).pow(0.2) : Effarig.maxRarityBoost.div(100).add(1),
       pet: "effarig",
       level: 25,
       displayIcon: `<i class="fas fa-ankh"></i>`

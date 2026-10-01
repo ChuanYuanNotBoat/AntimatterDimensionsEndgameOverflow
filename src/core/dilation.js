@@ -51,6 +51,11 @@ export function startDilatedEternity(auto) {
   eternity(false, auto, { switchingDilation: true });
   player.dilation.active = true;
   if (Pelle.isDoomed) PelleStrikes.dilation.trigger();
+  if (Slabdrill.isCursed && Slabdrill.currentStage === 9) {
+    Slabdrill.advanceLayer();
+    Glyphs.refreshActive();
+    Slabdrill.quotes.dilation.show();
+  }
   return true;
 }
 
@@ -265,6 +270,7 @@ export function getDilationGainPerSecond() {
   if (LHC.voidRunning) {
     NullUpgrade.dilatedTimeMult.applyEffect(mult => { dtRate = boundedPositiveProduct(dtRate, mult); });
   }
+  if (SlabdrillUnlocks.dilation.isUnlocked) dtRate = boundedPositiveProduct(dtRate, Slabdrill.slabPowers.dtMult());
   if (Enslaved.isRunning && !dtRate.eq(0)) {
     dtRate = boundedPositivePower(10, Decimal.pow(dtRate.plus(1).log10(), 0.85).sub(1));
   }
@@ -274,10 +280,14 @@ export function getDilationGainPerSecond() {
   if (getAdjustedGlyphEffect("replicationdtgain").neq(0) && ResurgenceUpgrade.repSurge.isBought && !player.disablePostReality) {
     dtRate = boundedPositivePower(dtRate, ReplicantiMultipliers.dtPow);
   }
+  dtRate = dtRate.pow(Universes.ephemeralLightToDilation);
   if (ResurgenceUpgrade.curr2Surge.isBought && !player.disablePostReality && !Pelle.isDoomed) {
     dtRate = boundedPositivePower(dtRate, player.dilation.dilatedTime.max(1e10).log10().log10());
   }
-  return applyDilatedTimeSoftcap(dtRate);
+  if (SlabdrillUnlocks.dilation.isUnlocked) dtRate = boundedPositivePower(dtRate, 0.25);
+  dtRate = applyDilatedTimeSoftcap(dtRate);
+  if (player.universes.current === 1) dtRate = boundedPositivePower(10, boundedPositivePower(dtRate.max(10).log10(), 0.1));
+  return dtRate;
 }
 
 export function tachyonGainMultiplier() {
@@ -338,12 +348,15 @@ export function getBaseTP(antimatter, requireEternity) {
 export function getTP(antimatter, requireEternity) {
   let pend = boundedPositiveProduct(getBaseTP(antimatter, requireEternity), tachyonGainMultiplier());
   pend = boundedPositivePower(pend, player.disablePostReality ? 1 : AlphaUnlocks.dilatedEternity.effects.buff.effectOrDefault(1));
+  if (SlabdrillUnlocks.dilation.isUnlocked) pend = boundedPositivePower(pend, 0.25);
   if (ResurgenceUpgrade.achSurge.isBought && !player.disablePostReality) {
     pend = boundedPositivePower(pend, Achievements.powerConv(RealityUpgrade(8).effectOrDefault(1)));
   }
+  if (!Pelle.isDoomed) pend = boundedPositivePower(pend, Universes.ephemeralLightToDilation);
   if (ResurgenceUpgrade.curr2Surge.isBought && !player.disablePostReality && !Pelle.isDoomed) {
     pend = boundedPositivePower(pend, player.dilation.tachyonParticles.max(1e10).log10().log10());
   }
+  if (player.universes.current === 1) pend = boundedPositivePower(10, boundedPositivePower(pend.max(10).log10(), 0.1));
   return pend;
 }
 
@@ -357,11 +370,17 @@ export function getTachyonGain(requireEternity) {
 export function getTachyonReq() {
   const alphaPower = player.disablePostReality ? DC.D1 :
     new Decimal(AlphaUnlocks.dilatedEternity.effects.buff.effectOrDefault(1));
-  let effectiveTP = boundedPositivePower(Currency.tachyonParticles.value, DC.D1.div(alphaPower));
+  let effectiveTP = Currency.tachyonParticles.value;
+  if (player.universes.current === 1) {
+    effectiveTP = boundedPositivePower(10, boundedPositivePower(effectiveTP.max(10).log10(), 10));
+  }
+  effectiveTP = boundedPositivePower(effectiveTP, DC.D1.div(alphaPower));
+  if (SlabdrillUnlocks.dilation.isUnlocked) effectiveTP = boundedPositivePower(effectiveTP, 4);
   if (ResurgenceUpgrade.achSurge.isBought && !player.disablePostReality) {
     effectiveTP = boundedPositivePower(effectiveTP,
       DC.D1.div(Achievements.powerConv(RealityUpgrade(8).effectOrDefault(1))));
   }
+  if (!Pelle.isDoomed) effectiveTP = boundedPositivePower(effectiveTP, DC.D1.div(Universes.ephemeralLightToDilation));
   if (ResurgenceUpgrade.curr2Surge.isBought && !player.disablePostReality && !Pelle.isDoomed) {
     effectiveTP = boundedPositivePower(effectiveTP,
       DC.D1.div(player.dilation.tachyonParticles.max(1e10).log10().log10()));

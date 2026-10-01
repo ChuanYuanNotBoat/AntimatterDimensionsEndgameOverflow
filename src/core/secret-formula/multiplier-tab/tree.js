@@ -57,8 +57,9 @@ export const multiplierTabTree = {
   AM_total: [
     ["AM_ad1Amount", "AD_total_1", "AM_tickRate", "AM_gameSpeed", "AM_unattributed"]
   ],
-  AM_tickRate: [["AM_tickBase", "AM_tickPurchased", "AM_tickFree", "AM_tickGalaxies",
-    "AM_tickRaPower", "AM_tickDilationPower", "AM_tickEffarig", "AM_tickDilation",
+  AM_tickRate: [["AM_tickBase", "AM_tickPurchased", "AM_tickFree", "AM_tickEqualizer", "AM_tickGalaxies",
+    "AM_tickRaPower", "AM_tickDilationPower", "AM_tickEffarig", "AM_tickSlabdrillInfinity", "AM_tickSlabdrillReplicanti",
+    "AM_tickDilation", "AM_tickCompression",
     "AM_tickOvercharge", "AM_tickTraceMismatch"]],
   AD_total: [
     getProps("AD"),
@@ -92,11 +93,12 @@ export const multiplierTabTree = {
   ],
   tickspeed_total: [
     ["tickspeed_base", "tickspeed_upgrades", "tickspeed_galaxies",
-      "tickspeed_raPower", "tickspeed_dilationPower", "tickspeed_effarig", "tickspeed_dilation",
+      "tickspeed_raPower", "tickspeed_dilationPower", "tickspeed_effarig",
+      "tickspeed_slabdrillInfinity", "tickspeed_slabdrillReplicanti", "tickspeed_dilation", "tickspeed_compression",
       "tickspeed_overcharge", "tickspeed_dimensionExponent", "tickspeed_traceMismatch"]
   ],
   tickspeed_upgrades: [
-    ["tickspeedUpgrades_purchased", "tickspeedUpgrades_free"]
+    ["tickspeedUpgrades_purchased", "tickspeedUpgrades_free", "tickspeedUpgrades_equalizer"]
   ],
   tickspeed_galaxies: [
     ["galaxies_antimatter", "galaxies_generated", "galaxies_replicanti", "galaxies_tachyon", "galaxies_galactic"]

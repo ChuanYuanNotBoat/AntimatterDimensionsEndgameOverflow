@@ -110,3 +110,27 @@ test('Chaos Rift cap remains finite at very high Divinity counts', () => {
   assert.ok(finite(result));
   assert.ok(result.lte(context.DC.BEMAX));
 });
+
+test('Chapter 3 unlocks accept Decimal Divinity counts without implicit conversion', () => {
+  const context = contextFor(0);
+  context.NormalChallenge = () => ({ isCharged: false });
+  context.GalacticPowers = { stelliferousUniverse: { isUnlocked: false } };
+  vm.runInContext(read('core/universes.js').replace(/^export /gm, '') + '\nthis.Universes = Universes;', context);
+  const requirements = [...read('core/secret-formula/achievements/normal-achievements.js')
+    .matchAll(/checkRequirement: (\(\) => player\.celestials\.pelle\.divinities[^,]+),/g)]
+    .map(match => vm.runInContext(`(${match[1]})`, context));
+  assert.equal(requirements.length, 2);
+  const originalValueOf = Decimal.prototype.valueOf;
+  Decimal.prototype.valueOf = () => { throw new Error('Implicit conversion from Decimal to number'); };
+  try {
+    for (const [count, ten, thirteen] of [[0, false, false], [9, false, false], [10, true, false],
+      [12, true, false], [13, true, true], ['1e1000', true, true]]) {
+      context.player.celestials.pelle.divinities = new Decimal(count);
+      assert.equal(requirements[0](), ten);
+      assert.equal(requirements[1](), thirteen);
+      assert.equal(context.Universes.areUnlocked, thirteen);
+    }
+  } finally {
+    Decimal.prototype.valueOf = originalValueOf;
+  }
+});

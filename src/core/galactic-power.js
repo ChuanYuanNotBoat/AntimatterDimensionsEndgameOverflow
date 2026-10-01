@@ -46,22 +46,7 @@ export const GalacticPower = {
 };
 
 export function getGalacticPowerGainPerSecond() {
-  const galaxySources = [
-    Replicanti.galaxies.total,
-    player.galaxies,
-    player.dilation.totalTachyonGalaxies,
-    GalacticPower.freeGalaxies
-  ];
-
-  let allGalaxies;
-  if (GalacticPowers.galacticAscension.isUnlocked) {
-    allGalaxies = galaxySources.reduce(
-      (total, value) => boundedPositiveProduct(total, new Decimal(value).max(1)), DC.D1);
-  } else {
-    allGalaxies = galaxySources.reduce(
-      (total, value) => boundedPositiveSum(total, value), DC.D0);
-  }
-
+  const allGalaxies = actualBaseGalaxiesWithoutGeneration();
   const galaxyFactor = Decimal.max(allGalaxies.div(100000), 1);
   const celestialMatter = boundedPositiveSum(player.endgame.celestialMatter, 1);
   const imaginaryMachines = boundedPositiveSum(player.reality.imaginaryMachines, 1);
@@ -84,5 +69,9 @@ export function getGalacticPowerGainPerSecond() {
   exponent = boundedPositiveProduct(exponent, galaxyExponent4);
   exponent = boundedPositiveProduct(exponent, galaxyExponent5);
 
+  for (const source of [EndgameMastery(291), EndgameMastery(292), EndgameMastery(293), DualityUpgrade(29)]) {
+    source.applyEffect(value => { exponent = boundedPositiveProduct(exponent, value); });
+  }
+  exponent = boundedPositiveProduct(exponent, NormalChallenge(10).chargedEffect);
   return Pelle.isDoomed ? DC.D0 : boundedPositivePower(base, exponent);
 }

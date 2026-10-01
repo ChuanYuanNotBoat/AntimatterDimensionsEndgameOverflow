@@ -295,7 +295,7 @@ function trace(tier, skipKey = null, steps = null) {
   transform("achievement231", "softcap", current => dilateMultiplier(current, effect(Achievement(231))));
   transform("etherealStars", "softcap", current => dilateMultiplier(current, EtherealStars.red.reward));
   if (player.endgame.overcharge.isRunning) {
-    transform("overcharge", "softcap", current => dilateMultiplier(current, Math.pow(0.72, player.endgame.overcharge.level)));
+    transform("overcharge", "softcap", current => dilateMultiplier(current, Ascension.overchargePenalty));
   }
   return value;
 }

@@ -181,7 +181,7 @@ export const galacticPowerRewards = {
   galaxyScaling: {
     id: 13,
     galacticPower: new Decimal("1e40000"),
-    reward: "Reduce the base cost scaling of Antimatter Galaxies",
+    reward: () => `Reduce the base cost scaling of ${player.universes.current === 2 ? "Matter" : "Antimatter"} Galaxies`,
     effect: () => {
       if (player.disablePostReality) return DC.D1;
       const gpPlusOne = boundedPositiveSum(Currency.galacticPower.value, 1);
@@ -192,7 +192,7 @@ export const galacticPowerRewards = {
       }
       return result;
     },
-    formatEffect: value => `Antimatter Galaxy cost scaling is reduced by ${formatDecimalPercents(DC.D1.sub(value), 2)}`
+    formatEffect: value => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Galaxy cost scaling is reduced by ${formatDecimalPercents(DC.D1.sub(value), 2)}`
   },
   galaxyGenerationEmpowerment: {
     id: 14,
@@ -225,7 +225,7 @@ export const galacticPowerRewards = {
   },
   stelliferousUniverse: {
     id: 16,
-    galacticPower: new Decimal("1e250000"),
+    galacticPower: DC.NUMMAX.pow(1000),
     reward: "Unlock the Stelliferous Universe"
   }
 };

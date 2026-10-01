@@ -320,7 +320,7 @@ function evaluateInfinityDimension(tier, skipKey = null, steps = null) {
   );
 
   if (player.endgame.overcharge.isRunning) {
-    const overchargePower = Math.pow(0.72, player.endgame.overcharge.level);
+    const overchargePower = Ascension.overchargePenalty;
     mult = orderedTransformStep(
       steps,
       "overcharge",

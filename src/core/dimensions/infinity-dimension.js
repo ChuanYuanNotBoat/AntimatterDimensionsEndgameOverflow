@@ -51,13 +51,27 @@ class InfinityDimensionState extends DimensionState {
       DC.E45000,
       DC.E54000,
       DC.E60000,
+      DC.BEMAX
+    ];
+    const SLAB_UNLOCK_REQUIREMENTS = [
+      undefined,
+      DC.E580,
+      DC.E860,
+      DC.E950,
+      DC.E10500,
+      DC.E30000,
+      DC.E45000,
+      DC.E54000,
+      DC.E60000,
+      DC.BEMAX
     ];
     this._unlockRequirement = UNLOCK_REQUIREMENTS[tier];
-    const COST_MULTS = [null, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30];
+    this._slabUnlockRequirement = SLAB_UNLOCK_REQUIREMENTS[tier];
+    const COST_MULTS = [null, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30, 1e100];
     this._costMultiplier = COST_MULTS[tier];
-    const POWER_MULTS = [null, 50, 30, 10, 5, 5, 5, 5, 5];
+    const POWER_MULTS = [null, 50, 30, 10, 5, 5, 5, 5, 5, 1000];
     this._powerMultiplier = POWER_MULTS[tier];
-    const BASE_COSTS = [null, 1e8, 1e9, 1e10, 1e20, 1e140, 1e200, 1e250, 1e280];
+    const BASE_COSTS = [null, 1e8, 1e9, 1e10, 1e20, 1e140, 1e200, 1e250, 1e280, 1e300];
     this._baseCost = new Decimal(BASE_COSTS[tier]);
     this.ipRequirement = BASE_COSTS[1];
   }
@@ -84,7 +98,7 @@ class InfinityDimensionState extends DimensionState {
   }
 
   get amRequirement() {
-    return this._unlockRequirement;
+    return Slabdrill.isCursed ? this._slabUnlockRequirement : this._unlockRequirement;
   }
 
   get antimatterRequirementReached() {
@@ -159,7 +173,7 @@ class InfinityDimensionState extends DimensionState {
   }
 
   productionPerSecondWithMultiplier(multiplier = undefined) {
-    if (EternityChallenge(2).isRunning || EternityChallenge(10).isRunning ||
+    if (EternityChallenge(2).isRunning || EternityChallenge(10).isRunning || player.universes.current === 2 ||
       (Laitela.isRunning && this.tier > Laitela.maxAllowedDimension)) {
       return DC.D0;
     }
@@ -200,6 +214,10 @@ class InfinityDimensionState extends DimensionState {
 
     if (tier === 1) {
       mult = mult.times(PelleRifts.decay.milestones[0].effectOrDefault(1));
+    }
+
+    if (SlabdrillUnlocks.infinityChallengeFour.isUnlocked) {
+      mult = mult.times(Slabdrill.slabPowers.idMult());
     }
 
 
@@ -244,6 +262,10 @@ class InfinityDimensionState extends DimensionState {
     }
 
     if (Alpha.isRunning) mult = mult.pow(AlphaUnlocks.eternityUpgrades.effects.nerf.effectOrDefault(1));
+    if (SlabdrillUnlocks.infinityChallengeFour.isUnlocked) mult = mult.pow(0.75);
+
+    if (SlabdrillUnlocks.eternity.isUnlocked) mult = mult.pow(0.75);
+    if (SlabdrillUnlocks.eternityChallengeTen.isUnlocked) mult = mult.pow(0.75);
 
     mult = mult.powEffectOf(DualityUpgrade(8));
 
@@ -251,12 +273,25 @@ class InfinityDimensionState extends DimensionState {
 
     if (ResurgenceUpgrade.achSurge.isBought && !player.disablePostReality) mult = mult.pow(Achievements.powerConv(Achievement(75).effectOrDefault(1)));
 
+    mult = mult.powEffectsOf(
+      EternityUpgrade.idMultEP.chargedEffect,
+      EternityUpgrade.idMultEternities.chargedEffect,
+      EternityUpgrade.idMultICRecords.chargedEffect
+    );
+    mult = mult.pow(NormalChallenge(2).chargedEffect);
+
     if (starCheckpoint) starCheckpoint.before = mult;
     mult = dilateMultiplier(mult, orangeStarExponent ?? EtherealStars.orange.reward);
     if (starCheckpoint) starCheckpoint.after = mult;
 
     if (player.endgame.overcharge.isRunning) {
-      mult = dilateMultiplier(mult, Math.pow(0.72, player.endgame.overcharge.level));
+      mult = dilateMultiplier(mult, Ascension.overchargePenalty);
+    }
+
+    if (player.compression.active) mult = compressedMultiplier(mult);
+    if (player.universes.current === 1) {
+      mult = dilateMultiplier(mult, Decimal.pow(0.1,
+        Decimal.pow(0.9, Currency.relativisticParticles.value.max(10).log10().log10().pow(2))));
     }
 
     // Optional cap diagnostics are captured at the exact gameplay operation.
@@ -288,7 +323,7 @@ class InfinityDimensionState extends DimensionState {
 
   get isProducing() {
     const tier = this.tier;
-    if (EternityChallenge(2).isRunning ||
+    if (EternityChallenge(2).isRunning || player.universes.current === 2 ||
       EternityChallenge(10).isRunning ||
       (Laitela.isRunning && tier > Laitela.maxAllowedDimension)) {
       return false;
@@ -483,7 +518,7 @@ export const InfinityDimensions = {
    */
   all: InfinityDimension.index.compact(),
   get HARDCAP_PURCHASES() {
-    return Alpha.isRunning ? AlphaUnlocks.breakUpgrades.effects.nerf.effectOrDefault(2000000) : 2000000;
+    return Slabdrill.isCursed && SlabdrillUnlocks.timeStudy181.isUnlocked ? 5000 : (Alpha.isRunning ? AlphaUnlocks.breakUpgrades.effects.nerf.effectOrDefault(2000000) : 2000000);
   },
 
   get OVERFLOW() {
@@ -539,7 +574,7 @@ export const InfinityDimensions = {
   },
 
   canBuy() {
-    return !EternityChallenge(2).isRunning &&
+    return !EternityChallenge(2).isRunning && player.universes.current !== 2 &&
       !EternityChallenge(10).isRunning &&
       (!EternityChallenge(8).isRunning || player.eterc8ids > 0);
   },
@@ -554,14 +589,14 @@ export const InfinityDimensions = {
     }
 
     if (EternityChallenge(7).isRunning) {
-      if (!NormalChallenge(10).isRunning) {
+      if (!NormalChallenge(10).isRunning && !Slabdrill.isCursed) {
         InfinityDimension(1).produceDimensions(AntimatterDimension(7), diff);
       }
     } else {
       InfinityDimension(1).produceCurrency(Currency.infinityPower, diff);
     }
 
-    if (!InfinityDimensions.all.every(d => d.amount.eq(0)) || !InfinityDimensions.all.every(d => d.continuumAmount.eq(0))) {
+    if (!InfinityDimensions.all.every(d => d.tier > 8 || d.amount.eq(0)) || !InfinityDimensions.all.every(d => d.tier > 8 || d.continuumAmount.eq(0))) {
       player.requirementChecks.endgame.onlyLowDims = false;
     }
 
@@ -595,7 +630,7 @@ export const InfinityDimensions = {
   get powerConversionRate() {
     const multiplier = PelleRifts.paradox.milestones[2].effectOrDefault(1);
     const multiplier2 = Effects.productDecimal(BreakEternityUpgrade.infinityPowerConversion);
-    const exponent = Effects.productDecimal(EndgameMastery(102), Ra.unlocks.spaceTheoremIPowConversion);
+    const exponent = Effects.productDecimal(EndgameMastery(102), Ra.unlocks.spaceTheoremIPowConversion).times(SlabdrillUnlocks.infinityChallengeFour.isUnlocked ? 1.5 : 1);
     const divisor = Alpha.isRunning ? AlphaUnlocks.breakInfinity.effects.nerfC.effectOrDefault(1) : 1;
     let base = boundedPositiveSum(7, getAdjustedGlyphEffect("infinityrate"));
     base = boundedPositiveSum(base, PelleUpgrade.infConversion.effectOrDefault(0));

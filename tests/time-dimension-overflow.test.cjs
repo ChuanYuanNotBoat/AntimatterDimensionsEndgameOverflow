@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
-const vm = require('node:vm');
+const vm = require('./helpers/chapter3-vm.cjs');
 
 const source = fs.readFileSync(path.join(__dirname, '../src/core/dimensions/time-dimension.js'), 'utf8')
   .replace(/\r\n/g, '\n');

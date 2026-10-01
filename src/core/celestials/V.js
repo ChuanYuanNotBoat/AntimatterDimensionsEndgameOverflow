@@ -3,7 +3,7 @@ import { GameDatabase } from "../secret-formula/game-database";
 
 import { SpeedrunMilestones } from "../speedrun";
 
-import { boundedPositiveProduct, finiteNumber } from "../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, finiteNumber } from "../finite-decimal";
 import { Quotes } from "./quotes";
 
 /**
@@ -226,14 +226,14 @@ export const V = {
       if (i < 6) sum += player.celestials.v.runUnlocks[i];
       else sum += player.celestials.v.runUnlocks[i] * 2;
     }
-    this.spaceTheorems = player.disablePostReality ? 0 : finiteNumber(
-      boundedPositiveProduct(
-        boundedPositiveProduct(
-          boundedPositiveProduct(sum, ExpansionPack.vPack.isBought ? 2 : 1),
-          Ra.unlocks.spaceTheoremBoost.effectOrDefault(1)),
-        Effects.productDecimal(ResurgenceUpgrade.synergy3)),
-      Number.MAX_SAFE_INTEGER,
-      Number.MAX_SAFE_INTEGER);
+    let theorems = boundedPositiveProduct(sum, ExpansionPack.vPack.isBought ? 2 : 1);
+    theorems = boundedPositiveProduct(theorems, Ra.unlocks.spaceTheoremBoost.effectOrDefault(1));
+    theorems = boundedPositiveProduct(theorems, Effects.productDecimal(ResurgenceUpgrade.synergy3));
+    theorems = boundedPositiveProduct(theorems, ReplicantiMultipliers.stMult);
+    if (ResurgenceUpgrade.repSurge.isBought && !player.disablePostReality) {
+      theorems = boundedPositivePower(theorems, ReplicantiMultipliers.stPow);
+    }
+    this.spaceTheorems = player.disablePostReality ? 0 : finiteNumber(theorems, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
   },
   reset() {
     player.celestials.v = {

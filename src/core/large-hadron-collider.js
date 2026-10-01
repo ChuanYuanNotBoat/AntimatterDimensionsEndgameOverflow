@@ -1,4 +1,5 @@
 import { GameMechanicState, RebuyableMechanicState, SetPurchasableMechanicState } from "./game-mechanics";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
 
 class AcceleratorMilestoneState extends GameMechanicState {
 
@@ -98,7 +99,7 @@ class AcceleratorState extends GameMechanicState {
   }
 
   get drainResource() {
-    return this.config.drainResource;
+    return typeof this.config.drainResource === "function" ? this.config.drainResource() : this.config.drainResource;
   }
 
   get totalEffects() {
@@ -147,7 +148,7 @@ class AcceleratorState extends GameMechanicState {
       return;
     }
     if (!this.isActive || this.isMaxed) return;
-    if (Pelle.isDoomed && this.name === "Potency Accelerator") return;
+    if ((Pelle.isDoomed || Slabdrill.isCursed) && this.name === "Potency Accelerator") return;
 
     // Don't drain resources if you only have 1 of it.
     if (this.fillCurrency.value.lte(1)) return;
@@ -177,6 +178,10 @@ export const LHC = {
     return 299792458 / (27000000 / Math.pow(firstThreeAcceleratorPercentagesSum, 3));
   },
 
+  get hadronC() {
+    return this.hadronSpeed / 299792458;
+  },
+
   get acceleratorSpeed() {
     return 0.00001 * player.endgame.largeHadronCollider.powerCores;
   },
@@ -187,6 +192,7 @@ export const LHC = {
   },
 
   get breakingPoint() {
+    if (Slabdrill.isCursed) return DC.ENUMMAX;
     return Decimal.pow10(Decimal.pow10(225 + Accelerators.potency._milestones[1].effectOrDefault(0) +
       Accelerators.emptiness._milestones[2].effectOrDefault(0) + Accelerators.cosmic._milestones[2].effectOrDefault(0)));
   },
@@ -204,6 +210,56 @@ export const LHC = {
   }
 };
 
+export const CMilestones = {
+  get c() {
+    return LHC.hadronC;
+  },
+
+  get reachedMilestones() {
+    return Math.clamp(5 - Math.ceil(Math.pow((1 - this.c) * 40 + 0.25, 0.5) - 0.5), 0, 5);
+  },
+
+  get nextMilestoneAt() {
+    return 1 - (Math.pow((4 - this.reachedMilestones) + 0.5, 2) - 0.25) / 40;
+  },
+
+  tesseractEqualizer(bought, free) {
+    const effectiveC = Math.clamp((this.c - 0.5) * 2, 0, 1);
+    return Math.pow((Math.max(bought, 1) * Math.max(free, 1)) / (bought + free), effectiveC) * (bought + free);
+  },
+
+  antimatterEqualizer(mults, tick) {
+    const effectiveC = Math.clamp((this.c - 0.7) * 10 / 3, 0, 1);
+    const production = boundedPositiveProduct(mults, tick);
+    if (production.lte(0)) return DC.D0;
+    if (effectiveC === 0 || new Decimal(mults).lte(1) || new Decimal(tick).lte(1)) return production;
+    // Divide in log space before multiplying to avoid overflowing mults^log10(tick)
+    // even when the final equalized production is finite.
+    const innerLog = boundedPositiveProduct(new Decimal(mults).log10().div(production.max(1).log10()),
+      new Decimal(tick).log10());
+    const equalized = dilateMultiplier(boundedPositivePower(10, innerLog), effectiveC).max(10);
+    return boundedPositivePower(equalized, production.log10());
+  },
+
+  tickspeedEqualizer(bought, free) {
+    const effectiveC = Math.clamp((this.c - 0.85) * 20 / 3, 0, 1);
+    const total = boundedPositiveSum(bought, free);
+    if (total.eq(0) || effectiveC === 0) return total;
+    const ratio = boundedPositiveProduct(bought.max(1).div(total), free.max(1));
+    return boundedPositiveProduct(boundedPositivePower(ratio, effectiveC), total);
+  },
+
+  bhImprovement(mult) {
+    const effectiveC = Math.clamp((this.c - 0.95) * 20, 0, 1);
+    return mult.max(10).log10().log10().times(effectiveC).add(1);
+  },
+
+  potencyImprovement(effect) {
+    const effectiveC = Math.clamp((this.c - 0.95) * 20, 0, 1);
+    return effect.max(1).log10().sub(18.5).max(0).times(effectiveC).div(3).add(1);
+  }
+};
+
 class PowerCoreState extends GameMechanicState {
   constructor() {
     super({});
@@ -212,7 +268,7 @@ class PowerCoreState extends GameMechanicState {
   }
 
   get isAffordable() {
-    return player.celestials.laitela.hadrons.total >= this.cost;
+    return player.celestials.laitela.hadrons.trueTotal >= this.cost;
   }
 
   get cost() {
@@ -245,7 +301,7 @@ class PowerCoreState extends GameMechanicState {
   }
 
   costInv() {
-    let cur = player.celestials.laitela.hadrons.total;
+    let cur = player.celestials.laitela.hadrons.trueTotal;
     return Math.floor(cur / 5 - 14);
   }
 
@@ -258,7 +314,7 @@ class PowerCoreState extends GameMechanicState {
     if (bulk === 0) return false;
     this.boughtAmount = this.boughtAmount + bulk;
     let i = 0;
-    while (player.celestials.laitela.hadrons.total > this.costAfterCount(this.boughtAmount) &&
+    while (player.celestials.laitela.hadrons.trueTotal > this.costAfterCount(this.boughtAmount) &&
     i < 50 && this.boughtAmount < 9e15) {
       this.boughtAmount = this.boughtAmount + 1;
       i += 1;
@@ -278,12 +334,15 @@ class PowerCoreState extends GameMechanicState {
 LHC.powerCores = new PowerCoreState();
 
 export function enterTheVoid() {
-  if (player.endgame.overcharge.isRunning) return;
+  if (Slabdrill.isCursed || player.endgame.overcharge.isRunning || player.compression.active || player.universes.current !== 0) return;
+  if (GameEnd.creditsEverClosed) return;
   player.disablePostReality = true;
   Endgame.resetNoReward();
   disChargeAllPerkUpgrades();
   disChargeAll();
   disChargeAllBreakUpgrades();
+  disChargeAllEternityUpgrades();
+  player.endgame.overcharge.allowComplex = false;
   AutomatorBackend.stop();
   clearCelestialRuns();
   player.endgame.largeHadronCollider.void.isRunning = true;
@@ -316,18 +375,24 @@ export function enterTheVoid() {
 };
 
 export function exitTheVoid() {
+  if (Slabdrill.isCursed || player.endgame.overcharge.isRunning || player.compression.active || player.universes.current !== 0) return;
+  if (GameEnd.creditsEverClosed) return;
   player.disablePostReality = false;
   Endgame.resetNoReward();
+  player.endgame.overcharge.allowComplex = true;
   player.endgame.largeHadronCollider.void.isRunning = false;
 };
 
 export function enterNullifiedVoid() {
-  if (player.endgame.overcharge.isRunning) return;
+  if (Slabdrill.isCursed) return;
+  if (GameEnd.creditsEverClosed) return;
   Endgame.resetNoReward();
   player.endgame.largeHadronCollider.void.isRunning = true;
 };
 
 export function exitNullifiedVoid() {
+  if (Slabdrill.isCursed) return;
+  if (GameEnd.creditsEverClosed) return;
   Endgame.resetNoReward();
   player.endgame.largeHadronCollider.void.isRunning = false;
 };
