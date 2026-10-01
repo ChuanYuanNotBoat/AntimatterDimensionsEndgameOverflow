@@ -1790,9 +1790,9 @@ window.player = {
   endgameMasteries: {
     skills: DC.D0,
     maxSkills: DC.D0,
-    ggBought: 0,
-    cpBought: 0,
-    dpBought: 0,
+    ggBought: DC.D0,
+    cpBought: DC.D0,
+    dpBought: DC.D0,
     masteries: [],
     shopMinimized: false,
     preferredPaths: [[], [], []],

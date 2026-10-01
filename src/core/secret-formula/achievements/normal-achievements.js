@@ -1962,12 +1962,17 @@ export const normalAchievements = [
     id: 231,
     name: "Grandmastery",
     get description() { return `Purchase ${formatInt(1000)} Endgame Skills.` },
-    checkRequirement: () => EndgameSkills.totalPurchased() >= 1000,
+    checkRequirement: () => EndgameSkills.totalPurchased().gte(1000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     get reward() {
       return `Dilate ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimension Multipliers based on purchased Endgame Skills, which is stronger in Pelle.`;
     },
-    effect: () => player.disablePostReality ? 1 : 1 + ((Math.min(EndgameSkills.totalPurchased(), 2000) + (Math.max(Math.log2(EndgameSkills.totalPurchased() / 2000), 0) * 1000)) / (Pelle.isDoomed ? 20000 : 100000)),
+    effect: () => {
+      if (player.disablePostReality) return DC.D1;
+      const purchased = EndgameSkills.totalPurchased();
+      return purchased.min(2000).add(purchased.div(2000).max(1).log2().times(1000))
+        .div(Pelle.isDoomed ? 20000 : 100000).add(1);
+    },
     formatEffect: value => `${formatPow(value, 2, 3)}`,
     progress: () => Achievement(231).isUnlocked ? DC.D1 : Decimal.clamp(new Decimal(EndgameSkills.totalPurchased()).div(1000), 0, 1)
   },
