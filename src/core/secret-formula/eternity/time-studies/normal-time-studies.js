@@ -647,7 +647,7 @@ export const normalTimeStudies = [
     requiresST: [231],
     description: () => `All Galaxies are stronger based on ${player.universes.current === 2 ? "Matter" : "Antimatter"} Galaxies`,
     effect: () => Decimal.pow(player.galaxies.div(500).add(1), 0.25),
-    formatEffect: value => `+${formatPercents(value - 1, 3)}`
+    formatEffect: value => `+${formatDecimalPercents(value.sub(1), 3)}`
   },
   {
     id: 233,

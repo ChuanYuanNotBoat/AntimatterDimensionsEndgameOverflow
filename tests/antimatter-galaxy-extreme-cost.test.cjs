@@ -127,3 +127,14 @@ test('AG confirmation keeps dimension budgets beyond native Number range', () =>
   const source = fs.readFileSync(path.join(__dirname, '../src/components/modals/prestige/AntimatterGalaxyModal.vue'), 'utf8');
   assert.doesNotMatch(source, /dim\.totalAmount\.toNumber\(\)/);
 });
+
+test('Slabdrill distant scaling remains Decimal and bulk inverse matches forward requirements', () => {
+  const context = world();
+  context.SlabdrillUnlocks = new Proxy({}, { get: (_, key) => ({ isUnlocked: key === 'galaxy' }) });
+  context.GlyphSacrifice.power.effectValue = new Decimal(100);
+  finite(context.Galaxy.costScalingStart);
+  for (const budget of [80, 6020, 6082, 75262, 1e8]) maximalAffordable(context, budget);
+  context.GlyphSacrifice.power.effectValue = new Decimal('1e400');
+  assert.ok(context.Galaxy.costScalingStart.eq('1e400'));
+  finite(context.Galaxy.costScalingStart);
+});

@@ -1,5 +1,5 @@
 import { GameMechanicState, RebuyableMechanicState, SetPurchasableMechanicState } from "./game-mechanics";
-import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "./finite-decimal";
 
 class AcceleratorMilestoneState extends GameMechanicState {
 
@@ -225,7 +225,12 @@ export const CMilestones = {
 
   tesseractEqualizer(bought, free) {
     const effectiveC = Math.clamp((this.c - 0.5) * 2, 0, 1);
-    return Math.pow((Math.max(bought, 1) * Math.max(free, 1)) / (bought + free), effectiveC) * (bought + free);
+    const total = boundedPositiveSum(bought, free);
+    // In particular, zero Tesseracts at active C must stay zero instead of
+    // evaluating Infinity^C * 0. Counts remain Numbers at this API boundary.
+    if (total.eq(0) || effectiveC === 0) return finiteNumber(total);
+    const ratio = boundedPositiveProduct(new Decimal(bought).max(1).div(total), new Decimal(free).max(1));
+    return finiteNumber(boundedPositiveProduct(boundedPositivePower(ratio, effectiveC), total));
   },
 
   antimatterEqualizer(mults, tick) {

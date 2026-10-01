@@ -186,8 +186,8 @@ export class Galaxy {
   }
 
   static get costScalingStart() {
-    if (SlabdrillUnlocks.galaxy.isUnlocked) return GlyphSacrifice.power.effectValue.toNumber() +
-      BreakEternityUpgrade.galaxyScaleDelay.effectOrDefault(0);
+    if (SlabdrillUnlocks.galaxy.isUnlocked) return boundedPositiveSum(GlyphSacrifice.power.effectValue,
+      BreakEternityUpgrade.galaxyScaleDelay.effectOrDefault(0));
     const extraDelay = Alpha.isRunning ? 0 : BreakEternityUpgrade.galaxyScaleDelay.effectOrDefault(0);
     let start = new Decimal(Alpha.isRunning ? AlphaUnlocks.powerGalaxies.effects.nerf.effectOrDefault(100) : 100);
     start = boundedPositiveSum(start, TimeStudy(302).effectOrDefault(0));

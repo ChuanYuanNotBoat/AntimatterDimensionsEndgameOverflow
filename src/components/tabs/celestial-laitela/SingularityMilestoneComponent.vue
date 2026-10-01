@@ -24,13 +24,14 @@ export default {
     start: new Decimal(),
     completions: new Decimal(),
     limit: 0,
-    milestoneMode: false,
+    milestoneMode: SINGULARITY_MILESTONE_RESOURCE.SINGULARITIES,
     singularitiesPerCondense: new Decimal(),
     baseCondenseTime: new Decimal(),
     currentCondenseTime: new Decimal(),
     autoCondenseDelay: new Decimal(),
     lastCheckedMilestones: new Decimal(),
     autoSingActive: false,
+    isMetro: false,
   }),
   computed: {
     // The bar is a mask that inverts colors for any element with a lower z-index (including text).
