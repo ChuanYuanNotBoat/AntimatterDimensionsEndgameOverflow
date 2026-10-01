@@ -60,3 +60,28 @@ test('inventory hint and modified-level opt-out preserve a valid zero cap', () =
   hintContext.update.call(instance);
   assert.equal(instance.displayLevel, null);
 });
+
+test('automatic TP reward restored with its original unlock and celestial restrictions', () => {
+  const game = read('game.js');
+  const begin = game.indexOf('  const teresa1 =');
+  const end = game.indexOf('rewardTP();', begin) + 'rewardTP();'.length;
+  const code = game.slice(begin, end);
+  for (const [active, auto, startRa, startingTP, celestial, doomed, disabled, expected] of [
+    [true, true, false, false, false, false, false, 1],
+    [true, false, true, false, false, false, false, 1],
+    [false, false, false, true, false, false, false, 1],
+    [false, false, false, false, false, false, false, 0],
+    [false, false, false, true, true, false, false, 0],
+    [true, true, false, true, false, true, false, 0],
+    [true, true, false, true, false, false, true, 0],
+  ]) {
+    let calls = 0;
+    vm.runInNewContext(code, {
+      player: { dilation: { active }, disablePostReality: disabled },
+      Ra: { unlocks: { autoTP: { canBeApplied: auto }, unlockDilationStartingTP: { canBeApplied: startingTP } } },
+      EndgameMilestone: { startRa: { isReached: startRa } }, Pelle: { isDoomed: doomed },
+      isInCelestialReality: () => celestial, rewardTP: () => calls++,
+    });
+    assert.equal(calls, expected);
+  }
+});
