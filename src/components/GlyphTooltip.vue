@@ -59,7 +59,7 @@ export default {
     displayLevel: {
       type: Decimal,
       required: false,
-      default: new Decimal(0),
+      default: null,
     },
     changeWatcher: {
       type: Number,
@@ -77,7 +77,7 @@ export default {
       return GameUI.touchDevice;
     },
     effectiveLevel() {
-      return this.displayLevel.neq(0) ? this.displayLevel : this.level;
+      return this.displayLevel ?? this.level;
     },
     sortedEffects() {
       return getGlyphEffectValuesFromBitmask(this.effects, this.effectiveLevel, this.strength, this.type)
@@ -119,10 +119,10 @@ export default {
       }
     },
     isLevelCapped() {
-      return this.displayLevel.neq(0) && this.displayLevel.lt(this.level);
+      return this.displayLevel !== null && this.displayLevel.lt(this.level);
     },
     isLevelBoosted() {
-      return this.displayLevel.neq(0) && this.displayLevel.gt(this.level);
+      return this.displayLevel !== null && this.displayLevel.gt(this.level);
     },
     rarityText() {
       if (!GlyphTypes[this.type].hasRarity) return "";

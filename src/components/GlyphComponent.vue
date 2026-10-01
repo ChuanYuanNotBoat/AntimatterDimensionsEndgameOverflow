@@ -349,7 +349,8 @@ export default {
       sacrificeReward: 0,
       uncappedRefineReward: 0,
       refineReward: 0,
-      displayLevel: new Decimal(),
+      // Null means an unmodified preview; zero is a valid Slabdrill level cap.
+      displayLevel: null,
       // We use this to not create a ton of tooltip components as soon as the glyph tab loads.
       tooltipLoaded: false,
       logTotalSacrifice: 0,
@@ -551,7 +552,7 @@ export default {
       switch (options.glyphInfoType) {
         case typeEnum.LEVEL:
           this.updateDisplayLevel();
-          return formatHybridLarge(new Decimal(this.displayLevel).eq(0) ? this.glyph.level : this.displayLevel, 3);
+          return formatHybridLarge(this.displayLevel ?? this.glyph.level, 3);
         case typeEnum.RARITY:
           return formatRarity(strengthToRarity(Slabdrill.isCursed
             ? rarityToStrength(Math.clamp((Slabdrill.currentStage - 4) * 20, 0, 100))
@@ -621,7 +622,7 @@ export default {
     },
     updateDisplayLevel() {
       if (this.ignoreModifiedLevel) {
-        this.displayLevel = DC.D0;
+        this.displayLevel = null;
         return;
       }
       // We have to consider some odd interactions in order to properly show level. The getAdjustedGlyphLevel() function
