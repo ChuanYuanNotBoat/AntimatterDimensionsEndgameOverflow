@@ -221,3 +221,13 @@ export const IP = {
     icon: MultiplierTabIcons.DIVISOR("IP"),
   },
 };
+
+// Chapter 3 effects use the same ordered trace as the resource total.
+Object.assign(IP, {
+  slabMultiplier: { name: "Slabdrill IP multiplier", isActive: true,
+    transformValue: () => InfinityPointBreakdown.transform("slabMultiplier"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabAutobuyer: { name: "Slabdrill: Autobuyer speed upgrade x666 IP", isActive: true,
+    transformValue: () => InfinityPointBreakdown.transform("slabAutobuyer"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabPower: { name: "Slabdrill TS181 stage: IP power penalty", isActive: true,
+    transformValue: () => InfinityPointBreakdown.transform("slabPower"), icon: MultiplierTabIcons.UPGRADE("reality") },
+});

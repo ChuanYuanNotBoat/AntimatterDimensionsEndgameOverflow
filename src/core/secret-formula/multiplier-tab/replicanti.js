@@ -42,3 +42,9 @@ for (const [key, entry] of Object.entries(replicanti)) {
   entry.isActive = true;
   entry.multValue = 1;
 }
+
+// Chapter 3 effects use the same ordered trace as the resource total.
+Object.assign(replicanti, {
+  slabMultiplier: { name: "Slabdrill Replicanti speed multiplier", isActive: true,
+    transformValue: () => ReplicantiBreakdown.transform("slabMultiplier"), icon: MultiplierTabIcons.UPGRADE("reality") },
+});

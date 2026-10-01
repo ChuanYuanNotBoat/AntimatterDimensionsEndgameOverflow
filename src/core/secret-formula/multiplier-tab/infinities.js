@@ -35,3 +35,13 @@ for (const [key, entry] of Object.entries(infinities)) {
   entry.multValue = 1;
   entry.powValue = 1;
 }
+
+// Chapter 3 effects use the same ordered trace as the resource total.
+Object.assign(infinities, {
+  chargedNC1: { name: "Charged Normal Challenge 1", isActive: true,
+    transformValue: () => InfinitiesBreakdown.transform("chargedNC1"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabPenalty: { name: "Slabdrill EC10 stage: gain divided by 1e20", isActive: true,
+    transformValue: () => InfinitiesBreakdown.transform("slabPenalty"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabMultiplier: { name: "Slabdrill Infinity gain multiplier", isActive: true,
+    transformValue: () => InfinitiesBreakdown.transform("slabMultiplier"), icon: MultiplierTabIcons.UPGRADE("reality") },
+});

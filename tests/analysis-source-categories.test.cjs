@@ -37,7 +37,7 @@ function setup() {
     classicachievement: { name: 'Achievements', icon: icons.trophy } };
   for (const key of Object.keys(trace)) values[key] = { name: key, sourceKey: key };
   const tree = { AD_total: [Object.keys(trace).map(key => `AD_${key}`), [], []] };
-  for (let tier = 1; tier <= 8; tier++) tree[`AD_total_${tier}`] = [[], []];
+  for (let tier = 1; tier <= 9; tier++) tree[`AD_total_${tier}`] = [[], []];
   context.install('AD', values, tree);
   return { values, tree, icons, evaluate, context, DC, trace };
 }

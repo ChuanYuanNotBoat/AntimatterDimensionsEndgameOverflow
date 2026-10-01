@@ -767,7 +767,15 @@ class AntimatterDimensionState extends DimensionState {
       if (tier === 6) amount = amount.pow(1.2);
     }
     const dimensionProduction = boundedPositiveProduct(amount, multiplier ?? this.multiplier);
-    if (Slabdrill.coreActive) return dimensionProduction;
+    if (Slabdrill.coreActive) {
+      if (diagnostic) {
+        diagnostic.push({ key: "raw", type: "formula", before: DC.D1, after: dimensionProduction,
+          display: "Effective amount × Slabdrill core multiplier" });
+        diagnostic.push({ key: "slabCore", type: "override", before: dimensionProduction, after: dimensionProduction,
+          alwaysShow: true, display: "Slabdrill core bypasses Tickspeed, production powers and caps" });
+      }
+      return dimensionProduction;
+    }
     let production = tier === 1 ? CMilestones.antimatterEqualizer(dimensionProduction, Tickspeed.perSecond)
       : boundedPositiveProduct(dimensionProduction, tier === 9 ? 1 : Tickspeed.perSecond);
     // An optional, read-only diagnostic records the *gameplay* production path.
@@ -776,13 +784,19 @@ class AntimatterDimensionState extends DimensionState {
     const record = diagnostic
       ? (key, type, before, display = "") => diagnostic.push({ key, type, before, after: production, display })
       : null;
-    if (diagnostic) diagnostic.push({ key: "raw", type: "formula", before: DC.D1,
-      after: production, display: "Effective amount × gameplay multiplier × one Tickspeed rate" });
+    if (diagnostic) {
+      const raw = boundedPositiveProduct(dimensionProduction, tier === 9 ? 1 : Tickspeed.perSecond);
+      diagnostic.push({ key: "raw", type: "formula", before: DC.D1, after: raw,
+        display: tier === 9 ? "Effective amount × gameplay multiplier (AD9 bypasses Tickspeed)"
+          : "Effective amount × gameplay multiplier × one Tickspeed rate" });
+      if (tier === 1) record("antimatterEqualizer", "formula", raw, "C Hadron Antimatter equalizer");
+    }
     let checkpoint = production;
     if (NormalChallenge(2).isRunning) {
       production = production.times(player.chall2Pow);
     }
     record?.("challenge2", "multiply", checkpoint, "Normal Challenge 2 multiplier (when active)");
+    checkpoint = production;
     if (tier === 1 && !player.compression.active) {
       if (NormalChallenge(3).isRunning) {
         production = production.times(player.chall3Pow);
@@ -872,17 +886,26 @@ class AntimatterDimensionState extends DimensionState {
         production = Decimal.tetrate(10, slog.times(0.75).toNumber());
       }
       record?.("overcharge", "softcap", checkpoint, "Overcharge tetration compression");
+      checkpoint = production;
       if (production.gt(1) && player.endgame.overcharge.isRunning) {
         if (DivinityMilestone.powerBurst.isReached) production = production.pow(Time.thisEndgameRealTime.totalSeconds.max(1).log10().pow(0.5).div(10).add(1));
       }
+      record?.("overchargePowerBurst", "power", checkpoint, "Divinity Power Burst after Overcharge");
+      checkpoint = production;
       if (production.gt(1) && player.universes.current === 1) {
         const slog = production.slog();
         production = Decimal.tetrate(10, slog.times(0.9).toNumber());
       }
+      record?.("transientUniverse", "softcap", checkpoint, "Transient Universe: production tetration transform");
+      checkpoint = production;
       if (production.gt(1) && player.universes.current === 2) {
         const slog = production.slog();
         production = Decimal.tetrate(10, slog.times(0.5).add(1).add(Currency.molecularMass.value.max(1).slog().div(2).sub(1).max(0)).toNumber());
       }
+      record?.("tangibleUniverse", "formula", checkpoint, "Tangible Universe: Molecular Mass production transform");
+    } else if (tier === 1 && diagnostic) {
+      diagnostic.push({ key: "compressionBypass", type: "override", before: production, after: production,
+        alwaysShow: true, display: "Compression bypasses the AD1 production powers and celestial softcaps" });
     }
     // Endgame and challenge caps apply to every AD tier, not to its multiplier.
     checkpoint = production;
@@ -891,7 +914,12 @@ class AntimatterDimensionState extends DimensionState {
       ((player.break && !NormalChallenge.isRunning) || InfinityChallenge.isRunning || Enslaved.isRunning)
       ? production.min(boundedPositiveProduct(dimensionProduction, NormalChallenge(2).isRunning ? player.chall2Pow : 1))
       : production.min(cap);
-    record?.("challengeCap", "hardcap", checkpoint, diagnostic ? `Production hardcap: ${format(cap, 2, 2)}/sec` : "");
+    let capDisplay = diagnostic ? `Production hardcap: ${format(cap, 2, 2)}/sec` : "";
+    if (diagnostic && tier !== 1 && NormalChallenge(12).isCharged &&
+        ((player.break && !NormalChallenge.isRunning) || InfinityChallenge.isRunning || Enslaved.isRunning)) {
+      capDisplay = "Charged NC12 caps production at the pre-Tickspeed output (including NC2 when active)";
+    }
+    record?.("challengeCap", "hardcap", checkpoint, capDisplay);
     return production;
   }
 }

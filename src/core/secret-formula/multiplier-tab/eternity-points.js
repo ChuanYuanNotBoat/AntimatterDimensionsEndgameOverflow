@@ -214,3 +214,17 @@ export const EP = {
     icon: MultiplierTabIcons.DIVISOR("EP"),
   },
 };
+
+// Chapter 3 effects use the same ordered trace as the resource total.
+Object.assign(EP, {
+  slabMultiplier: { name: "Slabdrill EP multiplier", isActive: true,
+    transformValue: () => EternityPointBreakdown.transform("slabMultiplier"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabPower: { name: "Slabdrill TS181 stage: EP power penalty", isActive: true,
+    transformValue: () => EternityPointBreakdown.transform("slabPower"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabSoftcap2000: { name: "Slabdrill EP softcap at 1e2000", isActive: true,
+    transformValue: () => EternityPointBreakdown.transform("slabSoftcap2000"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabSoftcap2500: { name: "Slabdrill EP softcap at 1e2500", isActive: true,
+    transformValue: () => EternityPointBreakdown.transform("slabSoftcap2500"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabSoftcap3000: { name: "Slabdrill EP softcap at 1e3000", isActive: true,
+    transformValue: () => EternityPointBreakdown.transform("slabSoftcap3000"), icon: MultiplierTabIcons.UPGRADE("reality") },
+});

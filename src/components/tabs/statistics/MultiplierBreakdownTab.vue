@@ -6,13 +6,15 @@ import {
 } from "./multiplier-tab-navigation";
 import MultiplierBreakdownEntry from "./MultiplierBreakdownEntry";
 import AntimatterProductionBreakdown from "./AntimatterProductionBreakdown";
+import MultiplierStateSummary from "./MultiplierStateSummary";
 import { antimatterProductionSnapshot } from "@/core/secret-formula/multiplier-tab/antimatter-production-audit";
 
 export default {
   name: "MultiplierBreakdownTab",
   components: {
     MultiplierBreakdownEntry,
-    AntimatterProductionBreakdown
+    AntimatterProductionBreakdown,
+    MultiplierStateSummary
   },
   data() {
     return {
@@ -218,6 +220,7 @@ export default {
       v-if="resource"
       class="c-list-container"
     >
+      <MultiplierStateSummary :key="currentKey" :resource-key="currentKey" />
       <div class="c-multiplier-context">
         <h3 class="c-multiplier-resource-title">
           {{ currentOption.text }}

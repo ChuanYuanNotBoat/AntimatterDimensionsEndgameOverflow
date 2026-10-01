@@ -69,12 +69,14 @@ function trace(skipKey = null, steps = null) {
   if (TimeStudy(132).isBought) {
     mult("study132", Perk.studyPassive.isBought && !player.disablePostReality ? 3 : 1.5);
   }
-  if (!overCap && Achievement(134).isUnlocked && !player.disablePostReality) mult("achievement2", 2);
+  if (!overCap && Achievement(134).isUnlocked &&
+      (!player.disablePostReality || SlabdrillUnlocks.eternityChallengeTen.isUnlocked)) mult("achievement2", 2);
   mult("glyph", getAdjustedGlyphEffect("replicationspeed"));
   if (GlyphAlteration.isAdded("replication")) mult("glyphAlteration", ReplicantiMultipliers.dtMult);
   mult("alchemy", AlchemyResource.replication.effectOrDefault(1));
   mult("ra", Ra.unlocks.continuousTTBoost.effects.replicanti.effectOrDefault(1));
   if (LHC.voidRunning) mult("nullUpgrade", NullUpgrade.replicantiSpeedMult.effectOrDefault(1));
+  if (SlabdrillUnlocks.replicanti.isUnlocked) mult("slabMultiplier", Slabdrill.slabPowers.repSpeed());
   return value;
 }
 

@@ -234,6 +234,9 @@ function postDilationPowers(tier) {
       key: "alphaNerfPower",
       value: () => (Alpha.isRunning ? AlphaUnlocks.eternityUpgrades.effects.nerf.effectOrDefault(1) : DC.D1)
     },
+    { key: "slabinfinityChallengeFourPower", value: () => (SlabdrillUnlocks.infinityChallengeFour.isUnlocked ? 0.75 : 1) },
+    { key: "slabeternityPower", value: () => (SlabdrillUnlocks.eternity.isUnlocked ? 0.75 : 1) },
+    { key: "slabeternityChallengeTenPower", value: () => (SlabdrillUnlocks.eternityChallengeTen.isUnlocked ? 0.75 : 1) },
     { key: "dualityPower", value: () => DualityUpgrade(8).effectOrDefault(1) },
     {
       key: "replicantiSurgePower",
@@ -247,6 +250,10 @@ function postDilationPowers(tier) {
         ? Achievements.powerConv(Achievement(75).effectOrDefault(1))
         : DC.D1)
     },
+    { key: "chargedidMultEP", value: () => EternityUpgrade.idMultEP.chargedEffect.effectOrDefault(1) },
+    { key: "chargedidMultEternities", value: () => EternityUpgrade.idMultEternities.chargedEffect.effectOrDefault(1) },
+    { key: "chargedidMultICRecords", value: () => EternityUpgrade.idMultICRecords.chargedEffect.effectOrDefault(1) },
+    { key: "chargedNC2", value: () => NormalChallenge(2).chargedEffect },
   ];
 }
 
@@ -291,6 +298,10 @@ function evaluateInfinityDimension(tier, skipKey = null, steps = null) {
     );
   }
 
+  if (SlabdrillUnlocks.infinityChallengeFour.isUnlocked) {
+    mult = orderedMultiplyStep(steps, "slabMultiplier", mult, Slabdrill.slabPowers.idMult(), skipKey);
+  }
+
   mult = powerGroup(steps, "preDilationPowers", mult, preDilationPowers(), skipKey);
 
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
@@ -330,6 +341,15 @@ function evaluateInfinityDimension(tier, skipKey = null, steps = null) {
       skipKey,
       { display: `Overcharge level ${formatInt(player.endgame.overcharge.level)}` }
     );
+  }
+
+  if (player.compression.active) {
+    mult = orderedTransformStep(steps, "compression", "softcap", mult, compressedMultiplier(mult), skipKey);
+  }
+  if (player.universes.current === 1) {
+    mult = orderedTransformStep(steps, "transientUniverse", "softcap", mult,
+      dilateMultiplier(mult, Decimal.pow(0.1,
+        Decimal.pow(0.9, Currency.relativisticParticles.value.max(10).log10().log10().pow(2)))), skipKey);
   }
 
   const overflow1 = overflow(mult, InfinityDimensions.OVERFLOW, InfinityDimensions.compressionMagnitude);

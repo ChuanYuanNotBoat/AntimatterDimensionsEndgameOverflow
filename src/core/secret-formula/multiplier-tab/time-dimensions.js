@@ -458,3 +458,19 @@ export const TD = {
   ),
 
 };
+
+Object.assign(TD, {
+  slabMultiplier: orderedTDEntry("Slabdrill TD multiplier", "slabMultiplier", MultiplierTabIcons.UPGRADE("reality")),
+  slabPower: orderedTDEntry("Slabdrill TS181 stage: TD power penalty", "slabPower", MultiplierTabIcons.UPGRADE("reality")),
+  chargedtdMultAchs: orderedTDEntry(
+    "Charged Eternity Upgrade 4: Achievement-based TD power", "chargedtdMultAchs", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedtdMultTheorems: orderedTDEntry(
+    "Charged Eternity Upgrade 5: Time Theorem-based TD power", "chargedtdMultTheorems", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedtdMultRealTime: orderedTDEntry(
+    "Charged Eternity Upgrade 6: time-based TD power", "chargedtdMultRealTime", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedNC2: orderedTDEntry("Charged Normal Challenge 2", "chargedNC2", MultiplierTabIcons.UPGRADE("reality")),
+  compression: orderedTDEntry("Compression", "compression", MultiplierTabIcons.UPGRADE("reality")),
+});

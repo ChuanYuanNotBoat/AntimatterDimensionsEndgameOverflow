@@ -5,7 +5,7 @@ export const MultiplierTabHelper = {
       case "AD":
         // Technically not 100% correct, but within EC7 any AD8 production is going to be irrelevant compared to AD7
         // and making the UI behave as if it's inactive produces a better look overall
-        return Math.clamp(AntimatterDimensions.all.filter(ad => ad.isProducing).length,
+        return Math.clamp(AntimatterDimensions.all.filter(ad => ad.tier <= 8 && ad.isProducing).length,
           1, EternityChallenge(7).isRunning ? 7 : 8);
       case "ID":
         return InfinityDimensions.all.filter(id => id.isProducing).length;

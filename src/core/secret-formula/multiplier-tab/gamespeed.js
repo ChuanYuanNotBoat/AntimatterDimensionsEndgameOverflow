@@ -116,3 +116,11 @@ export const gamespeed = {
     icon: MultiplierTabIcons.GAMESPEED,
   },
 };
+
+// Chapter 3 effects use the same ordered trace as the resource total.
+Object.assign(gamespeed, {
+  slabCore: { name: "Slabdrill core: fixed speed", isActive: true,
+    transformValue: () => GameSpeedBreakdown.transform("slabCore"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  ephemeralLight: { name: "Ephemeral Light: game speed power", isActive: true,
+    transformValue: () => GameSpeedBreakdown.transform("ephemeralLight"), icon: MultiplierTabIcons.UPGRADE("reality") },
+});

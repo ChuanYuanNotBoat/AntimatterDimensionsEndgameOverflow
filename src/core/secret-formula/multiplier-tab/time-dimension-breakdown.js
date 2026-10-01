@@ -114,6 +114,8 @@ function commonItems() {
     { key: "commonReplicanti", value: () => ReplicantiMultipliers.tdMult },
     { key: "ec9InfinityPower", value: ec9InfinityPowerMult },
     { key: "commonNull", value: () => (LHC.voidRunning ? NullUpgrade.timeDimensionMult.effectOrDefault(1) : DC.D1) },
+    { key: "slabMultiplier", value: () => (SlabdrillUnlocks.eternity.isUnlocked
+      ? Slabdrill.slabPowers.tdMult() : DC.D1) },
   ];
 }
 
@@ -223,6 +225,7 @@ function preDilationPowers() {
 
 function postDilationPowers(tier) {
   return [
+    { key: "slabPower", value: () => (SlabdrillUnlocks.timeStudy181.isUnlocked ? 0.75 : 1) },
     {
       key: "ascensionTimeStudy73Power",
       value: () => (tier === 3 && Ascensions.sacA.isUnlocked ? TimeStudy(73).effectOrDefault(1) : DC.D1)
@@ -249,6 +252,10 @@ function postDilationPowers(tier) {
         ? Achievements.powerConv(EternityUpgrade.tdMultAchs.effectOrDefault(1))
         : DC.D1)
     },
+    { key: "chargedtdMultAchs", value: () => EternityUpgrade.tdMultAchs.chargedEffect.effectOrDefault(1) },
+    { key: "chargedtdMultTheorems", value: () => EternityUpgrade.tdMultTheorems.chargedEffect.effectOrDefault(1) },
+    { key: "chargedtdMultRealTime", value: () => EternityUpgrade.tdMultRealTime.chargedEffect.effectOrDefault(1) },
+    { key: "chargedNC2", value: () => NormalChallenge(2).chargedEffect },
   ];
 }
 
@@ -331,6 +338,10 @@ function evaluateTimeDimension(tier, skipKey = null, steps = null) {
       skipKey,
       { display: `Overcharge level ${formatInt(player.endgame.overcharge.level)}` }
     );
+  }
+
+  if (player.compression.active) {
+    mult = orderedTransformStep(steps, "compression", "softcap", mult, compressedMultiplier(mult), skipKey);
   }
 
   const overflow1 = overflow(mult, TimeDimensions.OVERFLOW, TimeDimensions.compressionMagnitude);

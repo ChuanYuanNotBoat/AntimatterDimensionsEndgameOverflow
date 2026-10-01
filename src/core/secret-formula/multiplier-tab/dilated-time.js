@@ -130,3 +130,15 @@ for (const [key, entry] of Object.entries(DT)) {
   entry.multValue = 1;
   entry.powValue = 1;
 }
+
+// Chapter 3 effects use the same ordered trace as the resource total.
+Object.assign(DT, {
+  slabMultiplier: { name: "Slabdrill DT multiplier (outside dilation)", isActive: true,
+    transformValue: () => DilatedTimeBreakdown.transform("slabMultiplier"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  slabPower: { name: "Slabdrill dilation penalty", isActive: true,
+    transformValue: () => DilatedTimeBreakdown.transform("slabPower"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  ephemeralLight: { name: "Ephemeral Light: dilation power", isActive: true,
+    transformValue: () => DilatedTimeBreakdown.transform("ephemeralLight"), icon: MultiplierTabIcons.UPGRADE("reality") },
+  transientUniverse: { name: "Transient Universe: DT gain compression", isActive: true,
+    transformValue: () => DilatedTimeBreakdown.transform("transientUniverse"), icon: MultiplierTabIcons.UPGRADE("reality") },
+});

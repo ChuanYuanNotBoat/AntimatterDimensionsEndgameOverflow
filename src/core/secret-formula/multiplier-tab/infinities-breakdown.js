@@ -59,6 +59,11 @@ function trace(skipKey = null, steps = null) {
     power("currencySurge", player.infinities.max(1e10).log10().log10());
   }
   power("chargedInfinityGen", BreakInfinityUpgrade.infinitiedGen.chargedEffect.effectOrDefault(1));
+  power("chargedNC1", NormalChallenge(1).chargedEffect);
+  if (!Pelle.isDoomed && SlabdrillUnlocks.eternityChallengeTen.isUnlocked) {
+    mult("slabPenalty", 1e-20);
+    mult("slabMultiplier", Slabdrill.slabPowers.infMult());
+  }
   return value;
 }
 

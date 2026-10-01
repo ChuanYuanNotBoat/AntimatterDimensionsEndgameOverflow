@@ -213,6 +213,12 @@ function evaluateInfinityPoints(skipKey = null, steps = null) {
     if (LHC.voidRunning) {
       ip = orderedMultiplyStep(steps, "nullUpgrade", ip, NullUpgrade.infinityPointMult.effectOrDefault(1), skipKey);
     }
+    if (SlabdrillUnlocks.breakInfinity.isUnlocked) {
+      ip = orderedMultiplyStep(steps, "slabMultiplier", ip, Slabdrill.slabPowers.ipMult(), skipKey);
+    }
+    if (Slabdrill.isCursed && BreakInfinityUpgrade.autobuyerSpeed.isBought) {
+      ip = orderedMultiplyStep(steps, "slabAutobuyer", ip, 666, skipKey);
+    }
   }
 
   if (Teresa.isRunning) {
@@ -250,6 +256,10 @@ function evaluateInfinityPoints(skipKey = null, steps = null) {
 
   if (AlchemyResource.exponential.amount > 0 && ResurgenceUpgrade.repSurge.isBought && !player.disablePostReality) {
     ip = orderedPowerStep(steps, "replicantiSurge", ip, ReplicantiMultipliers.ipPow, skipKey);
+  }
+
+  if (SlabdrillUnlocks.timeStudy181.isUnlocked) {
+    ip = orderedPowerStep(steps, "slabPower", ip, 0.9, skipKey);
   }
 
   if (Ascensions.ipA.isUnlocked) {

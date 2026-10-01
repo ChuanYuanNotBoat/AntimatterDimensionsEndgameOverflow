@@ -148,6 +148,9 @@ function evaluateEternityPoints(skipKey = null, steps = null) {
     ep = orderedMultiplyStep(steps, "alphaTimeStudy", ep, epAlphaTimeStudyMult(), skipKey);
     ep = orderedMultiplyStep(steps, "eternityUpgrade", ep, epEternityUpgradeMult(), skipKey);
     ep = orderedMultiplyStep(steps, "nullUpgrade", ep, epNullUpgradeMult(), skipKey);
+    if (SlabdrillUnlocks.timeStudy181.isUnlocked) {
+      ep = orderedMultiplyStep(steps, "slabMultiplier", ep, Slabdrill.slabPowers.epMult(), skipKey);
+    }
   }
 
   if (Teresa.isRunning) {
@@ -182,6 +185,19 @@ function evaluateEternityPoints(skipKey = null, steps = null) {
       AlphaUnlocks.timeDimension8.effects.nerf.effectOrDefault(1),
       skipKey
     );
+  }
+
+  if (SlabdrillUnlocks.timeStudy181.isUnlocked) {
+    ep = orderedPowerStep(steps, "slabPower", ep, 0.9, skipKey);
+  }
+  if (Slabdrill.isCursed) {
+    for (const [threshold, power] of [[2000, 0.25], [2500, 0.5], [3000, 0.75]]) {
+      const cap = Decimal.pow10(threshold);
+      ep = orderedTransformStep(steps, `slabSoftcap${threshold}`, "softcap", ep,
+        ep.min(cap).times(ep.div(cap).max(1).pow(power)), skipKey, {
+          display: `Slabdrill: above 1e${threshold}, excess ${formatPow(power, 2, 2)}`
+        });
+    }
   }
 
   if (Ascensions.epA.isUnlocked) {

@@ -10,6 +10,7 @@ const breakdowns = { AD: AntimatterDimensionBreakdown, ID: InfinityDimensionBrea
 // Categories follow the original source names, while their values and source
 // removal use the complete gameplay trace, including all later expansion effects.
 function categoryFor(key) {
+  if (/^charged(idMult|tdMult)/u.test(key)) return "eternityUpgrade";
   if (/cursed/iu.test(key)) return "nerfCursed";
   if (/^(vNerf|effarig|alphaNerf|alphaPowerNerf|alphaNerfPower)$/u.test(key)) return key;
   if (/^(pelleNerf|pelleStrikePower|pelleStrike)$/u.test(key)) return "nerfPelle";
@@ -113,6 +114,7 @@ function sourceTransform(resource, breakdown, tiers, sources, mode) {
 
 export function installDimensionSourceGroups(resource, values, tree) {
   const prefix = `${resource}_`;
+  const tierCount = resource === "AD" ? 9 : 8;
   const original = { ...values };
   const roots = tree[`${resource}_total`][0];
   const calculationGroups = new Set(["commonEffects", "tierEffects", "powers", "voidPowers",
@@ -155,7 +157,7 @@ export function installDimensionSourceGroups(resource, values, tree) {
     const transform = tier => {
       const cacheKey = tier ?? 0;
       if (!caches.has(cacheKey)) caches.set(cacheKey, createOrderedTransformCache(() => {
-        const tiers = tier ? [tier] : Array.from({ length: 8 }, (_, i) => i + 1)
+        const tiers = tier ? [tier] : Array.from({ length: tierCount }, (_, i) => i + 1)
           .filter(t => Object.keys(breakdowns[resource].tierTrace(t)).length);
         const modes = new Map();
         return { forMode: mode => {
@@ -172,11 +174,11 @@ export function installDimensionSourceGroups(resource, values, tree) {
       icon: group.icon, isActive: true, isOrdered: true, transformValue: transform,
     };
     tree[key] = [group.leaves];
-    for (let tier = 1; tier <= 8; tier++) tree[`${key}_${tier}`] = [group.leaves.map(leaf => `${leaf}_${tier}`)];
+    for (let tier = 1; tier <= tierCount; tier++) tree[`${key}_${tier}`] = [group.leaves.map(leaf => `${leaf}_${tier}`)];
   }
   tree[`${resource}_total`][0] = categoryKeys;
   tree[`${resource}_total`][2] = categoryKeys;
-  for (let tier = 1; tier <= 8; tier++) {
+  for (let tier = 1; tier <= tierCount; tier++) {
     const base = resource === "AD" ? [] : [`${resource}_baseAmount_${tier}`];
     tree[`${resource}_total_${tier}`][0] = [...base, ...categoryKeys.map(key => `${key}_${tier}`)];
     tree[`${resource}_total_${tier}`][1] = [...base, ...categoryKeys.map(key => `${key}_${tier}`)];

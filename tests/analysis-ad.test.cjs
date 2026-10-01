@@ -93,15 +93,19 @@ function world(options = {}) {
   scenarios.GameCache = { antimatterDimensionCommonMultiplier: { get value() { return scenarios.antimatterDimensionCommonMultiplier(); } } };
   return vm.createContext(scenarios);
 }
-function load(options) {
+function load(options, configure = () => {}) {
   const c = world(options);
+  configure(c);
   const game = read('core/dimensions/antimatter-dimension.js');
   vm.runInContext(game.slice(game.indexOf('export function antimatterDimensionCommonMultiplier()'),
     game.indexOf('function onBuyDimension(')).replace(/^export /gm, ''), c);
   const dilation = read('core/dilation.js');
   vm.runInContext(dilation.slice(dilation.indexOf('export function dilatedValueOf('),
     dilation.indexOf('export function secondOrderDilateMultiplier(')).replace(/^export /gm, ''), c);
-  for (let tier = 1; tier <= 8; tier++) {
+  const compression = read('core/compression.js');
+  vm.runInContext(compression.slice(compression.indexOf('export function compressedMultiplier('),
+    compression.indexOf('class CompressionUpgradeState')).replace(/^export /gm, ''), c);
+  for (let tier = 1; tier <= c.AntimatterDimensions.all.length; tier++) {
     Object.defineProperty(c.AntimatterDimension(tier), 'multiplier', { get() { return c.getDimensionFinalMultiplierUncached(tier); } });
   }
   vm.runInContext(stripModule(read('core/finite-decimal.js')), c);
@@ -183,3 +187,55 @@ test('AD grouped children all have unique source IDs and no uncategorized active
     }
   }
 });
+
+// Exercise Chapter 3 in active states, comparing the shadow with the real formula.
+const chapter3States = [
+  ['charged NC2/NC3/NC12', c => {
+    c.NormalChallenge = id => ({ isRunning: false, chargedEffect: ({ 2: 1.2, 3: 0.9, 12: 0.8 })[id] ?? 1 });
+  }],
+  ['compression', c => { c.player.compression.active = true; }],
+  ['TR rewards outside compression', c => {
+    c.CompressionUpgrade = { adMultTR: e(3), adBigMultTR: e(5), compressionPenalty: { isBought: false } };
+  }],
+  ['Transient Universe', c => { c.player.universes.current = 1; }],
+  ['Slabdrill core', c => { c.Slabdrill.coreActive = true; }],
+  ['Slabdrill curse with IC4', c => {
+    c.Slabdrill.isCursed = true;
+    c.SlabdrillUnlocks = new Proxy({}, { get: () => ({ isUnlocked: true }) });
+  }],
+  ['Slabdrill locked tiers', c => {
+    c.Slabdrill.isCursed = true;
+    c.player.celestials.slabdrill.goodbyeTick = 32000;
+  }],
+  ['cursed NC12 and EC3', c => { c.Slabdrill.isCursed = true; }],
+  ['cursed NC10', c => { c.Slabdrill.isCursed = true; }],
+  ['cursed Sacrifice with ascension', c => { c.Slabdrill.isCursed = true; }],
+];
+for (const [label, configure] of chapter3States) {
+  test(`active Chapter 3 AD formula: ${label}`, () => {
+    const c = load({ ic: 4, nc: label.includes('NC10') ? 10 : 12, ec: 3,
+      ascension: label.includes('ascension') }, c => {
+      c.player.antimatter = new D('1e100');
+      c.player.chall2Pow = 0.3;
+      c.player.celestials = { slabdrill: { goodbyeTick: 360000 } };
+      c.Time.thisEndgameRealTime.totalHours = new D(1);
+      c.Currency.relativisticParticles = { value: new D('1e50') };
+      c.Slabdrill.slabPowers = { adMult: () => new D(3), adPow: () => new D(1.15) };
+      c.NormalChallenges = { all: { countWhere: () => 3 } };
+      c.DualityUpgrade = () => e(2);
+      c.AntimatterDimensions.all.push({ tier: 9, bought: new D(30), isProducing: true,
+        continuumValue: new D(3), infinityUpgrade: false });
+      configure(c);
+    });
+    for (let tier = 1; tier <= 9; tier++) {
+      const actual = c.getDimensionFinalMultiplierUncached(tier);
+      const traced = c.__audit.trace(tier);
+      assert.ok(actual.eq_tolerance(traced, 1e-9), `${label} AD${tier}: ${actual} != ${traced}`);
+      const steps = c.__audit.build(tier);
+      assert.ok(!steps.traceMismatch, `${label} AD${tier} mismatch`);
+      for (const key of Object.keys(steps)) assert.ok(key === 'base' || c.__audit.AD_ORDERED_LABELS[key], key);
+    }
+    const ninth = c.__audit.tierTransform(9, 'ninthLog');
+    if (ninth) assert.ok(ninth.finalWithout.eq(c.__audit.trace(9, 'ninthLog')));
+  });
+}

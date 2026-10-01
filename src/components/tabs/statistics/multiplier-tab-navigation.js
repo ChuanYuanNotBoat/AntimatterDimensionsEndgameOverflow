@@ -15,7 +15,7 @@ export const MULTIPLIER_TAB_GROUPS = [
     key: "dimensions",
     text: "Dimensions",
     options: [
-      { id: 2, key: "AD", text: "Antimatter Dimensions", dimensionTiers: 8 },
+      { id: 2, key: "AD", text: "Antimatter Dimensions", dimensionTiers: 9 },
       { id: 4, key: "ID", text: "Infinity Dimensions", dimensionTiers: 8 },
       { id: 8, key: "TD", text: "Time Dimensions", dimensionTiers: 8 },
     ],

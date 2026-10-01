@@ -3,6 +3,7 @@ import {
   addOrderedTraceMismatch,
   addOrderedTransform,
   createOrderedTransformCache,
+  orderedPowerStep,
 } from "./ordered-breakdown";
 
 // Shadow the full live algorithm in src/game.js:getGameSpeedupFactor(), without
@@ -17,9 +18,14 @@ function trace(skipKey = null, steps = null) {
     value = evaluate(value);
     if (steps) addOrderedTransform(steps, key, type, before, value, { display });
   };
-  if (EternityChallenge(12).isRunning || player.endgame.overcharge.isRunning) {
+  if (Slabdrill.coreActive && skipKey !== "slabCore") {
+    step("slabCore", "override", () => DC.D1, "Slabdrill core fixes game speed at 1");
+    return displaySpeed(value, skipKey, steps);
+  }
+  if (EternityChallenge(12).isRunning || player.endgame.overcharge.isRunning || player.compression.active ||
+      (player.universes.current >= 1 && (player.universes.current === 1 || player.universes.current % 2 === 0))) {
     step("fixed", "override", () => new Decimal(1 / 1000),
-      "EC12 or Overcharge fixes game speed at 1/1000");
+      "EC12, Overcharge, Compression or this Universe fixes game speed at 1/1000");
     if (skipKey !== "fixed") {
       // The gameplay getter returns immediately in this state, skipping even
       // Pelle, the late peak/clamp rules, and the other game-speed sources.
@@ -79,6 +85,9 @@ function trace(skipKey = null, steps = null) {
     return Decimal.pow(before, modifier);
   }, "Effarig multiplier, or Lai'tela's reality-time exponent");
   step("pelle", "multiply", before => before.times(PelleUpgrade.timeSpeedMult.effectValue));
+  if (!Pelle.isDoomed) {
+    value = orderedPowerStep(steps, "ephemeralLight", value, Universes.ephemeralLightToDilation, skipKey);
+  }
   step("peak", "hardcap", before => {
     const applyMax = !Teresa.isRunning && !Effarig.isRunning && !Enslaved.isRunning &&
       !V.isRunning && !Ra.isRunning && !Laitela.isRunning && !Pelle.isDoomed &&

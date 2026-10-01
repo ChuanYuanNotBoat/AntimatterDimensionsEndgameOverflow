@@ -17,11 +17,12 @@ const propList = {
   IP: ["base", "divisor", "powerCompensation", "effarigCap", "pelle", "pelleGlyph", "iap", "timeStudy",
     "achievement", "infinityUpgrade", "dilationUpgrade", "glyph", "alchemy", "nullUpgrade", "nerfTeresa", "nerfV",
     "nerfLaitela", "glyphPower", "endgameMastery141", "alphaPower", "alphaStageNerf", "alphaECNerf",
-    "replicantiSurge", "ascensionIPPower", "ipSurge", "floor", "traceMismatch"],
+    "replicantiSurge", "slabMultiplier", "slabAutobuyer", "slabPower", "ascensionIPPower", "ipSurge", "floor", "traceMismatch"],
   EP: ["base", "divisor", "powerCompensation", "eternityUpgrade", "timeStudy", "glyph", "cursedGlyph",
     "pelleGlyph", "realityUpgrade", "pelle", "iap", "alphaTimeStudy", "nullUpgrade", "nerfTeresa", "nerfV",
     "nerfLaitela", "glyphPower", "endgameMastery142", "raPower", "achievement232", "alphaEC10Nerf",
-    "alphaTD8Nerf", "ascensionEPPower", "alphaHardcap", "epSurge", "floor", "traceMismatch"],
+    "alphaTD8Nerf", "slabMultiplier", "slabPower", "slabSoftcap2000", "slabSoftcap2500", "slabSoftcap3000",
+    "ascensionEPPower", "alphaHardcap", "epSurge", "floor", "traceMismatch"],
 };
 
 // Some of the props above would contain every entry except "total" in their respective value GameDB entry, so we
@@ -571,9 +572,9 @@ for (const [key, groups] of Object.entries(multiplierTabTree)) {
 
 // Formula and classic source groups share the same resource and tier selection.
 multiplierTabTree.AD_total = [
-  AD_ORDERED_KEYS.map(key => `AD_${key}`), append8("AD_total"), getProps("AD").map(classicADKey)
+  AD_ORDERED_KEYS.map(key => `AD_${key}`), Array.from({ length: 9 }, (_, i) => `AD_total_${i + 1}`), getProps("AD").map(classicADKey)
 ];
-for (let tier = 1; tier <= 8; tier++) {
+for (let tier = 1; tier <= 9; tier++) {
   multiplierTabTree[`AD_total_${tier}`] = [
     AD_ORDERED_KEYS.map(key => `AD_${key}_${tier}`), getProps("AD", tier).map(classicADKey)
   ];
@@ -581,9 +582,31 @@ for (let tier = 1; tier <= 8; tier++) {
 for (const [key, , children] of AD_ORDERED_GROUPS) {
   if (children.length === 0) continue;
   multiplierTabTree[`AD_${key}`] = [children.map(([child]) => `AD_${child}`)];
-  for (let tier = 1; tier <= 8; tier++) {
+  for (let tier = 1; tier <= 9; tier++) {
     multiplierTabTree[`AD_${key}_${tier}`] = [children.map(([child]) => `AD_${child}_${tier}`)];
   }
+}
+
+// Insert Chapter 3 sources where gameplay applies them, for both combined and tier views.
+for (const tier of [null, 1, 2, 3, 4, 5, 6, 7, 8]) {
+  const suffix = tier ? `_${tier}` : "";
+  const insertBefore = (parent, before, children) => {
+    const group = multiplierTabTree[`${parent}${suffix}`][0];
+    group.splice(group.indexOf(`${before}${suffix}`), 0, ...children.map(key => `${key}${suffix}`));
+  };
+  insertBefore("ID_total", "ID_preDilationPowers", ["ID_slabMultiplier"]);
+  insertBefore("ID_postDilationPowers", "ID_dualityPower", ["ID_slabinfinityChallengeFourPower",
+    "ID_slabeternityPower", "ID_slabeternityChallengeTenPower"]);
+  multiplierTabTree[`ID_postDilationPowers${suffix}`][0].push(...[
+    "ID_chargedidMultEP", "ID_chargedidMultEternities", "ID_chargedidMultICRecords", "ID_chargedNC2"
+  ].map(key => `${key}${suffix}`));
+  insertBefore("ID_total", "ID_overflow1Ordered", ["ID_compression", "ID_transientUniverse"]);
+  multiplierTabTree[`TD_commonEffects${suffix}`][0].push(`TD_slabMultiplier${suffix}`);
+  insertBefore("TD_postDilationPowers", "TD_ascensionTimeStudy73Power", ["TD_slabPower"]);
+  multiplierTabTree[`TD_postDilationPowers${suffix}`][0].push(...[
+    "TD_chargedtdMultAchs", "TD_chargedtdMultTheorems", "TD_chargedtdMultRealTime", "TD_chargedNC2"
+  ].map(key => `${key}${suffix}`));
+  insertBefore("TD_total", "TD_overflow1Ordered", ["TD_compression"]);
 }
 
 for (const resource of ["AD", "ID", "TD"]) {

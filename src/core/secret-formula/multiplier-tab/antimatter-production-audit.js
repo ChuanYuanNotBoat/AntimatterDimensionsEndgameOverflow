@@ -20,10 +20,10 @@ export function antimatterProductionSnapshot() {
   const raw = steps.find(step => step.key === "raw")?.after ?? DC.D0;
   const finalHardcap = steps.find(step => step.key === "challengeCap");
   const activeStages = steps.filter(step => step.key !== "raw" &&
-    (step.before.neq(step.after) || step.key === "challengeCap"));
+    (step.before.neq(step.after) || step.alwaysShow || step.key === "challengeCap"));
   return {
     actual, calculated, mismatch: orderedOoMDifference(actual, calculated).gt(1e-7),
-    amount, multiplier, tickRate: Tickspeed.perSecond, raw,
+    amount, multiplier, tickRate: Tickspeed.perSecond, raw, usesTickspeed: !Slabdrill.coreActive,
     perGameSecond, speed, ad1Real,
     nc12, ad2Real, activeStages,
     finalHardcap, voidRunning: LHC.voidRunning,

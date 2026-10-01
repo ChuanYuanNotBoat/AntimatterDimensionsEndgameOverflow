@@ -69,6 +69,7 @@ function trace(skipKey = null, steps = null) {
     mult("iap", ShopPurchase.dilatedTimePurchases.currentMult);
     mult("replicantiGlyph", ReplicantiMultipliers.dtMult);
     if (LHC.voidRunning) mult("nullUpgrade", NullUpgrade.dilatedTimeMult.effectOrDefault(1));
+    if (SlabdrillUnlocks.dilation.isUnlocked) mult("slabMultiplier", Slabdrill.slabPowers.dtMult());
     if (Enslaved.isRunning && !value.eq(0)) {
       change("enslaved", "softcap", Decimal.pow10(Decimal.pow(value.plus(1).log10(), 0.85).sub(1)));
     }
@@ -78,14 +79,19 @@ function trace(skipKey = null, steps = null) {
         ResurgenceUpgrade.repSurge.isBought && !player.disablePostReality) {
       power("replicantiSurge", ReplicantiMultipliers.dtPow);
     }
+    power("ephemeralLight", Universes.ephemeralLightToDilation);
     if (ResurgenceUpgrade.curr2Surge.isBought && !player.disablePostReality) {
       power("currencySurge", player.dilation.dilatedTime.max(1e10).log10().log10());
     }
+    if (SlabdrillUnlocks.dilation.isUnlocked) power("slabPower", 0.25);
   }
   if (!EndgameMastery(271).isBought && value.gte(DC.E20000)) {
     const thresholdLog = DC.E20000.log10();
     change("primarySoftcap", "softcap", Decimal.pow(10,
       Decimal.log10(value).sub(thresholdLog).div(10).add(thresholdLog)));
+  }
+  if (!pelle && player.universes.current === 1) {
+    change("transientUniverse", "softcap", Decimal.pow10(value.max(10).log10().pow(0.1)));
   }
   return value;
 }

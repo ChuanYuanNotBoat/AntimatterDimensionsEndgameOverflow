@@ -501,3 +501,28 @@ export const ID = {
   ),
 
 };
+
+Object.assign(ID, {
+  slabMultiplier: orderedIDEntry("Slabdrill ID multiplier", "slabMultiplier", MultiplierTabIcons.UPGRADE("reality")),
+  slabinfinityChallengeFourPower: orderedIDEntry(
+    "Slabdrill IC4 stage: ID power penalty", "slabinfinityChallengeFourPower", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  slabeternityPower: orderedIDEntry(
+    "Slabdrill Eternity stage: ID power penalty", "slabeternityPower", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  slabeternityChallengeTenPower: orderedIDEntry(
+    "Slabdrill EC10 stage: ID power penalty", "slabeternityChallengeTenPower", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedidMultEP: orderedIDEntry(
+    "Charged Eternity Upgrade 1: EP-based ID power", "chargedidMultEP", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedidMultEternities: orderedIDEntry(
+    "Charged Eternity Upgrade 2: Eternities-based ID power", "chargedidMultEternities", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedidMultICRecords: orderedIDEntry(
+    "Charged Eternity Upgrade 3: Hadronizes-based ID power", "chargedidMultICRecords", MultiplierTabIcons.UPGRADE("reality")
+  ),
+  chargedNC2: orderedIDEntry("Charged Normal Challenge 2", "chargedNC2", MultiplierTabIcons.UPGRADE("reality")),
+  compression: orderedIDEntry("Compression", "compression", MultiplierTabIcons.UPGRADE("reality")),
+  transientUniverse: orderedIDEntry("Transient Universe: RP-dependent dilation", "transientUniverse", MultiplierTabIcons.UPGRADE("reality")),
+});

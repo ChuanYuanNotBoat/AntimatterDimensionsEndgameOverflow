@@ -94,8 +94,9 @@ const resources = [
     fn: 'gainedEternities', trace: 'core/secret-formula/multiplier-tab/eternities-breakdown.js',
     actual: c => c.gainedEternities(), missing: 'nullUpgrade' },
 ];
-function execute(resource, options) {
+function execute(resource, options, configure = () => {}) {
   const context = world(options);
+  configure(context);
   const source = read(resource.source);
   const start = source.indexOf(resource.begin);
   const end = source.indexOf(resource.end, start + resource.begin.length);
@@ -193,5 +194,45 @@ for (const [label, actual, expectedResidual] of [
     assert.equal(baseline, 600);
     assert.ok(Math.abs(Number(am.unattributed.multValue()) - expectedResidual) < 1e-12);
     assert.ok(Math.abs(baseline * Number(am.unattributed.multValue()) - actual) < 1e-8);
+  });
+}
+
+for (const [label, name, options, configure, expected] of [
+  ['Slabdrill speed', 'Replicanti', {}, c => {
+    c.SlabdrillUnlocks = new Proxy({}, { get: () => ({ isUnlocked: true }) });
+    c.Slabdrill.slabPowers = { repSpeed: () => new D(3) };
+  }, ['slabMultiplier']],
+  ['restored achievement 134', 'Replicanti', { disablePostReality: true }, c => {
+    c.SlabdrillUnlocks = new Proxy({}, { get: (_, key) => ({ isUnlocked: key === 'eternityChallengeTen' }) });
+  }, ['achievement2']],
+  ['charged NC1', 'Infinities', {}, c => {
+    c.NormalChallenge = () => ({ chargedEffect: 1.3 });
+  }, ['chargedNC1']],
+  ['cursed EC10 stage', 'Infinities', {}, c => {
+    c.SlabdrillUnlocks = new Proxy({}, { get: () => ({ isUnlocked: true }) });
+    c.Slabdrill.slabPowers = { infMult: () => new D(3) };
+  }, ['slabPenalty', 'slabMultiplier']],
+  ['Ephemeral Light', 'DT', {}, c => { c.Universes.ephemeralLightToDilation = 1.3; }, ['ephemeralLight']],
+  ['Transient Universe', 'DT', {}, c => { c.player.universes.current = 1; }, ['transientUniverse']],
+  ['cursed Dilation stage', 'DT', {}, c => {
+    c.SlabdrillUnlocks = new Proxy({}, { get: () => ({ isUnlocked: true }) });
+    c.Slabdrill.slabPowers = { dtMult: () => new D(3) };
+  }, ['slabMultiplier', 'slabPower']],
+  ['Pelle early return excludes cursed stages', 'DT', { doomed: true }, c => {
+    c.SlabdrillUnlocks = new Proxy({}, { get: () => ({ isUnlocked: true }) });
+    c.Universes.ephemeralLightToDilation = 1.3;
+    c.player.universes.current = 1;
+  }, []],
+]) {
+  test(`active Chapter 3 ${name}: ${label}`, () => {
+    const resource = resources.find(item => item.name === name);
+    const steps = execute(resource, options, configure);
+    for (const key of expected) {
+      assert.ok(steps[key], `${label}: missing ${key}`);
+      assert.ok(steps[key].finalWithout !== undefined, `${key}: missing final counterfactual`);
+    }
+    if (options.doomed && name === 'DT') {
+      for (const key of ['slabPower', 'slabMultiplier', 'ephemeralLight', 'transientUniverse']) assert.ok(!steps[key]);
+    }
   });
 }

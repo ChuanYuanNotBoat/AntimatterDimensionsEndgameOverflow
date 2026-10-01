@@ -11,7 +11,7 @@ const STAR_BY_RESOURCE = {
 };
 
 export function starResourceForEntry(key) {
-  const match = /^(AD_etherealStars|ID_etherealOrdered|TD_etherealOrdered)(?:_([1-8]))?$/.exec(key);
+  const match = /^(AD_etherealStars|ID_etherealOrdered|TD_etherealOrdered)(?:_([1-9]))?$/u.exec(key);
   if (!match) return null;
   return { resource: match[1].slice(0, 2), tier: match[2] ? Number(match[2]) : null };
 }

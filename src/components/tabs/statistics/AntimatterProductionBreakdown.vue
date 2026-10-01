@@ -61,7 +61,7 @@ export default {
           <MultiplierBreakdownEntry :resource="ad1Resource" :depth="1" />
         </div>
       </div>
-      <div class="c-am-section">
+      <div v-if="snapshot.usesTickspeed" class="c-am-section">
         <button type="button" class="c-am-section-title" :aria-expanded="openTickspeed"
           @click="openTickspeed = !openTickspeed">
           <i :class="openTickspeed ? 'far fa-minus-square' : 'far fa-plus-square'" />
@@ -118,7 +118,8 @@ export default {
         not the actual credited Void gain.
       </div>
       <p class="c-am-explanation">
-        The AD1 amount and multiplier feed a single Tickspeed rate, then the actual AD production powers and
+        The AD1 amount and multiplier feed the production formula. Slabdrill core bypasses Tickspeed and
+        production modifiers; otherwise one Tickspeed rate and the C Hadron equalizer apply before production powers and
         caps apply. Game speed converts game seconds into real seconds. Higher AD tiers increase AD1 amount
         over future ticks; their multiplier product is not instantaneous AM production.
         Cap losses compare the values immediately before and after each gameplay operation.

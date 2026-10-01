@@ -33,6 +33,8 @@ const common = [
   ["alchemyForce", "Alchemy: Reality Machine force"],
   ["pelleNerf", "Pelle AD penalty"],
   ["alphaNerf", "Alpha AD penalty"],
+  ["slabAMNerf", "Slabdrill: antimatter penalty"],
+  ["slabChallenges", "Slabdrill: completed Normal Challenges"],
   ["nullUpgrade", "Null AD upgrade"],
 ];
 const tierEffects = [
@@ -48,6 +50,7 @@ const tierEffects = [
   ["timeStudy71Multiplier", "Time Study 71 (multiplier)"],
   ["timeStudy214Multiplier", "Time Study 214 (multiplier)"],
   ["infinityChallenge8Reward", "Infinity Challenge 8 reward"],
+  ["slabMultiplier", "Slabdrill AD multiplier"],
 ];
 const powers = [
   ["ic4Nerf", "Infinity Challenge 4 running power"],
@@ -76,6 +79,12 @@ const powers = [
   ["timeStudy71Power", "Ascended Time Study 71"],
   ["timeStudy214Power", "Ascended Time Study 214"],
   ["timeStudy234Power", "Ascended Time Study 234"],
+  ["slabPower", "Slabdrill AD power"],
+  ["slabIC8Power", "Slabdrill: IC8 reward power"],
+  ["slabNC10", "Slabdrill: NC10 penalty"],
+  ["slabNC12", "Slabdrill: NC12 penalty"],
+  ["slabEC3", "Slabdrill: EC3 penalty"],
+  ["slabEC10", "Slabdrill: EC10 stage penalty"],
 ];
 const voidPowers = [
   ["voidPotency", "Accelerator potency"],
@@ -87,6 +96,8 @@ const voidPowers = [
 ];
 
 export const AD_ORDERED_GROUPS = [
+  ["slabTierLock", "Slabdrill: dimension locked", []],
+  ["slabCore", "Slabdrill core multiplier override", []],
   ["ec11InfinityPower", "EC11 Infinity Power conversion", []],
   ["ec11Dimboost", "EC11 Dimboost", []],
   ["commonEffects", "Common AD multipliers", common],
@@ -106,9 +117,19 @@ export const AD_ORDERED_GROUPS = [
   ["alphaPower", "Alpha AD exponent buff", []],
   ["voidPowers", "Void powers", voidPowers],
   ["achievementSurgePower", "Achievement resurgence", []],
+  ["chargedNC2", "Charged Normal Challenge 2", []],
+  ["chargedNC12", "Charged Normal Challenge 12 (even tiers)", []],
   ["achievement231", "Achievement 231 dilation", []],
   ["etherealStars", "Ethereal Stars: red", []],
+  ["chargedNC3", "Charged Normal Challenge 3 (AD1)", []],
   ["overcharge", "Endgame overcharge", []],
+  ["compression", "Compression", []],
+  ["compressionTR", "Compression: TR AD multiplier", []],
+  ["compressionBigTR", "Compression: large TR AD multiplier", []],
+  ["transientUniverse", "Transient Universe: RP-dependent dilation", []],
+  ["ninthLog", "AD9 logarithmic multiplier", []],
+  ["ninthDuality", "AD9: Duality upgrade 30", []],
+  ["ninthSlabPower", "Slabdrill: AD9 time power", []],
   ["traceMismatch", "Untracked AD formula difference", []],
 ];
 
@@ -117,7 +138,7 @@ export const AD_ORDERED_LABELS = Object.fromEntries(AD_ORDERED_GROUPS.flatMap(([
   [[key, label], ...children]));
 
 function trace(tier, skipKey = null, steps = null) {
-  if (tier < 1 || tier > 8) return DC.D1;
+  if (tier < 1 || tier > 9) return DC.D1;
   let value = DC.D1;
   if (steps) addOrderedTransform(steps, "base", "formula", DC.D1, value, { alwaysShow: true });
   const mul = (key, factor) => {
@@ -150,10 +171,20 @@ function trace(tier, skipKey = null, steps = null) {
   };
   const effect = item => item?.effectOrDefault(1) ?? DC.D1;
 
+  if (Slabdrill.isCursed && tier >
+      Math.max(Math.min(Math.floor((player.celestials.slabdrill.goodbyeTick - 30000) / 1000), 10), 2) - 1) {
+    transform("slabTierLock", "override", () => DC.D1, "Slabdrill locks this dimension's multiplier to 1");
+    return value;
+  }
   if (NormalChallenge(10).isRunning && tier > 6) return value;
   if (EternityChallenge(11).isRunning) {
     mul("ec11InfinityPower", Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
     mul("ec11Dimboost", DimBoost.multiplierToNDTier(tier));
+    return value;
+  }
+  if (Slabdrill.coreActive) {
+    transform("slabCore", "override", () => DC.D1.times(Slabdrill.slabPowers.adMult()),
+      "Slabdrill core replaces all ordinary AD multipliers");
     return value;
   }
 
@@ -185,10 +216,14 @@ function trace(tier, skipKey = null, steps = null) {
       mul("pelleNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(50).max(1)));
     }
     if (Alpha.isRunning) mul("alphaNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(125).max(1)));
+    if (Slabdrill.isCursed) {
+      mul("slabAMNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(1666).max(1)));
+      mul("slabChallenges", Decimal.pow(6.66, NormalChallenges.all.countWhere(c => c.id <= 9 && c.isCompleted)));
+    }
     if (LHC.voidRunning) mul("nullUpgrade", effect(NullUpgrade.antimatterDimensionMult));
   });
 
-  const purchases = Laitela.continuumActive ? AntimatterDimension(tier).continuumValue
+  const purchases = Laitela.continuumActive && tier !== 9 ? AntimatterDimension(tier).continuumValue
     : Decimal.floor(AntimatterDimension(tier).bought.div(10));
   if (!Ascensions.b10mA.isUnlocked) mul("purchases", Decimal.pow(AntimatterDimensions.buyTenMultiplier, purchases));
   mul("dimboost", DimBoost.multiplierToNDTier(tier));
@@ -197,7 +232,7 @@ function trace(tier, skipKey = null, steps = null) {
     // EffectOrDefault() may legitimately return a primitive number when an upgrade is inactive.
     // Gameplay starts this product from DC.D1; normalize the individual factors too, because
     // the analysis needs to recompute the product for TS31 counterfactual attribution.
-    const rawTier = new Decimal(effect(AntimatterDimension(tier).infinityUpgrade));
+    const rawTier = new Decimal(tier === 9 ? 1 : effect(AntimatterDimension(tier).infinityUpgrade));
     const rawBreak = new Decimal(effect(BreakInfinityUpgrade.infinitiedMult));
     const tierFactor = isOrderedSourceSkipped(skipKey, "tierInfinityUpgrade") ? DC.D1 : rawTier;
     const breakFactor = isOrderedSourceSkipped(skipKey, "breakInfinitiedMult") ? DC.D1 : rawBreak;
@@ -214,7 +249,9 @@ function trace(tier, skipKey = null, steps = null) {
       for (const id of [11, 28, 31, 68, 71]) mul(`achievementTier${id}`, effect(Achievement(id)));
       if (!Ascensions.sacA.isUnlocked) mul("timeStudy234Multiplier", effect(TimeStudy(234)));
     }
-    if (tier === 8 && !Ascensions.sacA.isUnlocked) mul("sacrificeMultiplier", Sacrifice.totalBoost);
+    if ((tier === 8 && !Ascensions.sacA.isUnlocked) || (tier === 1 && Slabdrill.isCursed)) {
+      mul("sacrificeMultiplier", Sacrifice.totalBoost);
+    }
     for (const [id, applies] of [
       [12, tier === 2], [13, tier >= 3 && tier <= 8], [14, tier === 4],
       [15, tier >= 5 && tier <= 8], [16, tier === 6], [17, tier === 7],
@@ -223,14 +260,21 @@ function trace(tier, skipKey = null, steps = null) {
       if (applies) mul(`achievementTier${id}`, effect(Achievement(id)));
     }
     if (tier < 8 && !Ascensions.sacA.isUnlocked) mul("timeStudy71Multiplier", effect(TimeStudy(71)));
-    if (tier === 8 && !Ascensions.sacA.isUnlocked) mul("timeStudy214Multiplier", effect(TimeStudy(214)));
-    if (tier > 1 && tier < 8) mul("infinityChallenge8Reward", effect(InfinityChallenge(8).reward));
+    if (tier === (Slabdrill.isCursed ? 1 : 8) && !Ascensions.sacA.isUnlocked) {
+      mul("timeStudy214Multiplier", effect(TimeStudy(214)));
+    }
+    if (tier > 1 && tier < 8 && !Slabdrill.isCursed) {
+      mul("infinityChallenge8Reward", effect(InfinityChallenge(8).reward));
+    }
     if (Achievement(43).isUnlocked) mul("achievementTier43", 1 + tier / 100);
+    if (Slabdrill.isCursed) mul("slabMultiplier", Slabdrill.slabPowers.adMult());
   });
   transform("minimum", "hardcap", current => current.clampMin(1));
 
   group("powers", () => {
-    if (InfinityChallenge(4).isRunning && player.postC4Tier !== tier) pow("ic4Nerf", InfinityChallenge(4).effectValue);
+    if (InfinityChallenge(4).isRunning && (player.postC4Tier !== tier || Slabdrill.isCursed)) {
+      pow("ic4Nerf", InfinityChallenge(4).effectValue);
+    }
     if (InfinityChallenge(4).isCompleted) pow("ic4Reward", InfinityChallenge(4).reward.effectValue);
     pow("glyphPower", getAdjustedGlyphEffect("powerpow"));
     pow("effarigGlyphPower", getAdjustedGlyphEffect("effarigdimensions"));
@@ -255,7 +299,7 @@ function trace(tier, skipKey = null, steps = null) {
     if (PelleStrikes.infinity.hasStrike && !PelleStrikes.infinity.isDestroyed()) pow("pelleStrikePower", 0.5);
     if (Ascensions.dbA.isUnlocked) pow("ascensionDimboostPower", DimBoost.powerToND);
     if (Ascensions.b10mA.isUnlocked) {
-      const oom = (Laitela.continuumActive ? AntimatterDimension(tier).continuumValue
+      const oom = (Laitela.continuumActive && tier !== 9 ? AntimatterDimension(tier).continuumValue
         : Decimal.floor(AntimatterDimension(tier).bought.div(10))).max(1).log10();
       pow("ascensionPurchasePower", AntimatterDimensions.buyOoMPower.times(oom).add(1));
     }
@@ -263,6 +307,14 @@ function trace(tier, skipKey = null, steps = null) {
     if (tier < 8 && Ascensions.sacA.isUnlocked) pow("timeStudy71Power", effect(TimeStudy(71)));
     if (tier === 8 && Ascensions.sacA.isUnlocked) pow("timeStudy214Power", effect(TimeStudy(214)));
     if (tier === 1 && Ascensions.sacA.isUnlocked) pow("timeStudy234Power", effect(TimeStudy(234)));
+    if (SlabdrillUnlocks.infinity.isUnlocked) pow("slabPower", Slabdrill.slabPowers.adPow());
+    if (Slabdrill.isCursed) {
+      pow("slabIC8Power", effect(InfinityChallenge(8).reward));
+      if (NormalChallenge(10).isRunning) pow("slabNC10", 0.75);
+      if (NormalChallenge(12).isRunning) pow("slabNC12", 0.5 + player.chall2Pow / 2);
+      if (EternityChallenge(3).isRunning) pow("slabEC3", 0.5);
+      if (SlabdrillUnlocks.eternityChallengeTen.isUnlocked) pow("slabEC10", 0.75);
+    }
   });
 
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
@@ -292,10 +344,26 @@ function trace(tier, skipKey = null, steps = null) {
   if (ResurgenceUpgrade.achSurge.isBought && !player.disablePostReality) {
     pow("achievementSurgePower", Achievements.powerConv(Achievements.power));
   }
+  pow("chargedNC2", NormalChallenge(2).chargedEffect);
+  if (tier % 2 === 0) pow("chargedNC12", NormalChallenge(12).chargedEffect);
   transform("achievement231", "softcap", current => dilateMultiplier(current, effect(Achievement(231))));
   transform("etherealStars", "softcap", current => dilateMultiplier(current, EtherealStars.red.reward));
+  if (tier === 1) transform("chargedNC3", "softcap",
+    current => dilateMultiplier(current, NormalChallenge(3).chargedEffect));
   if (player.endgame.overcharge.isRunning) {
     transform("overcharge", "softcap", current => dilateMultiplier(current, Ascension.overchargePenalty));
+  }
+  if (player.compression.active) transform("compression", "softcap", current => compressedMultiplier(current));
+  mul("compressionTR", effect(CompressionUpgrade.adMultTR));
+  mul("compressionBigTR", effect(CompressionUpgrade.adBigMultTR));
+  if (player.universes.current === 1) transform("transientUniverse", "softcap", current =>
+    dilateMultiplier(current, Decimal.pow(0.1,
+      Decimal.pow(0.9, Currency.relativisticParticles.value.max(10).log10().log10().pow(2)))));
+  if (tier === 9) {
+    transform("ninthLog", "formula", current => current.max(10).log10());
+    mul("ninthDuality", effect(DualityUpgrade(30)));
+    if (Slabdrill.isCursed) pow("ninthSlabPower",
+      Math.max((player.celestials.slabdrill.goodbyeTick - 300000) / 30000 + 1, 1));
   }
   return value;
 }
@@ -313,7 +381,7 @@ function build(tier) {
   return steps;
 }
 
-const caches = Array.from({ length: 9 }, (_, tier) => (tier === 0
+const caches = Array.from({ length: 10 }, (_, tier) => (tier === 0
   ? null : createOrderedTransformCache(() => build(tier), 100)));
 
 function attachTierCounterfactual(tier, steps, key) {
@@ -341,7 +409,7 @@ function attachTierCounterfactual(tier, steps, key) {
 }
 
 function tierTransform(tier, key) {
-  if (tier < 1 || tier > 8) return null;
+  if (tier < 1 || tier > 9) return null;
   return attachTierCounterfactual(tier, caches[tier](), key);
 }
 
