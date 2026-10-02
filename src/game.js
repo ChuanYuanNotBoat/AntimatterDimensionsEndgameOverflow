@@ -897,9 +897,14 @@ export function gameLoop(passedDiff, options = {}) {
   	}
   }
 
-  if (Slabdrill.isDestroyed && !player.celestials.slabdrill.hasBoughtNinthDimension) {
-    diff = new Decimal(0);
-    realDiff = 0;
+  Slabdrill.updatePelleDomainPause();
+  if (Slabdrill.isPausedForNinthDimension) {
+    DeltaTimeState.update(0, DC.D0);
+    player.lastUpdate = thisUpdate;
+    EventHub.dispatch(GAME_EVENT.GAME_TICK_AFTER);
+    GameUI.update();
+    PerformanceStats.end("Game Update");
+    return;
   }
 
   if (player.endgame.credits) {
@@ -920,7 +925,7 @@ export function gameLoop(passedDiff, options = {}) {
   // In certain cases we want to allow the player to interact with the game's settings and tabs, but prevent any actual
   // resource generation from happening - in these cases, we have to make sure this all comes before the hibernation
   // check or else it'll attempt to run the game anyway
-  if (Speedrun.isPausedAtStart() || (GameEnd.creditsEverClosed && !(Slabdrill.isDestroyed && !player.celestials.slabdrill.hasBoughtNinthDimension))) {
+  if (Speedrun.isPausedAtStart() || GameEnd.creditsEverClosed) {
     GameUI.update();
     return;
   }
