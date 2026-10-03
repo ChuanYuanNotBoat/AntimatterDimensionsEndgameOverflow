@@ -17,6 +17,20 @@ export const Slabdrill = {
   get isDestroyed() {
     return player.celestials.slabdrill.isDestroyed;
   },
+  get isAwaitingNinthDimension() {
+    return this.isDestroyed && !player.celestials.slabdrill.hasBoughtNinthDimension;
+  },
+  get isPausedForNinthDimension() {
+    if (!this.isAwaitingNinthDimension) return false;
+    const ninthDimension = AntimatterDimension(9);
+    return ninthDimension.isAvailableForPurchase && ninthDimension.isAffordable;
+  },
+  updatePelleDomainPause() {
+    if (!this.isAwaitingNinthDimension) return;
+    // A save can lose its starting antimatter or still lack a purchase unlock.
+    // Keep production and autobuyers running until the first AD9 is buyable.
+    GameEnd.creditsEverClosed = this.isPausedForNinthDimension;
+  },
   get currentStage() {
     return player.celestials.slabdrill.stage;
   },
@@ -92,8 +106,9 @@ export const Slabdrill = {
     recalculateAllGlyphs();
     AutomatorBackend.stop();
     Tab.dimensions.antimatter.show(false);
-    GameEnd.creditsEverClosed = true;
-    player.antimatter = Decimal.pow10(1e100);
+    player.break = true;
+    Currency.antimatter.bumpTo(AntimatterDimension(9).cost);
+    this.updatePelleDomainPause();
   },
   advanceLayer() {
     player.celestials.slabdrill.stage++;
