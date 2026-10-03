@@ -1,1 +1,1 @@
-{"sha":"bcbb9c293e0c91a2acb9a6546712b4639a6cab50","message":"Merge upstream/master v2.0 patch 3\n\nUpstream patch 3 restates the Hawking Radiation gain text fix that this branch already carries in a separate commit; merging keeps upstream history reachable without changing behaviour.","author":"Chuanyuan"}
+{"sha":"855c9f23e832be0a610eeca77af49967b557a9df","message":"Merge i18n foundation after merged Pelle Domain fix","author":"Chuanyuan"}
