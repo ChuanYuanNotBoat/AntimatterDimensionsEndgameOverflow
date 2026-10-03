@@ -80,17 +80,14 @@ export default {
     costScalingText() {
       switch (this.type) {
         case GALAXY_TYPE.DISTANT:
-          return `Each Galaxy is more expensive past ${quantifyInt("Galaxy", this.distantStart)}`;
+          return this.$t("dimensions.galaxy.distantCost", { amount: this.formatGalaxies(this.distantStart) });
         case GALAXY_TYPE.REMOTE: {
           const scalings = [
-            { type: "distant", function: "quadratic", amount: this.distantStart },
-            { type: "remote", function: "exponential", amount: this.remoteStart }
-          ];
-          return `Increased Galaxy cost scaling: ${scalings.sort((a, b) =>
-  new Decimal(a.amount).cmp(new Decimal(b.amount))
-)
-            .map(scaling => `${scaling.function} scaling past ${this.formatGalaxies(scaling.amount)} (${scaling.type})`)
-            .join(", ").capitalize()}`;
+            { key: "dimensions.galaxy.distantScaling", amount: this.distantStart },
+            { key: "dimensions.galaxy.remoteScaling", amount: this.remoteStart }
+          ].sort((a, b) => new Decimal(a.amount).cmp(new Decimal(b.amount)))
+            .map(scaling => this.$t(scaling.key, { amount: this.formatGalaxies(scaling.amount) })).join(", ");
+          return this.$t("dimensions.galaxy.scalingHeader", { scalings });
         }
       }
       return undefined;

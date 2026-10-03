@@ -8362,5 +8362,10 @@
   "ade.ffb7afeeb72c171d": "分数：{p0}",
   "ade.ffc6fade9d3bb889": "已锁定",
   "ade.ffc9c474deb0d023": "归一至臻",
-  "ui.quantity": "{amount} {resource}"
+  "ui.quantity": "{amount} {resource}",
+  "ui.dimensionName": "{ordinal}{dimension}",
+  "dimensions.galaxy.scalingHeader": "星系价格增长：{scalings}",
+  "dimensions.galaxy.distantScaling": "超过 {amount} 个星系后按二次函数增长（遥远星系）",
+  "dimensions.galaxy.remoteScaling": "超过 {amount} 个星系后按指数增长（远端星系）",
+  "dimensions.galaxy.distantCost": "超过 {amount} 个星系后，每个星系的价格都会提高。"
 }

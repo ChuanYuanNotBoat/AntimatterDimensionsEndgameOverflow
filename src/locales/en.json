@@ -8537,5 +8537,10 @@
   "ade.ffb7afeeb72c171d": "Score: {p0}",
   "ade.ffc6fade9d3bb889": "Locked",
   "ade.ffc9c474deb0d023": "Completion",
-  "ui.quantity": "{amount} {resource}"
+  "ui.quantity": "{amount} {resource}",
+  "ui.dimensionName": "{ordinal} {dimension}",
+  "dimensions.galaxy.scalingHeader": "Increased Galaxy cost scaling: {scalings}",
+  "dimensions.galaxy.distantScaling": "Quadratic scaling past {amount} (distant)",
+  "dimensions.galaxy.remoteScaling": "Exponential scaling past {amount} (remote)",
+  "dimensions.galaxy.distantCost": "Each Galaxy is more expensive past {amount} Galaxies"
 }

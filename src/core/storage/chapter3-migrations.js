@@ -10,7 +10,11 @@ export function normalizeChapter3Save(save) {
   slab.core.chaosCores = count(slab.core.chaosCores);
   slab.core.lastFound = Math.max(0, finiteNumber(slab.core.lastFound, 0, Date.now()));
   slab.serpentinePower = boundedPositiveValue(slab.serpentinePower);
-  if (slab.isDestroyed) slab.isCursed = false;
+  if (slab.isDestroyed) {
+    slab.isCursed = false;
+    slab.isWarping = false;
+    slab.isGoodbye = false;
+  }
   if (!slab.isCursed) slab.core.isActive = false;
 
   const compression = save.compression;

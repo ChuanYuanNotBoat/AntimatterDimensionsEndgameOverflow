@@ -313,8 +313,8 @@ export const normalTimeStudies = [
         ? TimeSpan.fromMinutes(DC.D0)
         : TimeSpan.fromMinutes(new Decimal(Perk.studyIdleEP.effectOrDefault(0))));
       let totalSeconds = Alpha.isRunning ? Time.thisEternityRealTime.totalSeconds : Time.thisEternity.plus(perkEffect).totalSeconds;
-      if (Slabdrill.isCursed) totalSeconds = Time.thisEternityRealTime.totalSeconds.times(
-        Time.thisEternity.totalSeconds.div(Time.thisEternityRealTime.totalSeconds).max(1).pow(0.1));
+      if (Slabdrill.isCursed) totalSeconds = boundedPositiveProduct(Time.thisEternityRealTime.totalSeconds,
+        boundedPositiveQuotient(Time.thisEternity.totalSeconds, Time.thisEternityRealTime.totalSeconds).max(1).pow(0.1));
       return Decimal.pow(new Decimal(1.39).times(totalSeconds), 0.5);
     },
     formatEffect: value => formatX(value, 1, 1)

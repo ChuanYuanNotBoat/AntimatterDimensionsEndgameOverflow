@@ -89,3 +89,43 @@ test('Large offline steps stop at every mandatory cinematic quote',()=>{
   const source=read('game.js');const assignments=source.match(/player\.celestials\.slabdrill\.(?:goodbyeTick|warpTick) = Math\.min\([^;]+;/g);
   assert.equal(assignments.length,4);for(const statement of assignments){const w=setup();w.context.realDiff=86400000;w.run(statement);const cap=Number(statement.match(/Math\.min\((\d+)/)[1]);const key=statement.includes('goodbyeTick')?'goodbyeTick':'warpTick';assert.equal(w.player.celestials.slabdrill[key],cap);}
 });
+
+test('Cursed TS123 and TS143 handle freshly reset clocks without 0/0',()=>{
+  const w=setup();w.player.celestials.slabdrill.isCursed=true;w.player.disablePostReality=true;
+  const seconds=()=>({totalSeconds:new Decimal(0),plus(){return this}});
+  Object.assign(w.context.Time,{thisInfinity:seconds(),thisInfinityRealTime:seconds(),thisEternity:seconds(),thisEternityRealTime:seconds()});
+  w.context.TimeSpan={fromMinutes:seconds};w.context.Alpha={isRunning:false};w.context.Perk={};
+  w.context.TS_REQUIREMENT_TYPE=new Proxy({},{get:()=>0});w.DC.D15=new Decimal(15);
+  w.load('core/secret-formula/eternity/time-studies/normal-time-studies.js');
+  for(const id of [123,143])assert.ok(finite(w.run(`normalTimeStudies.find(x=>x.id===${id}).effect()`)));
+});
+
+test('Legacy Pelle Domain cinematic flags cannot keep later challenge entries locked',()=>{
+  const w=setup();const slab=w.player.celestials.slabdrill;slab.isDestroyed=true;slab.hasBoughtNinthDimension=true;slab.isWarping=true;slab.isGoodbye=true;
+  w.context.normalizeChapter3Save(w.player);assert.equal(slab.isWarping,false);assert.equal(slab.isGoodbye,false);assert.equal(w.context.enterUniverse(1),true);
+});
+
+test('Ethereal generation does not multiply an overflowing factor by zero',()=>{
+  const w=setup(),neutral={isBought:false,canBeApplied:false,applyEffect(){},effectOrDefault:v=>v};
+  w.player.endgame.celestialPoints=w.DC.BEMAX;w.player.endgame.galacticPower=w.DC.BEMAX;
+  w.player.celestials.laitela.singularities=w.DC.D0;w.player.reality={realityMachines:w.DC.BEMAX};
+  w.context.Alpha={currentStage:0};w.context.EtherealStars={blue:{reward:w.DC.BEMAX},all:[]};
+  w.context.DivineDimensions={conversionFormula1:w.DC.D1};w.context.DivinityUpgrade={divineL2U3:neutral};
+  Object.assign(w.context.DivinityMilestone,{hadronEmpowerment:{isReached:false},celestialSurge:{isReached:false},ascendedSurge:{isReached:false}});
+  w.context.ResurgenceUpgrade={ethSurge:neutral,synergy6:neutral};w.context.SingularityMilestone={singEthPowerBoost:neutral};
+  const raw=read('core/ethereal.js');const fn=raw.match(/export function getEtherealPowerGainPerSecond\(\) \{[\s\S]*?\n\}/)[0];
+  w.run(fn.replace(/^export /,''));assert.ok(w.context.getEtherealPowerGainPerSecond().eq(0));
+  w.player.celestials.laitela.singularities=w.DC.BEMAX;assert.ok(finite(w.context.getEtherealPowerGainPerSecond()));
+});
+
+test('Mastery import budgets account for virtual entanglements and mixed-case shorthand',()=>{
+  const w=setup();w.context.EndgameMastery.permaMasteries={isBought:true};
+  w.context.Currency.endgameSkills={value:new Decimal(3000000)};
+  w.context.GameCache={currentMasteryTree:{value:{spentSkills:[0,0]}}};
+  w.load('core/endgame-masteries/endgame-mastery-tree.js');
+  assert.equal(w.run('EndgameMasteryTree.isValidImportString("endgameE,celestialE,divineE")'),true);
+  assert.equal(w.run('EndgameMasteryTree.truncateInput("endgameE")'),'281,291,301');
+  w.run('this.tree = new EndgameMasteryTree();');
+  for(const id of [281,291,301])w.context.tree.buySingleMastery({id,cost:123},true);
+  assert.equal(w.context.tree.spentSkills[0],3000000);assert.equal(w.context.tree.purchasedMasteries.length,2);
+});

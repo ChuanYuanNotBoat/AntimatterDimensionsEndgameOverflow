@@ -96,6 +96,8 @@ export const Slabdrill = {
     if (!this.isCursed || this.isDestroyed || this.coreActive || this.currentStage < this.layerReqs.length) return false;
     player.celestials.slabdrill.isCursed = false;
     player.celestials.slabdrill.isDestroyed = true;
+    player.celestials.slabdrill.isWarping = false;
+    player.celestials.slabdrill.isGoodbye = false;
     clearCelestialRuns();
     player.disablePostReality = false;
     player.celestials.slabdrill.core.chaosCores = 0;
@@ -150,8 +152,8 @@ export const Slabdrill = {
     GameStorage.loadPlayerObject(player);
     for (let a = 0; a < 8; a++) {
       if (player.auto.antimatterDims.all[a].isUnlocked) {
-        Currency.antimatter.add(Autobuyer.antimatterDimension(a+1).cost);
-        Autobuyer.antimatterDimension(a+1).purchase();
+        Currency.antimatter.add(new Decimal(Autobuyer.antimatterDimension(a + 1).cost));
+        Autobuyer.antimatterDimension(a + 1).purchase();
       }
     }
     const cache = Object.keys(GameCache);

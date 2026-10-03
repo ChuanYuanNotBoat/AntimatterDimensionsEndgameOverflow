@@ -52,6 +52,11 @@ export function createLegacyDisplay(i18n, rules) {
     for (const term of quantities) {
       if (!text.toLowerCase().endsWith(` ${term.source.toLowerCase()}`)) continue;
       const amount = text.slice(0, -term.source.length).trim();
+      const ordinal = /^([1-9])(?:st|nd|rd|th)$/iu.exec(amount);
+      if (ordinal && /Dimension$/u.test(term.source)) {
+        return i18n.t("ui.dimensionName", { ordinal: i18n.t(`terms.dimension.ordinal${ordinal[1]}`, {}, "ordinal"),
+          dimension: i18n.t(term.id, {}, term.form) });
+      }
       // Accept formatted numbers only. A longer named resource cannot become an amount.
       if (/^[+-]?(?:[\d.,eEfFgG^()+×:/⁰¹²³⁴⁵⁶⁷⁸⁹-]|\s|Infinity|Infinite)+$/u.test(amount)) {
         return i18n.t("ui.quantity", { amount, resource: i18n.t(term.id, {}, term.form) });
@@ -79,8 +84,9 @@ export function createLegacyDisplay(i18n, rules) {
       const normalized = text.toLowerCase();
       const staticRule = choose(exact.get(normalized) ?? [], scope) ??
         (text.endsWith("s") ? choose(exact.get(normalized.slice(0, -1)) ?? [], scope) : undefined);
-      if (staticRule) result = i18n.t(staticRule.id, {}, staticRule.form);
-      else if (translateQuantity(text) !== undefined) result = translateQuantity(text);
+      const quantity = translateQuantity(text);
+      if (quantity !== undefined) result = quantity;
+      else if (staticRule) result = i18n.t(staticRule.id, {}, staticRule.form);
       else {
         const matches = [];
         for (const entry of [...(patterns.get(bucket(text)) ?? []), ...(patterns.get("*") ?? [])]) {
@@ -88,6 +94,11 @@ export function createLegacyDisplay(i18n, rules) {
           if (!normalized.startsWith(entry.prefix) || !normalized.endsWith(entry.suffix)) continue;
           const match = entry.regex.exec(text);
           if (match) {
+            // Short templates cannot consume unknown clauses as if they were a value.
+            const capturesProse = match.slice(1).some(captured => captured.length > 40 &&
+              /[A-Za-z]{2}/u.test(captured) && captured.split(/\s+/u).length >= 5 &&
+              !choose(exact.get(captured.toLowerCase()) ?? [], scope));
+            if (capturesProse && entry.specificity < text.length * 0.4) continue;
             // A generic sentence must never capture part of a longer resource name.
             // Example: "{amount} Infinity Points" cannot consume "Celestial Infinity Points".
             const spans = resourcePattern ? [...text.matchAll(resourcePattern)]

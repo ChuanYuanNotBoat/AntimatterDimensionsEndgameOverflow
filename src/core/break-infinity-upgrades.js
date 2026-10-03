@@ -71,11 +71,13 @@ export class BreakInfinityUpgradeState extends SetPurchasableMechanicState {
     return this.isBought &&
       this.hasChargeEffect &&
       !this.isCharged &&
-      player.endgame.overcharge.chargesLeft.infinite !== 0;
+      player.endgame.overcharge.completions.bi > player.endgame.overcharge.charged.infinite.size;
   }
 
   charge() {
+    if (!this.canCharge) return false;
     player.endgame.overcharge.charged.infinite.add(this.id);
+    return true;
   }
 
   disCharge() {

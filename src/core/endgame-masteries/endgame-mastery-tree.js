@@ -58,7 +58,7 @@ export class EndgameMasteryTree {
       return false;
     }
     let test = input.toLowerCase().replaceAll(/ +/gu, "");
-    EndgameMasteryTree.sets.forEach((_, x) => test = test.replaceAll(new RegExp(`${x.toLowerCase()},?`, "gu"), ""));
+    EndgameMasteryTree.sets.forEach((_, x) => test = test.replaceAll(new RegExp(`\\b${x.toLowerCase()}\\b,?`, "gu"), ""));
     return /^,?((\d{2,3}(-\d{2,3})?)\b,?)*(\|\d{1,2}!?)?$/iu.test(test);
   }
 
@@ -99,7 +99,7 @@ export class EndgameMasteryTree {
   static truncateInput(input) {
     let internal = input.toLowerCase();
     // Convert every name into the ids it is a shorthand for
-    this.sets.forEach((ids, name) => (internal = internal.replaceAll(name.toLowerCase(), ids.join())));
+    this.sets.forEach((ids, name) => (internal = internal.replaceAll(new RegExp(`\\b${name.toLowerCase()}\\b`, "gu"), ids.join())));
     return internal
       .replace(/[|,]$/u, "")
       .replaceAll(" ", "")

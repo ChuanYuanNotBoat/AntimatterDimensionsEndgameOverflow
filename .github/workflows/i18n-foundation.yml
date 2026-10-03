@@ -6,6 +6,7 @@ on:
     branches:
       - feat/i18n-foundation
       - feat/i18n-adechinese-sync
+      - fix/ade2-progression-hardening
 
 permissions:
   contents: read
@@ -22,5 +23,5 @@ jobs:
       - run: npm ci --legacy-peer-deps --ignore-scripts --no-audit --no-fund
       - run: npm run i18n:check
       - run: npm run test:i18n
-      - run: node --test tests/ethereal-sector-number-boundary.test.cjs
+      - run: npm run test:chapter3
       - run: node node_modules/@vue/cli-service/bin/vue-cli-service.js build --mode master

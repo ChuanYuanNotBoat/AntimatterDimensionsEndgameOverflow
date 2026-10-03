@@ -24,9 +24,9 @@ export class Effect {
     const addGetter = (property, v, label) => {
       if (isConstant(v)) {
         property.writable = false;
-        property.value = finiteEffectValue(v, label);
+        property.value = finiteEffectValue(v, `${label} (${this.constructor.name}:${this._config?.id ?? ""})`);
       } else if (isFunction(v)) {
-        property.get = () => finiteEffectValue(v(), label);
+        property.get = () => finiteEffectValue(v(), `${label} (${this.constructor.name}:${this._config?.id ?? ""})`);
       } else {
         throw new Error("Unknown getter type.");
       }

@@ -43,7 +43,8 @@ export const Ethereal = {
     return player.endgame.ethereal.starPower;
   },
   get allStarBoost() {
-    return Decimal.max(this.starPower.pow(0.2), 1).times(DivinityMilestone.powerBurst.isReached ? 1000 : 1);
+    return boundedPositiveProduct(this.starPower.pow(0.2).max(1),
+      DivinityMilestone.powerBurst.isReached ? 1000 : 1);
   },
   get nextGeneration() {
     let arr = [];
@@ -101,16 +102,21 @@ export const EtherealStars = mapGameDataToObject(
 
 export function getEtherealPowerGainPerSecond() {
   if (Slabdrill.isCursed && SlabdrillUnlocks.replicanti.isUnlocked) return Slabdrill.power;
-  const cpFactor = Decimal.pow(Decimal.log10(player.endgame.celestialPoints.add(1)).div(100), 10);
-  const singFactor = Decimal.pow(Decimal.log10(player.celestials.laitela.singularities.add(1)).div(20000), 3);
-  const rmFactor = Decimal.pow(Decimal.log10(Decimal.log10(player.reality.realityMachines.add(1)).add(1)).div(5), 75);
-  const gpFactor = Decimal.pow(Decimal.log10(Decimal.max(player.endgame.galacticPower, DC.NUMMAX)).div(308.25), 5);
-  const alphaBoost = player.disablePostReality ? DC.D1 : Decimal.pow(1.33, Alpha.currentStage);
-  return cpFactor.times(singFactor).times(rmFactor).times(gpFactor).div(1000).times(
-    Achievement(216).effectOrDefault(1)).times(alphaBoost).times(EtherealStars.blue.reward).times(
-    DivineDimensions.conversionFormula1).times(DivinityMilestone.hadronEmpowerment.isReached ? 10 : 1).timesEffectOf(
-    DivinityUpgrade.divineL2U3).times(DivinityMilestone.celestialSurge.isReached ? 1000 : 1).timesEffectsOf(
-    ResurgenceUpgrade.ethSurge, ResurgenceUpgrade.synergy6, EndgameMastery(241), SingularityMilestone.singEthPowerBoost).times(
+  const cpFactor = boundedPositivePower(boundedPositiveSum(player.endgame.celestialPoints, 1).log10().div(100), 10);
+  const singFactor = boundedPositivePower(boundedPositiveSum(player.celestials.laitela.singularities, 1).log10().div(20000), 3);
+  const rmFactor = boundedPositivePower(boundedPositiveSum(player.reality.realityMachines, 1).log10().add(1).log10().div(5), 75);
+  const gpFactor = boundedPositivePower(player.endgame.galacticPower.max(DC.NUMMAX).log10().div(308.25), 5);
+  const alphaBoost = player.disablePostReality ? DC.D1 : boundedPositivePower(1.33, Alpha.currentStage);
+  let power = [cpFactor, singFactor, rmFactor, gpFactor].reduce(boundedPositiveProduct, DC.D1).div(1000);
+  for (const factor of [Achievement(216).effectOrDefault(1), alphaBoost, EtherealStars.blue.reward,
+    DivineDimensions.conversionFormula1, DivinityMilestone.hadronEmpowerment.isReached ? 10 : 1]) {
+    power = boundedPositiveProduct(power, factor);
+  }
+  power = power.timesEffectOf(DivinityUpgrade.divineL2U3);
+  power = boundedPositiveProduct(power, DivinityMilestone.celestialSurge.isReached ? 1000 : 1);
+  power = power.timesEffectsOf(ResurgenceUpgrade.ethSurge, ResurgenceUpgrade.synergy6,
+    EndgameMastery(241), SingularityMilestone.singEthPowerBoost);
+  return boundedPositiveProduct(power,
     DivinityMilestone.ascendedSurge.isReached ? getGameSpeedupForDisplay().max(10).log10() : 1);
 }
 
@@ -191,5 +197,5 @@ export function freeStarReset(id, diff) {
 }
 
 export function getStarPowerGainPerSecond() {
-  return Decimal.pow10(Ethereal.stellarProduct.div(DC.NUMMAX).max(1).log10().div(25));
+  return boundedPositivePower(10, Ethereal.stellarProduct.div(DC.NUMMAX).max(1).log10().div(25));
 }
