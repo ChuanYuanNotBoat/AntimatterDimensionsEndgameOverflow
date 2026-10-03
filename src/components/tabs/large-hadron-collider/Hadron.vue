@@ -86,7 +86,7 @@ export default {
     v-if="isBlob"
     class="o-tachyon-particle"
   >
-    {{ blob }}
+    {{ $legacyText(_s(blob)) }}
   </text>
   <circle
     v-else-if="type === 0"

@@ -379,83 +379,77 @@ export default {
   <div class="c-stats-tab">
     <div>
       <PrimaryButton onclick="Modal.catchup.show(0)">
-        View Content Summary
+        {{ $t('ade.983716ec14393a23') }}
       </PrimaryButton>
       <div class="c-stats-tab-title c-stats-tab-general">
-        General
+        {{ $t('ade.ff067c2d36048625') }}
       </div>
       <div class="c-stats-tab-general">
-        <div>You have made a total of {{ format(totalAntimatter, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}.</div>
+        <div>{{ $t('ade.9cd826e166efdf12', { p0: $legacyText(_s(format(totalAntimatter,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}</div>
         <div v-if="divinity.isUnlocked">
-          You have made a total of {{ format(bestDoomedAntimatterThisDivinity, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}
-          in Doom this Divinity.
+          {{ $t('ade.a65a3860b2176038', { p0: $legacyText(_s(format(bestDoomedAntimatterThisDivinity,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
         </div>
         <div v-if="endgame.isUnlocked">
-          You have made a total of {{ format(totalAntimatterOutsideDoom, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}
-          outside Doom.
+          {{ $t('ade.72f3fc7b63b7d380', { p0: $legacyText(_s(format(totalAntimatterOutsideDoom,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
         </div>
         <div v-if="endgame.isUnlocked">
-          You have made a total of {{ format(endgame.totalEndgameAntimatter, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}
-          this Endgame.
+          {{ $t('ade.449bc2ec31a4937b', { p0: $legacyText(_s(format(endgame.totalEndgameAntimatter,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
         </div>
         <div v-if="reality.isUnlocked" :class="{ 'c-stats-tab-doomed' : isDoomed }">
-          You have made a total of {{ format(reality.totalRealityAntimatter, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}
-          this {{ isDoomed ? "Armageddon" : "Reality" }}.
+          {{ $t('ade.9308315939c8f6fd', { p0: $legacyText(_s(format(reality.totalRealityAntimatter,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")), p2: $legacyText(_s(isDoomed?"Armageddon":"Reality")) }) }}
         </div>
         <div v-if="eternity.isUnlocked">
-          You have made a total of {{ format(eternity.totalEternityAntimatter, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}
-          this Eternity.
+          {{ $t('ade.45e8ca7b7d0ac6a5', { p0: $legacyText(_s(format(eternity.totalEternityAntimatter,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
         </div>
         <div v-if="infinity.isUnlocked">
-          You have made a total of {{ format(infinity.totalInfinityAntimatter, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }}
-          this Infinity.
+          {{ $t('ade.6735a2558ebfde6e', { p0: $legacyText(_s(format(infinity.totalInfinityAntimatter,2,1))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
         </div>
         <div v-if="endgame.isUnlocked" class="c-stats-tab-celestials">
-          You have made a total of {{ format(totalCelMatter, 2, 1) }} Celestial Matter.
+          {{ $t('ade.ece56feae1306318', { p0: $legacyText(_s(format(totalCelMatter,2,1))) }) }}
         </div>
         <div v-if="celestialEternity.isUnlocked" class="c-stats-tab-celestials">
-          You have made a total of {{ format(celestialEternity.totalCelestialEternityCelMatter, 2, 1) }} Celestial Matter
-          this Celestial Eternity.
+          {{ $t('ade.377b6047e1da5fcb', { p0: $legacyText(_s(format(celestialEternity.totalCelestialEternityCelMatter,2,1))) }) }}
         </div>
         <div v-if="celestialInfinity.isUnlocked" class="c-stats-tab-celestials">
-          You have made a total of {{ format(celestialInfinity.totalCelestialInfinityCelMatter, 2, 1) }} Celestial Matter
-          this Celestial Infinity.
+          {{ $t('ade.af438081efce7d28', { p0: $legacyText(_s(format(celestialInfinity.totalCelestialInfinityCelMatter,2,1))) }) }}
         </div>
         <div v-if="hasSeenDivineDims" class="c-stats-tab-divinity">
-          You have made a total of {{ format(totalDivineMatter, 2, 1) }} Divine Matter.
+          {{ $t('ade.8343aa001ebfd90e', { p0: $legacyText(_s(format(totalDivineMatter,2,1))) }) }}
         </div>
         <div v-if="supernova.isUnlocked" class="c-stats-tab-divinity">
-          You have made a total of {{ format(supernova.totalSupernovaDivineMatter, 2, 1) }} Divine Matter this Supernova.
+          {{ $t('ade.10fb319960b420c6', { p0: $legacyText(_s(format(supernova.totalSupernovaDivineMatter,2,1))) }) }}
         </div>
         <div v-if="condense.isUnlocked" class="c-stats-tab-divinity">
-          You have made a total of {{ format(condense.totalCondenseDivineMatter, 2, 1) }} Divine Matter this Condense.
+          {{ $t('ade.9b4f342572d322b6', { p0: $legacyText(_s(format(condense.totalCondenseDivineMatter,2,1))) }) }}
         </div>
-        <div>You have played for {{ realTimePlayed }}. (real time)</div>
+        <div>{{ $t('ade.9a3449a0c005b7f5', { p0: $legacyText(_s(realTimePlayed)) }) }}</div>
         <div v-if="reality.isUnlocked">
-          Your existence has spanned {{ reality.totalTimePlayed }} of time. (game time)
+          {{ $t('ade.1e3fd40c8969b9e3', { p0: $legacyText(_s(reality.totalTimePlayed)) }) }}
         </div>
         <div>
-          Your save was created on {{ startDate }} ({{ saveAge }} ago)
+          {{ $t('ade.ef3096c63b3db401', { p0: $legacyText(_s(startDate)), p1: $legacyText(_s(saveAge)) }) }}
         </div>
         <br>
         <div>
-          You have seen {{ quantifyHybridSmall("news message", totalNews) }} in total.
+          {{ $t('ade.72a9a310bae43a76', { p0: $legacyText(_s(quantifyHybridSmall("news message",totalNews))) }) }}
         </div>
         <div>
-          You have seen {{ quantifyInt("unique news message", uniqueNews) }}.
+          {{ $t('ade.8fcac7ed263d882e', { p0: $legacyText(_s(quantifyInt("unique news message",uniqueNews))) }) }}
         </div>
         <div>
-          You have unlocked {{ quantifyInt("Secret Achievement", secretAchievementCount) }}.
+          {{ $t('ade.0862db62ce04808f', { p0: $legacyText(_s(quantifyInt("Secret Achievement",secretAchievementCount))) }) }}
         </div>
         <div v-if="paperclips">
-          You have {{ quantifyInt("useless paperclip", paperclips) }}.
+          {{ $t('ade.72a577765e7e40b3', { p0: $legacyText(_s(quantifyInt("useless paperclip",paperclips))) }) }}
         </div>
         <div v-if="fullGameCompletions">
           <br>
           <b>
-            You have completed the entire game {{ quantifyInt("time", fullGameCompletions) }}.
-            <br>
-            You have played for {{ fullTimePlayed }} across all playthroughs.
+            <LocalizedText id="ade.47bf5ce7e7f6edb2">
+              <template #p0>{{ $legacyText(_s(quantifyInt("time",fullGameCompletions))) }}</template>
+              <template #p1><br></template>
+              <template #p2>{{ $legacyText(_s(fullTimePlayed)) }}</template>
+            </LocalizedText>
           </b>
         </div>
       </div>
@@ -466,7 +460,7 @@ export default {
             v-for="(line, i) in matterScale"
             :key="i"
           >
-            {{ line }}
+            {{ $legacyText(_s(line)) }}
           </div>
           <br v-if="matterScale.length < 2">
           <br v-if="matterScale.length < 3">
@@ -479,31 +473,38 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-infinity">
-        Infinity
+        {{ $t('ade.eeaef40f3d862f8e') }}
       </div>
       <div>
-        You have {{ infinityCountString }}<span v-if="eternity.isUnlocked"> this Eternity</span>.
+        <LocalizedText id="ade.25fc59b38c7a409e">
+          <template #p0>{{ $legacyText(_s(infinityCountString)) }}</template>
+          <template #p1><span v-if="eternity.isUnlocked"> this Eternity</span></template>
+        </LocalizedText>
       </div>
       <div v-if="infinity.banked.gt(0)">
-        You have {{ formatDecimalAmount(infinity.banked.floor()) }}
-        {{ pluralize("Banked Infinity", infinity.banked.floor()) }}.
+        {{ $t('ade.cd1ff500c8f2ac78', { p0: $legacyText(_s(formatDecimalAmount(infinity.banked.floor()))), p1: $legacyText(_s(pluralize("Banked Infinity",infinity.banked.floor()))) }) }}
       </div>
       <div v-if="infinity.hasBest">
-        Your fastest Infinity was {{ infinity.best.toStringShort() }}.
+        {{ $t('ade.62c9d1875df15da1', { p0: $legacyText(_s(infinity.best.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Infinity<span v-if="eternity.isUnlocked"> this Eternity</span>.
+        <LocalizedText id="ade.f19d55184fe2c3e4">
+          <template #p0><span v-if="eternity.isUnlocked"> this Eternity</span></template>
+        </LocalizedText>
       </div>
       <div>
-        You have spent {{ infinity.this.toStringShort() }} in this Infinity.
-        <span v-if="reality.isUnlocked">
-          ({{ infinity.thisReal.toStringShort() }} real time)
-        </span>
+        <LocalizedText id="ade.8d531bb52e5d2926">
+          <template #p0>{{ $legacyText(_s(infinity.this.toStringShort())) }}</template>
+          <template #p1><span v-if="reality.isUnlocked">
+          ({{ $legacyText(_s(infinity.thisReal.toStringShort())) }} real time)
+        </span></template>
+        </LocalizedText>
       </div>
       <div>
-        Your best Infinity Points per minute
-        <span v-if="eternity.count.gt(0)">this Eternity </span>
-        is {{ format(infinity.bestRate, 2, 2) }}.
+        <LocalizedText id="ade.153fef2705d744b2">
+          <template #p0><span v-if="eternity.count.gt(0)">this Eternity </span></template>
+          <template #p1>{{ $legacyText(_s(format(infinity.bestRate,2,2))) }}</template>
+        </LocalizedText>
       </div>
       <br>
     </div>
@@ -512,39 +513,42 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-eternity">
-        Eternity
+        {{ $t('ade.9398ce737a0f9218') }}
       </div>
       <div>
-        You have {{ eternityCountString }}<span v-if="reality.isUnlocked"> this
-        <span :class="{ 'c-stats-tab-doomed' : isDoomed }">{{ isDoomed ? "Armageddon" : "Reality" }}</span></span>.
+        {{ $t('ade.0581970f3074ed1d', { p0: $legacyText(_s(eternityCountString)) }) }}<span v-if="reality.isUnlocked"> <LocalizedText id="ade.44b4796e147dddd5">
+   <template #p0><span :class="{ 'c-stats-tab-doomed' : isDoomed }">{{ $legacyText(_s(isDoomed ? "Armageddon" : "Reality")) }}</span></template>
+ </LocalizedText></span>.
       </div>
       <div v-if="infinity.projectedBanked.gt(0)">
-        You will gain {{ formatDecimalAmount(infinity.projectedBanked.floor()) }}
-        {{ pluralize("Banked Infinity", infinity.projectedBanked.floor()) }} on Eternity
-        ({{ formatDecimalAmount(infinity.bankRate) }} per minute).
+        {{ $t('ade.ece1d543889c6482', { p0: $legacyText(_s(formatDecimalAmount(infinity.projectedBanked.floor()))), p1: $legacyText(_s(pluralize("Banked Infinity",infinity.projectedBanked.floor()))), p2: $legacyText(_s(formatDecimalAmount(infinity.bankRate))) }) }}
       </div>
       <div v-else-if="infinity.banked.gt(0)">
-        You will gain no Banked Infinities on Eternity.
+        {{ $t('ade.91238d5ac2e0da7c') }}
       </div>
       <div v-if="eternity.hasBest">
-        Your fastest Eternity was {{ eternity.best.toStringShort() }}.
+        {{ $t('ade.ac94ad608ada89f3', { p0: $legacyText(_s(eternity.best.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Eternity<span v-if="reality.isUnlocked"> this
-        <span :class="{ 'c-stats-tab-doomed' : isDoomed }">{{ isDoomed ? "Armageddon" : "Reality" }}</span></span>.
+        {{ $t('ade.493a32f5e6a2f566') }}<span v-if="reality.isUnlocked"> <LocalizedText id="ade.c9a31d4f172c92d0">
+   <template #p0><span :class="{ 'c-stats-tab-doomed' : isDoomed }">{{ $legacyText(_s(isDoomed ? "Armageddon" : "Reality")) }}</span></template>
+ </LocalizedText></span>.
       </div>
       <div>
-        You have spent {{ eternity.this.toStringShort() }} in this Eternity.
-        <span v-if="reality.isUnlocked">
-          ({{ eternity.thisReal.toStringShort() }} real time)
-        </span>
+        <LocalizedText id="ade.0bb7e2c178ec69e7">
+          <template #p0>{{ $legacyText(_s(eternity.this.toStringShort())) }}</template>
+          <template #p1><span v-if="reality.isUnlocked">
+          ({{ $legacyText(_s(eternity.thisReal.toStringShort())) }} real time)
+        </span></template>
+        </LocalizedText>
       </div>
       <div>
-        Your best Eternity Points per minute
-        <span v-if="reality.isUnlocked">this
-        <span :class="{ 'c-stats-tab-doomed' : isDoomed }">{{ isDoomed ? "Armageddon" : "Reality" }}</span>
+        {{ $t('ade.8fc8789955701cb7') }}
+        <span v-if="reality.isUnlocked"><LocalizedText id="ade.44b4796e147dddd5">
+    <template #p0><span :class="{ 'c-stats-tab-doomed' : isDoomed }">{{ $legacyText(_s(isDoomed ? "Armageddon" : "Reality")) }}</span></template>
+  </LocalizedText>
         </span>
-        is {{ format(eternity.bestRate, 2, 2) }}.
+        {{ $t('ade.2daae26a30aab1fd', { p0: $legacyText(_s(format(eternity.bestRate,2,2))) }) }}
       </div>
       <br>
     </div>
@@ -553,38 +557,42 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div :class="realityClassObject()">
-        {{ isDoomed ? "Doomed Reality" : "Reality" }}
+        {{ $legacyText(_s(isDoomed ? "Doomed Reality" : "Reality")) }}
       </div>
       <div>
-        You have {{ realityCountString }}<span v-if="endgame.isUnlocked"> this Endgame</span>.
+        <LocalizedText id="ade.54f45f07035df199">
+          <template #p0>{{ $legacyText(_s(realityCountString)) }}</template>
+          <template #p1><span v-if="endgame.isUnlocked"> this Endgame</span></template>
+        </LocalizedText>
       </div>
       <div v-if="reality.hasBest">
-        Your fastest game-time Reality was {{ reality.best.toStringShort() }}.
-        Your fastest real-time Reality was {{ reality.bestReal.toStringShort() }}.
+        {{ $t('ade.1e9c73a0e71b1e5f', { p0: $legacyText(_s(reality.best.toStringShort())), p1: $legacyText(_s(reality.bestReal.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Reality<span v-if="endgame.isUnlocked"> this Endgame</span>.
+        <LocalizedText id="ade.bde90cadbf13800b">
+          <template #p0><span v-if="endgame.isUnlocked"> this Endgame</span></template>
+        </LocalizedText>
       </div>
       <div :class="{ 'c-stats-tab-doomed' : isDoomed }">
-        You have spent {{ reality.this.toStringShort() }}
-        in this {{ isDoomed ? "Armageddon" : "Reality" }}.
-        ({{ reality.thisReal.toStringShort() }} real time)
+        {{ $t('ade.c5bdd95251d54d0e', { p0: $legacyText(_s(reality.this.toStringShort())), p1: $legacyText(_s(isDoomed?"Armageddon":"Reality")), p2: $legacyText(_s(reality.thisReal.toStringShort())) }) }}
       </div>
       <div
         v-if="isDoomed"
         class="c-stats-tab-doomed"
       >
-        You have been Doomed for {{ realTimeDoomed.toStringShort() }}, real time.
+        {{ $t('ade.3bea109c101c41b2', { p0: $legacyText(_s(realTimeDoomed.toStringShort())) }) }}
       </div>
       <div>
-        Your best Reality Machines per minute 
-        <span v-if="endgame.isUnlocked">this Endgame </span>
-        is {{ format(reality.bestRate, 2, 2) }}.
+        <LocalizedText id="ade.306a5bbfe7ed09da">
+          <template #p0><span v-if="endgame.isUnlocked">this Endgame </span></template>
+          <template #p1>{{ $legacyText(_s(format(reality.bestRate,2,2))) }}</template>
+        </LocalizedText>
       </div>
       <div>
-        Your best Glyph rarity
-        <span v-if="endgame.isUnlocked">this Endgame </span>
-        is {{ formatRarity(reality.bestRarity) }}.</div>
+        <LocalizedText id="ade.a04c66f6be5ea7c6">
+          <template #p0><span v-if="endgame.isUnlocked">this Endgame </span></template>
+          <template #p1>{{ $legacyText(_s(formatRarity(reality.bestRarity))) }}</template>
+        </LocalizedText></div>
       <br>
     </div>
     <div
@@ -592,30 +600,25 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-endgame">
-        Endgame
+        {{ $t('ade.07bf328a78ebf91b') }}
       </div>
       <div>
-        You have {{ endgameCountString }}.
+        {{ $t('ade.be635d047cec0c6b', { p0: $legacyText(_s(endgameCountString)) }) }}
       </div>
       <div v-if="endgame.hasBest">
-        Your fastest game-time Endgame was {{ endgame.best.toStringShort() }}.
-        Your fastest real-time Endgame was {{ endgame.bestReal.toStringShort() }}.
+        {{ $t('ade.821427629779c64d', { p0: $legacyText(_s(endgame.best.toStringShort())), p1: $legacyText(_s(endgame.bestReal.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Endgame.
+        {{ $t('ade.d34650cd259b3ee5') }}
       </div>
       <div>
-        You have spent {{ endgame.this.toStringShort() }}
-        in this Endgame.
-        ({{ endgame.thisReal.toStringShort() }} real time)
+        {{ $t('ade.fec3b8568d77e5ec', { p0: $legacyText(_s(endgame.this.toStringShort())), p1: $legacyText(_s(endgame.thisReal.toStringShort())) }) }}
       </div>
       <div>
-        Your best Celestial Points per minute 
-        is {{ format(endgame.bestRateCP, 2, 2) }}.
+        {{ $t('ade.0f6bd963645bbf65', { p0: $legacyText(_s(format(endgame.bestRateCP,2,2))) }) }}
       </div>
       <div>
-        Your best Doomed Particles per minute 
-        is {{ format(endgame.bestRateDP, 2, 2) }}.
+        {{ $t('ade.c008d08b8da642ce', { p0: $legacyText(_s(format(endgame.bestRateDP,2,2))) }) }}
       </div>
       <br>
     </div>
@@ -624,25 +627,30 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-celestial-infinity">
-        Celestial Infinity
+        {{ $t('ade.190b872d96266ed2') }}
       </div>
       <div>
-        You have {{ celestialInfinityCountString }}<span v-if="celestialEternity.isUnlocked"> this Celestial Eternity</span>.
+        <LocalizedText id="ade.53e661ee2959f665">
+          <template #p0>{{ $legacyText(_s(celestialInfinityCountString)) }}</template>
+          <template #p1><span v-if="celestialEternity.isUnlocked"> this Celestial Eternity</span></template>
+        </LocalizedText>
       </div>
       <div v-if="celestialInfinity.hasBest">
-        Your fastest game-time Celestial Infinity was {{ celestialInfinity.best.toStringShort() }}.
-        Your fastest real-time Celestial Infinity was {{ celestialInfinity.bestReal.toStringShort() }}.
+        {{ $t('ade.044ff5cd1646886e', { p0: $legacyText(_s(celestialInfinity.best.toStringShort())), p1: $legacyText(_s(celestialInfinity.bestReal.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Celestial Infinity<span v-if="celestialEternity.isUnlocked"> this Celestial Eternity</span>.
+        <LocalizedText id="ade.0d481b26fb1a5d32">
+          <template #p0><span v-if="celestialEternity.isUnlocked"> this Celestial Eternity</span></template>
+        </LocalizedText>
       </div>
       <div>
-        You have spent {{ celestialInfinity.this.toStringShort() }} in this Celestial Infinity.
-        ({{ celestialInfinity.thisReal.toStringShort() }} real time)
+        {{ $t('ade.6671b7cedb561510', { p0: $legacyText(_s(celestialInfinity.this.toStringShort())), p1: $legacyText(_s(celestialInfinity.thisReal.toStringShort())) }) }}
       </div>
       <div>
-        Your best Celestial Infinity Points per minute<span v-if="celestialEternity.isUnlocked"> this Celestial Eternity</span>
-        is {{ format(celestialInfinity.bestRate, 2, 2) }}.
+        <LocalizedText id="ade.571c8fc07e17c6a2">
+          <template #p0><span v-if="celestialEternity.isUnlocked"> this Celestial Eternity</span></template>
+          <template #p1>{{ $legacyText(_s(format(celestialInfinity.bestRate,2,2))) }}</template>
+        </LocalizedText>
       </div>
       <br>
     </div>
@@ -651,25 +659,22 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-celestial-eternity">
-        Celestial Eternity
+        {{ $t('ade.6bb0245f2b0b1e23') }}
       </div>
       <div>
-        You have {{ celestialEternityCountString }}.
+        {{ $t('ade.f7517e65c9ff97dd', { p0: $legacyText(_s(celestialEternityCountString)) }) }}
       </div>
       <div v-if="celestialEternity.hasBest">
-        Your fastest game-time Celestial Eternity was {{ celestialEternity.best.toStringShort() }}.
-        Your fastest real-time Celestial Eternity was {{ celestialEternity.bestReal.toStringShort() }}.
+        {{ $t('ade.97725f62f9950335', { p0: $legacyText(_s(celestialEternity.best.toStringShort())), p1: $legacyText(_s(celestialEternity.bestReal.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Celestial Eternity.
+        {{ $t('ade.41ad7803e9cf571a') }}
       </div>
       <div>
-        You have spent {{ celestialEternity.this.toStringShort() }} in this Celestial Eternity.
-        ({{ celestialEternity.thisReal.toStringShort() }} real time)
+        {{ $t('ade.7e522e59c2490048', { p0: $legacyText(_s(celestialEternity.this.toStringShort())), p1: $legacyText(_s(celestialEternity.thisReal.toStringShort())) }) }}
       </div>
       <div>
-        Your best Celestial Eternity Points per minute
-        is {{ format(celestialEternity.bestRate, 2, 2) }}.
+        {{ $t('ade.cf3622d0a118944e', { p0: $legacyText(_s(format(celestialEternity.bestRate,2,2))) }) }}
       </div>
       <br>
     </div>
@@ -678,10 +683,10 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-divinity">
-        Divinity
+        {{ $t('ade.808ce92fea7400ba') }}
       </div>
       <div>
-        You have {{ divinityCountString }}.
+        {{ $t('ade.d43e7bb67d067c7a', { p0: $legacyText(_s(divinityCountString)) }) }}
       </div>
       <br>
     </div>
@@ -690,25 +695,30 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-condense">
-        Condense
+        {{ $t('ade.b3ba6d8a36080d8c') }}
       </div>
       <div>
-        You have {{ condenseCountString }}<span v-if="supernova.isUnlocked"> this Supernova</span>.
+        <LocalizedText id="ade.a94167cd2f2185a0">
+          <template #p0>{{ $legacyText(_s(condenseCountString)) }}</template>
+          <template #p1><span v-if="supernova.isUnlocked"> this Supernova</span></template>
+        </LocalizedText>
       </div>
       <div v-if="condense.hasBest">
-        Your fastest game-time Condense was {{ condense.best.toStringShort() }}.
-        Your fastest real-time Condense was {{ condense.bestReal.toStringShort() }}.
+        {{ $t('ade.75f7e63a66a5d0ae', { p0: $legacyText(_s(condense.best.toStringShort())), p1: $legacyText(_s(condense.bestReal.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Condense<span v-if="supernova.isUnlocked"> this Supernova</span>.
+        <LocalizedText id="ade.4c552248333379d3">
+          <template #p0><span v-if="supernova.isUnlocked"> this Supernova</span></template>
+        </LocalizedText>
       </div>
       <div>
-        You have spent {{ condense.this.toStringShort() }} in this Condense.
-        ({{ condense.thisReal.toStringShort() }} real time)
+        {{ $t('ade.66aa125a459e9204', { p0: $legacyText(_s(condense.this.toStringShort())), p1: $legacyText(_s(condense.thisReal.toStringShort())) }) }}
       </div>
       <div>
-        Your best Divine Stars per minute<span v-if="supernova.isUnlocked"> this Supernova</span>
-        is {{ format(condense.bestRate, 2, 2) }}.
+        <LocalizedText id="ade.bd6ea1f4e1a4dc8d">
+          <template #p0><span v-if="supernova.isUnlocked"> this Supernova</span></template>
+          <template #p1>{{ $legacyText(_s(format(condense.bestRate,2,2))) }}</template>
+        </LocalizedText>
       </div>
       <br>
     </div>
@@ -717,25 +727,22 @@ export default {
       class="c-stats-tab-subheader c-stats-tab-general"
     >
       <div class="c-stats-tab-title c-stats-tab-supernova">
-        Supernova
+        {{ $t('ade.71dbe0054f8d0165') }}
       </div>
       <div>
-        You have {{ supernovaCountString }}.
+        {{ $t('ade.b00912ef9c4cfdb1', { p0: $legacyText(_s(supernovaCountString)) }) }}
       </div>
       <div v-if="supernova.hasBest">
-        Your fastest game-time Supernova was {{ supernova.best.toStringShort() }}.
-        Your fastest real-time Supernova was {{ supernova.bestReal.toStringShort() }}.
+        {{ $t('ade.6d5f7f31d8d6b07f', { p0: $legacyText(_s(supernova.best.toStringShort())), p1: $legacyText(_s(supernova.bestReal.toStringShort())) }) }}
       </div>
       <div v-else>
-        You have no fastest Supernova.
+        {{ $t('ade.57a368a68c0add31') }}
       </div>
       <div>
-        You have spent {{ supernova.this.toStringShort() }} in this Supernova.
-        ({{ supernova.thisReal.toStringShort() }} real time)
+        {{ $t('ade.31b83c899f1668f7', { p0: $legacyText(_s(supernova.this.toStringShort())), p1: $legacyText(_s(supernova.thisReal.toStringShort())) }) }}
       </div>
       <div>
-        Your best Nebulae per minute
-        is {{ format(supernova.bestRate, 2, 2) }}.
+        {{ $t('ade.73f64e900cd0a071', { p0: $legacyText(_s(format(supernova.bestRate,2,2))) }) }}
       </div>
       <br>
     </div>

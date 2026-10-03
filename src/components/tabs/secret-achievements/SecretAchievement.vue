@@ -86,18 +86,18 @@ export default {
       type="achievements"
       class="l-hint-text--achievement"
     >
-      S{{ id }}
+      S{{ $legacyText(_s(id)) }}
     </HintText>
     <div class="o-achievement__tooltip">
       <template v-if="isMouseOver">
         <div class="o-achievement__tooltip__name">
-          {{ config.name }} (S{{ id }})
+          {{ $legacyText(_s(config.name)) }} (S{{ $legacyText(_s(id)) }})
         </div>
         <div
           v-if="isUnlocked"
           class="o-achievement__tooltip__description"
         >
-          {{ config.description }}
+          {{ $legacyText(_s(config.description)) }}
         </div>
       </template>
     </div>

@@ -196,6 +196,6 @@ export default {
         text="Null Upgrade names:"
       />
     </div>
-    Note: All types of additional info above will always display when holding shift.
+    {{ $t('ade.4afb3b902b7404e8') }}
   </ModalWrapperOptions>
 </template>

@@ -109,14 +109,15 @@ export default {
 <template>
   <div class="l-divinity-upgrade-grid">
     <div v-if="hasBonus">
-      Power Grab is currently providing
-      a <span class="c-divinity-effects">{{ formatX(bonus1, 2) }}</span> to Divine Energy,
-      a <span class="c-divinity-effects">{{ formatPow(bonus2, 2, 3) }}</span> to all Divine Dimensions,
-      and a <span class="c-divinity-effects">{{ formatX(bonus3, 2) }}</span> to Divine Stars.
+      <LocalizedText id="ade.77abc4cf82949a78">
+        <template #p0><span class="c-divinity-effects">{{ $legacyText(_s(formatX(bonus1, 2))) }}</span></template>
+        <template #p1><span class="c-divinity-effects">{{ $legacyText(_s(formatPow(bonus2, 2, 3))) }}</span></template>
+        <template #p2><span class="c-divinity-effects">{{ $legacyText(_s(formatX(bonus3, 2))) }}</span></template>
+      </LocalizedText>
     </div>
     <div v-if="has1">
       <div class="c-divinity-header">
-        Layer One Upgrades
+        {{ $t('ade.3acf1b7a8b29eea8') }}
       </div>
       <div
         v-for="(column, columnId) in grid1"
@@ -132,7 +133,7 @@ export default {
     </div>
     <div v-if="has2">
       <div class="c-divinity-header">
-        Layer Two Upgrades
+        {{ $t('ade.1786af12fdf907fa') }}
       </div>
       <div
         v-for="(column, columnId) in grid2"
@@ -148,7 +149,7 @@ export default {
     </div>
     <div v-if="has3">
       <div class="c-divinity-header">
-        Layer Three Upgrades
+        {{ $t('ade.171073d556f17c20') }}
       </div>
       <div
         v-for="(column, columnId) in grid3"
@@ -164,7 +165,7 @@ export default {
     </div>
     <div v-if="has4">
       <div class="c-divinity-header">
-        Layer Four Upgrades
+        {{ $t('ade.1916783eb454e7c3') }}
       </div>
       <div
         v-for="(column, columnId) in grid4"
@@ -180,7 +181,7 @@ export default {
     </div>
     <div v-if="has5">
       <div class="c-divinity-header">
-        Layer Five Upgrades
+        {{ $t('ade.202bb8d6dd5ea52b') }}
       </div>
       <div
         v-for="(column, columnId) in grid5"

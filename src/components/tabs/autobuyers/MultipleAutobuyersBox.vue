@@ -93,7 +93,7 @@ export default {
       @click="toggleGroup"
     />
     <div class="l-autobuyer-box__title">
-      {{ name }}<br>Autobuyers
+      {{ $legacyText(_s(name)) }}<br>{{ $t('ade.38dcb3a6aed58802') }}
       <!-- If we're showing as a group, then all attributes are the same and we can arbitrarily take the first one -->
       <AutobuyerIntervalLabel
         v-if="displayLabelAsGroup"
@@ -123,7 +123,7 @@ export default {
     v-else-if="isADBox && continuumActive"
     class="c-autobuyer-box-row"
   >
-    Continuum replaces your {{ isFlipped ? "Matter" : "Antimatter" }} Dimension and Tickspeed Autobuyers, as your production multipliers
+    Continuum replaces your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimension and Tickspeed Autobuyers, as your production multipliers
     <br>
     now automatically and continuously scale based on how many purchases you would have had otherwise.
   </span>
@@ -131,7 +131,7 @@ export default {
     v-else-if="isIDBox && continuumActive && infinityContinuumUnlocked"
     class="c-autobuyer-box-row"
   >
-    Continuum replaces your Infinity Dimension Autobuyers, as your production multipliers
+    {{ $t('ade.598fc1353fac64aa') }}
     <br>
     now automatically and continuously scale based on how many purchases you would have had otherwise.
   </span>
@@ -139,7 +139,7 @@ export default {
     v-else-if="isTDBox && continuumActive && timeContinuumUnlocked"
     class="c-autobuyer-box-row"
   >
-    Continuum replaces your Time Dimension Autobuyers, as your production multipliers
+    {{ $t('ade.81c688126d28b0fc') }}
     <br>
     now automatically and continuously scale based on how many purchases you would have had otherwise.
   </span>

@@ -133,36 +133,35 @@ export default {
   <div class="l-ethereal-tab">
     <div>
       <div>
-        <span class="c-normal-ethereal-text">You have </span>
-        <span class="c-really-cool-ethereal-text">{{ etherealPowerDisplay }}</span>
-        <span class="c-normal-ethereal-text"> Ethereal Power. </span>
-        <span class="c-really-cool-ethereal-text">+{{ format(etherealPowerPerSecond, 3, 3) }}/s</span>
+        <span class="c-normal-ethereal-text">{{ $t('ade.9f717812b3aa8e61') }} </span>
+        <span class="c-really-cool-ethereal-text">{{ $legacyText(_s(etherealPowerDisplay)) }}</span>
+        <span class="c-normal-ethereal-text"> {{ $t('ade.514306886ac99fcd') }} </span>
+        <span class="c-really-cool-ethereal-text">{{ $t('ade.7401cbf5f86d95e0', { p0: $legacyText(_s(format(etherealPowerPerSecond,3,3))) }) }}</span>
       </div>
       <div>
         <span class="c-normal-ethereal-text">
-          Ethereal Power income is based on Celestial Points, Singularities, and Reality Machine amounts.
+          {{ $t('ade.a062ed942472b350') }}
         </span>
         <span
           v-if="isBetter"
           class="c-normal-ethereal-text"
         >
-          {{ extraPowerDisplay }}
+          {{ $legacyText(_s(extraPowerDisplay)) }}
         </span>
       </div>
       <div>
-        <span class="c-normal-ethereal-text">Your Cosmic Sector is </span>
-        <span class="c-really-cool-ethereal-text">{{ formatInt(cosmicSector) }}</span>
-        <span class="c-normal-ethereal-text">, which is currently multiplying all Celestial Dimensions and delaying
-        the Celestial Matter Softcap by </span>
-        <span class="c-really-cool-ethereal-text">{{ formatX(sectorBoost, 3) }}</span><span class="c-normal-ethereal-text">.</span>
+        <span class="c-normal-ethereal-text">{{ $t('ade.dafc381a83700d7a') }} </span>
+        <span class="c-really-cool-ethereal-text">{{ $legacyText(_s(formatInt(cosmicSector))) }}</span>
+        <span class="c-normal-ethereal-text">{{ $t('ade.3d15a3f93f454829') }} </span>
+        <span class="c-really-cool-ethereal-text">{{ $legacyText(_s(formatX(sectorBoost, 3))) }}</span><span class="c-normal-ethereal-text">.</span>
       </div>
       <div>
-        <span class="c-normal-ethereal-text">You will ascend into the next Cosmic Sector at </span>
+        <span class="c-normal-ethereal-text">{{ $t('ade.bbf4a1f9a6b0b94b') }} </span>
         <span
           class="c-really-cool-ethereal-text"
-          :ach-tooltip="etherealPowerTimeEstimate"
-        >{{ formatHybridLarge(nextSectorAt, 3) }}</span>
-        <span class="c-normal-ethereal-text"> Ethereal Power.</span>
+          :ach-tooltip="$legacyText(etherealPowerTimeEstimate)"
+        >{{ $legacyText(_s(formatHybridLarge(nextSectorAt, 3))) }}</span>
+        <span class="c-normal-ethereal-text"> {{ $t('ade.514306886ac99fcd') }}</span>
       </div>
     </div>
     <br>
@@ -171,14 +170,14 @@ export default {
       class="l-ethereal-extension-unlock"
     >
       <div v-if="!canExtend">
-        <span class="c-normal-ethereal-text">Reach {{ format(1e25, 2, 2) }} Ethereal Power to Extend the Ethereal.</span>
+        <span class="c-normal-ethereal-text">{{ $t('ade.fc75a718e69fb1c6', { p0: $legacyText(_s(format(1e25,2,2))) }) }}</span>
       </div>
       <div v-if="canExtend">
         <button
           :class="etherealClassObject"
           @click="extendEthereal"
         >
-          Extend the Ethereal
+          {{ $t('ade.87f3f74c389965d8') }}
         </button>
       </div>
     </div>
@@ -187,8 +186,8 @@ export default {
       class="l-star-grid"
     >
       <div>
-        <span class="c-stellar-glow">Your Stellar Product is </span>
-        <span class="c-cooler-stellar-glow">{{ format(stellarProd, 2, 2) }}</span><span class="c-stellar-glow">.</span>
+        <span class="c-stellar-glow">{{ $t('ade.7113d09c4a3d6255') }} </span>
+        <span class="c-cooler-stellar-glow">{{ $legacyText(_s(format(stellarProd, 2, 2))) }}</span><span class="c-stellar-glow">.</span>
       </div>
       <br>
       <div
@@ -205,7 +204,7 @@ export default {
       </div>
       <br>
       <span class="c-normal-ethereal-text">
-        {{ nextStarText }}
+        {{ $legacyText(_s(nextStarText)) }}
       </span>
     </div>
     <br>
@@ -214,14 +213,14 @@ export default {
       class="l-ethereal-extension-unlock"
     >
       <div v-if="!canUnlockStarPower">
-        <span class="c-stellar-glow">{{ starPowerReqText }}</span>
+        <span class="c-stellar-glow">{{ $legacyText(_s(starPowerReqText)) }}</span>
       </div>
       <div v-if="canUnlockStarPower">
         <button
           :class="etherealCoolClassObject"
           @click="unlockStarPower"
         >
-          Unlock Star Power
+          {{ $t('ade.787dce09f50c6349') }}
         </button>
       </div>
     </div>
@@ -230,14 +229,14 @@ export default {
       class="l-star-grid"
     >
       <div>
-        <span class="c-stellar-glow">You have </span>
-        <span class="c-cooler-stellar-glow">{{ starPowerDisplay }}</span>
-        <span class="c-stellar-glow"> Star Power. </span>
-        <span class="c-cooler-stellar-glow">+{{ format(starPowerPerSecond, 3, 3) }}/s</span>
+        <span class="c-stellar-glow">{{ $t('ade.9f717812b3aa8e61') }} </span>
+        <span class="c-cooler-stellar-glow">{{ $legacyText(_s(starPowerDisplay)) }}</span>
+        <span class="c-stellar-glow"> {{ $t('ade.194dcf979a5b02bd') }} </span>
+        <span class="c-cooler-stellar-glow">{{ $t('ade.7401cbf5f86d95e0', { p0: $legacyText(_s(format(starPowerPerSecond,3,3))) }) }}</span>
       </div>
       <div>
-        <span class="c-stellar-glow">Your Star Power is currently multiplying the gain of all Star types by </span>
-        <span class="c-cooler-stellar-glow">{{ formatX(starBoost, 3, 3) }}</span><span class="c-stellar-glow">.</span>
+        <span class="c-stellar-glow">{{ $t('ade.0ed4a7aa83629af0') }} </span>
+        <span class="c-cooler-stellar-glow">{{ $legacyText(_s(formatX(starBoost, 3, 3))) }}</span><span class="c-stellar-glow">.</span>
       </div>
       <br>
       <span
@@ -245,11 +244,11 @@ export default {
         v-for="(line, index) in starTexts"
         :key="index"
       >
-        {{ line }} <br>
+        {{ $legacyText(_s(line)) }} <br>
       </span>
       <br>
       <span class="c-stellar-glow">
-        {{ nextGenerationText }}
+        {{ $legacyText(_s(nextGenerationText)) }}
       </span>
     </div>
   </div>

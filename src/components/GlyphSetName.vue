@@ -260,7 +260,7 @@ export default {
       :style="textStyle"
       class="c-current-glyph-effects__header"
     >
-      {{ setName }}
+      {{ $legacyText(_s(setName)) }}
     </span>
   </div>
 </template>

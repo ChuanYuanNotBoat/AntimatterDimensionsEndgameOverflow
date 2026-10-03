@@ -67,9 +67,7 @@ export default {
       Importing Time Study Presets as Constants
     </template>
     <div class="c-modal-message__text">
-      Confirming this modal will import all of your saved Time Study presets as new Automator constants.
-      Below are all the valid presets which will be imported, with the beginning and end of their contained
-      studies shown. Some names may be changed due to restrictions on constant name formatting.
+      {{ $t('ade.8935baf817b810bd') }}
       <br>
       <br>
       <div
@@ -77,25 +75,27 @@ export default {
         :key="i"
         :class="{ 'l-not-imported' : !willImport[i-1] }"
       >
-        Name: {{ presets[i-1].name }} ➜ <b>{{ names[i-1] }}</b>
-        <br>
-        {{ shortenString(presets[i-1].studies) }}
-        <span
+        <LocalizedText id="ade.e19e72e7d18c3f6b">
+          <template #p0>{{ $legacyText(_s(presets[i-1].name)) }}</template>
+          <template #p1><b>{{ $legacyText(_s(names[i-1])) }}</b></template>
+          <template #p2><br></template>
+          <template #p3>{{ $legacyText(_s(shortenString(presets[i-1].studies))) }}</template>
+          <template #p4><span
           v-if="hasConflict(names[i-1])"
           class="l-warn-text"
         >
           <br>
-          This will overwrite an existing constant!
-        </span>
-        <br>
-        <br>
+          {{ $t('ade.62b932c8235c388b') }}
+        </span></template>
+          <template #p5><br></template>
+          <template #p6><br></template>
+        </LocalizedText>
       </div>
       <div
         v-if="missedImports() > 0"
         class="l-warn-text"
       >
-        {{ quantify("preset", missedImports()) }} in this list cannot be imported
-        due to the limit on constant count.
+        {{ $t('ade.00898e0a7d252faf', { p0: $legacyText(_s(quantify("preset",missedImports()))) }) }}
       </div>
     </div>
     <template #confirm-text>

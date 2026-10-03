@@ -69,16 +69,16 @@ export class ReplicantiUpgradeButtonSetup {
       class="o-primary-btn--replicanti-upgrade"
       @click="upgrade.purchase()"
     >
-      <span v-html="description" />
+      <span v-html="$legacyHtml(description)" />
       <template v-if="!isCapped">
         <br>
-        <span>{{ costDescription }}</span>
+        <span>{{ $legacyText(_s(costDescription)) }}</span>
       </template>
     </PrimaryButton>
     <PrimaryToggleButton
       v-if="isAutoUnlocked && !isEC8Running"
       v-model="isAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.fc5aa8b492c774bf')"
       class="l--spoon-btn-group__little-spoon o-primary-btn--replicanti-upgrade-toggle"
     />
   </div>

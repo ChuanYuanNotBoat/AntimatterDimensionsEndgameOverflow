@@ -66,19 +66,19 @@ export default {
         class="c-collapse-icon-clickable"
         @click="toggleCollapse"
       />
-      Pelle Strikes and Rifts
+      {{ $t('ade.6d264e174464dc06') }}
     </div>
     <div
       v-if="!isCollapsed"
       class="l-pelle-content-container"
     >
-      Rifts can be activated by clicking on their bars.
-      <span v-if="strikes.length > 1">You cannot activate more than two Rifts at once.</span>
+      {{ $t('ade.b6157b30a8ca0ea2') }}
+      <span v-if="strikes.length > 1">{{ $t('ade.aa7529f027403e70') }}</span>
       <br v-else>
-      When active, Rifts consume {{ formatPercents(decayRate) }} of another resource per second.
+      {{ $t('ade.a2251771cff4099d', { p0: $legacyText(_s(formatPercents(decayRate))) }) }}
       <br>
       Rift effects apply even when not activated, and are based on the total amount drained.
-      <b class="o-strike-warning">{{ sickVisualStrikeText() }}</b>
+      <b class="o-strike-warning">{{ $legacyText(_s(sickVisualStrikeText())) }}</b>
       <div class="c-pelle-bar-container">
         <PelleRift
           v-for="strike in strikes"

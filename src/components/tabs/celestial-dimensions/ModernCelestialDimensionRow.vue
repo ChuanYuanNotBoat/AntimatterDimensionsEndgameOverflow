@@ -119,7 +119,7 @@ export default {
     />
     <div class="l-dim-row-multi-button-container c-modern-dim-tooltip-container">
       <div class="c-modern-dim-purchase-count-tooltip">
-        {{ capTooltip }}
+        {{ $legacyText(_s(capTooltip)) }}
       </div>
       <PrimaryButton
         :enabled="isAvailableForPurchase || (!isUnlocked && canUnlock)"
@@ -127,13 +127,13 @@ export default {
         :class="{ 'l-dim-row-small-text': hasLongText }"
         @click="buySingleCelestialDimension"
       >
-        {{ costDisplay }}
+        {{ $legacyText(_s(costDisplay)) }}
       </PrimaryButton>
       <PrimaryToggleButton
         v-if="isAutobuyerUnlocked"
         v-model="isAutobuyerOn"
         class="o-primary-btn--cd-auto"
-        label="Auto:"
+        :label="$t('ade.fc5aa8b492c774bf')"
       />
       <PrimaryButton
         v-else
@@ -141,7 +141,7 @@ export default {
         class="o-primary-btn--cd-auto"
         @click="buyMaxCelestialDimension"
       >
-        Buy Max
+        {{ $t('ade.6c1858ad1ff1fc9e') }}
       </PrimaryButton>
     </div>
   </div>

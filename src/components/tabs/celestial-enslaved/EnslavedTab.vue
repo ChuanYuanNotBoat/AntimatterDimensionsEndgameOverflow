@@ -222,7 +222,7 @@ export default {
       <PrimaryToggleButton
         v-model="autoRelease"
         class="o-primary-btn--subtab-option"
-        label="Pulse Black Hole:"
+        :label="$t('ade.28dd95e957ffb834')"
       />
     </div>
     <div class="l-enslaved-celestial-tab--inner">
@@ -233,17 +233,17 @@ export default {
               class="c-enslaved-run-button__title"
               :class="doomedDisabledClass"
             >
-              {{ realityTitle }}
+              {{ $legacyText(_s(realityTitle)) }}
             </div>
             <div v-if="completed">
-              <b>(Completed)</b>
+              <b>{{ $t('ade.e80b793364cba30f') }}</b>
             </div>
             <div
               :class="runButtonClassObject"
               @click="startRun"
             >
               <div class="c-enslaved-run-button__icon__sigil">
-                {{ enslavedSymbol }}
+                {{ $legacyText(_s(enslavedSymbol)) }}
               </div>
               <div
                 v-for="x in (isRunning ? 25 : 0)"
@@ -257,10 +257,9 @@ export default {
               :key="line"
               class="c-enslaved-run-description-line"
             >
-              {{ line }}
+              {{ $legacyText(_s(line)) }}
             </div>
-            <b>Reward: Unlock Tesseracts, which let you increase Infinity Dimension caps
-              (see Infinity Dimension tab)</b>
+            <b>{{ $t('ade.d35da891d8d93c8f') }}</b>
           </div>
         </div>
       </div>
@@ -270,13 +269,11 @@ export default {
           class="o-primary-btn"
           onclick="Modal.enslavedHints.show()"
         >
-          Examine the Reality more closely...
+          {{ $t('ade.45f642df7affc45e') }}
         </PrimaryButton>
         <div class="l-enslaved-top-container">
           <div class="l-enslaved-top-container__half">
-            While charging, game speed multipliers are {{ hasAutoRelease ? "decreased" : "disabled" }},
-            and the lost speed is converted into stored game time. Discharging the Black Hole allows you to skip
-            forward in time. Stored game time is also used to unlock certain upgrades.
+            {{ $t('ade.533e3a35b1ccbecb', { p0: $legacyText(_s(hasAutoRelease?"decreased":"disabled")) }) }}
             <button
               :class="storeGameTimeClass"
               @click="toggleStoreBlackHole"
@@ -285,36 +282,34 @@ export default {
                 class="o-enslaved-stored-time"
                 :class="BHDescClass"
               >
-                {{ storedBHDesc }}
+                {{ $legacyText(_s(storedBHDesc)) }}
               </div>
               <div>
-                {{ isStoringBlackHole ? "Charging Black Hole": "Charge Black Hole" }}
+                {{ $legacyText(_s(isStoringBlackHole ? "Charging Black Hole": "Charge Black Hole")) }}
               </div>
             </button>
             <button
               :class="dischargeClass"
               @click="useStored"
             >
-              <span>Discharge Black Hole</span>
+              <span>{{ $t('ade.3aea98be36e96204') }}</span>
               <p v-if="isRunning">
-                {{ nerfedBHTimeDesc }} in this Reality
+                {{ $t('ade.aca93dffe26e61e8', { p0: $legacyText(_s(nerfedBHTimeDesc)) }) }}
               </p>
             </button>
           </div>
           <div class="l-enslaved-top-container__half">
-            Storing real time completely halts all production, setting game speed to {{ formatInt(0) }}.
-            You can use stored real time to "amplify" a Reality, simulating repeated runs of it.
-            Amplified Realities give all the rewards that normal Realities do.
+            {{ $t('ade.00af70e2d5b832db', { p0: $legacyText(_s(formatInt(0))) }) }}
             <button
               :class="[storeRealTimeClass,
                        {'l-fixed-setting': hasReachedCurrentCap}]"
               @click="toggleStoreReal"
             >
               <div class="o-enslaved-stored-time">
-                {{ storedRealDesc }}
+                {{ $legacyText(_s(storedRealDesc)) }}
               </div>
               <div>
-                {{ isStoringReal ? "Storing real time": "Store real time" }}
+                {{ $legacyText(_s(isStoringReal ? "Storing real time": "Store real time")) }}
               </div>
             </button>
             <button
@@ -324,13 +319,13 @@ export default {
                        doomedDisabledClass]"
               @click="toggleAutoStoreReal"
             >
-              {{ realTimeButtonText }}
+              {{ $legacyText(_s(realTimeButtonText)) }}
             </button>
             <div>
-              Efficiency: {{ storedRealEfficiencyDesc }}
+              {{ $t('ade.074aa42fbd97080c', { p0: $legacyText(_s(storedRealEfficiencyDesc)) }) }}
             </div>
             <div>
-              Maximum stored real time: {{ storedRealCapDesc }}
+              {{ $t('ade.d4cfd359a1ea7e01', { p0: $legacyText(_s(storedRealCapDesc)) }) }}
             </div>
           </div>
         </div>
@@ -344,12 +339,12 @@ export default {
             :class="unlockClassObject(unlock)"
             @click="buyUnlock(unlock)"
           >
-            {{ unlock.description() }}
+            {{ $legacyText(_s(unlock.description())) }}
             <div v-if="!hasUnlock(unlock)">
-              Costs: {{ timeDisplayShort(unlock.price) }}
+              {{ $t('ade.177a8d6475e524b3', { p0: $legacyText(_s(timeDisplayShort(unlock.price))) }) }}
             </div>
             <span v-if="isStoringBlackHole && !hasUnlock(unlock) && timeUntilBuy(unlock.price).gt(0)">
-              Time to obtain: {{ timeDisplayShort(timeUntilBuy(unlock.price)) }}
+              {{ $t('ade.261e10706d804d69', { p0: $legacyText(_s(timeDisplayShort(timeUntilBuy(unlock.price)))) }) }}
             </span>
           </button>
         </div>

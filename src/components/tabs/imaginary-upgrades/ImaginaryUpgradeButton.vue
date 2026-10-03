@@ -96,7 +96,7 @@ export default {
 
 <template>
   <div
-    v-tooltip="etaText"
+    v-tooltip="$legacyTooltip(etaText)"
     class="l-spoon-btn-group"
   >
     <button
@@ -109,7 +109,7 @@ export default {
         type="realityUpgrades"
         class="l-hint-text--reality-upgrade c-hint-text--reality-upgrade"
       >
-        {{ config.name }}
+        {{ $legacyText(_s(config.name)) }}
       </HintText>
       <span :class="{ 'o-pelle-disabled': upgrade.pelleDisabled }">
         <DescriptionDisplay :config="config" />
@@ -117,7 +117,7 @@ export default {
           <br>
           <DescriptionDisplay
             :config="requirementConfig"
-            label="Requirement:"
+            :label="$t('ade.3578b594e1f9e71d')"
             class="c-reality-upgrade-btn__requirement"
           />
         </template>
@@ -151,7 +151,7 @@ export default {
     <PrimaryToggleButton
       v-if="isRebuyable && isAutoUnlocked"
       v-model="isAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.fc5aa8b492c774bf')"
       class="l--spoon-btn-group__little-spoon-reality-btn o-primary-btn--reality-upgrade-toggle"
     />
   </div>

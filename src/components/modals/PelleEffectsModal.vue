@@ -72,14 +72,14 @@ export default {
         v-for="(nerf, idx) in nerfs"
         :key="idx"
       >
-        {{ nerf }}
+        {{ $legacyText(_s(nerf)) }}
       </p>
     </div>
     <PrimaryButton
       class="o-primary-btn--width-medium c-modal-message__okay-btn c-modal__confirm-btn"
       @click="emitClose"
     >
-      Okay
+      {{ $t('ade.897863f44ccdc0cf') }}
     </PrimaryButton>
   </ModalWrapper>
 </template>

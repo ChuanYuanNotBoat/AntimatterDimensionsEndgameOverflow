@@ -16,7 +16,7 @@ export default {
   <div class="l-achievements-tab">
     <div class="c-achievements-tab__header">
       <span>
-        Secret Achievements are optional and give no bonuses.
+        {{ $t('ade.2bda639664e9471d') }}
       </span>
     </div>
     <div class="l-achievement-grid">

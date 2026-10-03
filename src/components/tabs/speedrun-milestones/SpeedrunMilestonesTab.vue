@@ -49,12 +49,12 @@ export default {
     <PrimaryToggleButton
       v-model="displayAll"
       class="o-primary-btn--subtab-option"
-      label="Describe all milestones:"
+      :label="$t('ade.77130fb94b61dc39')"
     />
     <br>
-    <b>{{ startTimeStr }}</b>
+    <b>{{ $legacyText(_s(startTimeStr)) }}</b>
     <br>
-    <b>{{ spectateText }}</b>
+    <b>{{ $legacyText(_s(spectateText)) }}</b>
     <br>
     <div class="l-speedrun-milestone-tab">
       <SpeedrunMilestoneSingle

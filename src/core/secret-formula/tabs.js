@@ -2,6 +2,7 @@ export const tabs = [
   {
     key: "dimensions",
     name: "Dimensions",
+    nameKey: "navigation.dimensions",
     hideAt: 2.9,
     id: 0,
     hidable: true,
@@ -9,6 +10,8 @@ export const tabs = [
       {
         key: "antimatter",
         name: () => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions`,
+        nameKey: "navigation.dimensions.antimatter",
+        nameValues: () => ({ resource: player.universes.current === 2 ? "matter" : "antimatter" }),
         symbol: "Ω",
         component: "AntimatterDimensionsTab",
         id: 0,
@@ -17,6 +20,7 @@ export const tabs = [
       {
         key: "infinity",
         name: "Infinity Dimensions",
+        nameKey: "navigation.dimensions.infinity",
         hideAt: 2.7,
         symbol: "∞",
         component: "InfinityDimensionsTab",
@@ -31,6 +35,7 @@ export const tabs = [
       {
         key: "time",
         name: "Time Dimensions",
+        nameKey: "navigation.dimensions.time",
         hideAt: 2.6,
         symbol: "Δ",
         component: "TimeDimensionsTab",
@@ -41,6 +46,7 @@ export const tabs = [
       {
         key: "celestial",
         name: "Celestial Dimensions",
+        nameKey: "navigation.dimensions.celestial",
         hideAt: 2.5,
         symbol: "✯",
         component: "CelestialDimensionsTab",
@@ -51,6 +57,7 @@ export const tabs = [
       {
         key: "divine",
         name: "Divine Dimensions",
+        nameKey: "navigation.dimensions.divine",
         hideAt: 2.5,
         symbol: "<i class='fas fa-crown'></i>",
         component: "DivineDimensionsTab",
@@ -100,6 +107,7 @@ export const tabs = [
   {
     key: "statistics",
     name: "Statistics",
+    nameKey: "navigation.statistics",
     hideAt: 1.7,
     id: 2,
     hidable: true,
@@ -107,6 +115,7 @@ export const tabs = [
       {
         key: "statistics",
         name: "Statistics",
+        nameKey: "navigation.statistics.statistics",
         symbol: "<i class='fas fa-clipboard-list'></i>",
         component: "StatisticsTab",
         id: 0,
@@ -115,6 +124,7 @@ export const tabs = [
       {
         key: "challenges",
         name: "Challenge records",
+        nameKey: "navigation.statistics.challenges",
         symbol: "<i class='fas fa-stopwatch'></i>",
         component: "ChallengeRecordsTab",
         condition: () =>
@@ -128,6 +138,7 @@ export const tabs = [
       {
         key: "prestige runs",
         name: "Past Prestige Runs",
+        nameKey: "navigation.statistics.prestige_runs",
         symbol: "<i class='fas fa-list-ol'></i>",
         component: "PastPrestigeRunsTab",
         condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.infinityUnlocked(),
@@ -137,6 +148,7 @@ export const tabs = [
       {
         key: "multipliers",
         name: "Multiplier Breakdown",
+        nameKey: "navigation.statistics.multipliers",
         symbol: "<i class='fas fa-calculator'></i>",
         component: "MultiplierBreakdownTab",
         condition: () => PlayerProgress.infinityUnlocked(),
@@ -146,6 +158,7 @@ export const tabs = [
       {
         key: "glyph sets",
         name: "Glyph Set Records",
+        nameKey: "navigation.statistics.glyph_sets",
         symbol: "<i class='fas fa-ellipsis-h'></i>",
         component: "GlyphSetRecordsTab",
         condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.realityUnlocked(),
@@ -155,6 +168,7 @@ export const tabs = [
       {
         key: "speedrun milestones",
         name: "Speedrun Milestones",
+        nameKey: "navigation.statistics.speedrun_milestones",
         symbol: "<i class='fas fa-flag-checkered'></i>",
         component: "SpeedrunMilestonesTab",
         condition: () => player.speedrun.isActive,
@@ -164,6 +178,7 @@ export const tabs = [
       {
         key: "speedrun records",
         name: "Speedrun Records",
+        nameKey: "navigation.statistics.speedrun_records",
         symbol: "<i class='fas fa-ranking-star'></i>",
         component: "PreviousSpeedrunTab",
         condition: () => Object.keys(player.speedrun.previousRuns).length > 0,
@@ -173,6 +188,7 @@ export const tabs = [
       {
         key: "stored time",
         name: "Stored Time",
+        nameKey: "navigation.statistics.stored_time",
         symbol: "<i class='fas fa-clock'></i>",
         component: "StoredTimeTab",
         id: 7,
@@ -183,6 +199,7 @@ export const tabs = [
   {
     key: "achievements",
     name: "Achievements",
+    nameKey: "navigation.achievements",
     hideAt: 1.9,
     id: 3,
     hidable: true,
@@ -190,6 +207,7 @@ export const tabs = [
       {
         key: "normal",
         name: "Achievements",
+        nameKey: "navigation.achievements.normal",
         symbol: "<i class='fas fa-trophy'></i>",
         component: "NormalAchievementsTab",
         id: 0,
@@ -198,6 +216,7 @@ export const tabs = [
       {
         key: "secret",
         name: "Secret Achievements",
+        nameKey: "navigation.achievements.secret",
         symbol: "<i class='fas fa-question'></i>",
         component: "SecretAchievementTab",
         id: 1,
@@ -208,6 +227,7 @@ export const tabs = [
   {
     key: "automation",
     name: "Automation",
+    nameKey: "navigation.automation",
     id: 4,
     hideAt: 2.1,
     condition: () => PlayerProgress.endgameUnlocked() || player.records.totalAntimatter.gte(1e40),
@@ -216,6 +236,7 @@ export const tabs = [
       {
         key: "autobuyers",
         name: "Autobuyers",
+        nameKey: "navigation.automation.autobuyers",
         symbol: "<i class='fas fa-cog'></i>",
         component: "AutobuyersTab",
         id: 0,
@@ -224,6 +245,7 @@ export const tabs = [
       {
         key: "automator",
         name: "Automator",
+        nameKey: "navigation.automation.automator",
         symbol: "<i class='fas fa-code'></i>",
         component: "AutomatorTab",
         condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.realityUnlocked(),
@@ -235,6 +257,7 @@ export const tabs = [
   {
     key: "challenges",
     name: "Challenges",
+    nameKey: "navigation.challenges",
     hideAt: 2,
     condition: () =>
       PlayerProgress.endgameUnlocked() ||
@@ -247,6 +270,7 @@ export const tabs = [
       {
         key: "normal",
         name: "Challenges",
+        nameKey: "navigation.challenges.normal",
         symbol: "Ω",
         component: "NormalChallengesTab",
         id: 0,
@@ -255,6 +279,7 @@ export const tabs = [
       {
         key: "infinity",
         name: "Infinity Challenges",
+        nameKey: "navigation.challenges.infinity",
         symbol: "∞",
         component: "infinity-challenges-tab",
         condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.realityUnlocked() || PlayerProgress.hasBroken() || Pelle.isDoomed,
@@ -264,6 +289,7 @@ export const tabs = [
       {
         key: "eternity",
         name: "Eternity Challenges",
+        nameKey: "navigation.challenges.eternity",
         symbol: "Δ",
         component: "eternity-challenges-tab",
         condition: () =>
@@ -279,6 +305,7 @@ export const tabs = [
   {
     key: "infinity",
     name: "Infinity",
+    nameKey: "navigation.infinity",
     hideAt: 2.2,
     UIClass: "o-tab-btn--infinity",
     before: "InfinityPointsHeader",
@@ -289,6 +316,7 @@ export const tabs = [
       {
         key: "upgrades",
         name: "Infinity Upgrades",
+        nameKey: "navigation.infinity.upgrades",
         symbol: "<i class='fas fa-arrow-up'></i>",
         component: "InfinityUpgradesTab",
         condition: () =>
@@ -302,6 +330,7 @@ export const tabs = [
       {
         key: "break",
         name: "Break Infinity",
+        nameKey: "navigation.infinity.break",
         symbol: "∝",
         component: "BreakInfinityTab",
         condition: () =>
@@ -315,6 +344,7 @@ export const tabs = [
       {
         key: "replicanti",
         name: "Replicanti",
+        nameKey: "navigation.infinity.replicanti",
         symbol: "Ξ",
         component: "ReplicantiTab",
         condition: () =>
@@ -330,6 +360,7 @@ export const tabs = [
   {
     key: "eternity",
     name: "Eternity",
+    nameKey: "navigation.eternity",
     hideAt: 1.8,
     UIClass: "o-tab-btn--eternity",
     condition: () =>
@@ -343,6 +374,7 @@ export const tabs = [
       {
         key: "studies",
         name: "Time Studies",
+        nameKey: "navigation.eternity.studies",
         symbol: "<i class='fas fa-book'></i>",
         component: "TimeStudiesTab",
         id: 0,
@@ -351,6 +383,7 @@ export const tabs = [
       {
         key: "upgrades",
         name: "Eternity Upgrades",
+        nameKey: "navigation.eternity.upgrades",
         symbol: "<i class='fas fa-arrow-up'></i>",
         component: "EternityUpgradesTab",
         id: 1,
@@ -359,6 +392,7 @@ export const tabs = [
       {
         key: "milestones",
         name: "Eternity Milestones",
+        nameKey: "navigation.eternity.milestones",
         symbol: "<i class='fas fa-star'></i>",
         component: "EternityMilestonesTab",
         id: 2,
@@ -367,6 +401,7 @@ export const tabs = [
       {
         key: "dilation",
         name: "Time Dilation",
+        nameKey: "navigation.eternity.dilation",
         symbol: "Ψ",
         component: "TimeDilationTab",
         condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.dilationUnlocked() || PlayerProgress.realityUnlocked(),
@@ -378,6 +413,7 @@ export const tabs = [
   {
     key: "reality",
     name: "Reality",
+    nameKey: "navigation.reality",
     hideAt: 2.3,
     UIClass: "o-tab-btn--reality",
     condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.realityUnlocked() || TimeStudy.reality.isBought,
@@ -387,6 +423,7 @@ export const tabs = [
       {
         key: "glyphs",
         name: "Glyphs",
+        nameKey: "navigation.reality.glyphs",
         symbol: "<i class='fas fa-clone'></i>",
         component: "GlyphsTab",
         id: 0,
@@ -395,6 +432,7 @@ export const tabs = [
       {
         key: "upgrades",
         name: "Reality Upgrades",
+        nameKey: "navigation.reality.upgrades",
         symbol: "<i class='fas fa-arrow-up'></i>",
         component: "RealityUpgradesTab",
         id: 1,
@@ -403,6 +441,7 @@ export const tabs = [
       {
         key: "imag_upgrades",
         name: "Imaginary Upgrades",
+        nameKey: "navigation.reality.imag_upgrades",
         symbol: "<i class='fas fa-level-up-alt'></i>",
         component: "ImaginaryUpgradesTab",
         condition: () => PlayerProgress.endgameUnlocked() || MachineHandler.isIMUnlocked,
@@ -412,6 +451,7 @@ export const tabs = [
       {
         key: "dual_upgrades",
         name: "Duality Upgrades",
+        nameKey: "navigation.reality.dual_upgrades",
         symbol: "<i class='fas fa-arrow-trend-up'></i>",
         component: "DualityUpgradesTab",
         condition: () => MachineHandler.isDMUnlocked,
@@ -421,6 +461,7 @@ export const tabs = [
       {
         key: "perks",
         name: "Perks",
+        nameKey: "navigation.reality.perks",
         symbol: "<i class='fas fa-project-diagram'></i>",
         component: "PerksTab",
         id: 4,
@@ -429,6 +470,7 @@ export const tabs = [
       {
         key: "hole",
         name: "Black Hole",
+        nameKey: "navigation.reality.hole",
         symbol: "<i class='fas fa-circle'></i>",
         component: "BlackHoleTab",
         condition: () => PlayerProgress.endgameUnlocked() || PlayerProgress.realityUnlocked(),
@@ -438,6 +480,7 @@ export const tabs = [
       {
         key: "alchemy",
         name: "Glyph Alchemy",
+        nameKey: "navigation.reality.alchemy",
         symbol: "<i class='fas fa-vial'></i>",
         component: "AlchemyTab",
         condition: () => PlayerProgress.endgameUnlocked() || Ra.unlocks.unlockGlyphAlchemy.canBeApplied,
@@ -449,6 +492,7 @@ export const tabs = [
   {
     key: "celestials",
     name: "Celestials",
+    nameKey: "navigation.celestials",
     hideAt: 2.4,
     UIClass: "o-tab-btn--celestial",
     condition: () => PlayerProgress.endgameUnlocked() || Teresa.isUnlocked,
@@ -458,6 +502,7 @@ export const tabs = [
       {
         key: "celestial-navigation",
         name: "Celestial Navigation",
+        nameKey: "navigation.celestials.celestial-navigation",
         symbol: "<i class='fas fa-map-marked-alt'></i>",
         component: "CelestialNavigationTab",
         id: 0,
@@ -466,6 +511,7 @@ export const tabs = [
       {
         key: "teresa",
         name: "Teresa",
+        nameKey: "navigation.celestials.teresa",
         symbol: "Ϟ",
         component: "TeresaTab",
         condition: () => Teresa.isUnlocked,
@@ -475,6 +521,7 @@ export const tabs = [
       {
         key: "effarig",
         name: "Effarig",
+        nameKey: "navigation.celestials.effarig",
         symbol: "Ϙ",
         component: "EffarigTab",
         condition: () => TeresaUnlocks.effarig.isUnlocked || EndgameMilestone.celestialEarlyUnlock.isReached,
@@ -484,6 +531,7 @@ export const tabs = [
       {
         key: "enslaved",
         name: "The Nameless Ones",
+        nameKey: "navigation.celestials.enslaved",
         symbol: "<div class='o-tab-btn--cel3'>\uf0c1</div>",
         component: "EnslavedTab",
         condition: () => EffarigUnlock.eternity.isUnlocked || EndgameMilestone.celestialEarlyUnlock.isReached,
@@ -493,6 +541,7 @@ export const tabs = [
       {
         key: "v",
         name: "V",
+        nameKey: "navigation.celestials.v",
         symbol: "⌬",
         component: "VTab",
         condition: () => Achievement(151).isUnlocked || EndgameMilestone.celestialEarlyUnlock.isReached,
@@ -502,6 +551,7 @@ export const tabs = [
       {
         key: "ra",
         name: "Ra",
+        nameKey: "navigation.celestials.ra",
         symbol: "<i class='fas fa-sun'></i>",
         component: "RaTab",
         condition: () => VUnlocks.raUnlock.isUnlocked || EndgameMilestone.celestialEarlyUnlock.isReached,
@@ -511,6 +561,7 @@ export const tabs = [
       {
         key: "laitela",
         name: "Lai'tela",
+        nameKey: "navigation.celestials.laitela",
         symbol: "ᛝ",
         component: "LaitelaTab",
         condition: () => Laitela.isUnlocked,
@@ -520,6 +571,7 @@ export const tabs = [
       {
         key: "pelle",
         name: "Pelle",
+        nameKey: "navigation.celestials.pelle",
         symbol: "♅",
         component: "PelleTab",
         condition: () => Pelle.isUnlocked,
@@ -529,6 +581,7 @@ export const tabs = [
       {
         key: "alpha",
         name: "Alpha",
+        nameKey: "navigation.celestials.alpha",
         symbol: "α",
         component: "AlphaTab",
         condition: () => Alpha.isUnlocked,
@@ -538,6 +591,7 @@ export const tabs = [
       {
         key: "slabdrill",
         name: "Slabdrill",
+        nameKey: "navigation.celestials.slabdrill",
         symbol: "⁹δ",
         component: "SlabdrillTab",
         condition: () => Slabdrill.isUnlocked,
@@ -549,6 +603,7 @@ export const tabs = [
   {
     key: "shop",
     name: "Shop",
+    nameKey: "navigation.shop",
     newUIClass: "shop",
     hideAt: 1.5,
     condition: () => Cloud.isAvailable,
@@ -558,6 +613,7 @@ export const tabs = [
       {
         key: "shop",
         name: "Shop",
+        nameKey: "navigation.shop.shop",
         symbol: "$",
         component: "ShopTab",
         id: 0,
@@ -568,6 +624,7 @@ export const tabs = [
   {
     key: "endgame",
     name: "Endgame",
+    nameKey: "navigation.endgame",
     hideAt: 2.4,
     UIClass: "o-tab-btn--endgame",
     id: 11,
@@ -577,6 +634,7 @@ export const tabs = [
       {
         key: "endgame",
         name: "Endgame",
+        nameKey: "navigation.endgame.endgame",
         symbol: "∮",
         component: "EndgameTab",
         id: 0,
@@ -585,6 +643,7 @@ export const tabs = [
       {
         key: "break-eternity",
         name: "Break Eternity",
+        nameKey: "navigation.endgame.break-eternity",
         symbol: "∇",
         component: "BreakEternityTab",
         id: 1,
@@ -593,6 +652,7 @@ export const tabs = [
       {
         key: "pelle-destruction",
         name: "Pelle Destruction",
+        nameKey: "navigation.endgame.pelle-destruction",
         symbol: "♆",
         component: "PelleDestructionTab",
         id: 2,
@@ -601,6 +661,7 @@ export const tabs = [
       {
         key: "expansion-packs",
         name: "Expansion Packs",
+        nameKey: "navigation.endgame.expansion-packs",
         symbol: "<i class='fas fa-expand-arrows-alt'></i>",
         component: "ExpansionPacksTab",
         id: 3,
@@ -609,6 +670,7 @@ export const tabs = [
       {
         key: "masteries",
         name: "Endgame Masteries",
+        nameKey: "navigation.endgame.masteries",
         symbol: "<i class='fas fa-trophy'></i>",
         component: "EndgameMasteriesTab",
         id: 4,
@@ -617,6 +679,7 @@ export const tabs = [
       {
         key: "milestones",
         name: "Endgame Milestones",
+        nameKey: "navigation.endgame.milestones",
         symbol: "<i class='fas fa-star'></i>",
         component: "EndgameMilestonesTab",
         id: 5,
@@ -625,6 +688,7 @@ export const tabs = [
       {
         key: "upgrades",
         name: "Endgame Upgrades",
+        nameKey: "navigation.endgame.upgrades",
         symbol: "<i class='fas fa-arrow-up'></i>",
         component: "EndgameUpgradesTab",
         condition: () => EndgameUpgrades.isUnlocked,
@@ -634,6 +698,7 @@ export const tabs = [
       {
         key: "power",
         name: "Galactic Power",
+        nameKey: "navigation.endgame.power",
         symbol: "Ω",
         component: "GalacticPowerTab",
         condition: () => GalacticPower.isUnlocked,
@@ -643,6 +708,7 @@ export const tabs = [
       {
         key: "ethereal",
         name: "The Ethereal",
+        nameKey: "navigation.endgame.ethereal",
         symbol: "<i class='fas fa-meteor'></i>",
         component: "EtherealTab",
         condition: () => Ethereal.isUnlocked,
@@ -652,6 +718,7 @@ export const tabs = [
       {
         key: "hypercubes",
         name: "Hypercubes",
+        nameKey: "navigation.endgame.hypercubes",
         symbol: "<i class='fas fa-cubes'></i>",
         component: "HypercubesTab",
         condition: () => DualityUpgrade(25).isBought,
@@ -661,6 +728,7 @@ export const tabs = [
       {
         key: "collider",
         name: "Large Hadron Collider",
+        nameKey: "navigation.endgame.collider",
         symbol: "<i class='fas fa-atom'></i>",
         component: "LargeHadronColliderTab",
         condition: () => ExpansionPack.alphaPack.isBought,
@@ -670,6 +738,7 @@ export const tabs = [
       {
         key: "ascension",
         name: "Ascension",
+        nameKey: "navigation.endgame.ascension",
         symbol: "⤴",
         component: "AscensionTab",
         condition: () => Ascension.isUnlocked,
@@ -679,6 +748,7 @@ export const tabs = [
       {
         key: "compression",
         name: "Time Compression",
+        nameKey: "navigation.endgame.compression",
         symbol: "<i class='fas fa-down-left-and-up-right-to-center'></i>",
         component: "TimeCompressionTab",
         condition: () => PlayerProgress.compressionUnlocked(),
@@ -690,6 +760,7 @@ export const tabs = [
   {
     key: "cdexpansion",
     name: "CD Expansion",
+    nameKey: "navigation.cdexpansion",
     hideAt: 2.4,
     UIClass: "o-tab-btn--cd-expansion",
     id: 12,
@@ -699,6 +770,7 @@ export const tabs = [
       {
         key: "celestial-infinity",
         name: "Celestial Infinity Upgrades",
+        nameKey: "navigation.cdexpansion.celestial-infinity",
         symbol: "<i class='fas fa-infinity'></i>",
         component: "CelestialInfinityUpgradesTab",
         id: 0,
@@ -707,6 +779,7 @@ export const tabs = [
       {
         key: "celestial-break-infinity",
         name: "Celestial Break Infinity",
+        nameKey: "navigation.cdexpansion.celestial-break-infinity",
         symbol: "<i class='fab fa-skyatlas'></i>",
         component: "CelestialBreakInfinityTab",
         condition: () => CelestialInfinityUpgrade.all.filter(u => u.isBought).length === CelestialInfinityUpgrade.all.length ||
@@ -717,6 +790,7 @@ export const tabs = [
       {
         key: "celestial-eternity",
         name: "Celestial Eternity Upgrades",
+        nameKey: "navigation.cdexpansion.celestial-eternity",
         symbol: "<i class='fas fa-hourglass-start'></i>",
         component: "CelestialEternityUpgradesTab",
         condition: () => PlayerProgress.celestialEternityUnlocked(),
@@ -726,6 +800,7 @@ export const tabs = [
       {
         key: "celestial-eternity-plus",
         name: "Celestial Eternity+ Upgrades",
+        nameKey: "navigation.cdexpansion.celestial-eternity-plus",
         symbol: "<i class='fas fa-hourglass-end'></i>",
         component: "CelestialEternityPlusUpgradesTab",
         condition: () => Currency.celestialEternityPoints.gte("1e1000"),
@@ -737,6 +812,7 @@ export const tabs = [
   {
     key: "divinity",
     name: "Divinity",
+    nameKey: "navigation.divinity",
     hideAt: 2.4,
     UIClass: "o-tab-btn--divinity",
     id: 13,
@@ -746,6 +822,7 @@ export const tabs = [
       {
         key: "milestones",
         name: "Divinity Milestones",
+        nameKey: "navigation.divinity.milestones",
         symbol: "<i class='fas fa-star'></i>",
         component: "DivinityMilestonesTab",
         id: 0,
@@ -754,6 +831,7 @@ export const tabs = [
       {
         key: "upgrades",
         name: "Divinity Upgrades",
+        nameKey: "navigation.divinity.upgrades",
         symbol: "<i class='fas fa-arrow-up'></i>",
         component: "DivinityUpgradesTab",
         condition: () => DivinityUpgrades.isUnlocked,
@@ -763,6 +841,7 @@ export const tabs = [
       {
         key: "resurgence",
         name: "Resurgence Upgrades",
+        nameKey: "navigation.divinity.resurgence",
         symbol: "<i class='fas fa-bolt-lightning'></i>",
         component: "ResurgenceUpgradesTab",
         condition: () => ResurgenceUpgrades.isUnlocked,
@@ -774,6 +853,7 @@ export const tabs = [
   {
     key: "universes",
     name: "Universes",
+    nameKey: "navigation.universes",
     hideAt: 2.4,
     UIClass: () => universesUI(player.universes.current),
     id: 14,
@@ -783,6 +863,7 @@ export const tabs = [
       {
         key: "transient",
         name: "Transient Universe",
+        nameKey: "navigation.universes.transient",
         symbol: "<i class='fas fa-stopwatch-20'></i>",
         component: "TransientUniverseTab",
         condition: () => Universes.isUnlocked(1),
@@ -792,6 +873,7 @@ export const tabs = [
       {
         key: "tangible",
         name: "Tangible Universe",
+        nameKey: "navigation.universes.tangible",
         symbol: "℧",
         component: "TangibleUniverseTab",
         condition: () => Universes.isUnlocked(2),

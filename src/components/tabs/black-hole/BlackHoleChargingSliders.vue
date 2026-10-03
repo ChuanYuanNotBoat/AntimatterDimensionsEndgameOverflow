@@ -100,13 +100,16 @@ export default {
       class="l-black-hole-sliders"
     >
       <b>
-        Inverted Black Hole divides game speed by {{ format(negativeBHDivisor, 2, 2) }}.
-        (Currently {{ isInverted ? "active" : "inactive" }}<span
+        <LocalizedText id="ade.e16aafaccc29d664">
+          <template #p0>{{ $legacyText(_s(format(negativeBHDivisor,2,2))) }}</template>
+          <template #p1>{{ $legacyText(_s(isInverted?"active":"inactive")) }}</template>
+          <template #p2><span
           v-if="negativeSlider !== 0 && !isInverted"
           :ach-tooltip="infoTooltip"
         >
           <i class="fas fa-question-circle l-margin-left" />
-        </span>)
+        </span></template>
+        </LocalizedText>
       </b>
       <SliderComponent
         v-if="!isDisabled"
@@ -118,11 +121,10 @@ export default {
         v-else
         class="l-lock-text"
       >
-        {{ reqLockText }}
+        {{ $legacyText(_s(reqLockText)) }}
       </div>
       <br>
-      Inverting the Black Hole only affects its own speedup, no other upgrades or effects, although
-      it will also indirectly affect the Effarig Game speed power effect.
+      {{ $t('ade.34fa985364a4ff63') }}
     </div>
     <br>
     <div
@@ -130,7 +132,7 @@ export default {
       class="l-black-hole-sliders"
     >
       <b>
-        Black Holes will auto-release {{ formatPercents(amountSlider / 500, 2, 1) }} of Stored Game Time per second if Pulse is on.
+        {{ $t('ade.a66e2dea6d075115', { p0: $legacyText(_s(formatPercents(amountSlider/500,2,1))) }) }}
       </b>
       <SliderComponent
         v-if="areExtraSlidersUnlocked"
@@ -140,7 +142,7 @@ export default {
       />
       <br>
       <b>
-        Black Holes currently release Stored Game Time every {{ formatInt(timeSlider) }} ticks of Pulse is on.
+        {{ $t('ade.ba4d505f4f308527', { p0: $legacyText(_s(formatInt(timeSlider))) }) }}
       </b>
       <SliderComponent
         v-if="areExtraSlidersUnlocked"

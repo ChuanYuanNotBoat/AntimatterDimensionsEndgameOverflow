@@ -67,33 +67,33 @@ export default {
       v-if="darkMatter.lt(matterRequirement)"
       class="l-laitela-annihilation-button"
     >
-      Annihilation requires {{ format(matterRequirement, 2) }} Dark Matter
+      {{ $t('ade.5fdc9073da96a233', { p0: $legacyText(_s(format(matterRequirement,2))) }) }}
     </button>
     <button
       v-else
       class="l-laitela-annihilation-button c-laitela-annihilation-button"
       @click="annihilate"
     >
-      <b>Annihilate your Dark Matter Dimensions</b>
+      <b>{{ $t('ade.961b54020dd50c84') }}</b>
     </button>
     <br>
     <br>
     <span v-if="darkMatterMult.gt(1)">
-      Current multiplier to all Dark Matter Dimensions: <b>{{ formatX(darkMatterMult, 2, 2) }}</b>
+      {{ $t('ade.ad469327a649bf60') }} <b>{{ $legacyText(_s(formatX(darkMatterMult, 2, 2))) }}</b>
       <br>
       <br>
-      Annihilation will reset your Dark Matter and Dark Matter Dimension amounts, but also add
-      <b>+{{ format(darkMatterMultGain, 2, 2) }}</b> to your Annihilation multiplier.
+      {{ $t('ade.5f95e9634be1b1cb') }}
+      <b>+{{ $legacyText(_s(format(darkMatterMultGain, 2, 2))) }}</b> to your Annihilation multiplier.
       <br>
-      (<b>{{ formatX(darkMatterMultRatio, 2, 2) }}</b> from previous multiplier)
+      (<b>{{ $legacyText(_s(formatX(darkMatterMultRatio, 2, 2))) }}</b> from previous multiplier)
       <span v-if="autobuyerUnlocked">
         <br>
         <br>
         <span v-if="isBasic">
-          Auto-Annihilate when adding
+          {{ $t('ade.ee377669fe2cb21f') }}
         </span>
         <span v-if="!isBasic">
-          Auto-Annihilate when the pending multiplier is
+          {{ $t('ade.a2fac105ae960c8e') }}
         </span>
         <input
           v-model="autoAnnihilationInput"
@@ -103,16 +103,17 @@ export default {
           @change="handleAutoAnnihilationInputChange()"
         >
         <span v-if="isBasic">
-          to the multiplier.
+          {{ $t('ade.57ae762c7a4a2707') }}
         </span>
         <span v-if="!isBasic">
-          times higher than the current multiplier.
+          {{ $t('ade.a20dab309bcffe4a') }}
         </span>
       </span>
     </span>
     <span v-else>
-      Annihilation will reset your Dark Matter and Dark Matter Dimension amounts, but will give a permanent
-      multiplier of <b>{{ formatX(darkMatterMultGain.add(1), 2, 2) }}</b> to all Dark Matter Dimensions.
+      <LocalizedText id="ade.aa64f59e2f8ac0ea">
+        <template #p0><b>{{ $legacyText(_s(formatX(darkMatterMultGain.add(1), 2, 2))) }}</b></template>
+      </LocalizedText>
     </span>
     <br>
     <br>
@@ -121,7 +122,7 @@ export default {
       class="l-laitela-annihilation-button c-laitela-annihilation-button"
       @click="modeToggle"
     >
-      <b>Toggle Autobuyer Mode</b>
+      <b>{{ $t('ade.c91eb995a24a5993') }}</b>
     </button>
   </div>
 </template>

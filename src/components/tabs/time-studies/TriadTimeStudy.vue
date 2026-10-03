@@ -42,7 +42,7 @@ export default {
       type="studies"
       class="l-hint-text--time-study"
     >
-      {{ id }} Triad
+      {{ $t('ade.ebcbcd2730662860', { p0: $legacyText(_s(id)) }) }}
     </HintText>
     <DescriptionDisplay :config="study.config" />
     <EffectDisplay

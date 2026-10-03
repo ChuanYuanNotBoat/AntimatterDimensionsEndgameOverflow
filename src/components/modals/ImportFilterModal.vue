@@ -101,7 +101,7 @@ export default {
     <template #header>
       Import Glyph filter settings
     </template>
-    Note: Importing Glyph filter options will overwrite settings
+    {{ $t('ade.5c333f8fab8a6faa') }}
     <br>
     in all filter modes, not just the currently-selected one.
     <input
@@ -115,13 +115,13 @@ export default {
     <div class="c-modal-import__save-info">
       <div v-if="!input" />
       <div v-else-if="inputIsValid">
-        <b>Selection mode:</b> {{ selectStr }}
+        <b>{{ $t('ade.f13ac39bc5f9bb0a') }}</b> {{ $legacyText(_s(selectStr)) }}
         <br>
-        <b>Effect Count ("Number of Effects"):</b> {{ basicCountStr }}
+        <b>{{ $t('ade.8124b50e27ed4622') }}</b> {{ $legacyText(_s(basicCountStr)) }}
         <br>
-        <b>Rejected Glyphs:</b> {{ trashStr }}
+        <b>{{ $t('ade.84a505c2f3c8b543') }}</b> {{ $legacyText(_s(trashStr)) }}
         <br>
-        <u><b>Type-specific Settings</b></u> <span :ach-tooltip="settingTooltipText">
+        <u><b>Type-specific Settings</b></u> <span :ach-tooltip="$legacyText(settingTooltipText)">
           <i class="fas fa-question-circle" />
         </span>
         <br>
@@ -135,7 +135,7 @@ export default {
         />
       </div>
       <div v-else>
-        Not a valid Glyph filter string
+        {{ $t('ade.65ee98f7d5f66980') }}
       </div>
     </div>
 
@@ -144,7 +144,7 @@ export default {
       class="o-primary-btn--width-medium c-modal-message__okay-btn c-modal__confirm-btn"
       @click="importFilter"
     >
-      Import
+      {{ $t('ade.1a200b31b133d7d9') }}
     </PrimaryButton>
   </ModalWrapperChoice>
 </template>

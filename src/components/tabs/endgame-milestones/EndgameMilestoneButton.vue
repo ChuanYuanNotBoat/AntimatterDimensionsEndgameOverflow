@@ -52,14 +52,14 @@ export default {
     class="l-endgame-milestone"
   >
     <span class="o-endgame-milestone__goal">
-      {{ quantifyInt("Endgame", endgames) }}:
+      {{ $t('ade.60303819f8e1c679', { p0: $legacyText(_s(quantifyInt("Endgame",endgames))) }) }}
     </span>
     <button
-      v-tooltip="activeCondition"
+      v-tooltip="$legacyTooltip(activeCondition)"
       :class="rewardClassObject"
     >
       <span>
-        {{ reward }}
+        {{ $legacyText(_s(reward)) }}
       </span>
     </button>
   </div>

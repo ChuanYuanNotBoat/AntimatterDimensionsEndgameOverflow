@@ -29,7 +29,7 @@ export default {
 
 <template>
   <span v-if="isUnlocked">
-    🌀{{ id }}:<span v-html="state" />
+    🌀{{ $legacyText(_s(id)) }}:<span v-html="$legacyHtml(state)" />
   </span>
 </template>
 

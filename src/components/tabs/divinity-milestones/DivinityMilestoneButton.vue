@@ -54,10 +54,10 @@ export default {
     class="l-divinity-milestone"
   >
     <span class="o-divinity-milestone__goal">
-      {{ quantifyInt("Divinity", divinities) }}:
+      {{ $legacyText(_s(quantifyInt("Divinity", divinities))) }}:
     </span>
     <button
-      v-tooltip="activeCondition"
+      v-tooltip="$legacyTooltip(activeCondition)"
       :class="rewardClassObject"
     >
       <div
@@ -65,7 +65,7 @@ export default {
         :key="descriptionKey"
         class="c-divinity-reward-description"
       >
-        {{ description }}
+        {{ $legacyText(_s(description)) }}
       </div>
     </button>
   </div>

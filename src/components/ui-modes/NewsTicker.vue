@@ -16,6 +16,7 @@ export default {
   },
   beforeCreate() {
     this.recentTickers = [];
+    this.currentDisplayText = undefined;
   },
   mounted() {
     document.addEventListener("visibilitychange", () => this.restart.bind(this));
@@ -26,7 +27,23 @@ export default {
     this.clearTimeouts();
     if (window.showMessage === this.showMessage) delete window.showMessage;
   },
+  watch: {
+    $i18nRevision() {
+      if (this.currentNews && this.$refs.line) {
+        this.$refs.line.innerHTML = this.newsDisplayText(this.currentDisplayText ?? this.currentNews.text);
+      }
+    }
+  },
   methods: {
+    newsDisplayText(value) {
+      let text = value;
+      if (STEAM) {
+        window.openNewsLink = openExternalLink;
+        text = text.replace(/href=['"]([^"']+)['"]/gu,
+          "href onClick='window.openNewsLink(\"$1\"); return false;'");
+      }
+      return this.$legacyHtml(text, `news:${this.currentNews.id}`);
+    },
     showMessage(id) {
       if (!GameDatabase.news.some(message => message.id === id)) return false;
       nextNewsMessageId = id;
@@ -35,7 +52,8 @@ export default {
     },
     update() {
       if (this.currentNews?.dynamic) {
-        this.$refs.line.innerHTML = this.currentNews.text;
+        this.currentDisplayText = this.currentNews.text;
+        this.$refs.line.innerHTML = this.newsDisplayText(this.currentDisplayText);
       }
       this.enableAnimation = player.options.news.includeAnimated;
     },
@@ -89,15 +107,8 @@ export default {
         this.currentNews.reset();
       }
 
-      let text = this.currentNews.text;
-      if (STEAM) {
-        window.openNewsLink = openExternalLink;
-        text = text.replace(
-          /href=['"]([^"']+)['"]/gu,
-          "href onClick='window.openNewsLink(\"$1\"); return false;'"
-        );
-      }
-      line.innerHTML = text;
+      this.currentDisplayText = this.currentNews.text;
+      line.innerHTML = this.newsDisplayText(this.currentDisplayText);
 
       line.style["transition-duration"] = "0ms";
       if (this.currentNews?.id === "a244" || this.currentNews?.id === "ai63" ||
@@ -137,7 +148,8 @@ export default {
       SecretAchievement(24).unlock();
       const updatedText = this.currentNews.onClick();
       if (updatedText !== undefined) {
-        this.$refs.line.innerHTML = updatedText;
+        this.currentDisplayText = updatedText;
+        this.$refs.line.innerHTML = this.newsDisplayText(updatedText);
       }
     }
   }

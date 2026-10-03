@@ -51,7 +51,7 @@ export default {
       :autobuyer="autobuyer"
       :parent-disabled="parentDisabled"
     />
-    {{ name }}
+    {{ $legacyText(_s(name)) }}
     <AutobuyerIntervalLabel
       v-if="showIndividual"
       :autobuyer="autobuyer"

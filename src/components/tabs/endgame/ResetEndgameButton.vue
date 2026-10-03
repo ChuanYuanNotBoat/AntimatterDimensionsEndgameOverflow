@@ -58,7 +58,7 @@ export default {
     @click="resetEndgame"
   >
     <div class="l-endgame-button__contents">
-      {{ resetText }}
+      {{ $legacyText(_s(resetText)) }}
     </div>
   </button>
 </template>

@@ -33,7 +33,7 @@ export default {
     </template>
     <div class="c-modal-message__text">
       Are you sure you want to respec your Shop Purchases? This will not cost anything and
-      return the {{ returnedSTDCount() }}
+      return the {{ $legacyText(_s(returnedSTDCount())) }}
       <img
         src="images/std_coin.png"
         class="o-shop-button-button__img"

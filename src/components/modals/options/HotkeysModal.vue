@@ -88,11 +88,11 @@ export default {
     <span class="c-modal-hotkeys l-modal-hotkeys">
       <div class="l-modal-hotkeys__column">
         <div class="l-modal-hotkeys-row">
-          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Buy 1 Dimension</span>
+          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.66136f406507e836') }}</span>
           <kbd>SHIFT</kbd><kbd>1</kbd>-<kbd>SHIFT</kbd><kbd>8</kbd>
         </div>
         <div class="l-modal-hotkeys-row">
-          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Buy 10 Dimensions</span>
+          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.19e73dd76fa3994a') }}</span>
           <kbd>1</kbd>-<kbd>8</kbd>
         </div>
         <div
@@ -103,77 +103,80 @@ export default {
             v-if="visible[index - 1]"
             class="l-modal-hotkeys-row"
           >
-            <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ shortcutNames[index - 1] }}</span>
+            <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $legacyText(_s(shortcutNames[index - 1])) }}</span>
             <kbd
               v-for="(key, i) in shortcutKeys[index - 1]"
               :key="i"
             >
-              {{ key }}
+              {{ $legacyText(_s(key)) }}
             </kbd>
           </span>
         </div>
       </div>
       <div class="l-modal-hotkeys__column l-modal-hotkeys__column--right">
         <div class="l-modal-hotkeys-row">
-          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Modifier Key</span>
+          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.a91771d5c91193a1') }}</span>
           <kbd>SHIFT</kbd>
         </div>
         <span class="c-modal-hotkeys__shift-description">
-          Shift is a modifier key that shows additional information on certain things
-          and adjusts the function of certain buttons.
-          <br>
-          {{ moreShiftKeyInfo }}
+          <LocalizedText id="ade.39eabc7178a21959">
+            <template #p0><br></template>
+            <template #p1>{{ $legacyText(_s(moreShiftKeyInfo)) }}</template>
+          </LocalizedText>
         </span>
         <br>
         <div class="l-modal-hotkeys-row">
-          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Autobuyer Controls</span>
+          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.504e813e66734bb5') }}</span>
           <kbd>ALT</kbd>
         </div>
         <span class="c-modal-hotkeys__shift-description">
-          Alt is a modifier key that, when pressed in conjunction with any key that has a corresponding autobuyer,
-          will toggle said autobuyer.
-          <br>
-          When pressing both Alt and Shift, you can toggle buying singles or buying max for the
-          {{ isFlipped ? "Matter" : "Antimatter" }} Dimension and Tickspeed Autobuyers instead.
+          <LocalizedText id="ade.cf91f7b057631a19">
+            <template #p0><br></template>
+            <template #p1>{{ $legacyText(_s(isFlipped?"Matter":"Antimatter")) }}</template>
+          </LocalizedText>
         </span>
         <br>
         <div class="l-modal-hotkeys-row">
-          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Tab Movement</span>
+          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.513984bdf82c12fa') }}</span>
           <div>
             <kbd>←</kbd><kbd>↓</kbd><kbd>↑</kbd><kbd>→</kbd>
           </div>
         </div>
         <span class="c-modal-hotkeys__shift-description">
-          Using the Arrow Keys will cycle you through the game's pages.
-          The Up and Down arrows cycle you through tabs,
-          and the Left and Right arrows cycle you through that tab's subtabs.
+          {{ $t('ade.ebedafcd7346c627') }}
         </span>
         <br>
         <div class="l-modal-hotkeys-row">
-          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Numpad Support</span>
+          <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.b93a55cf35d9c3f0') }}</span>
         </div>
         <span class="c-modal-hotkeys__shift-description">
-          Due to technical reasons, pressing a numpad key will purchase 10 of a Dimension if possible, but pressing
-          a numpad key with <kbd>SHIFT</kbd> will not buy a single Dimension. It may instead, depending on your device,
+          {{ $t('ade.712883a300884b5c') }} <kbd>SHIFT</kbd> will not buy a single Dimension. It may instead, depending on your device,
           cause the page to scroll or change game tabs. <kbd>ALT</kbd> will still work as expected.
         </span>
         <template v-if="isElectron">
           <br>
           <div class="l-modal-hotkeys-row">
-            <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Window Zoom</span>
+            <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.798ba851db0fd6fa') }}</span>
             <kbd>-</kbd><kbd>0</kbd><kbd>+</kbd>
           </div>
           <span class="c-modal-hotkeys__shift-description">
-            To adjust zoom level, hold <kbd>ctrl</kbd> and press either <kbd>-</kbd> or <kbd>+</kbd> to decrease or
-            increase zoom. <kbd>ctrl</kbd><kbd>0</kbd> will reset zoom to 100%.
+            <LocalizedText id="ade.a39f19083b996bb6">
+              <template #p0><kbd>ctrl</kbd></template>
+              <template #p1><kbd>-</kbd></template>
+              <template #p2><kbd>+</kbd></template>
+              <template #p3><kbd>ctrl</kbd></template>
+              <template #p4><kbd>0</kbd></template>
+            </LocalizedText>
           </span>
           <br>
           <div class="l-modal-hotkeys-row">
-            <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">Fullscreen</span>
+            <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.d7d6b3a93a4d2670') }}</span>
             <kbd>F10</kbd>
           </div>
           <span class="c-modal-hotkeys__shift-description">
-            To enter or exit fullscreen, press <kbd>F10</kbd>.
+            <LocalizedText id="ade.859063965c6a3311">
+              <template #p0><kbd>F10</kbd></template>
+            </LocalizedText>
           </span>
         </template>
       </div>

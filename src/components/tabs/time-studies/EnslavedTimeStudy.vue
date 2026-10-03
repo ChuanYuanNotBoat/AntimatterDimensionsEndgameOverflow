@@ -54,10 +54,11 @@ export default {
     @click="handleClick"
   >
     <span>
-      ... you ... have great potential ...
-      <br>
-      <br>
-      Cost: {{ format(-enslavedTT) }} Time Theorems
+      <LocalizedText id="ade.fdcb97323251530d">
+        <template #p0><br></template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(format(-enslavedTT))) }}</template>
+      </LocalizedText>
     </span>
   </button>
 </template>

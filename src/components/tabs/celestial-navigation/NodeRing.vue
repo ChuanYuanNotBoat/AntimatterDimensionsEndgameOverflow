@@ -89,7 +89,7 @@ export default {
       :font-size="symbolFontSize"
       :dy="symbolOffset"
     >
-      {{ symbol }}
+      {{ $legacyText(_s(symbol)) }}
     </text>
   </g>
 </template>

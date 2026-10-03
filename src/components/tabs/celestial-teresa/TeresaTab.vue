@@ -206,17 +206,18 @@ export default {
         :class="disChargeClassObject"
         @click="disCharge = !disCharge"
       >
-        Respec Charged Perk Upgrades on next Endgame
+        {{ $t('ade.0b2032c637135008') }}
       </PrimaryButton>
     </div>
     <div v-if="chargeUnlocked">
-      You have charged {{ formatInt(chargesUsed) }}/{{ formatInt(totalCharges) }} Perk Upgrades.
-      Charged Perk Upgrades have their effect altered.
-      <br>
-      Hold shift to show Charged Perk Upgrades. You can freely respec your choices on Endgame.
+      <LocalizedText id="ade.089429b63fd8f51a">
+        <template #p0>{{ $legacyText(_s(formatInt(chargesUsed))) }}</template>
+        <template #p1>{{ $legacyText(_s(formatInt(totalCharges))) }}</template>
+        <template #p2><br></template>
+      </LocalizedText>
     </div>
     <div>
-      You have {{ quantify("Reality Machine", rm, 2, 2) }}.
+      {{ $t('ade.72a577765e7e40b3', { p0: $legacyText(_s(quantify("Reality Machine",rm,2,2))) }) }}
     </div>
     <div class="l-mechanics-container">
       <div
@@ -225,7 +226,7 @@ export default {
       >
         <div class="c-teresa-unlock c-teresa-run-button">
           <span :class="{ 'o-pelle-disabled': isDoomed }">
-            Start Teresa's Reality.
+            {{ $t('ade.48bf9b2f3bc8119a') }}
           </span>
           <div
             :class="runButtonClassObject"
@@ -233,17 +234,17 @@ export default {
           >
             Ϟ
           </div>
-          {{ runDescription }}
+          {{ $legacyText(_s(runDescription)) }}
           <br><br>
           <div>
-            This Reality can be repeated for a stronger reward based on the {{ isFlipped ? "matter" : "antimatter" }} gained
+            This Reality can be repeated for a stronger reward based on the {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }} gained
             within it.
             <br><br>
             <span v-if="showRunReward">
-              Your record {{ isFlipped ? "matter" : "antimatter" }} in Teresa's Reality is {{ format(bestAM, 2) }},
-              achieved with {{ lastMachinesString }}.
+              Your record {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }} in Teresa's Reality is {{ $legacyText(_s(format(bestAM, 2))) }},
+              achieved with {{ $legacyText(_s(lastMachinesString)) }}.
               <br><br>
-              Glyph Set used:
+              {{ $t('ade.5d138fea5a2c1da7') }}
               <GlyphSetPreview
                 text="Teresa's Best Glyph Set"
                 :text-hidden="true"
@@ -252,7 +253,7 @@ export default {
               />
             </span>
             <span v-else>
-              You have not completed Teresa's Reality yet.
+              {{ $t('ade.1286819cd8a206bc') }}
             </span>
           </div>
         </div>
@@ -260,14 +261,14 @@ export default {
           v-if="showRunReward"
           class="c-teresa-unlock"
         >
-          Teresa Reality reward: Glyph Sacrifice power {{ formatX(runReward, 2, 2) }}
+          {{ $t('ade.153e5ec62de07174', { p0: $legacyText(_s(formatX(runReward,2,2))) }) }}
         </div>
         <div
           v-if="hasEPGen"
           class="c-teresa-unlock"
         >
           <span :class="{ 'o-pelle-disabled': isEPGenDoomed }">
-            Every second, you gain {{ formatPercents(0.01) }} of your peaked Eternity Points per minute this Reality.
+            {{ $t('ade.5ca0fe7ddee76e9d', { p0: $legacyText(_s(formatPercents(0.01))) }) }}
           </span>
         </div>
       </div>
@@ -277,7 +278,7 @@ export default {
           :class="autoClassObject"
           @click="toggleAuto"
         >
-          {{ autoText }}
+          {{ $legacyText(_s(autoText)) }}
         </button>
         <button
           :class="pourButtonClassObject"
@@ -287,7 +288,7 @@ export default {
           @touchend="pour = false"
           @mouseleave="pour = false"
         >
-          {{ pourText }}
+          {{ $legacyText(_s(pourText)) }}
         </button>
         <div class="c-rm-store">
           <div
@@ -299,15 +300,18 @@ export default {
             :style="{ height: percentage}"
           >
             <div class="c-rm-store-label">
-              {{ formatX(rmMult, 2, 2) }} RM gain
-              <br>
-              {{ format(pouredAmount, 2, 2) }}
-              <span v-if="shouldDisplayPourLimit">
-                / {{ format(pouredAmountCap, 2, 2) }}
+              <LocalizedText id="ade.be623b9be1b31f70">
+                <template #p0>{{ $legacyText(_s(formatX(rmMult,2,2))) }}</template>
+                <template #p1><br></template>
+                <template #p2>{{ $legacyText(_s(format(pouredAmount,2,2))) }}</template>
+                <template #p3><span v-if="shouldDisplayPourLimit">
+                / {{ $legacyText(_s(format(pouredAmountCap, 2, 2))) }}
               </span>
-              <span v-else>
-                RM
-              </span>
+<span v-else>
+                {{ $t('ade.8f9f4051b1386abb') }}
+              </span></template>
+              </LocalizedText>
+
             </div>
           </div>
           <CustomizeableTooltip
@@ -340,7 +344,7 @@ export default {
         class="c-teresa-shop"
       >
         <span class="o-teresa-pp">
-          You have {{ quantify("Perk Point", perkPoints, 2, 0) }}.
+          {{ $t('ade.72a577765e7e40b3', { p0: $legacyText(_s(quantify("Perk Point",perkPoints,2,0))) }) }}
         </span>
         <PerkShopUpgradeButton
           v-for="upgrade in upgrades"
@@ -352,9 +356,9 @@ export default {
           class="o-primary-btn--subtab-option"
           @click="chargeView = !chargeView"
         >
-          {{ chargeDisplay }}
+          {{ $legacyText(_s(chargeDisplay)) }}
         </PrimaryButton>
-        You can now modify the appearance of your Glyphs to look like Music Glyphs.
+        {{ $t('ade.8d17a10fea920659') }}
       </div>
       <div
         v-else

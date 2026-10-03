@@ -160,16 +160,16 @@ export default {
         :class="buttonClass()"
         @click="buySingleInfinityDimension"
       >
-        {{ costDisplay }}
+        {{ $legacyText(_s(costDisplay)) }}
         <div class="c-dim-purchase-count-tooltip">
-          {{ capTooltip }}
+          {{ $legacyText(_s(capTooltip)) }}
         </div>
       </PrimaryButton>
       <PrimaryToggleButton
         v-if="isAutobuyerUnlocked && !isEC8Running"
         v-model="isAutobuyerOn"
         class="o-primary-btn--id-auto"
-        label="Auto:"
+        :label="$t('ade.fc5aa8b492c774bf')"
       />
       <PrimaryButton
         v-else
@@ -177,7 +177,7 @@ export default {
         :class="maxButtonClass()"
         @click="buyMaxInfinityDimension"
       >
-        Buy Max
+        {{ $t('ade.552c8c001016ab0a') }}
       </PrimaryButton>
     </div>
   </div>

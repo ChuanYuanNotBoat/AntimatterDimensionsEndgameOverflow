@@ -88,7 +88,7 @@ export default {
     :class="[classObject, masteryClass]"
     :style="styleObject"
   >
-    {{ masteryString }}
+    {{ $legacyText(_s(masteryString)) }}
   </button>
 </template>
 

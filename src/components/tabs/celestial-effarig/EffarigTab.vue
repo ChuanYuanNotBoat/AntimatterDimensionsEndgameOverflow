@@ -114,39 +114,43 @@ export default {
     <div class="l-effarig-shop-and-run">
       <div class="l-effarig-shop">
         <div class="c-effarig-relics">
-          You have {{ quantify("Relic Shard", relicShards, 2, 0) }}.
+          {{ $t('ade.72a577765e7e40b3', { p0: $legacyText(_s(quantify("Relic Shard",relicShards,2,0))) }) }}
           <br>
           <span v-if="relicShardRarityAlwaysMax">
-            The rarity of new Glyphs is being increased by +{{ formatDecimalPercents(shardRarityBoost, 2) }}.
+            The rarity of new Glyphs is being increased by +{{ $legacyText(_s(formatDecimalPercents(shardRarityBoost, 2))) }}.
           </span>
           <span v-else>
             Each new Glyph will have its rarity increased
             <br>
-            by a random value between +{{ formatPercents(0) }} and +{{ formatDecimalPercents(shardRarityBoost, 2) }}.
+            by a random value between +{{ $legacyText(_s(formatPercents(0))) }} and +{{ $legacyText(_s(formatDecimalPercents(shardRarityBoost, 2))) }}.
           </span>
           <span v-if="shardPower.gt(1)">
-            <br>
-            Glyph Sacrifice gain is also being raised to {{ formatPow(shardPower, 0, 2) }}.
+            <LocalizedText id="ade.8b7a451ab20f2a16">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(formatPow(shardPower,0,2))) }}</template>
+  </LocalizedText>
           </span>
           <span v-if="shardMaxRarityIncrease.gt(0)">
             <br>
-            The Glyph Rarity cap is also being increased by +{{ formatDecimalPercents(shardMaxRarityIncrease, 2) }}.
+            The Glyph Rarity cap is also being increased by +{{ $legacyText(_s(formatDecimalPercents(shardMaxRarityIncrease, 2))) }}.
           </span>
         </div>
         <div class="c-effarig-relic-description">
-          You will gain {{ quantify("Relic Shard", shardsGained, 2) }} next Reality
-          ({{ format(currentShardsRate, 2) }}/min).
-          <span v-if="amplification.gt(0)">
+          <LocalizedText id="ade.966c58f5a9f8a8fd">
+            <template #p0>{{ $legacyText(_s(quantify("Relic Shard",shardsGained,2))) }}</template>
+            <template #p1>{{ $legacyText(_s(format(currentShardsRate,2))) }}</template>
+            <template #p2><span v-if="amplification.gt(0)">
             <br>
-            Due to amplification of your current Reality,
+            {{ $t('ade.d2cfd600a36d6045') }}
             <br>
             you will actually gain a total of
-            {{ quantify("Relic Shard", amplifiedShards, 2) }} ({{ format(amplifiedShardsRate, 2) }}/min).
-          </span>
+            {{ $legacyText(_s(quantify("Relic Shard", amplifiedShards, 2))) }} ({{ $legacyText(_s(format(amplifiedShardsRate, 2))) }}/min).
+          </span></template>
+          </LocalizedText>
         </div>
         <div class="c-effarig-relic-description">
           <br>
-          More Eternity Points slightly increases Relic Shards
+          {{ $t('ade.fce0f6e48755a88f') }}
           <br>
           gained. More distinct Glyph effects significantly
           <br>
@@ -166,7 +170,7 @@ export default {
           class="c-effarig-shop-button c-effarig-shop-button--available"
           @click="createCursedGlyph"
         >
-          Get a Cursed Glyph...
+          {{ $t('ade.906ee4e1d44b75d8') }}
         </button>
       </div>
       <div
@@ -175,7 +179,7 @@ export default {
       >
         <div class="c-effarig-run-description">
           <span :class="{ 'o-pelle-disabled': isDoomed }">
-            Enter Effarig's Reality.
+            {{ $t('ade.1648b59b1d7b2bdd') }}
           </span>
         </div>
         <div
@@ -186,11 +190,11 @@ export default {
             :class="runButtonInnerClass"
             :button-symbol="symbol"
           >
-            {{ symbol }}
+            {{ $legacyText(_s(symbol)) }}
           </div>
         </div>
         <div class="c-effarig-run-description">
-          {{ runDescription }}
+          {{ $legacyText(_s(runDescription)) }}
         </div>
         <EffarigRunUnlockReward
           v-for="(runRewardUnlock, j) in runUnlocks"

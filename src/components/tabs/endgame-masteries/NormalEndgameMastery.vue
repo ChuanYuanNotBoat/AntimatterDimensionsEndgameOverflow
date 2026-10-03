@@ -46,7 +46,7 @@ export default {
       type="masteries"
       class="l-hint-text--endgame-mastery"
     >
-      {{ hintText }}
+      {{ $legacyText(_s(hintText)) }}
     </HintText>
     <span>
       <DescriptionDisplay

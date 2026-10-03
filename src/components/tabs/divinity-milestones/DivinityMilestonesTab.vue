@@ -36,7 +36,7 @@ export default {
 
 <template>
   <div class="l-divinity-milestone-grid">
-    <div class="o-divinity-amount">You have {{ quantify("Divinity", divinityCount, 3) }}.</div>
+    <div class="o-divinity-amount">{{ $t('ade.ae5c9b4f89fb6342', { p0: $legacyText(_s(quantify("Divinity",divinityCount,3))) }) }}</div>
     <div
       v-for="row in rows"
       :key="row"
@@ -50,7 +50,7 @@ export default {
       />
     </div>
     <div v-if="showNewFeature">
-      <span class="o-divinity-amount">Reach {{ formatInt(13) }} Divinities to unlock Universes.</span>
+      <span class="o-divinity-amount">{{ $t('ade.df67139800597fd0', { p0: $legacyText(_s(formatInt(13))) }) }}</span>
     </div>
   </div>
 </template>

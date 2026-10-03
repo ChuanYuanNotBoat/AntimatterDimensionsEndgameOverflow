@@ -161,7 +161,7 @@ export default {
             for="autoRestart"
             class="o-clickable"
           >
-            Repeat this Celestial's Reality
+            {{ $t('ade.bdfb9c4a6c89de45') }}
           </label>
         </div>
 
@@ -171,32 +171,32 @@ export default {
 
         <div v-if="showInstability">
           <br>
-          Glyphs are becoming unstable.
+          {{ $t('ade.f5d6b21544e9adcd') }}
           <br>
-          Glyph levels higher than {{ formatInt(instabilityThreshold) }} are harder to reach.
+          {{ $t('ade.24f33e7ca9fa0193', { p0: $legacyText(_s(formatInt(instabilityThreshold))) }) }}
           <br>
-          This effect is even stronger above level {{ formatInt(hyperInstabilityThreshold) }}.
+          {{ $t('ade.abd8210f19d6e02a', { p0: $legacyText(_s(formatInt(hyperInstabilityThreshold))) }) }}
           <br>
           <div v-if="showHigherInstability">
-            Above level {{ formatInt(extremeInstabilityThreshold) }}, higher Glyph levels are nearly impossible to reach.
+            {{ $t('ade.a193903da4774f94', { p0: $legacyText(_s(formatInt(extremeInstabilityThreshold))) }) }}
           </div>
           <div v-if="showMoreHigherInstability">
-            Past level {{ formatInt(immenseInstabilityThreshold) }}, higher Glyph levels become not much more than a dream.
+            {{ $t('ade.76c2ced6d8589bff', { p0: $legacyText(_s(formatInt(immenseInstabilityThreshold))) }) }}
           </div>
           <div v-if="showEvenMoreHigherInstability">
-            Beyond level {{ formatInt(extensiveInstabilityThreshold) }}, just pretend higher Glyph levels don't exist.
+            {{ $t('ade.a0b686780fbe1824', { p0: $legacyText(_s(formatInt(extensiveInstabilityThreshold))) }) }}
           </div>
           <div v-if="showStillEvenMoreHigherInstability">
-            Upon exceeding level {{ formatInt(prodigiousInstabilityThreshold) }}, your Glyph Levels just die.
+            {{ $t('ade.24541aac084808cc', { p0: $legacyText(_s(formatInt(prodigiousInstabilityThreshold))) }) }}
           </div>
           <div v-if="showHighestInstability">
-            After surpassing level {{ formatInt(ultimateInstabilityThreshold) }}, your Glyph Level increase reaches an abrupt end.
+            {{ $t('ade.317bacf427b0d176', { p0: $legacyText(_s(formatInt(ultimateInstabilityThreshold))) }) }}
           </div>
         </div>
         <SingleGlyphCustomzationPanel />
         <ExpandingControlBox
           width-source="content"
-          label="Glyph Level Factors"
+          :label="$t('ade.69e1acd8e6e20e7f')"
           container-class="c-glyph-level-factors-dropdown-header"
           class="l-glyph-level-factors"
         >
@@ -210,7 +210,7 @@ export default {
         <div
           v-if="showEnslavedHint"
           class="o-teresa-quotes"
-          v-html="enslavedHint"
+          v-html="$legacyHtml(enslavedHint)"
         />
         <div class="l-equipped-glyphs-and-effects-container">
           <EquippedGlyphs />
@@ -235,13 +235,13 @@ export default {
                 :class="glyphInfoClass(!sacrificeDisplayed)"
                 @click="setInfoState(false)"
               >
-                Current Glyph effects
+                {{ $t('ade.71986f5a05a035a2') }}
               </button>
               <button
                 :class="glyphInfoClass(sacrificeDisplayed)"
                 @click="setInfoState(true)"
               >
-                Glyph Sacrifice totals
+                {{ $t('ade.0d5188c5a01a4bae') }}
               </button>
             </div>
             <SacrificedGlyphs v-if="sacrificeUnlocked && sacrificeDisplayed" />

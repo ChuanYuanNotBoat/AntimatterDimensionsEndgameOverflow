@@ -61,11 +61,11 @@ export default {
       {{ topLabel }}
     </template>
     <div class="c-modal-message__text">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
     <br>
     <div class="c-modal-hard-reset-danger">
-      {{ extraMessage }}
+      {{ $legacyText(_s(extraMessage)) }}
     </div>
   </ModalWrapperChoice>
 </template>

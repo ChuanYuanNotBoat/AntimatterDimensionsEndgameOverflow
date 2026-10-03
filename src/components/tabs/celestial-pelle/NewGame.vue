@@ -40,40 +40,37 @@ export default {
     :style="style"
   >
     <h2>
-      Are you sure you want to Endgame? Endgame will reset the entire game, but keep Record Antimatter, Automator Scripts, Study Presets, Secret Themes,
-      Normal/Secret Achievements (only Rows 19+ for Normal Achievements), Options, and Companion Glyphs.
+      {{ $t('ade.9793601bd3733d7e') }}
     </h2>
-    <h3>You can use the button in the top-right to view the game as it is right now.</h3>
+    <h3>{{ $t('ade.a5f7805c4d05ada0') }}</h3>
     <div class="c-new-game-button-container">
       <button
         class="c-new-game-button"
         @click="startNewGame"
       >
-        Enter The Endgame
+        {{ $t('ade.a6a341e1bc7b1ff2') }}
       </button>
     </div>
     <br>
     <h3 v-if="hasMoreCosmetics">
-      For completing the vanilla game, you also unlock a new cosmetic set of your choice for Glyphs. These are freely
-      modifiable once you reach Reality again, but are purely visual and offer no gameplay bonuses.
+      {{ $t('ade.abb5f5be4b7cb277') }}
       <br>
       <button
         class="c-new-game-button"
         @click="openSelectionModal"
       >
-        Choose Cosmetic Set
+        {{ $t('ade.b111fcb50875c678') }}
       </button>
       <br>
       <br>
-      Selected Set: {{ selectedSetName }}
+      {{ $t('ade.57303db4d991dfba', { p0: $legacyText(_s(selectedSetName)) }) }}
     </h3>
     <h3 v-else>
-      You have unlocked all Glyph cosmetic sets!
+      {{ $t('ade.4978ea0c1597aa85') }}
     </h3>
     <br>
     <h3>
-      You can also import "speedrun" to start the game again with additional tracking for speedrunning purposes, however,
-      this may reset progress up to Endgame.
+      {{ $t('ade.0a8056895a9c3884') }}
     </h3>
   </div>
 </template>

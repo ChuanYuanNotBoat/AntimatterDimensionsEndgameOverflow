@@ -77,8 +77,7 @@ export default {
   <div class="l-challenges-tab">
     <ChallengeTabHeader />
     <div v-if="isAutoECVisible">
-      Eternity Challenges are automatically completed sequentially, requiring all previous
-      Eternity Challenges to be fully completed before any progress is made.
+      {{ $t('ade.89375da4fd09fd9c') }}
     </div>
     <div
       v-if="isAutoECVisible && remainingECTiers > 0"
@@ -89,30 +88,32 @@ export default {
           v-if="hasUpgradeLock"
           class="l-emphasis"
         >
-          Auto EC is currently disabled because of the "{{ upgradeLockNameText }}" upgrade requirement lock.
+          {{ $t('ade.a56fe6d07060ea1f', { p0: $legacyText(_s(upgradeLockNameText)) }) }}
         </span>
         <span v-if="remainingECTiers > 0">
-          Next Auto Eternity Challenge completion: {{ nextECText }}
+          {{ $t('ade.05570f163e46bcd9', { p0: $legacyText(_s(nextECText)) }) }}
         </span>
         <span>
-          All Auto Eternity Challenge completions: {{ allECText }}
+          {{ $t('ade.4c01a65ca9d9434b', { p0: $legacyText(_s(allECText)) }) }}
         </span>
         <br>
       </div>
     </div>
     <div>
-      Complete Eternity Challenges again for a bigger reward, maximum of {{ formatInt(5) }} times.<br>
-      The rewards are applied permanently with no need to have the respective Eternity Challenge Time Study purchased.
+      <LocalizedText id="ade.e9514efbaab73600">
+        <template #p0>{{ $legacyText(_s(formatInt(5))) }}</template>
+        <template #p1><br></template>
+      </LocalizedText>
     </div>
     <div v-if="!hasECR">
-      When you respec out of an unlocked Eternity Challenge, you don't need to redo the secondary requirement<br>
+      {{ $t('ade.aeadd535b786d1a1') }}<br>
       in order to unlock it again until you complete it; only the Time Theorems are required.
     </div>
     <div v-if="unlockedCount !== 12">
-      You have seen {{ formatInt(unlockedCount) }} out of {{ formatInt(12) }} Eternity Challenges.
+      {{ $t('ade.211d65d64b389cb9', { p0: $legacyText(_s(formatInt(unlockedCount))), p1: $legacyText(_s(formatInt(12))) }) }}
     </div>
     <div v-else>
-      You have seen all {{ formatInt(12) }} Eternity Challenges.
+      {{ $t('ade.7d87a44fa69741a3', { p0: $legacyText(_s(formatInt(12))) }) }}
     </div>
     <ChallengeGrid
       v-slot="{ challenge }"

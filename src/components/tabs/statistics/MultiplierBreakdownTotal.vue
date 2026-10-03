@@ -58,5 +58,5 @@ export default {
 </script>
 
 <template>
-  <span>{{ text }}</span>
+  <span>{{ $legacyText(_s(text)) }}</span>
 </template>

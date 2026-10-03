@@ -111,11 +111,11 @@ export default {
         label="Disable in-app-purchases:"
         @click="toggleEnable()"
       >
-        {{ enableText }}
+        {{ $legacyText(_s(enableText)) }}
       </PrimaryButton>
       <PrimaryButton
         v-if="!STEAM"
-        v-tooltip="respecText"
+        v-tooltip="$legacyTooltip(respecText)"
         :class="respecClass()"
         @click="respec()"
       >
@@ -123,7 +123,7 @@ export default {
       </PrimaryButton>
     </div>
     <div v-if="loggedIn && !canRespec && !STEAM">
-      Time until respec available: {{ respecTimeStr }}
+      Time until respec available: {{ $legacyText(_s(respecTimeStr)) }}
     </div>
     <div
       v-if="loggedIn"
@@ -156,7 +156,7 @@ export default {
       </button>
     </div>
     <div class="c-shop-header">
-      <span>You have {{ availableSTD }}</span>
+      <span>You have {{ $legacyText(_s(availableSTD)) }}</span>
       <img
         src="images/std_coin.png"
         class="c-shop-header__img"

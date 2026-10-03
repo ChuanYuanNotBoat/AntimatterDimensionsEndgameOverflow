@@ -79,45 +79,41 @@ export default {
       Modifying Glyph RNG Seed
     </template>
     <div>
-      All Glyph options beyond the first Reality for an entire playthrough are randomly determined from the very
-      beginning, based on the value of an initial seed number. The role of this seed is that it chooses a single,
-      <i>particular</i> set of Glyph options for your playthrough. If you or anyone else chooses the same seed
-      in a different run, you will get the same options for Glyphs.
+      {{ $t('ade.7230fff6da25bae8') }}
+      <i>{{ $t('ade.948a434650d61b1d') }}</i> {{ $t('ade.82717a64aa168842') }}
       <br>
       <br>
-      You can switch between these three options any point before you generate your first Glyph.
+      {{ $t('ade.9a999b51844e3e49') }}
       <br>
-      Current Setting: <b>{{ seedText }}</b>
+      {{ $t('ade.18b12c94dee3f488') }} <b>{{ $legacyText(_s(seedText)) }}</b>
       <br>
       <br>
       <PrimaryButton
         :class="buttonClass(choiceEnum.FIXED)"
         @click="setMode(choiceEnum.FIXED)"
       >
-        Official Preset Seed
+        {{ $t('ade.70c53ec6b77035bf') }}
       </PrimaryButton>
       <br>
-      This is the default option which chooses the seed <b>{{ officialSeed }}</b>. Anyone who
-      chooses to not modify the seed at all will get these Glyph options.
+      {{ $t('ade.bfae15a4549c77a6') }} <b>{{ $legacyText(_s(officialSeed)) }}</b>{{ $t('ade.f20c901e9dbdf856') }}
       <br>
       <br>
       <PrimaryButton
         :class="buttonClass(choiceEnum.RANDOM)"
         @click="setMode(choiceEnum.RANDOM)"
       >
-        Randomized Seed
+        {{ $t('ade.ed867707b15ec2d0') }}
       </PrimaryButton>
       <br>
-      This selects a completely randomized seed value, producing Glyph options which are very likely to be
-      different from anyone else's playthrough unless they intentionally choose the same value.
+      {{ $t('ade.69eed6486dbf1355') }}
       <br>
       <br>
       <PrimaryButton
-        v-tooltip="seedValue === 0 ? 'Input seed cannot be zero!' : ''"
+        v-tooltip="$legacyTooltip(seedValue === 0 ? 'Input seed cannot be zero!' : '')"
         :class="buttonClass(choiceEnum.PLAYER)"
         @click="setMode(choiceEnum.PLAYER, seedValue)"
       >
-        Player-selected Seed:
+        {{ $t('ade.fe9e40d21b73a789') }}
       </PrimaryButton>
       <input
         ref="inputSeed"
@@ -127,17 +123,16 @@ export default {
         @input="handleSeedInput()"
       >
       <br>
-      This option sets your seed to the value you type into the text box.
+      {{ $t('ade.8f607aee519f4e66') }}
       <br>
       <span v-if="seedValue !== 0">
-        Your current input will be {{ convertedInput ? "converted to" : "used as" }} the number <b>{{ seedValue }}</b>.
+        Your current input will be {{ $legacyText(_s(convertedInput ? "converted to" : "used as")) }} the number <b>{{ $legacyText(_s(seedValue)) }}</b>.
       </span>
       <span v-else>
-        Your current input {{ convertedInput ? "converts to" : "is equal to" }} <b>0</b>;
-        the seed will default to Official Preset.
+        Your current input {{ $legacyText(_s(convertedInput ? "converts to" : "is equal to")) }} <b>0</b>{{ $t('ade.bff67754fed9ef02') }}
       </span>
       <br>
-      For technical reasons, this value must be must be non-zero to be accepted.
+      {{ $t('ade.2f7b9877aaecd55a') }}
     </div>
   </ModalWrapper>
 </template>

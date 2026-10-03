@@ -57,21 +57,21 @@ export default {
       <div class="l-endgame-button__contents">
         <template v-if="canEndgame">
           <div class="c-endgame-button__header">
-            Enter the Endgame
+            {{ $t('ade.d1f77184b56b2dd2') }}
           </div>
-          <div>{{ formatCPGain }}</div>
-          <div>{{ formatDPGain }}</div>
+          <div>{{ $legacyText(_s(formatCPGain)) }}</div>
+          <div>{{ $legacyText(_s(formatDPGain)) }}</div>
         </template>
         <template v-else>
           <div>
-            Reach {{ format("e9e15", 2, 2) }} {{ isFlipped ? "Matter" : "Antimatter" }} to unlock the ability to Enter the Endgame
+            {{ $t('ade.1017e673f528e424', { p0: $legacyText(_s(format("e9e15",2,2))), p1: $legacyText(_s(isFlipped?"Matter":"Antimatter")) }) }}
           </div>
         </template>
         <div
           v-if="canEndgame"
           class="infotooltiptext"
         >
-          <div>Another End, and a New Beginning...</div>
+          <div>{{ $t('ade.6b8d954ec075b802') }}</div>
         </div>
       </div>
     </button>

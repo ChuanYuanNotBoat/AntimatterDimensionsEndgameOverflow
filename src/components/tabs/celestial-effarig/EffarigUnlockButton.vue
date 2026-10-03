@@ -57,7 +57,7 @@ export default {
       label=""
     />
     <div v-else>
-      (Unlocked)
+      {{ $t('ade.e63cf3ae5adcd686') }}
     </div>
   </button>
 </template>

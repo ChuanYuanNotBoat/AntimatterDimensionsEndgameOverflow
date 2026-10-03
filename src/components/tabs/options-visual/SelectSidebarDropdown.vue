@@ -23,7 +23,7 @@ export default {
         class="o-primary-btn l-select-theme__item c-select-theme__item"
         @click="setResource(0)"
       >
-        Latest Resource
+        {{ $t('ade.638abddac859586c') }}
       </div>
       <div
         v-for="res in resources"
@@ -31,7 +31,7 @@ export default {
         class="o-primary-btn l-select-theme__item c-select-theme__item"
         @click="setResource(res.id)"
       >
-        {{ res.optionName }}
+        {{ $legacyText(_s(res.optionName)) }}
       </div>
     </div>
   </div>

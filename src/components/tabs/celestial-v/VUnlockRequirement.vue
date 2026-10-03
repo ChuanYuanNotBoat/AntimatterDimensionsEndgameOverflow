@@ -50,6 +50,6 @@ export default {
       class="c-v-unlock-bar__progress"
       :style="barProgressStyle"
     />
-    {{ dbEntry.format(resource) }} / {{ dbEntry.format(dbEntry.requirement) }} {{ dbEntry.name }}
+    {{ $legacyText(_s(dbEntry.format(resource))) }} / {{ $legacyText(_s(dbEntry.format(dbEntry.requirement))) }} {{ $legacyText(_s(dbEntry.name)) }}
   </div>
 </template>

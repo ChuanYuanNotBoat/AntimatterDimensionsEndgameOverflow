@@ -83,11 +83,18 @@ export default {
       @mouseleave="isHovering = false"
     >
       <span>
-        You have <span v-if="showPending && canReset">▲</span>{{ format(displayedAmount, 2, 2) }} {{ name }} Stars
+        <LocalizedText id="ade.1808194c70bb0379">
+          <template #p0><span v-if="showPending && canReset">▲</span></template>
+          <template #p1>{{ $legacyText(_s(format(displayedAmount,2,2))) }}</template>
+          <template #p2>{{ $legacyText(_s(name)) }}</template>
+        </LocalizedText>
       </span>
       <br>
       <span>
-        Effect: <span v-if="showPending && canReset">▲</span>{{ description }}
+        <LocalizedText id="ade.4a8c53b4b2736a7c">
+          <template #p0><span v-if="showPending && canReset">▲</span></template>
+          <template #p1>{{ $legacyText(_s(description)) }}</template>
+        </LocalizedText>
       </span>
       <br>
       <br>
@@ -96,7 +103,7 @@ export default {
         class="o-reset-btn"
         @click="starReset"
       >
-        {{ resetText }}
+        {{ $legacyText(_s(resetText)) }}
       </PrimaryButton>
     </button>
   </div>

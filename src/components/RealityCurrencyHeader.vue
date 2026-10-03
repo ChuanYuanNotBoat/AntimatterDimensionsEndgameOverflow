@@ -33,11 +33,12 @@ export default {
 
 <template>
   <div class="c-reality-currency">
-    You have
-    <b :class="resourceClass()">
-      {{ currencyValue }}
-    </b>
-    {{ currencyName }}.
+    <LocalizedText id="ade.cd1ff500c8f2ac78">
+      <template #p0><b :class="resourceClass()">
+      {{ $legacyText(_s(currencyValue)) }}
+    </b></template>
+      <template #p1>{{ $legacyText(_s(currencyName)) }}</template>
+    </LocalizedText>
   </div>
 </template>
 

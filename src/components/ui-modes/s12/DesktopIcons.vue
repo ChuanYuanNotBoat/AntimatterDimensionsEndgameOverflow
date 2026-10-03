@@ -51,7 +51,7 @@ export default {
           class="c-s12-desktop-icon__img"
         >
         <div class="c-s12-desktop-icon__text">
-          {{ icon.name }}
+          {{ $legacyText(_s(icon.name)) }}
         </div>
       </div>
     </div>

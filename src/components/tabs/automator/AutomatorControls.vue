@@ -121,42 +121,42 @@ export default {
     <div class="c-automator-control-row l-automator-button-row">
       <div class="c-button-group">
         <AutomatorButton
-          v-tooltip="'Rewind Automator to the first command'"
+          v-tooltip="$legacyTooltip('Rewind Automator to the first command')"
           class="fa-fast-backward"
           @click="rewind"
         />
         <AutomatorButton
-          v-tooltip="{
+          v-tooltip="$legacyTooltip({
             content: playTooltip,
             hideOnTargetClick: false
-          }"
+          })"
           :class="playButtonClass"
           @click="play"
         />
         <AutomatorButton
-          v-tooltip="'Stop Automator and reset position'"
+          v-tooltip="$legacyTooltip('Stop Automator and reset position')"
           class="fa-stop"
           @click="stop"
         />
         <AutomatorButton
-          v-tooltip="'Step forward one line'"
+          v-tooltip="$legacyTooltip('Step forward one line')"
           class="fa-step-forward"
           @click="step"
         />
         <AutomatorButton
-          v-tooltip="'Restart script automatically when it reaches the end'"
+          v-tooltip="$legacyTooltip('Restart script automatically when it reaches the end')"
           class="fa-sync-alt"
           :class="{ 'c-automator__button--active' : repeatOn }"
           @click="repeat"
         />
         <AutomatorButton
-          v-tooltip="'Automatically restart the active script when finishing or restarting a Reality'"
+          v-tooltip="$legacyTooltip('Automatically restart the active script when finishing or restarting a Reality')"
           class="fa-reply"
           :class="{ 'c-automator__button--active' : forceRestartOn }"
           @click="restart"
         />
         <AutomatorButton
-          v-tooltip="'Scroll Automator to follow current line'"
+          v-tooltip="$legacyTooltip('Scroll Automator to follow current line')"
           class="fa-indent"
           :class="{ 'c-automator__button--active' : followExecution }"
           @click="follow"
@@ -166,18 +166,18 @@ export default {
           class="c-automator__status-text c-automator__status-text--small"
           :class="{ 'c-automator__status-text--error' : currentChars > maxScriptChars }"
         >
-          This script: {{ formatInt(currentChars) }}/{{ formatInt(maxScriptChars) }}
+          {{ $t('ade.584485e26738cfa1', { p0: $legacyText(_s(formatInt(currentChars))), p1: $legacyText(_s(formatInt(maxScriptChars))) }) }}
         </span>
       </div>
       <div class="c-button-group">
         <AutomatorButton
-          v-tooltip="'Undo'"
+          v-tooltip="$legacyTooltip('Undo')"
           class="fa-arrow-rotate-left"
           :class="{ 'c-automator__button--inactive' : !hasUndo }"
           @click="undo"
         />
         <AutomatorButton
-          v-tooltip="'Redo'"
+          v-tooltip="$legacyTooltip('Redo')"
           class="fa-arrow-rotate-right"
           :class="{ 'c-automator__button--inactive' : !hasRedo }"
           @click="redo"
@@ -188,24 +188,24 @@ export default {
     <div class="l-automator-button-row">
       <span
         v-if="duplicateStatus"
-        v-tooltip="'More than one script has this name!'"
+        v-tooltip="$legacyTooltip('More than one script has this name!')"
         class="fas fa-exclamation-triangle c-automator__status-text c-automator__status-text--error"
       />
       <span
         v-if="editingDifferentScript"
-        v-tooltip="'The automator is running a different script than the editor is showing'"
+        v-tooltip="$legacyTooltip('The automator is running a different script than the editor is showing')"
         class="fas fa-circle-exclamation c-automator__status-text c-automator__status-text--warning"
       />
       <span
         v-if="justCompleted"
-        v-tooltip="'The automator completed running the previous script'"
+        v-tooltip="$legacyTooltip('The automator completed running the previous script')"
         class="fas fa-circle-check c-automator__status-text"
       />
       <span
         class="c-automator__status-text"
         :class="{ 'c-automator__status-text--error' : hasErrors && !(isRunning || isPaused) }"
       >
-        {{ statusText }}
+        {{ $legacyText(_s(statusText)) }}
       </span>
     </div>
   </div>

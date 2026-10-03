@@ -1,10 +1,11 @@
-name: i18n foundation
+name: i18n and overflow regressions
 
 on:
   pull_request:
   push:
     branches:
       - feat/i18n-foundation
+      - feat/i18n-adechinese-sync
 
 permissions:
   contents: read
@@ -21,4 +22,5 @@ jobs:
       - run: npm ci --legacy-peer-deps --ignore-scripts --no-audit --no-fund
       - run: npm run i18n:check
       - run: npm run test:i18n
+      - run: node --test tests/ethereal-sector-number-boundary.test.cjs
       - run: node node_modules/@vue/cli-service/bin/vue-cli-service.js build --mode master

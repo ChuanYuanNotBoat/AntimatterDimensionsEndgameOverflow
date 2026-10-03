@@ -217,7 +217,7 @@ export const automatorBlocksMap = automatorBlocks.mapToObject(b => b.cmd, b => b
     <p>
       Inputs with a <span class="c-automator-input-optional">brown</span> color are optional, while inputs with a
       <span class="c-automator-input-required">teal</span> color are required.
-      <span class="c-automator-block-row-error">Red</span> inputs are causing errors and must be changed before the
+      <span class="c-automator-block-row-error">{{ $t('ade.efa6f19b45472f21') }}</span> inputs are causing errors and must be changed before the
       script can be run. For more details, check the Scripting Information pane.
     </p>
     <p>
@@ -234,10 +234,10 @@ export const automatorBlocksMap = automatorBlocks.mapToObject(b => b.cmd, b => b
       <div
         v-for="block in blocks"
         :key="block.id"
-        v-tooltip="block.alias"
+        v-tooltip="$legacyTooltip(block.alias)"
         class="o-automator-command o-automator-block-list draggable-blocks"
       >
-        {{ block.cmd }}
+        {{ $legacyText(_s(block.cmd)) }}
       </div>
     </draggable>
     <p>

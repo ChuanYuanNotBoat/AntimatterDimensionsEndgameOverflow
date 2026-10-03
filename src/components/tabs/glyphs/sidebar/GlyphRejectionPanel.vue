@@ -39,7 +39,7 @@ export default {
 <template>
   <div class="l-glyph-sacrifice-options c-glyph-sacrifice-options l-glyph-sidebar-panel-size">
     <span class="c-glyph-sacrifice-options__advanced">
-      Behavior for deleted and filtered Glyphs:
+      {{ $t('ade.d288dc7dd863cf58') }}
     </span>
     <br>
     <div class="l-glyph-auto-pick-options__container">
@@ -49,7 +49,7 @@ export default {
         :class="optionClass(modeID)"
         @click="setMode(modeID)"
       >
-        {{ modeDesc(modeID) }}
+        {{ $legacyText(_s(modeDesc(modeID))) }}
       </div>
     </div>
   </div>

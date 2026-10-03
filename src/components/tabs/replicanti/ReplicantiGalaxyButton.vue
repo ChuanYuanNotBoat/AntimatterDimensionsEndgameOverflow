@@ -70,15 +70,17 @@ export default {
       class="o-primary-btn--replicanti-galaxy"
       @click="handleClick"
     >
-      {{ resetActionDisplay }} for a Replicanti Galaxy
-      <br>
-      {{ galaxyCountDisplay }}
+      <LocalizedText id="ade.9e481fa3ab88e046">
+        <template #p0>{{ $legacyText(_s(resetActionDisplay)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(galaxyCountDisplay)) }}</template>
+      </LocalizedText>
     </PrimaryButton>
     <PrimaryToggleButton
       v-if="isAutoUnlocked"
       :value="isAutoActive"
-      :on="autobuyerTextDisplay"
-      :off="autobuyerTextDisplay"
+      :on="$legacyText(autobuyerTextDisplay)"
+      :off="$legacyText(autobuyerTextDisplay)"
       class="l--spoon-btn-group__little-spoon o-primary-btn--replicanti-galaxy-toggle"
       @input="handleAutoToggle"
     />

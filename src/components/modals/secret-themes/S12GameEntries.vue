@@ -51,7 +51,7 @@ export default {
           class="c-s12-game__img"
         >
         <div class="c-s12-game__text">
-          {{ game.name }}
+          {{ $legacyText(_s(game.name)) }}
         </div>
       </div>
     </div>

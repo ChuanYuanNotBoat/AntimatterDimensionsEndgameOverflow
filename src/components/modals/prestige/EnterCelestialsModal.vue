@@ -116,7 +116,7 @@ export default {
       {{ topLabel }}
     </template>
     <div class="c-modal-message__text" :class="{ 'l-alpha-text': number === 7 }">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
       <br>
       <br>
       <div class="c-modal-celestial__run-effects">
@@ -127,7 +127,7 @@ export default {
         >
           <b v-if="effect.trim()">&bull;</b>
           <b>&nbsp;</b>
-          {{ effect }}
+          {{ $legacyText(_s(effect)) }}
         </div>
       </div>
       <div
@@ -135,11 +135,11 @@ export default {
         class="reality-description"
       >
         <br><br>
-        {{ description }}
+        {{ $legacyText(_s(description)) }}
       </div>
       <br><br>
       <div>
-        {{ extraLine }}
+        {{ $legacyText(_s(extraLine)) }}
       </div>
       <span v-if="number === 4">
         <EnterCelestialsRaPet

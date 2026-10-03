@@ -108,8 +108,8 @@ test('all template IDs dispatch even when the UI title is no longer English', ()
 });
 
 test('localized notation labels leave saved names, lookup, and numerical formatting unchanged', () => {
-  const en = JSON.parse(read('locales/en/notations.json'));
-  const zh = JSON.parse(read('locales/zh-CN/notations.json'));
+  const en = JSON.parse(read('locales/en.json'));
+  const zh = JSON.parse(read('locales/zh-CN.json'));
   let locale = en;
   const context = vm.createContext({
     ADNotations: require('adnot-beport-small'), ADLNotations: require('adnot-beport-large'),

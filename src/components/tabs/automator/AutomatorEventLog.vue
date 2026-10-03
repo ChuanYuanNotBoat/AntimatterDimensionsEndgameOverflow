@@ -117,44 +117,42 @@ const AUTOMATOR_EVENT_TIMESTAMP_MODE = {
 <template>
   <div class="c-automator-docs-page">
     <div>
-      This panel keeps a running event log of all the commands which the automator has recently executed, with a little
-      extra info on some of the commands. It may be useful to help you find problems if you find your automator is
-      getting stuck in certain spots.
+      {{ $t('ade.1e3294dd5b0e17b2') }}
       <br>
       <br>
-      While your settings are kept within your savefile, the actual events are not and will disappear on refresh.
+      {{ $t('ade.7ac218039dc7e5b6') }}
       <br>
       <br>
-      <b>Entry Sorting:</b>
+      <b>{{ $t('ade.90c21b505751a38d') }}</b>
       <button
-        v-tooltip="'Oldest results first'"
+        v-tooltip="$legacyTooltip('Oldest results first')"
         :style="sortStyle(!newestFirst)"
         :class="buttonClassObject"
         class="fa-angle-down"
         @click="newestFirst = false"
       />
       <button
-        v-tooltip="'Newest results first'"
+        v-tooltip="$legacyTooltip('Newest results first')"
         :style="sortStyle(newestFirst)"
         :class="buttonClassObject"
         class="fa-angle-up"
         @click="newestFirst = true"
       />
       <button
-        v-tooltip="clearTooltip"
+        v-tooltip="$legacyTooltip(clearTooltip)"
         :class="buttonClassObject"
         class="fa-trash"
         @click="clearLog"
       />
       <button
-        v-tooltip="'Clear event log every Reality'"
+        v-tooltip="$legacyTooltip('Clear event log every Reality')"
         :style="clearRealityStyle()"
         :class="buttonClassObject"
         class="fa-eraser"
         @click="clearOnReality = !clearOnReality"
       />
       <button
-        v-tooltip="'Clear event log on script restart'"
+        v-tooltip="$legacyTooltip('Clear event log on script restart')"
         :style="clearRestartStyle()"
         :class="buttonClassObject"
         class="fa-backspace"
@@ -162,37 +160,37 @@ const AUTOMATOR_EVENT_TIMESTAMP_MODE = {
       />
     </div>
     <div>
-      <b>Timestamp style:</b>
+      <b>{{ $t('ade.56e8e1f2a54db2d9') }}</b>
       <button
-        v-tooltip="'No timestamps'"
+        v-tooltip="$legacyTooltip('No timestamps')"
         :style="timestampStyle('DISABLED')"
         :class="buttonClassObject"
         class="fa-ban"
         @click="setTimestampMode('DISABLED')"
       />
       <button
-        v-tooltip="'Current time this Reality'"
+        v-tooltip="$legacyTooltip('Current time this Reality')"
         :style="timestampStyle('THIS_REALITY')"
         :class="buttonClassObject"
         class="fa-stopwatch"
         @click="setTimestampMode('THIS_REALITY')"
       />
       <button
-        v-tooltip="'Time elapsed since event'"
+        v-tooltip="$legacyTooltip('Time elapsed since event')"
         :style="timestampStyle('RELATIVE_NOW')"
         :class="buttonClassObject"
         class="fa-clock"
         @click="setTimestampMode('RELATIVE_NOW')"
       />
       <button
-        v-tooltip="'Time since last event'"
+        v-tooltip="$legacyTooltip('Time since last event')"
         :style="timestampStyle('RELATIVE_PREV')"
         :class="buttonClassObject"
         class="fa-arrow-left"
         @click="setTimestampMode('RELATIVE_PREV')"
       />
       <button
-        v-tooltip="'Date and time'"
+        v-tooltip="$legacyTooltip('Date and time')"
         :style="timestampStyle('DATE_TIME')"
         :class="buttonClassObject"
         class="fa-user-clock"
@@ -203,15 +201,15 @@ const AUTOMATOR_EVENT_TIMESTAMP_MODE = {
       v-for="(event, id) in events"
       :key="id"
     >
-      <b>Line {{ event.line }}{{ timestamp(event) }}:</b>
+      <b>{{ $t('ade.6327b888890793d5', { p0: $legacyText(_s(event.line)), p1: $legacyText(_s(timestamp(event))) }) }}</b>
       <button
-        v-tooltip="'Jump to line'"
+        v-tooltip="$legacyTooltip('Jump to line')"
         :class="buttonClassObject"
         class="fa-arrow-circle-right"
         @click="scrollToLine(event.line)"
       />
       <div class="c-automator-docs-page__indented">
-        <i>{{ event.message }}</i>
+        <i>{{ $legacyText(_s(event.message)) }}</i>
       </div>
     </span>
   </div>

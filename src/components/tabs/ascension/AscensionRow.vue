@@ -62,10 +62,12 @@ export default {
     <div
       :style="ascensionStyle"
     >
-      Ascension {{ id }}:
-      {{ name }}
-      <br>
-      Effect: {{ description }}.
+      <LocalizedText id="ade.ed16152c7d5945e7">
+        <template #p0>{{ $legacyText(_s(id)) }}</template>
+        <template #p1>{{ $legacyText(_s(name)) }}</template>
+        <template #p2><br></template>
+        <template #p3>{{ $legacyText(_s(description)) }}</template>
+      </LocalizedText>
     </div>
   </div>
 </template>

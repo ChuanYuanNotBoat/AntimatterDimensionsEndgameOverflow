@@ -231,10 +231,10 @@ export default {
       class="c-progress-bar__fill"
     >
       <span
-        v-tooltip="tooltip"
+        v-tooltip="$legacyTooltip(tooltip)"
         class="c-progress-bar__percents"
       >
-        {{ displayPercents }}
+        {{ $legacyText(_s(displayPercents)) }}
       </span>
     </div>
   </div>

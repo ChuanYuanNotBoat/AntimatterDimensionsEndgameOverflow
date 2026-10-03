@@ -60,7 +60,7 @@ export default {
       type="studies"
       class="l-hint-text--time-study"
     >
-      {{ hintText }}
+      {{ $legacyText(_s(hintText)) }}
     </HintText>
     <span :class="{ 'o-pelle-disabled': isUseless }">
       <DescriptionDisplay

@@ -64,42 +64,41 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="maxAll"
       >
-        Max all
+        {{ $t('ade.5fd68fd3aca6ea9f') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         @click="toggleCelestialMatterMultiplier"
       >
-        Toggle Celestial Matter
+        {{ $t('ade.1d488751b0b3fd49') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="isAnyAutobuyerUnlocked"
         class="o-primary-btn--subtab-option"
         @click="toggleAllAutobuyers"
       >
-        Toggle all autobuyers
+        {{ $t('ade.df61aae1ac373e48') }}
       </PrimaryButton>
     </div>
     <div>
       <p>
-        You have
-        <span class="c-celestial-dim-description__accent">{{ format(celestialMatter, 2, 1) }}</span>
-        Celestial Matter<span v-if="!isEffectActive"> (Disabled)</span>,
-        <br>
-        <span>
-          increased by
-          <span class="c-celestial-dim-description__accent">{{ formatPow(conversionExponent, 2, 3) }}</span>
-        </span>
-        to a
-        <span class="c-celestial-dim-description__accent">{{ formatX(dimMultiplier, 2, 1) }}</span>
-        multiplier to
-        <span>Game Speed.</span>
+        <LocalizedText id="ade.9cf6f0fffcfca55c">
+          <template #p0><span class="c-celestial-dim-description__accent">{{ $legacyText(_s(format(celestialMatter, 2, 1))) }}</span></template>
+          <template #p1><span v-if="!isEffectActive"> {{ $t('ade.9fd26eab7df63cd3') }}</span></template>
+          <template #p2><br></template>
+          <template #p3><span>
+          {{ $t('ade.3b32181c27401525') }}
+          <span class="c-celestial-dim-description__accent">{{ $legacyText(_s(formatPow(conversionExponent, 2, 3))) }}</span>
+        </span></template>
+          <template #p4><span class="c-celestial-dim-description__accent">{{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}</span></template>
+          <template #p5><span>{{ $t('ade.0a01db022efb97a1') }}</span></template>
+        </LocalizedText>
       </p>
     </div>
     <div>
-      All Celestial Dimensions can be purchased until {{ format(totalDimCap, 2, 2) }} Celestial Points.
+      {{ $t('ade.d5e3aa3576a44d7f', { p0: $legacyText(_s(format(totalDimCap,2,2))) }) }}
     </div>
-    <div>You are getting {{ format(matterPerSecond, 2, 0) }} {{ incomeType }} per second.</div>
+    <div>{{ $t('ade.d6f6a1aba24ec060', { p0: $legacyText(_s(format(matterPerSecond,2,0))), p1: $legacyText(_s(incomeType)) }) }}</div>
     <CelestialTickspeedRow v-if="isExpanded"/>
     <div class="l-dimensions-container">
       <CelestialDimensionRow
@@ -111,7 +110,7 @@ export default {
       <CelestialGalaxyRow v-if="isExpanded"/>
     </div>
     <div v-if="showLockedDimCostNote">
-      Hold shift to see the Celestial Point cost for locked Celestial Dimensions.
+      {{ $t('ade.2563bc10ad33d8f9') }}
     </div>
   </div>
 </template>

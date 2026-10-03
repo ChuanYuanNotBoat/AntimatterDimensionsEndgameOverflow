@@ -57,24 +57,24 @@ export default {
     </template>
     <div v-if="!alternateCondition">
       <div class="c-modal-message__text">
-        {{ message }}
+        {{ $legacyText(_s(message)) }}
         <br>
       </div>
       <br>
       <div class="c-modal-message__text">
-        {{ gainedResources }}
+        {{ $legacyText(_s(gainedResources)) }}
       </div>
       <br>
       <div
         v-if="startingResources"
         class="c-modal-message__text"
       >
-        {{ startingResources }}
+        {{ $legacyText(_s(startingResources)) }}
       </div>
     </div>
     <div v-else>
       <div class="c-modal-message__text">
-        {{ alternateText }}
+        {{ $legacyText(_s(alternateText)) }}
       </div>
     </div>
   </ModalWrapperChoice>

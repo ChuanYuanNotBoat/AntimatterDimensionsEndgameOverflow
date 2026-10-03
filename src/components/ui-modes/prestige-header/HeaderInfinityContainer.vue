@@ -45,12 +45,12 @@ export default {
       class="c-prestige-button-container"
     >
       <div class="c-infinity-points">
-        You have
-        <span class="c-game-header__ip-amount">{{ format(infinityPoints, 2) }}</span>
-        {{ pluralize("Infinity Point", infinityPoints) }}.
+        {{ $t('ade.9f717812b3aa8e61') }}
+        <span class="c-game-header__ip-amount">{{ $legacyText(_s(format(infinityPoints, 2))) }}</span>
+        {{ $t('ade.2d6767bdc396d538', { p0: $legacyText(_s(pluralize("Infinity Point",infinityPoints))) }) }}
         <span
           v-if="isTesseractUnlocked"
-          v-html="tesseractText"
+          v-html="$legacyHtml(tesseractText)"
         />
       </div>
       <BigCrunchButton />
@@ -60,9 +60,10 @@ export default {
       class="c-prestige-button-container"
     >
       <div class="c-infinity-points">
-        You have
-        <span class="c-game-header__cip-amount">{{ format(celInfinityPoints, 2) }}</span>
-        {{ pluralize("Celestial Infinity Point", celInfinityPoints) }}.
+        <LocalizedText id="ade.cd1ff500c8f2ac78">
+          <template #p0><span class="c-game-header__cip-amount">{{ $legacyText(_s(format(celInfinityPoints, 2))) }}</span></template>
+          <template #p1>{{ $legacyText(_s(pluralize("Celestial Infinity Point",celInfinityPoints))) }}</template>
+        </LocalizedText>
       </div>
       <CelestialCrunchButton />
     </div>

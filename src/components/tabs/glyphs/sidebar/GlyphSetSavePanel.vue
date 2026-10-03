@@ -185,37 +185,35 @@ export default {
 <template>
   <div class="l-glyph-sacrifice-options c-glyph-sacrifice-options l-glyph-sidebar-panel-size">
     <span
-      v-tooltip="questionmarkTooltip"
+      v-tooltip="$legacyTooltip(questionmarkTooltip)"
       class="l-glyph-sacrifice-options__help c-glyph-sacrifice-options__help o-questionmark"
     >
       ?
     </span>
     <div class="l-glyph-set-save__header">
-      When loading a preset, try to match the following attributes. "Exact" will only equip Glyphs
-      identical to the ones in the preset. The other settings will, loosely speaking, allow "better" Glyphs to be
-      equipped in their place.
+      {{ $t('ade.df0974c846525d2c') }}
     </div>
     <div class="c-glyph-set-save-container">
       <ToggleButton
         v-model="effects"
         class="c-glyph-set-save-setting-button"
-        label="Effects:"
-        on="Including"
-        off="Exact"
+        :label="$t('ade.cf96e672f0e412a9')"
+        :on="$t('ade.eb0304fc40eeccd4')"
+        :off="$t('ade.50f939e42e3ca9cf')"
       />
       <ToggleButton
         v-model="level"
         class="c-glyph-set-save-setting-button"
-        label="Level:"
-        on="Increased"
-        off="Exact"
+        :label="$t('ade.947aaf1e4473deac')"
+        :on="$t('ade.31c00afa2e666a02')"
+        :off="$t('ade.50f939e42e3ca9cf')"
       />
       <ToggleButton
         v-model="rarity"
         class="c-glyph-set-save-setting-button"
-        label="Rarity:"
-        on="Increased"
-        off="Exact"
+        :label="$t('ade.db2c59bc4f34ffd4')"
+        :on="$t('ade.31c00afa2e666a02')"
+        :off="$t('ade.50f939e42e3ca9cf')"
       />
     </div>
     <div
@@ -240,7 +238,7 @@ export default {
             type="text"
             size="20"
             maxlength="20"
-            placeholder="Custom set name"
+            :placeholder="$t('ade.893801b939ddf136')"
             class="c-glyph-sets-save-name__input"
             :value="names[id]"
             @blur="nicknameBlur"
@@ -252,22 +250,22 @@ export default {
             :class="{'c-glyph-set-save-button--unavailable': !hasEquipped || set.length}"
             @click="saveGlyphSet(id)"
           >
-            Save
+            {{ $t('ade.ec8e6d581933849a') }}
           </button>
           <button
-            v-tooltip="loadingTooltip(set)"
+            v-tooltip="$legacyTooltip(loadingTooltip(set))"
             class="c-glyph-set-save-button"
             :class="{'c-glyph-set-save-button--unavailable': !setLengthValid(set)}"
             @click="loadGlyphSet(set, id)"
           >
-            Load
+            {{ $t('ade.860e35d0e1f97b24') }}
           </button>
           <button
             class="c-glyph-set-save-button"
             :class="{'c-glyph-set-save-button--unavailable': !set.length}"
             @click="deleteGlyphSet(id)"
           >
-            Delete
+            {{ $t('ade.5b875326d112eabc') }}
           </button>
         </div>
       </div>

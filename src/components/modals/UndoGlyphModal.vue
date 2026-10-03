@@ -39,21 +39,20 @@ export default {
     <div
       class="c-modal-message__text c-text-wrapper"
     >
-      The last equipped Glyph will be removed.
-      Reality will be reset, but some things will be restored to what they were when it was equipped:
+      {{ $t('ade.738f12b57f6a4d08') }}
       <br>
       <div class="c-text-wrapper">
-        <br>- Antimatter, Infinity Points, and Eternity Points
-        <br>- Dilation Upgrades, Tachyon Particles, and Dilated Time
-        <br>- Time Theorems and Eternity Challenge completions
-        <br>- Time Dimension and Reality unlocks
-        <br>- Time in current Infinity/Eternity/Reality
-        <span v-if="showStoredGameTime"><br>- Stored game time</span>
+        <LocalizedText id="ade.bb6adad5f45e2c64">
+    <template #p0><br></template>
+    <template #p1><br></template>
+    <template #p2><br></template>
+    <template #p3><br></template>
+    <template #p4><br></template>
+    <template #p5><span v-if="showStoredGameTime"><br>{{ $t('ade.21d9bd794f269407') }}</span></template>
+  </LocalizedText>
       </div>
       <br>
-      Note that if you invalidate special requirements for certain things (such as the achievement for completing
-      a Reality without producing antimatter), they will remain invalid even after undoing. In those cases, you will
-      need to complete the conditions in a single Reality without using undo.
+      {{ $t('ade.40166ac681892d5f') }}
     </div>
   </ModalWrapperChoice>
 </template>

@@ -46,7 +46,7 @@ export default {
         v-for="(line, index) in message"
         :key="index"
       >
-        {{ line }} <br>
+        {{ $legacyText(_s(line)) }} <br>
       </span>
     </div>
     <template #confirm-text>

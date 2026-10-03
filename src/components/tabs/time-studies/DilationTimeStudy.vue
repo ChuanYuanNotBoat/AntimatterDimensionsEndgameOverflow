@@ -84,13 +84,13 @@ export default {
 <template>
   <TimeStudyButton
     :setup="setup"
-    :ach-tooltip="theoremTimeEstimate"
+    :ach-tooltip="$legacyText(theoremTimeEstimate)"
     :special-click="clickHandler()"
   >
     <DescriptionDisplay :config="study.config" />
     <template v-if="showRequirement">
       <br>
-      <span>{{ requirement }}</span>
+      <span>{{ $legacyText(_s(requirement)) }}</span>
     </template>
   </TimeStudyButton>
 </template>

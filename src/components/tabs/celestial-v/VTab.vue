@@ -185,8 +185,8 @@ export default {
           :class="celestialUnlockClassObject"
           @click="unlockCelestial"
         >
-          <p>{{ vUnlock.description }}</p>
-          <p>{{ vUnlock.rewardText }}</p>
+          <p>{{ $legacyText(_s(vUnlock.description)) }}</p>
+          <p>{{ $legacyText(_s(vUnlock.rewardText)) }}</p>
         </div>
       </div>
     </div>
@@ -199,33 +199,33 @@ export default {
           class="o-primary-btn--subtab-option"
           @click="toggleFlipped"
         >
-          <span v-if="wantsFlipped">Hide</span>
-          <span v-else>Show</span>
-          Hard V
+          <LocalizedText id="ade.066c64b0abb7a9dc">
+    <template #p0><span v-if="wantsFlipped">{{ $t('ade.e0bcc69a62163dce') }}</span>
+<span v-else>{{ $t('ade.04aa4eaa9accbfcd') }}</span></template>
+  </LocalizedText>
         </PrimaryButton>
         <PrimaryButton
           class="o-primary-btn--subtab-option l-cursed-glyph-creation"
           @click="createCursedGlyph"
         >
-          Create a Cursed Glyph
+          {{ $t('ade.f72357ad6eb513c4') }}
         </PrimaryButton>
         <br>
-        Cursed Glyphs can be created here or in the Effarig tab.
+        {{ $t('ade.6f7ec4b74f1f3487') }}
         <br>
-        Cursed Glyphs count as {{ formatInt(-3) }} Glyphs for the purposes of all requirements related to Glyph count.
+        {{ $t('ade.a22a2b0de6986bdb', { p0: $legacyText(_s(formatInt(-3))) }) }}
         <br>
-        <span v-if="!isDoomed">The Black Hole can now be used to slow down time if they are both permanent.</span>
+        <span v-if="!isDoomed">{{ $t('ade.d9b4e40a9e193be2') }}</span>
         <br><br>
-        Each Hard V-Achievement counts as two V-Achievements and will award {{ formatInt(2) }} Space Theorems
-        instead of {{ formatInt(1) }}.
+        {{ $t('ade.43eb96c94412beb9', { p0: $legacyText(_s(formatInt(2))), p1: $legacyText(_s(formatInt(1))) }) }}
         <br>
-        Goal reduction is significantly more expensive for Hard V-Achievements.
+        {{ $t('ade.2d41f17716b52954') }}
       </div>
       <div
         v-if="showReduction"
         class="c-v-info-text"
       >
-        You have {{ quantify("Perk Point", pp, 2, 0) }}.
+        {{ $t('ade.72a577765e7e40b3', { p0: $legacyText(_s(quantify("Perk Point",pp,2,0))) }) }}
       </div>
       <div class="l-v-upgrades-grid">
         <VUpgradeButton
@@ -247,24 +247,24 @@ export default {
             :style="'background-color: ' + hexColor(hex)"
           >
             <p class="o-v-unlock-name">
-              <br v-if="hex.canBeReduced && showReduction">{{ hex.config.name }}
+              <br v-if="hex.canBeReduced && showReduction">{{ $legacyText(_s(hex.config.name)) }}
             </p>
             <p
               class="o-v-unlock-desc"
-              v-html="hex.formattedDescription"
+              v-html="$legacyHtml(hex.formattedDescription)"
             />
             <p
               v-if="has(runMilestones[0][0]) && hex.isReduced"
               class="o-v-unlock-goal-reduction"
             >
-              Goal has been {{ mode(hex) }} by {{ reductionValue(hex) }}
+              {{ $t('ade.00819aa9a5c30b19', { p0: $legacyText(_s(mode(hex))), p1: $legacyText(_s(reductionValue(hex))) }) }}
             </p>
             <p class="o-v-unlock-amount">
-              {{ formatInt(hex.completions) }}/{{ formatInt(hex.config.values.length) }} done
+              {{ $t('ade.57d48b4d06afb549', { p0: $legacyText(_s(formatInt(hex.completions))), p1: $legacyText(_s(formatInt(hex.config.values.length))) }) }}
             </p>
             <div v-if="showRecord(hex)">
               <p class="o-v-unlock-record">
-                Best: {{ hex.config.formatRecord(runRecords[hex.id]) }}
+                {{ $t('ade.63e526c10b31e099', { p0: $legacyText(_s(hex.config.formatRecord(runRecords[hex.id]))) }) }}
               </p>
               <p>
                 <GlyphSetPreview
@@ -278,7 +278,7 @@ export default {
                 <button
                   class="o-primary-btn l-v-reduction"
                   :class="{ 'o-primary-btn--disabled': !hex.canBeReduced || pp < hex.reductionCost }"
-                  :ach-tooltip="reductionTooltip(hex)"
+                  :ach-tooltip="$legacyText(reductionTooltip(hex))"
                   @click="reduceGoals(hex)"
                 >
                   <i class="fas fa-angle-double-down" />
@@ -295,13 +295,13 @@ export default {
               class="o-v-start-text"
               :class="{ 'o-pelle-disabled': isDoomed }"
             >
-              <span v-if="isRunning">You are in </span>
-              <span v-else>Start </span>
+              <span v-if="isRunning">{{ $t('ade.7eb1604c3f5151e4') }} </span>
+              <span v-else>{{ $t('ade.62b158013e5a02ae') }} </span>
               V's Reality.
             </b>
             <br>
             <div :style="{ 'font-size': hasAlchemy ? '1.2rem' : '' }">
-              {{ runDescription }}
+              {{ $legacyText(_s(runDescription)) }}
             </div>
             <div class="c-v-run-button__line c-v-run-button__line--1" />
             <div class="c-v-run-button__line c-v-run-button__line--2" />
@@ -313,17 +313,18 @@ export default {
         </li>
       </div>
       <div class="c-v-info-text">
-        V-Achievements can only be completed within V's Reality, but are permanent and do not reset upon leaving
-        and re-entering the Reality.
+        {{ $t('ade.05b9a281d4ab23de') }}
       </div>
       <div class="c-v-info-text">
-        You have {{ formatInt(totalUnlocks) }} V-Achievements done.
-        <span v-if="!isDoomed">
-          You gain {{ formatInt(1) }} Space Theorem for each completion,
+        <LocalizedText id="ade.76b0672813bce858">
+          <template #p0>{{ $legacyText(_s(formatInt(totalUnlocks))) }}</template>
+          <template #p1><span v-if="!isDoomed">
+          You gain {{ $legacyText(_s(formatInt(1))) }} Space Theorem for each completion,
           allowing you to purchase Time Studies which are normally locked.
           <br>
-          Space Theorems can also be used as a Currency in the Automator.
-        </span>
+          {{ $t('ade.ebe2001648c00f24') }}
+        </span></template>
+        </LocalizedText>
       </div>
       <br>
       <div class="l-v-milestones-grid">
@@ -340,10 +341,12 @@ export default {
               has(milestone)}"
           >
             <div :class="{ 'o-pelle-disabled': isDoomed && milestone.pelleDisabled }">
-              <p>{{ milestone.description }}</p>
-              <p>Reward: {{ milestone.rewardText }}</p>
+              <p>{{ $legacyText(_s(milestone.description)) }}</p>
+              <p>{{ $t('ade.bd13cbc1d66c8881', { p0: $legacyText(_s(milestone.rewardText)) }) }}</p>
               <p v-if="milestone.formattedEffect">
-                Currently: <b>{{ milestone.formattedEffect }}</b>
+                <LocalizedText id="ade.3ec0110124609f74">
+                  <template #p0><b>{{ $legacyText(_s(milestone.formattedEffect)) }}</b></template>
+                </LocalizedText>
               </p>
             </div>
           </div>

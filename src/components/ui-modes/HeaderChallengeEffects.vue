@@ -106,27 +106,29 @@ export default {
 <template>
   <div>
     <div v-if="isCompressed">
-      {{ compressionText }}
+      {{ $legacyText(_s(compressionText)) }}
     </div>
     <div v-if="isInAlpha">
-      {{ alphaText }}
+      {{ $legacyText(_s(alphaText)) }}
     </div>
     <div v-if="waitingforHint">
-      {{ enslavedText }}
+      {{ $legacyText(_s(enslavedText)) }}
     </div>
     <div v-if="isInEffarig">
-      Game speed and multipliers are Dilated {{ effarigMultNerfText }}
-      <br>
-      Tickspeed is Dilated {{ effarigTickNerfText }}
+      <LocalizedText id="ade.cabea5e69184e505">
+        <template #p0>{{ $legacyText(_s(effarigMultNerfText)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(effarigTickNerfText)) }}</template>
+      </LocalizedText>
     </div>
     <div v-if="isInLaitela">
-      Entropy: {{ laitelaEntropy }} ({{ laitelaTimer }})
+      {{ $t('ade.ad3e5b18db9bb68c', { p0: $legacyText(_s(laitelaEntropy)), p1: $legacyText(_s(laitelaTimer)) }) }}
     </div>
     <div v-if="isInMatterChallenge">
-      There is {{ format(matter, 2, 1) }} {{ isFlipped ? "antimatter" : "matter" }}.
+      {{ $t('ade.4e9555706f570a8c', { p0: $legacyText(_s(format(matter,2,1))), p1: $legacyText(_s(isFlipped?"antimatter":"matter")) }) }}
     </div>
     <div v-if="isChallengePowerVisible">
-      {{ challengePower }}
+      {{ $legacyText(_s(challengePower)) }}
     </div>
   </div>
 </template>

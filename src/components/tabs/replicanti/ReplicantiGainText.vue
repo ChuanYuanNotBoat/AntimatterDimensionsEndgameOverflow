@@ -133,7 +133,7 @@ export default {
 </script>
 
 <template>
-  <p>{{ remainingTimeText }}<br>{{ galaxyText }}</p>
+  <p>{{ $legacyText(_s(remainingTimeText)) }}<br>{{ $legacyText(_s(galaxyText)) }}</p>
 </template>
 
 <style scoped>

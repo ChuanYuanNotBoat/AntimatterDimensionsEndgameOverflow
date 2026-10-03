@@ -58,14 +58,14 @@ export default {
     class="l-eternity-milestone"
   >
     <span class="o-eternity-milestone__goal">
-      {{ quantifyInt("Eternity", eternities) }}:
+      {{ $t('ade.60303819f8e1c679', { p0: $legacyText(_s(quantifyInt("Eternity",eternities))) }) }}
     </span>
     <button
-      v-tooltip="activeCondition"
+      v-tooltip="$legacyTooltip(activeCondition)"
       :class="rewardClassObject"
     >
       <span :class="{ 'o-pelle-disabled': isUseless }">
-        {{ reward }} {{ (isLocked && !isReached) ? "(Locked behind a Pelle Upgrade)" : "" }}
+        {{ $legacyText(_s(reward)) }} {{ $legacyText(_s((isLocked && !isReached) ? "(Locked behind a Pelle Upgrade)" : "")) }}
       </span>
     </button>
   </div>

@@ -53,14 +53,17 @@ export default {
       <br>
       <div>
       <b>
-        Endgame
+        {{ $t('ade.07bf328a78ebf91b') }}
       </b>
       </div>
       <br>
       <div>
-        You are currently playing Antimatter Dimensions: The {{ stage }} Update, Chapter {{ chapter }}.
-        <br>
-        Percentage to next chapter: {{ formatPercents(percentage, 2, 2) }}
+        <LocalizedText id="ade.d71bd83915f47f51">
+          <template #p0>{{ $legacyText(_s(stage)) }}</template>
+          <template #p1>{{ $legacyText(_s(chapter)) }}</template>
+          <template #p2><br></template>
+          <template #p3>{{ $legacyText(_s(formatPercents(percentage,2,2))) }}</template>
+        </LocalizedText>
       </div>
     </div>
     <br>

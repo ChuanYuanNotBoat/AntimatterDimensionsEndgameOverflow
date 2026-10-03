@@ -159,7 +159,7 @@ export class EndgameMasterySetup {
       name="Endgame Skill"
     />
     <div v-else>
-      Cost: {{ customCostStr }}
+      {{ $t('ade.9b699ddbf2778050', { p0: $legacyText(_s(customCostStr)) }) }}
     </div>
   </button>
 </template>

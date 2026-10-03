@@ -315,7 +315,7 @@ export default {
       class="c-automator-single-block o-automator-command c-automator-constant-block"
       :class="{ 'l-blob' : constant === 'BLOB' }"
     >
-      {{ displayedConstant }}
+      {{ $legacyText(_s(displayedConstant)) }}
     </div>
     <div
       v-else-if="isTextInput"
@@ -323,7 +323,7 @@ export default {
     >
       <input
         v-model="textContents"
-        v-tooltip="errorTooltip()"
+        v-tooltip="$legacyTooltip(errorTooltip())"
         :class="textInputClassObject()"
         @keyup="changeBlock()"
         @focusin="handleFocus(true)"
@@ -346,7 +346,7 @@ export default {
         :key="target"
         :value="target"
       >
-        {{ target }}
+        {{ $legacyText(_s(target)) }}
       </option>
     </select>
     <AutomatorBlockSingleInput

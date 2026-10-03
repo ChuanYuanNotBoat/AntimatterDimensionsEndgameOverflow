@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint",
     "i18n:check": "node scripts/i18n-check.cjs",
     "i18n:audit": "node scripts/i18n-audit.cjs",
-    "test:i18n": "node --test tests/i18n-service.test.cjs tests/i18n-identities.test.cjs tests/pelle-domain-stall.test.cjs"
+    "test:i18n": "node --test tests/i18n-service.test.cjs tests/i18n-identities.test.cjs tests/i18n-display.test.cjs tests/pelle-domain-stall.test.cjs"
   },
   "dependencies": {
     "@antimatter-dimensions/notations": "^3.1.0",

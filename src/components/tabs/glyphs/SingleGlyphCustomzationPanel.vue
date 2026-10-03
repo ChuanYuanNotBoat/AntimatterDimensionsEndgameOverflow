@@ -96,31 +96,30 @@ export default {
         />
       </div>
       <div class="c-glyph-info-section c-cosmetic-text">
-        <u>Cosmetic Attributes</u>
-        Type: {{ glyph.type.capitalize() }}
+        <u>{{ $t('ade.5337e6eb9d34c263') }}</u>
+        {{ $t('ade.5bb0a2793a6966e6', { p0: $legacyText(_s(glyph.type.capitalize())) }) }}
         <br>
-        All: {{ typeCosmetic }}
+        {{ $t('ade.f94040440f285f25', { p0: $legacyText(_s(typeCosmetic)) }) }}
         <br>
-        Single: {{ specialCosmetic }}
+        {{ $t('ade.f15235002528f5bd', { p0: $legacyText(_s(specialCosmetic)) }) }}
       </div>
       <div class="c-glyph-info-section">
         <PrimaryButton
           class="o-primary-btn--subtab-option"
           @click="openModal"
         >
-          Customize!
+          {{ $t('ade.fcfc0a2db3023f88') }}
         </PrimaryButton>
         <PrimaryButton
           class="o-primary-btn--subtab-option"
           @click="glyphID = -1"
         >
-          Clear Box
+          {{ $t('ade.04cc00a51c95c634') }}
         </PrimaryButton>
       </div>
     </div>
     <div v-else>
-      Drag a Glyph over this box to change its appearance! This will make a visual copy of it here,
-      but leave the actual Glyph itself in your inventory. Removing, gaining, or moving any Glyphs will clear this box.
+      {{ $t('ade.e4574bee93d6557a') }}
     </div>
   </div>
 </template>

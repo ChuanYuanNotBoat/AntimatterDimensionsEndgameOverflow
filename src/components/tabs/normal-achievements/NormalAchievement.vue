@@ -199,15 +199,15 @@ export default {
       type="achievements"
       class="l-hint-text--achievement"
     >
-      {{ processedId }}
+      {{ $legacyText(_s(processedId)) }}
     </HintText>
     <div class="o-achievement__tooltip">
       <template v-if="isMouseOver">
         <div class="o-achievement__tooltip__name">
-          {{ processedName }} ({{ processedId }})
+          {{ $legacyText(_s(processedName)) }} ({{ $legacyText(_s(processedId)) }})
         </div>
         <div class="o-achievement__tooltip__description">
-          {{ processedDescription }}
+          {{ $legacyText(_s(processedDescription)) }}
         </div>
         <div
           v-if="config.reward"
@@ -217,7 +217,7 @@ export default {
             v-if="!isObscured"
             :class="{ 'o-pelle-disabled': isDisabled }"
           >
-            Reward: {{ config.reward }}
+            {{ $t('ade.bd13cbc1d66c8881', { p0: $legacyText(_s(config.reward)) }) }}
             <EffectDisplay
               v-if="config.formatEffect"
               br
@@ -229,12 +229,12 @@ export default {
           v-if="achievedTime"
           class="o-achievement-time"
         >
-          {{ achievedTime }}
+          {{ $legacyText(_s(achievedTime)) }}
         </div>
         <div
           class="o-achievement-prog"
         >
-          {{ achieveProgress }}
+          {{ $legacyText(_s(achieveProgress)) }}
         </div>
       </template>
     </div>

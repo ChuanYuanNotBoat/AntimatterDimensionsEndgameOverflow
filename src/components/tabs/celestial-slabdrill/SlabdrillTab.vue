@@ -114,18 +114,18 @@ export default {
       </button>
     </div>
     <br>
-    <span class="l-cursed-header">You have {{ quantifyInt("Chaos Core", cores) }}.</span>
+    <span class="l-cursed-header">You have {{ $legacyText(_s(quantifyInt("Chaos Core", cores))) }}.</span>
     <br>
     <div v-if="isDestroyed">
       <span class="l-slabdrill-header">Since Slabdrill has been defeated, the following Strikes have no effect except for the last.</span>
       <br>
     </div>
-    <span class="l-slabdrill-header">You have {{ format(power, 2, 3) }} Serpentine Power. +{{ format(powerPerSecond, 2, 3) }}/s</span>
+    <span class="l-slabdrill-header">You have {{ $legacyText(_s(format(power, 2, 3))) }} Serpentine Power. +{{ $legacyText(_s(format(powerPerSecond, 2, 3))) }}/s</span>
     <span class="l-slabdrill-header">
-      Your Chaos Cores are currently giving Serpentine Power a cap of {{ format(powerCap, 2, 2) }}.
+      Your Chaos Cores are currently giving Serpentine Power a cap of {{ $legacyText(_s(format(powerCap, 2, 2))) }}.
     </span>
     <span class="l-slabdrill-header">
-      The distance between your current Serpentine Power and the Serpentine Power cap decreases by half every {{ halveText }}.
+      The distance between your current Serpentine Power and the Serpentine Power cap decreases by half every {{ $legacyText(_s(halveText)) }}.
     </span>
     <br>
     <div
@@ -133,7 +133,7 @@ export default {
       :key="rewardKey + 100"
       class="l-slabdrill-header"
     >
-      {{ reward }}
+      {{ $legacyText(_s(reward)) }}
     </div>
     <br>
     <div
@@ -152,7 +152,7 @@ export default {
       v-if="isCursed"
       class="l-slabdrill-header"
     >
-      The next Strike will be encountered when you {{ nextLayer }}.
+      The next Strike will be encountered when you {{ $legacyText(_s(nextLayer)) }}.
     </span>
     <br>
     <br>
@@ -161,7 +161,7 @@ export default {
       :class="cursedCoreClassObject"
       @click="toggleCore"
     >
-      {{ cursedCoreButtonText }}
+      {{ $legacyText(_s(cursedCoreButtonText)) }}
     </button>
   </div>
 </template>

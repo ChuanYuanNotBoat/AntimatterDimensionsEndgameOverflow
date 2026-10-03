@@ -132,22 +132,22 @@ export default {
 
 <template>
   <div class="l-modal-options__save-record">
-    <h3>{{ saveType }} <span v-if="saveId">(Slot #{{ saveId + 1 }}):</span></h3>
+    <h3>{{ $legacyText(_s(saveType)) }} <span v-if="saveId">(Slot #{{ $legacyText(_s(saveId + 1)) }}):</span></h3>
     <span v-if="showName">
       <span v-if="name">
-        Save Name: {{ name }}
+        Save Name: {{ $legacyText(_s(name)) }}
       </span>
       <span v-else>
         Unnamed Save
       </span>
       <br>
     </span>
-    {{ timePlayed }}
+    {{ $legacyText(_s(timePlayed)) }}
     <br>
-    <span v-html="antimatter" />
-    <span v-html="prestigeCount" />
-    <span v-html="prestigeResource" />
-    <span v-html="extraProgressIndicator" />
+    <span v-html="$legacyHtml(antimatter)" />
+    <span v-html="$legacyHtml(prestigeCount)" />
+    <span v-html="$legacyHtml(prestigeResource)" />
+    <span v-html="$legacyHtml(extraProgressIndicator)" />
     <br>
     <slot />
   </div>

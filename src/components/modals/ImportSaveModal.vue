@@ -171,54 +171,56 @@ export default {
       </div>
       <template v-else-if="inputIsValidSave">
         <div v-if="fileName">
-          File name: {{ fileName }}
+          {{ $t('ade.93aa8bc4e2b1aa8c', { p0: _s(fileName) }) }}
         </div>
-        <div>Antimatter: {{ formatPostBreak(antimatter, 2, 1) }}</div>
+        <div>{{ $t('ade.14d4b4ec75ed3e1b', { p0: $legacyText(_s(formatPostBreak(antimatter,2,1))) }) }}</div>
         <div v-if="progress.isInfinityUnlocked">
-          Infinities: {{ formatPostBreak(infinities, 2) }}
+          {{ $t('ade.5f652e9a6b24a0c6', { p0: $legacyText(_s(formatPostBreak(infinities,2))) }) }}
         </div>
         <div v-if="progress.isEternityUnlocked">
-          Eternities: {{ formatPostBreak(player.eternities, 2) }}
+          {{ $t('ade.39d40c48f6120b25', { p0: $legacyText(_s(formatPostBreak(player.eternities,2))) }) }}
         </div>
         <div v-if="progress.isRealityUnlocked">
-          Realities: {{ formatPostBreak(player.realities, 2) }}
+          {{ $t('ade.d5bc281b86426170', { p0: $legacyText(_s(formatPostBreak(player.realities,2))) }) }}
         </div>
         <div v-if="progress.hasFullCompletion">
-          Full game completions: {{ formatInt(player.records.fullGameCompletions) }}
+          {{ $t('ade.bd29d3ddb7ddbad6', { p0: $legacyText(_s(formatInt(player.records.fullGameCompletions))) }) }}
         </div>
         <div class="c-modal-import__warning">
-          (Your current save file will be overwritten!)
+          {{ $t('ade.eee5192d64eaeef2') }}
         </div>
         <br>
         <div>
-          {{ lastOpened }}
+          {{ $legacyText(_s(lastOpened)) }}
           <div
             class="o-primary-btn"
             @click="changeOfflineSetting"
           >
-            Offline Progress: {{ offlineType }}
+            {{ $t('ade.5c73fd6570cb1664', { p0: $legacyText(_s(offlineType)) }) }}
           </div>
-          <span v-html="offlineDetails" />
+          <span v-html="$legacyHtml(offlineDetails)" />
         </div>
       </template>
       <div v-else-if="hasInput">
-        Not a valid save:
-        <br>
-        {{ saveCheckString }}
+        <LocalizedText id="ade.512ed0592aed4a81">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(saveCheckString)) }}</template>
+        </LocalizedText>
       </div>
       <div
         v-if="player"
         class="c-modal-hard-reset-danger"
       >
         <div v-if="willLoseCosmetics">
-          <br>
-          Glyph cosmetic sets from completing the game are tied to your save.
-          <br>
-          Importing this save will cause you to lose some sets.
+          <LocalizedText id="ade.4957ddd52df8c17a">
+    <template #p0><br></template>
+    <template #p1><br></template>
+  </LocalizedText>
         </div>
         <div v-if="willLoseSpeedrun">
-          <br>
-          You will lose the ability to do a Speedrun, as this save does not have it unlocked.
+          <LocalizedText id="ade.49fcab4a9ab8a7de">
+    <template #p0><br></template>
+  </LocalizedText>
         </div>
       </div>
     </div>
@@ -228,7 +230,7 @@ export default {
       class="o-primary-btn--width-medium c-modal-message__okay-btn c-modal__confirm-btn"
       @click="importSave"
     >
-      Import
+      {{ $t('ade.1a200b31b133d7d9') }}
     </PrimaryButton>
   </ModalWrapperChoice>
 </template>

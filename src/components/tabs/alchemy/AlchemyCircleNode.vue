@@ -85,7 +85,7 @@ export default {
         :class="hintClassObject"
         class="o-hint-text--alchemy-node l-hint-text--alchemy-node"
       >
-        {{ formatHybridSmall(amount, 3) }}
+        {{ $legacyText(_s(formatHybridSmall(amount, 3))) }}
       </HintText>
     </span>
   </div>

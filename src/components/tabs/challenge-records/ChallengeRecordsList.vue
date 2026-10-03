@@ -41,14 +41,14 @@ export default {
       v-for="(time, i) in times"
       :key="i"
     >
-      <span>{{ name }} {{ start + i }} {{ completionString(time) }}</span>
+      <span>{{ $legacyText(_s(name)) }} {{ $legacyText(_s(start + i)) }} {{ $legacyText(_s(completionString(time))) }}</span>
     </div>
     <br>
     <div v-if="completedAllChallenges">
-      Sum of {{ name }} record times: {{ timeDisplayShort(timeSum) }}
+      {{ $t('ade.a0242fe7b9069789', { p0: $legacyText(_s(name)), p1: $legacyText(_s(timeDisplayShort(timeSum))) }) }}
     </div>
     <div v-else>
-      You have not completed all {{ name }}s yet.
+      {{ $t('ade.91dc6177fc117c24', { p0: $legacyText(_s(name)) }) }}
     </div>
   </div>
 </template>

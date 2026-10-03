@@ -28,7 +28,7 @@ export default {
         :name="name"
       />
     </div>
-    Note: Selected resources will only show if they've increased.
+    {{ $t('ade.efce23749631b60f') }}
   </ModalWrapperOptions>
 </template>
 

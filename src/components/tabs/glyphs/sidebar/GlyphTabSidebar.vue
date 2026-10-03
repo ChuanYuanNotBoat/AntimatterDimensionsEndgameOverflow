@@ -65,28 +65,28 @@ export default {
         :class="sidebarClass(sidebarEnum.INVENTORY_MANAGEMENT)"
         @click="setSidebarState(sidebarEnum.INVENTORY_MANAGEMENT)"
       >
-        Manage Inventory
+        {{ $t('ade.f784f077689a1639') }}
       </button>
       <button
         v-if="unlockedFilter"
         :class="sidebarClass(sidebarEnum.FILTER_SETTINGS)"
         @click="setSidebarState(sidebarEnum.FILTER_SETTINGS)"
       >
-        Glyph Filter
+        {{ $t('ade.82aae4ee46f63750') }}
       </button>
       <button
         v-if="unlockedSets"
         :class="sidebarClass(sidebarEnum.SAVED_SETS)"
         @click="setSidebarState(sidebarEnum.SAVED_SETS)"
       >
-        Glyph Presets
+        {{ $t('ade.5e9ae1c4f741f28c') }}
       </button>
       <button
         v-if="unlockedAlchemy"
         :class="sidebarClass(sidebarEnum.SACRIFICE_TYPE)"
         @click="setSidebarState(sidebarEnum.SACRIFICE_TYPE)"
       >
-        Sacrifice Type
+        {{ $t('ade.a20414a5bf25dff4') }}
       </button>
     </div>
     <GlyphInventoryManagementPanel

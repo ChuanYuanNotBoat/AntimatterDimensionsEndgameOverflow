@@ -248,7 +248,7 @@ export default {
           <div
             v-if="invalidMessage"
             class="l-modal-import-tree__tree-info-line"
-            v-html="invalidMessage"
+            v-html="$legacyHtml(invalidMessage)"
           />
           <StudyStringLine
             v-if="isImporting"
@@ -276,7 +276,7 @@ export default {
           />
         </template>
         <div v-if="!deleting && !inputIsValidTree && hasInput">
-          Not a valid tree
+          {{ $t('ade.ab069fcf60d95f9c') }}
         </div>
       </div>
       <div class="c-study-preview">
@@ -292,16 +292,16 @@ export default {
       <br>
       <PrimaryButton
         v-if="!deleting"
-        v-tooltip="'This will format the study preset text, for example, changing \'a,b,c|d\' to \'a, b, c | d\'.'"
+        v-tooltip="$legacyTooltip('This will format the study preset text, for example, changing \'a,b,c|d\' to \'a, b, c | d\'.')"
         @click="convertInputShorthands"
       >
-        Format Preset Text
+        {{ $t('ade.54964db04ca8a850') }}
       </PrimaryButton>
     </div>
     <span v-if="isImporting">
       <br>
       <div
-        v-tooltip="canEternity ? '' : 'You are currently unable to eternity, so this will only do a normal load.'"
+        v-tooltip="$legacyTooltip(canEternity ? '' : 'You are currently unable to eternity, so this will only do a normal load.')"
         class="c-modal__confirmation-toggle"
         @click="respecAndLoad = !respecAndLoad"
       >
@@ -317,13 +317,14 @@ export default {
           />
         </div>
         <span class="c-modal__confirmation-toggle__text">
-          Also respec tree and eternity
-          <span
+          <LocalizedText id="ade.b2eb1449710c0a8d">
+            <template #p0><span
             v-if="!canEternity"
             class="c-modal__confirmation-toggle__warning"
           >
             !
-          </span>
+          </span></template>
+          </LocalizedText>
         </span>
       </div>
     </span>

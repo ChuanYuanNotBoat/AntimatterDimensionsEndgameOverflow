@@ -101,14 +101,14 @@ export default {
         </template>
       </ExpandingControlBox>
       <div v-if="currentSet">
-        The "{{ currentSet.name }}" Set contains the following {{ setContents }}:
+        {{ $t('ade.91918008446e28ab', { p0: $legacyText(_s(currentSet.name)), p1: $legacyText(_s(setContents)) }) }}
         <br>
         <span
           v-for="symbol of symbols"
           :key="symbol"
           class="o-single-symbol"
         >
-          {{ symbol }}
+          {{ $legacyText(_s(symbol)) }}
         </span>
         <br>
         <span

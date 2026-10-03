@@ -60,15 +60,15 @@ export default {
       {{ topLabel }}
     </template>
     <div class="c-modal-message__text">
-      This could delete Glyphs in your inventory that are good enough that you might want to use them
-      later. Purging will Purge Glyphs based on your Purge mode. Are you sure you want to do this?
-      <br>
-      <br>
-      {{ explanation }}
+      <LocalizedText id="ade.43acf973b9613a8b">
+        <template #p0><br></template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(explanation)) }}</template>
+      </LocalizedText>
     </div>
     <br>
     <div class="c-modal-hard-reset-danger">
-      {{ extraMessage }}
+      {{ $legacyText(_s(extraMessage)) }}
     </div>
   </ModalWrapperChoice>
 </template>

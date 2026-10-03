@@ -38,7 +38,7 @@ export default {
     </template>
     <div class="c-modal-message__text-fit">
       <span>
-        {{ message }}
+        {{ $legacyText(_s(message)) }}
       </span>
     </div>
     <!--

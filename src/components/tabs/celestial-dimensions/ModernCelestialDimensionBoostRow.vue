@@ -51,14 +51,14 @@ export default {
 
 <template>
   <div class="reset-container dimboost">
-    <h4>Celestial Dimension Boost ({{ boostCountText }})</h4>
-    <span>Requires: {{ formatHybridLarge(requirement.amount, 3) }} Cel Matter</span>
+    <h4>{{ $t('ade.d7b562a2444e1eec', { p0: $legacyText(_s(boostCountText)) }) }}</h4>
+    <span>{{ $t('ade.93182c08bbf707cb', { p0: $legacyText(_s(formatHybridLarge(requirement.amount,3))) }) }}</span>
     <button
       :class="classObject"
       @click.exact="celestialDimensionBoost(true)"
       @click.shift.exact="celestialDimensionBoost(false)"
     >
-      {{ unlockedByBoost }}
+      {{ $legacyText(_s(unlockedByBoost)) }}
     </button>
   </div>
 </template>

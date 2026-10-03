@@ -46,7 +46,7 @@ export default {
         v-if="hasTutorial"
         class="h2p-tooltip"
       >
-        Click for info
+        {{ $t('ade.a810cc583dcbeada') }}
       </div>
     </div>
     <div

@@ -21,31 +21,31 @@ export default {
     <b>NAME</b>
     <div
       class="c-automator-docs-page__indented"
-      v-html="command.keyword"
+      v-html="$legacyHtml(command.keyword)"
     />
     <b>SYNTAX</b>
     <div
       class="c-automator-docs-page__indented"
-      v-html="command.syntax"
+      v-html="$legacyHtml(command.syntax)"
     />
     <template v-if="command.description">
       <b>DESCRIPTION</b>
       <div
         class="c-automator-docs-page__indented"
-        v-html="description"
+        v-html="$legacyHtml(description)"
       />
     </template>
     <template v-for="section in command.sections">
-      <b :key="section.name">{{ section.name }}</b>
+      <b :key="section.name">{{ $legacyText(_s(section.name)) }}</b>
       <template v-for="item in section.items">
         <div
           :key="item.header"
           class="c-automator-docs-page__indented"
         >
-          <div v-html="item.header" />
+          <div v-html="$legacyHtml(item.header)" />
           <div
             class="c-automator-docs-page__indented"
-            v-html="item.description"
+            v-html="$legacyHtml(item.description)"
           />
         </div>
       </template>
@@ -56,7 +56,7 @@ export default {
         v-for="example in command.examples"
         :key="example"
         class="c-automator-docs-page__indented"
-        v-html="example"
+        v-html="$legacyHtml(example)"
       />
     </template>
   </div>

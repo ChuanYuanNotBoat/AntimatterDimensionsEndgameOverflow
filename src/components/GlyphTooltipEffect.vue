@@ -91,20 +91,20 @@ export default {
     class="c-glyph-tooltip__effect"
     :class="{ 'o-pelle-disabled': isPelleDisabled }"
   >
-    <span v-html="convertedParts[0]" />
+    <span v-html="$legacyHtml(convertedParts[0])" />
     <!-- Do not "fix" the spacing on these spans; moving effectText to its own line causes extra spaces to appear -->
     <span
       v-if="hasValue"
       :style="valueStyle"
-    >{{ primaryEffectText }}</span>
-    <span v-html="convertedParts[1]" />
+    >{{ $legacyText(_s(primaryEffectText)) }}</span>
+    <span v-html="$legacyHtml(convertedParts[1])" />
     <span
       v-if="hasSecondaryValue"
       :style="valueStyle"
-    >{{ secondaryEffectText }}</span>
+    >{{ $legacyText(_s(secondaryEffectText)) }}</span>
     <span
       v-if="hasSecondaryValue"
-      v-html="convertedParts[2]"
+      v-html="$legacyHtml(convertedParts[2])"
     />
   </div>
 </template>

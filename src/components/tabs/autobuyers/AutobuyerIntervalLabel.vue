@@ -51,11 +51,13 @@ export default {
 
 <template>
   <div class="c-autobuyer-box__small-text">
-    Current interval: {{ intervalText }}
-    <span v-if="isShowingBulk">
+    <LocalizedText id="ade.2daf7bb6e8f69955">
+      <template #p0>{{ $legacyText(_s(intervalText)) }}</template>
+      <template #p1><span v-if="isShowingBulk">
       <br>
-      {{ bulkText }}
-    </span>
+      {{ $legacyText(_s(bulkText)) }}
+    </span></template>
+    </LocalizedText>
   </div>
 </template>
 

@@ -63,7 +63,7 @@ export default {
       You are about to sacrifice a Glyph
     </template>
     <div class="c-modal-message__text">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
   </ModalWrapperChoice>
 </template>

@@ -1,3 +1,5 @@
+import { DisplayI18n } from "../i18n/display";
+
 export const notify = (function() {
   const template = document.createElement("div");
   template.classList.add("o-notification");
@@ -9,7 +11,7 @@ export const notify = (function() {
       return;
     }
     const el = template.cloneNode();
-    el.textContent = text;
+    el.textContent = DisplayI18n.translate(text);
     el.classList.add(elClass, enterAnimation);
     const container = document.getElementById("notification-container");
     container.appendChild(el);

@@ -31,17 +31,18 @@ export default {
 <template>
   <div>
     <div class="l-header">
-      You have {{ formatInt(totalPoints) }} / {{ formatInt(pointsForAutomator) }}
-      Automator Points towards unlocking the Automator.
-      <br>
-      You gain Automator Points from the following sources:
+      <LocalizedText id="ade.0d04866fe679cce0">
+        <template #p0>{{ $legacyText(_s(formatInt(totalPoints))) }}</template>
+        <template #p1>{{ $legacyText(_s(formatInt(pointsForAutomator))) }}</template>
+        <template #p2><br></template>
+      </LocalizedText>
     </div>
     <div class="l-automator-points-list-container">
       <div class="l-automator-points-list-side-col c-automator-points-list-col">
         <span class="c-automator-points-list-symbol fas fa-project-diagram" />
-        <span class="c-automator-points-list-ap--large">{{ formatInt(fromPerks) }} AP</span>
+        <span class="c-automator-points-list-ap--large">{{ $t('ade.b5cc896a83874516', { p0: $legacyText(_s(formatInt(fromPerks))) }) }}</span>
         <span class="l-large-text">
-          Perks
+          {{ $t('ade.5894f188d9464aff') }}
         </span>
         <div
           v-for="perk in perkSources"
@@ -49,9 +50,9 @@ export default {
           class="c-automator-points-list-single-entry"
           :style="textColor(perk.isBought)"
         >
-          <span class="c-automator-points-list-perk-label">{{ perk.label }}</span>
-          - {{ perk.shortDescription }}
-          <span class="c-automator-points-list-ap">{{ formatInt(perk.automatorPoints) }} AP</span>
+          <span class="c-automator-points-list-perk-label">{{ $legacyText(_s(perk.label)) }}</span>
+          - {{ $legacyText(_s(perk.shortDescription)) }}
+          <span class="c-automator-points-list-ap">{{ $t('ade.b5cc896a83874516', { p0: $legacyText(_s(formatInt(perk.automatorPoints))) }) }}</span>
         </div>
       </div>
       <div class="l-automator-points-list-center-col">
@@ -60,26 +61,26 @@ export default {
           :key="source.name"
           class="c-automator-points-list-cell"
         >
-          <span class="c-automator-points-list-ap--large">{{ formatInt(source.automatorPoints()) }} AP</span>
+          <span class="c-automator-points-list-ap--large">{{ $t('ade.b5cc896a83874516', { p0: $legacyText(_s(formatInt(source.automatorPoints()))) }) }}</span>
           <span class="l-large-text">
-            {{ source.name }}
+            {{ $legacyText(_s(source.name)) }}
           </span>
           <br>
           <br>
           <span :style="textColor(source.automatorPoints() > 0)">
-            {{ source.shortDescription() }}
+            {{ $legacyText(_s(source.shortDescription())) }}
           </span>
           <span
             class="c-automator-points-list-symbol"
-            v-html="source.symbol"
+            v-html="$legacyHtml(source.symbol)"
           />
         </div>
       </div>
       <div class="l-automator-points-list-side-col c-automator-points-list-col">
         <span class="c-automator-points-list-symbol fas fa-arrow-up" />
-        <span class="c-automator-points-list-ap--large">{{ formatInt(fromUpgrades) }} AP</span>
+        <span class="c-automator-points-list-ap--large">{{ $t('ade.b5cc896a83874516', { p0: $legacyText(_s(formatInt(fromUpgrades))) }) }}</span>
         <span class="l-large-text">
-          Reality Upgrades
+          {{ $t('ade.569a5bcded2f6ba4') }}
         </span>
         <div
           v-for="upgrade in upgradeSources"
@@ -87,23 +88,20 @@ export default {
           class="c-automator-points-list-single-entry l-upgrade-list"
           :style="textColor(upgrade.isBought)"
         >
-          <b>{{ upgrade.name }}</b>
-          <span class="c-automator-points-list-ap">{{ formatInt(upgrade.automatorPoints) }} AP</span>
+          <b>{{ $legacyText(_s(upgrade.name)) }}</b>
+          <span class="c-automator-points-list-ap">{{ $t('ade.b5cc896a83874516', { p0: $legacyText(_s(formatInt(upgrade.automatorPoints))) }) }}</span>
           <br>
-          {{ upgrade.shortDescription }}
+          {{ $legacyText(_s(upgrade.shortDescription)) }}
         </div>
       </div>
     </div>
     <br>
     <div>
-      The Automator allows (amongst other things) buying full Time Study Trees, entering Eternity Challenges,
-      or starting Dilation.
-      <br>
-      It can also force prestige events on certain conditions independently from your Autobuyers or modify
-      some of your Autobuyer settings.
-      <br>
-      The speed of the Automator gradually increases as you get more Realities. If unlocked right now,
-      it would run {{ format(1000 / automatorInterval, 2, 2) }} commands per real-time second.
+      <LocalizedText id="ade.26bde8d631d4d87f">
+        <template #p0><br></template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(format(1000/automatorInterval,2,2))) }}</template>
+      </LocalizedText>
     </div>
   </div>
 </template>

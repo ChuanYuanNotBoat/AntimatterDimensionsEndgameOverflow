@@ -33,7 +33,7 @@ export default {
         :value="language.id"
         :lang="language.id"
       >
-        {{ language.nativeName }}
+        {{ $legacyText(_s(language.nativeName)) }}
       </option>
     </select>
     <p class="c-language-setting__notice">

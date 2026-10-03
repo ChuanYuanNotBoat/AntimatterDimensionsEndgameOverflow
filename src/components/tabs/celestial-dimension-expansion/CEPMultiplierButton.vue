@@ -48,18 +48,20 @@ export default {
       @click="purchaseUpgrade"
     >
       <div>
-        Multiply Celestial Eternity Points from all sources by {{ formatX(5) }}
-        <br>
-        Currently: {{ formatX(multiplier, 2, 0) }}
+        <LocalizedText id="ade.535a057e35ca8e39">
+          <template #p0>{{ $legacyText(_s(formatX(5))) }}</template>
+          <template #p1><br></template>
+          <template #p2>{{ $legacyText(_s(formatX(multiplier,2,0))) }}</template>
+        </LocalizedText>
       </div>
       <br>
-      Cost: {{ quantify("Celestial Eternity Point", cost, 2, 0) }}
+      {{ $t('ade.9b699ddbf2778050', { p0: $legacyText(_s(quantify("Celestial Eternity Point",cost,2,0))) }) }}
     </button>
     <PrimaryButton
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
       @click="upgrade.buyMax(false)"
     >
-      Max Cel Eternity Point mult
+      {{ $t('ade.dd990301628a7aec') }}
     </PrimaryButton>
   </div>
 </template>

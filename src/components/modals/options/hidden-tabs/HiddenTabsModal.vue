@@ -41,26 +41,26 @@ export default {
       Modify Visible Tabs
     </template>
     <div class="c-modal--short">
-      Click a button to toggle showing a tab on/off.
+      {{ $t('ade.2153515cc6e7138b') }}
       <br>
-      Some tabs cannot be hidden, and you cannot hide your current tab.
+      {{ $t('ade.07faf31eaa6ae2bc') }}
       <br>
-      Unhiding a tab in which all subtabs are hidden will also unhide all subtabs,
-      and hiding all subtabs will also hide the tab.
+      {{ $t('ade.eb39badf88e7318c') }}
       <br>
       <div v-if="isAlmostEnd">
-        You cannot hide your tabs after unlocking the Galaxy Generator.
+        {{ $t('ade.23799e403eb90775') }}
       </div>
       <div v-if="isEnslaved">
-        <br>
-        <i>You must... see everywhere...</i>
-        <br>
-        (You cannot hide your tabs within this Reality)
+        <LocalizedText id="ade.ed879b2d650a4a41">
+    <template #p0><br></template>
+    <template #p1><i>{{ $t('ade.b83bed7a444e7dbb') }}</i></template>
+    <template #p2><br></template>
+  </LocalizedText>
       </div>
       <PrimaryButton
         @click="showAllTabs"
       >
-        Show all tabs
+        {{ $t('ade.b36f4a79e2284a69') }}
       </PrimaryButton>
       <HiddenTabGroup
         v-for="(tab, index) in tabs"

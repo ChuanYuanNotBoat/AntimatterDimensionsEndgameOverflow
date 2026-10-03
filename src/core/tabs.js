@@ -11,7 +11,7 @@ class SubtabState {
   }
 
   get displayName() {
-    return this.config.nameKey ? translate(this.config.nameKey) : this.name;
+    return this.config.nameKey ? translate(this.config.nameKey, this.config.nameValues?.() ?? {}) : this.name;
   }
 
   get symbol() {
@@ -106,7 +106,7 @@ class TabState {
   }
 
   get displayName() {
-    return this.config.nameKey ? translate(this.config.nameKey) : this.name;
+    return this.config.nameKey ? translate(this.config.nameKey, this.config.nameValues?.() ?? {}) : this.name;
   }
 
   get key() {

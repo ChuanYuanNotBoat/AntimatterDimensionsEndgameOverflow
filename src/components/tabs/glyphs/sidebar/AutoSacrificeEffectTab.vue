@@ -57,12 +57,12 @@ export default {
   <div class="c-glyph-sacrifice-options__advanced">
     <div>
       <span
-        v-tooltip="questionmarkTooltip"
+        v-tooltip="$legacyTooltip(questionmarkTooltip)"
         class="o-questionmark"
       >
         ?
       </span>
-      Selected Glyphs will have at least
+      {{ $t('ade.d370d011ec2c1c13') }}
       <input
         ref="effectCount"
         type="number"
@@ -72,7 +72,7 @@ export default {
         :value="effectCount"
         @blur="setEffectCount"
       >
-      effects total, which must include <i>all</i> of the following effects:
+      {{ $t('ade.7d94f9ea726b7763') }} <i>{{ $t('ade.952d708ab772cfaf') }}</i> {{ $t('ade.dba4f19b3d04885f') }}
     </div>
     <div
       v-for="effect in effects"
@@ -86,7 +86,7 @@ export default {
         :style="descStyle"
       />
     </div>
-    Click to toggle individual effects on/off
+    {{ $t('ade.e9e2a6807c04109d') }}
   </div>
 </template>
 

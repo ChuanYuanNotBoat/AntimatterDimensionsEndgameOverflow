@@ -121,11 +121,11 @@ export default {
         v-if="isDoomed"
         class="pelle-current-glyph-effects"
       >
-        You cannot sacrifice Glyphs while Doomed.
+        {{ $t('ade.d87e68614d864b95') }}
       </span>
       <span v-else>
-        <div>Drag Glyphs here or shift-click to Sacrifice.</div>
-        <div>The confirmation can be disabled in Options or by holding Ctrl.</div>
+        <div>{{ $t('ade.a23626bfa6f6a17a') }}</div>
+        <div>{{ $t('ade.490eb0f8744e2401') }}</div>
       </span>
     </div>
     <div v-if="hasAlteration">
@@ -134,38 +134,40 @@ export default {
         @click="toggleAlteration"
       >
         <i :class="dropDownIconClass" />
-        <b> Altered Glyphs</b>
+        <b> {{ $t('ade.4fc1840af825b9a4') }}</b>
       </span>
       <br>
       <div v-if="hideAlteration">
-        (Details hidden, click to unhide)
+        {{ $t('ade.2869c2b8c0e8ea88') }}
       </div>
       <div v-else>
-        Glyph types will have one of their effects improved<br>
+        {{ $t('ade.173ddab84e47e675') }}<br>
         when their Glyph type's total sacrifice value is above:
         <br><br>
         <b>
-          <span :style="addStyle">{{ format(addThreshold) }} - an additional secondary effect</span>
+          <span :style="addStyle">{{ $t('ade.5842efee2cab9832', { p0: $legacyText(_s(format(addThreshold))) }) }}</span>
           <br>
-          <span :style="empowerStyle">{{ format(empowerThreshold) }} - formula drastically improved</span>
+          <span :style="empowerStyle">{{ $t('ade.962769e4bc28091d', { p0: $legacyText(_s(format(empowerThreshold))) }) }}</span>
           <br>
-          <span :style="boostStyle">{{ format(boostThreshold) }} - a boost depending on Glyph Sacrifice</span>
+          <span :style="boostStyle">{{ $t('ade.89e24af321c2b785', { p0: $legacyText(_s(format(boostThreshold))) }) }}</span>
         </b>
         <br><br>
-        All effects from Glyph Sacrifice can no longer be increased once they reach {{ format(maxSacrifice) }}.
+        All effects from Glyph Sacrifice can no longer be increased once they reach {{ $legacyText(_s(format(maxSacrifice))) }}.
       </div>
     </div>
     <br>
     <div class="c-sacrificed-glyphs__header">
-      Glyph Sacrifice Boosts:
+      {{ $t('ade.819bc8f38dff9d30') }}
     </div>
     <div v-if="anySacrifices && !isDoomed">
       <div v-if="teresaMult.gt(1)">
-        Glyph sacrifice values are multiplied by {{ formatX(teresaMult, 2, 2) }};
-        Teresa was last done at {{ lastMachines }}.
-        <span v-if="hasSeenRealityGlyph">
-          Reality Glyphs are unaffected by this multiplier and have no altered effects.
-        </span>
+        <LocalizedText id="ade.c974cd63d9817605">
+          <template #p0>{{ $legacyText(_s(formatX(teresaMult,2,2))) }}</template>
+          <template #p1>{{ $legacyText(_s(lastMachines)) }}</template>
+          <template #p2><span v-if="hasSeenRealityGlyph">
+          {{ $t('ade.89f333b4e5e1b311') }}
+        </span></template>
+        </LocalizedText>
       </div>
       <template v-for="type in types">
         <TypeSacrifice
@@ -179,10 +181,10 @@ export default {
       v-else-if="isDoomed"
       class="pelle-current-glyph-effects"
     >
-      All boosts from Glyph Sacrifice are disabled while Doomed, including changes to effects due to Altered Glyphs.
+      {{ $t('ade.73d86d7cecba0c7d') }}
     </div>
     <div v-else>
-      You haven't Sacrificed any Glyphs yet!
+      {{ $t('ade.2b7a8b37d0049a69') }}
     </div>
   </div>
 </template>

@@ -220,22 +220,26 @@ export default {
     <div class="c-laitela-hadrons-row">
       <h2>
         You have
-        {{ formatHybridSmall(lightHadrons, 3) }}<span v-if="totalLightHadrons > lightHadrons">(+{{ formatHybridSmall(totalLightHadrons - lightHadrons, 3) }})</span>
-        {{ pluralize("Light Hadron", totalLightHadrons) }}
+        {{ $legacyText(_s(formatHybridSmall(lightHadrons, 3))) }}<span v-if="totalLightHadrons > lightHadrons">(+{{ $legacyText(_s(formatHybridSmall(totalLightHadrons - lightHadrons, 3))) }})</span>
+        {{ $legacyText(_s(pluralize("Light Hadron", totalLightHadrons))) }}
       </h2>
       <h2 v-if="hasDark">
-        You have
-        {{ formatHybridSmall(darkHadrons, 3) }}<span v-if="totalDarkHadrons > darkHadrons">(+{{ formatHybridSmall(totalDarkHadrons - darkHadrons, 3) }})</span>
-        {{ pluralize("Dark Hadron", totalDarkHadrons) }}
+        <LocalizedText id="ade.884971f9825801e2">
+          <template #p0>{{ $legacyText(_s(formatHybridSmall(darkHadrons,3))) }}</template>
+          <template #p1><span v-if="totalDarkHadrons > darkHadrons">(+{{ $legacyText(_s(formatHybridSmall(totalDarkHadrons - darkHadrons, 3))) }})</span></template>
+          <template #p2>{{ $legacyText(_s(pluralize("Dark Hadron",totalDarkHadrons))) }}</template>
+        </LocalizedText>
       </h2>
       <h2 v-if="hasExotic">
-        You have
-        {{ formatHybridSmall(exoticHadrons, 3) }}<span v-if="totalExoticHadrons > exoticHadrons">(+{{ formatHybridSmall(totalExoticHadrons - exoticHadrons, 3) }})</span>
-        {{ pluralize("Exotic Hadron", totalExoticHadrons) }}
+        <LocalizedText id="ade.884971f9825801e2">
+          <template #p0>{{ $legacyText(_s(formatHybridSmall(exoticHadrons,3))) }}</template>
+          <template #p1><span v-if="totalExoticHadrons > exoticHadrons">(+{{ $legacyText(_s(formatHybridSmall(totalExoticHadrons - exoticHadrons, 3))) }})</span></template>
+          <template #p2>{{ $legacyText(_s(pluralize("Exotic Hadron",totalExoticHadrons))) }}</template>
+        </LocalizedText>
       </h2>
       <br>
       <h2>
-        You have spent {{ hadronTime }} in your current Endgame
+        {{ $t('ade.35fac156dd122033', { p0: $legacyText(_s(hadronTime)) }) }}
       </h2>
     </div>
     <div
@@ -243,16 +247,16 @@ export default {
       class="c-laitela-hadrons-row"
     >
       <div>
-        Hadron Effect 1:
+        {{ $t('ade.36b562db9ada5267') }}
       </div>
       <div>
-        Increase Singularities by {{ formatX(effect1, 2, 2) }}{{ extraH1Text }}
+        {{ $t('ade.4d497482fdec886c', { p0: $legacyText(_s(formatX(effect1,2,2))), p1: $legacyText(_s(extraH1Text)) }) }}
       </div>
       <div>
-        {{ effect1Text }}
+        {{ $legacyText(_s(effect1Text)) }}
       </div>
       <div>
-        Effectiveness: {{ formatDecimalPercents(effect1Percent, 2, 2) }}
+        {{ $t('ade.bbd9c047a98edb8a', { p0: $legacyText(_s(formatDecimalPercents(effect1Percent,2,2))) }) }}
       </div>
     </div>
     <div
@@ -260,16 +264,16 @@ export default {
       class="c-laitela-hadrons-row"
     >
       <div>
-        Hadron Effect 2:
+        {{ $t('ade.8cbd71862f2fbc3d') }}
       </div>
       <div>
-        Multiply Dark Matter cap by {{ format(effect2, 2, 2) }}
+        {{ $t('ade.b4c0c23005f2e2e6', { p0: $legacyText(_s(format(effect2,2,2))) }) }}
       </div>
       <div>
-        {{ effect2Text }}
+        {{ $legacyText(_s(effect2Text)) }}
       </div>
       <div>
-        Effectiveness: {{ formatDecimalPercents(effect2Percent, 2, 2) }}
+        {{ $t('ade.bbd9c047a98edb8a', { p0: $legacyText(_s(formatDecimalPercents(effect2Percent,2,2))) }) }}
       </div>
     </div>
     <div
@@ -277,16 +281,16 @@ export default {
       class="c-laitela-hadrons-row"
     >
       <div>
-        Hadron Effect 3:
+        {{ $t('ade.8fbea77427a17588') }}
       </div>
       <div>
-        Increase Dark Energy Multiplier on Ascension by {{ format(effect3, 2, 2) }}
+        {{ $t('ade.eee004caba8727f5', { p0: $legacyText(_s(format(effect3,2,2))) }) }}
       </div>
       <div>
-        {{ effect3Text }}
+        {{ $legacyText(_s(effect3Text)) }}
       </div>
       <div>
-        Effectiveness: {{ formatDecimalPercents(effect3Percent, 2, 2) }}
+        {{ $t('ade.bbd9c047a98edb8a', { p0: $legacyText(_s(formatDecimalPercents(effect3Percent,2,2))) }) }}
       </div>
     </div>
     <div
@@ -294,16 +298,16 @@ export default {
       class="c-laitela-hadrons-row"
     >
       <div>
-        Hadron Effect 4:
+        {{ $t('ade.95a4e136ebdd7363') }}
       </div>
       <div>
-        {{ isFlipped ? "Matter" : "Antimatter" }} generates {{ formatX(effect4, 2, 2) }} more Entropy
+        {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} generates {{ $legacyText(_s(formatX(effect4, 2, 2))) }} more Entropy
       </div>
       <div>
-        {{ effect4Text }}
+        {{ $legacyText(_s(effect4Text)) }}
       </div>
       <div>
-        Effectiveness: {{ formatDecimalPercents(effect4Percent, 2, 2) }}
+        {{ $t('ade.bbd9c047a98edb8a', { p0: $legacyText(_s(formatDecimalPercents(effect4Percent,2,2))) }) }}
       </div>
     </div>
     <div
@@ -311,16 +315,16 @@ export default {
       class="c-laitela-hadrons-row"
     >
       <div>
-        Dark Hadron Effect:
+        {{ $t('ade.e0a45a6720feca07') }}
       </div>
       <div>
-        Multiply Continuum Purchases by {{ format(effect5, 2, 2) }}
+        {{ $t('ade.5333fa9687d6857a', { p0: $legacyText(_s(format(effect5,2,2))) }) }}
       </div>
       <div>
-        {{ effect5Text }}
+        {{ $legacyText(_s(effect5Text)) }}
       </div>
       <div>
-        Effectiveness: {{ formatDecimalPercents(effect5Percent, 2, 2) }}
+        {{ $t('ade.bbd9c047a98edb8a', { p0: $legacyText(_s(formatDecimalPercents(effect5Percent,2,2))) }) }}
       </div>
     </div>
     <div
@@ -332,35 +336,35 @@ export default {
         :class="{ 'c-laitela-hadrons-assign--available' : lightHadrons > 0 }"
         @click="assignOne"
       >
-        {{ buttonText1 }}
+        {{ $legacyText(_s(buttonText1)) }}
       </button>
       <button
         class="c-laitela-hadrons-assign"
         :class="{ 'c-laitela-hadrons-assign--available' : (hasExotic ? exoticHadrons > 0 : darkHadrons > 0) }"
         @click="unassignOne"
       >
-        {{ buttonText2 }}
+        {{ $legacyText(_s(buttonText2)) }}
       </button>
       <button
         class="c-laitela-hadrons-assign"
         :class="{ 'c-laitela-hadrons-assign--available' : lightHadrons > 0 }"
         @click="assignAll"
       >
-        {{ buttonText3 }}
+        {{ $legacyText(_s(buttonText3)) }}
       </button>
       <button
         class="c-laitela-hadrons-assign"
         :class="{ 'c-laitela-hadrons-assign--available' : (hasExotic ? exoticHadrons > 0 : darkHadrons > 0) }"
         @click="unassignAll"
       >
-        {{ buttonText4 }}
+        {{ $legacyText(_s(buttonText4)) }}
       </button>
     </div>
     <div
       v-if="showWarning"
       class="c-laitela-warning"
     >
-      Hadron effectiveness will increase much slower above {{ formatPercents(1) }}
+      {{ $t('ade.6050cf2bae716d78', { p0: $legacyText(_s(formatPercents(1))) }) }}
     </div>
   </div>
 </template>

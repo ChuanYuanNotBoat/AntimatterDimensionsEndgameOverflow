@@ -76,7 +76,7 @@ export default {
       </PrimaryButton>
     </div>
     <div v-if="chargeUnlocked">
-      You have charged {{ formatInt(chargesUsed) }}/{{ formatInt(totalCharges) }} Eternity Upgrades.
+      You have charged {{ $legacyText(_s(formatInt(chargesUsed))) }}/{{ $legacyText(_s(formatInt(totalCharges))) }} Eternity Upgrades.
       Charged Eternity Upgrades have their effect altered.
       <br>
       Hold shift to show Charged Eternity Upgrades.
@@ -96,14 +96,20 @@ export default {
     </div>
     <EPMultiplierButton />
     <div v-if="areSoftcapsApplicable">
-      The cost for the {{ formatX(5) }} multiplier jumps at {{ format(costIncreases[0]) }},
-      {{ formatPostBreak(costIncreases[1], 2) }}, and {{ formatPostBreak(costIncreases[2]) }} Eternity Points.
-      <br>
-      The cost increases super-exponentially after {{ formatPostBreak(costIncreases[3]) }} Eternity Points.
+      <LocalizedText id="ade.d910b0f8918626ef">
+        <template #p0>{{ $legacyText(_s(formatX(5))) }}</template>
+        <template #p1>{{ $legacyText(_s(format(costIncreases[0]))) }}</template>
+        <template #p2>{{ $legacyText(_s(formatPostBreak(costIncreases[1],2))) }}</template>
+        <template #p3>{{ $legacyText(_s(formatPostBreak(costIncreases[2]))) }}</template>
+        <template #p4><br></template>
+        <template #p5>{{ $legacyText(_s(formatPostBreak(costIncreases[3]))) }}</template>
+      </LocalizedText>
     </div>
     <div v-if="hasSeenFinalSoftcap">
-      <br>
-      The cost increases greatly beyond {{ formatPostBreak(costIncreases[4]) }} Eternity Points.
+      <LocalizedText id="ade.43faf28f879ba748">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(formatPostBreak(costIncreases[4]))) }}</template>
+  </LocalizedText>
     </div>
   </div>
 </template>

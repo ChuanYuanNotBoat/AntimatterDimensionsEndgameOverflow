@@ -196,7 +196,7 @@ export default {
         :aria-pressed="group.key === currentGroupKey"
         @click="clickCategory(group)"
       >
-        {{ group.text }}
+        {{ $legacyText(_s(group.text)) }}
       </button>
     </div>
     <div
@@ -213,7 +213,7 @@ export default {
         :aria-pressed="option.key === currentKey"
         @click="selectTab(option)"
       >
-        {{ option.text }}
+        {{ $legacyText(_s(option.text)) }}
       </button>
     </div>
     <div
@@ -223,9 +223,9 @@ export default {
       <MultiplierStateSummary :key="currentKey" :resource-key="currentKey" />
       <div class="c-multiplier-context">
         <h3 class="c-multiplier-resource-title">
-          {{ currentOption.text }}
+          {{ $legacyText(_s(currentOption.text)) }}
         </h3>
-        <span class="c-multiplier-analysis-kind">{{ analysisModeLabel }}</span>
+        <span class="c-multiplier-analysis-kind">{{ $legacyText(_s(analysisModeLabel)) }}</span>
         <div
           v-if="isDimensionBreakdown"
           class="l-dimension-inline-switch"
@@ -250,7 +250,7 @@ export default {
               :key="opt.tier"
               :value="opt.tier"
             >
-              {{ opt.text }}
+              {{ $legacyText(_s(opt.text)) }}
             </option>
           </select>
           <button
@@ -286,7 +286,7 @@ export default {
             :aria-pressed="valueMode === mode.key"
             @click="selectValueMode(mode.key)"
           >
-            {{ mode.text }}
+            {{ $legacyText(_s(mode.text)) }}
           </button>
         </div>
       </div>
@@ -305,7 +305,7 @@ export default {
       >
         <span
           class="c-symbol-overlay"
-          v-html="symbol"
+          v-html="$legacyHtml(symbol)"
         />
       </span>
       <AntimatterProductionBreakdown

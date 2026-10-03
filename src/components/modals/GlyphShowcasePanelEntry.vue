@@ -150,10 +150,10 @@ export default {
 <template>
   <div>
     <div class="c-glyph-choice-icon">
-      <span :style="typeStyle">{{ typeCapitalized }}</span>
+      <span :style="typeStyle">{{ $legacyText(_s(typeCapitalized)) }}</span>
       <div
         v-if="showLevel"
-        v-html="levelText"
+        v-html="$legacyHtml(levelText)"
       />
       <GlyphComponent
         :key="idx"
@@ -172,7 +172,7 @@ export default {
         @clicked="clickGlyph(glyph)"
       />
       <div :style="rarityStyle">
-        {{ rarityPercent }}
+        {{ $legacyText(_s(rarityPercent)) }}
       </div>
     </div>
     <div
@@ -184,7 +184,7 @@ export default {
         :key="index"
         :class="{ 'o-pelle-disabled': effectObj.isPelleDisabled }"
       >
-        {{ effectObj.text }}
+        {{ $legacyText(_s(effectObj.text)) }}
       </div>
     </div>
   </div>

@@ -49,17 +49,17 @@ export default {
 <template>
   <div :class="classObject">
     <div
-      v-html="icon"
+      v-html="$legacyHtml(icon)"
     />
     <div class="c-ra-pet-upgrade__tooltip">
       <div class="c-ra-pet-upgrade__tooltip__name">
-        {{ petName }} Level {{ formatInt(level) }}
+        {{ $t('ade.134e13ff1142918b', { p0: $legacyText(_s(petName)), p1: $legacyText(_s(formatInt(level))) }) }}
       </div>
       <div
         class="c-ra-pet-upgrade__tooltip__description"
         :class="{ 'o-pelle-disabled': isUseless }"
       >
-        {{ description }}
+        {{ $legacyText(_s(description)) }}
       </div>
     </div>
   </div>

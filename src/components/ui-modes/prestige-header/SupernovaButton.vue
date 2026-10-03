@@ -104,27 +104,32 @@ export default {
   >
     <!-- Cannot Supernova -->
     <template v-if="!canSupernova">
-      Reach {{ format(supernovaGoal, 2, 2) }}
-      <br>
-      Divine Stars
+      <LocalizedText id="ade.de1a0495138b9b7a">
+        <template #p0>{{ $legacyText(_s(format(supernovaGoal,2,2))) }}</template>
+        <template #p1><br></template>
+      </LocalizedText>
     </template>
 
     <!-- Can Supernova -->
     <template v-else>
       <div v-if="!showNebRate" />
       <b>
-        Supernova for
-        <span :style="amountStyle">{{ format(gainedNeb, 2) }}</span>
-        <span v-if="showNebRate"> Neb</span>
-        <span v-else> {{ pluralize("Nebula", gainedNeb) }}</span>
+        <LocalizedText id="ade.9a74b5021c6d61ac">
+          <template #p0><span :style="amountStyle">{{ $legacyText(_s(format(gainedNeb, 2))) }}</span></template>
+          <template #p1><span v-if="showNebRate"> {{ $t('ade.735eeceeae51b068') }}</span>
+<span v-else> {{ pluralize("Nebula", gainedNeb) }}</span></template>
+        </LocalizedText>
+
       </b>
       <template v-if="showNebRate">
-        <br>
-        Current: {{ format(currentNebRate, 2) }} Neb/min
-        <br>
-        Peak: {{ format(peakNebRate, 2) }} Neb/min
-        <br>
-        at {{ format(peakNebRateVal, 2) }} Neb
+        <LocalizedText id="ade.f04e2bb1fca76e4a">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(currentNebRate,2))) }}</template>
+    <template #p2><br></template>
+    <template #p3>{{ $legacyText(_s(format(peakNebRate,2))) }}</template>
+    <template #p4><br></template>
+    <template #p5>{{ $legacyText(_s(format(peakNebRateVal,2))) }}</template>
+  </LocalizedText>
       </template>
       <div v-else />
     </template>

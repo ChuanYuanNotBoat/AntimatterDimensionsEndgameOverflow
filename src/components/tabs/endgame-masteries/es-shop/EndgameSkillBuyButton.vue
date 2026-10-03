@@ -42,6 +42,6 @@ export default {
     :class="enabledClass"
     @click="action"
   >
-    {{ isLocked ? "Requires an Endgame to unlock" : formatCost(cost) }}
+    {{ $legacyText(_s(isLocked ? "Requires an Endgame to unlock" : formatCost(cost))) }}
   </button>
 </template>

@@ -98,9 +98,10 @@ export default {
       :class="classObject"
       onclick="ExpansionPacks.unlock();"
     >
-      Unlock Expansion Packs
-      <br>
-      Cost: {{ format(unlockCost, 2, 3) }} Galaxies
+      <LocalizedText id="ade.9d71acac2bef0b18">
+        <template #p0><br></template>
+        <template #p1>{{ $legacyText(_s(format(unlockCost,2,3))) }}</template>
+      </LocalizedText>
     </PrimaryButton>
     <div v-if="isUnlocked">
       <div
@@ -116,7 +117,7 @@ export default {
         />
       </div>
       <div>
-        <span class="c-expansion-packs-next-text">{{ nextAtDisplay }}</span>
+        <span class="c-expansion-packs-next-text">{{ $legacyText(_s(nextAtDisplay)) }}</span>
       </div>
     </div>
   </div>

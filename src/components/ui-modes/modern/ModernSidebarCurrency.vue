@@ -65,10 +65,10 @@ export default {
       :class="resource.formatClass"
       :style="styleObject()"
     >
-      {{ displayValue }}
+      {{ $legacyText(_s(displayValue)) }}
     </h2>
     <div class="c-sidebar-resource__information">
-      <span class="c-sidebar-resource__name">{{ resourceName }}</span>
+      <span class="c-sidebar-resource__name">{{ $legacyText(_s(resourceName)) }}</span>
     </div>
   </div>
 </template>

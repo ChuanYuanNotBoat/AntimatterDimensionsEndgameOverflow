@@ -99,29 +99,29 @@ export default {
     class="c-speedrun-status"
   >
     <div v-if="!isCollapsed">
-      <b>Speedrun Status (<span v-html="statusText" />)</b>
+      <b>{{ $t('ade.d64c2dca026cff9d') }}<span v-html="$legacyHtml(statusText)" />)</b>
       <br>
       <span
         :class="{ 'c-speedrun-status--can-change': !hasStarted }"
         @click="changeName"
       >
-        Player Name: {{ saveName }}
+        {{ $t('ade.1a5893293782c88a', { p0: $legacyText(_s(saveName)) }) }}
       </span>
       <br>
-      <i>{{ segmentText }}</i>
+      <i>{{ $legacyText(_s(segmentText)) }}</i>
       <br>
-      <i>{{ iapText }}</i>
+      <i>{{ $legacyText(_s(iapText)) }}</i>
       <br>
       <span
         :class="{ 'c-speedrun-status--can-change': canModifySeed }"
         @click="openSeedModal()"
-      >{{ seedText }}</span>
+      >{{ $legacyText(_s(seedText)) }}</span>
       <br>
-      Total real playtime since start: {{ timePlayedStr }}
+      {{ $t('ade.c4ad8b645213ff40', { p0: $legacyText(_s(timePlayedStr)) }) }}
       <br>
-      Offline Progress: <span v-html="offlineText" />
+      {{ $t('ade.ff43616b6aa95269') }} <span v-html="$legacyHtml(offlineText)" />
       <br>
-      Most Recent Milestone: {{ milestoneName(mostRecent) }} <span v-if="mostRecent">({{ timeSince }} ago)</span>
+      {{ $t('ade.39ff7fedbc636f8b', { p0: $legacyText(_s(milestoneName(mostRecent))) }) }} <span v-if="mostRecent">{{ $t('ade.0b1ced927dca81b7', { p0: $legacyText(_s(timeSince)) }) }}</span>
       <br>
     </div>
     <div
@@ -129,7 +129,7 @@ export default {
       @click="toggleCollapse"
     >
       <i :class="collapseIcon" />
-      {{ collapseText() }}
+      {{ $legacyText(_s(collapseText())) }}
       <i :class="collapseIcon" />
     </div>
   </div>

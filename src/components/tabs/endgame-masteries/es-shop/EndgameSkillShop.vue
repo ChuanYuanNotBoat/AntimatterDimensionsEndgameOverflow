@@ -140,12 +140,12 @@ export default {
         </button>
         <p class="endgameskills">
           <span class="c-es-amount">
-            {{ quantify("Endgame Skill", skillAmount, 2, 0, formatEndgameSkillType) }}
+            {{ $legacyText(_s(quantify("Endgame Skill", skillAmount, 2, 0, formatEndgameSkillType))) }}
           </span>
         </p>
         <div class="l-load-tree-area">
           <div class="l-tree-load-button-wrapper">
-            <span class="c-esshop__save-load-text">{{ saveLoadText }}</span>
+            <span class="c-esshop__save-load-text">{{ $legacyText(_s(saveLoadText)) }}</span>
             <EndgameMasterySaveLoadButton
               v-for="saveslot in 6"
               :key="saveslot"
@@ -156,8 +156,7 @@ export default {
             <span
               v-if="hasESGen"
               class="checkbox-margin"
-              ach-tooltip="This shows ES generation by default and total ES if you hold shift.
-                Check this box to swap this behavior."
+              :ach-tooltip="$t('ade.e3ec1a3bcfd3600c')"
             >
               <input
                 v-model="invertESgenDisplay"
@@ -168,10 +167,10 @@ export default {
               >
             </span>
             <span v-if="showESGen">
-              You are gaining {{ ESgenRateText }}.
+              {{ $t('ade.49414230ef98cf16', { p0: $legacyText(_s(ESgenRateText)) }) }}
             </span>
             <span v-else>
-              You have {{ totalEndgameSkillText }}.
+              {{ $t('ade.72a577765e7e40b3', { p0: $legacyText(_s(totalEndgameSkillText)) }) }}
             </span>
           </div>
         </div>
@@ -205,7 +204,7 @@ export default {
             class="o-es-top-row-button c-es-buy-button c-es-buy-button--unlocked"
             @click="buyMaxSkills"
           >
-            Buy max
+            {{ $t('ade.9bd664051a0c4776') }}
           </button>
         </div>
       </div>

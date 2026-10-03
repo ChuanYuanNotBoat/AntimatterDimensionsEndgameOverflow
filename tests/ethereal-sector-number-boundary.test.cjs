@@ -165,3 +165,51 @@ test('fractional, infinite, and negative saved sectors are diagnosed before muta
     assert.equal(world.saves.length, 0);
   }
 });
+
+// The real Decimal's Lambert W can miss by several sectors near 2^53.
+// A logarithmic test double cannot reproduce that numerical error.
+const RealDecimal = require('break_eternity.js');
+function realWorld(power, sector = 1) {
+  const player = { endgame: { ethereal: { sector } } };
+  let comparisons = 0;
+  const Decimal = class extends RealDecimal {};
+  Decimal.pow = (...args) => { comparisons++; return RealDecimal.pow(...args); };
+  Decimal.lambertw = () => { throw Error('No approximate inverse in sector search'); };
+  const sandbox = { Decimal, Number, Error, Math, player,
+    Currency: { etherealPower: { value: power, lt: threshold => power.lt(threshold) } },
+    Ethereal: { get sectorThreshold() { return RealDecimal.pow(player.endgame.ethereal.sector, player.endgame.ethereal.sector); } },
+    DivinityMilestone: { ascendedSurge: { isReached: true } } };
+  vm.runInNewContext(code + '\nglobalThis.advance = tryAdvanceSector;', sandbox);
+  return { player, advance: sandbox.advance, get comparisons() { return comparisons; } };
+}
+
+test('real Decimal near the safe-integer boundary selects an affordable sector without the reported crash', () => {
+  for (const exponent of [1e12, 2.762650960432e12, 1e15, 1e16, 1e17]) {
+    const power = RealDecimal.pow10(exponent);
+    power.toNumber = () => { throw Error('Never convert astronomical power'); };
+    const world = realWorld(power);
+    assert.doesNotThrow(() => world.advance());
+    const sector = world.player.endgame.ethereal.sector;
+    assert.ok(Number.isSafeInteger(sector));
+    assert.ok(power.gte(RealDecimal.pow(sector - 1, sector - 1)), 'last advance was affordable');
+    assert.ok(power.lt(RealDecimal.pow(sector, sector)), 'no affordable advance was missed');
+    assert.ok(world.comparisons <= 54, 'bounded search');
+    world.advance();
+    assert.equal(world.player.endgame.ethereal.sector, sector, 'stable on the following tick');
+  }
+});
+
+test('real Decimal exact thresholds, resets, and saturation preserve the saved Number boundary', () => {
+  for (const threshold of [2, 3, 1000, 1e8, 1e12]) {
+    const power = RealDecimal.pow(threshold, threshold);
+    const world = realWorld(power);
+    world.advance();
+    const sector = world.player.endgame.ethereal.sector;
+    assert.ok(sector > threshold);
+    assert.ok(power.gte(RealDecimal.pow(sector - 1, sector - 1)));
+    assert.ok(power.lt(RealDecimal.pow(sector, sector)));
+  }
+  const world = realWorld(new RealDecimal('(e^17)266'));
+  world.advance();
+  assert.equal(world.player.endgame.ethereal.sector, Number.MAX_SAFE_INTEGER);
+});

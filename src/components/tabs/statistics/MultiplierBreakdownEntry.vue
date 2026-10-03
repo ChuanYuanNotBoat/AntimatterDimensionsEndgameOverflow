@@ -899,7 +899,7 @@ export default {
       >
         <span
           class="c-bar-overlay"
-          v-html="barSymbol(index)"
+          v-html="$legacyHtml(barSymbol(index))"
         />
       </div>
     </div>
@@ -918,7 +918,7 @@ export default {
       >
         <span
           class="c-bar-overlay"
-          v-html="barSymbol(index)"
+          v-html="$legacyHtml(barSymbol(index))"
         />
       </div>
     </div>
@@ -932,7 +932,7 @@ export default {
             :presentation="presentation"
             :value-mode="valueMode"
           />
-          <template v-else>{{ totalString() }}</template>
+          <template v-else>{{ $legacyText(_s(totalString())) }}</template>
         </b>
         <span
           class="c-display-settings"
@@ -947,7 +947,7 @@ export default {
           <PrimaryToggleButton
             v-if="usesOrdered && canShowFinalImpact"
             v-model="orderedFinalImpact"
-            v-tooltip="'Final includes amplification or reduction from later formula steps; Direct only measures this step itself'"
+            v-tooltip="$legacyTooltip('Final includes amplification or reduction from later formula steps; Direct only measures this step itself')"
             off="Direct"
             on="Final"
             class="o-primary-btn c-impact-display-btn"
@@ -955,14 +955,14 @@ export default {
           <PrimaryToggleButton
             v-else-if="valueMode === 'all' && hasSeenPowers && allowPowerToggle"
             v-model="replacePowers"
-            v-tooltip="'Change Display for Power effects'"
+            v-tooltip="$legacyTooltip('Change Display for Power effects')"
             off="^N"
             on="×N"
             class="o-primary-btn c-change-display-btn"
           />
           <i
             v-if="groups.length > 1 && !isDimensionRoot"
-            v-tooltip="'Change Multiplier Grouping'"
+            v-tooltip="$legacyTooltip('Change Multiplier Grouping')"
             class="o-primary-btn c-change-display-btn fas fa-arrows-rotate"
             @click="changeGroup"
           />
@@ -971,26 +971,26 @@ export default {
       <div v-if="valueMode !== 'all' && !isEmpty" class="c-selected-effect">
         <template v-if="usesOrdered">
           <div v-if="selectedRawEffectAvailable">
-            Product of source {{ valueMode === 'exponent' ? 'exponents (per tier)' : 'multipliers' }}:
-            {{ valueMode === 'exponent' ? formatPow(selectedRawEffect, 2, 3) : formatX(selectedRawEffect, 2, 2) }}
+            Product of source {{ $legacyText(_s(valueMode === 'exponent' ? 'exponents (per tier)' : 'multipliers')) }}:
+            {{ $legacyText(_s(valueMode === 'exponent' ? formatPow(selectedRawEffect, 2, 3) : formatX(selectedRawEffect, 2, 2))) }}
           </div>
-          Product of selected direct step ratios: {{ formatX(selectedEffect, 2, 2) }}
+          Product of selected direct step ratios: {{ $legacyText(_s(formatX(selectedEffect, 2, 2))) }}
         </template>
         <template v-else-if="valueMode === 'exponent'">
-          Product of source exponents: {{ formatPow(selectedEffect, 2, 3) }}
+          Product of source exponents: {{ $legacyText(_s(formatPow(selectedEffect, 2, 3))) }}
         </template>
         <template v-else>
-          Product of source multipliers: {{ formatX(selectedEffect, 2, 2) }}
+          Product of source multipliers: {{ $legacyText(_s(formatX(selectedEffect, 2, 2))) }}
         </template>
       </div>
       <div
         v-if="isEmpty"
         class="c-no-effect"
       >
-        No Active {{ valueMode === 'all' ? 'Effects' : (valueMode === 'exponent' ? 'Exponents' : 'Multipliers') }}
+        No Active {{ $legacyText(_s(valueMode === 'all' ? 'Effects' : (valueMode === 'exponent' ? 'Exponents' : 'Multipliers'))) }}
         <br>
         <br>
-        <template v-if="valueMode === 'all'">{{ disabledText }}</template>
+        <template v-if="valueMode === 'all'">{{ $legacyText(_s(disabledText)) }}</template>
       </div>
       <div
         v-for="(entry, index) in entries"
@@ -1015,7 +1015,7 @@ export default {
                   v-if="hasChildEntries(index)"
                   type="button"
                   class="c-inline-expander c-inline-expander--children"
-                  v-tooltip="'Show child entries'"
+                  v-tooltip="$legacyTooltip('Show child entries')"
                   @click.stop="toggleChildren(index)"
                 >
                   <span
@@ -1027,7 +1027,7 @@ export default {
                   v-if="usesOrdered && entry.data.hasTransform"
                   type="button"
                   class="c-inline-expander c-inline-expander--details"
-                  v-tooltip="'Show or hide detail box'"
+                  v-tooltip="$legacyTooltip('Show or hide detail box')"
                   @click.stop="toggleDetails(index)"
                 >
                   <span
@@ -1041,7 +1041,7 @@ export default {
                 class="c-entry-name"
                 :aria-expanded="!!(showGroup[index] || showDetails[index])"
                 @click="toggleBar(index)"
-              >{{ entryString(index) }}</button>
+              >{{ $legacyText(_s(entryString(index))) }}</button>
             </span>
           </div>
           <div
@@ -1053,30 +1053,30 @@ export default {
               class="c-transform-detail-grid"
             >
               <span>Star / amount</span>
-              <b>{{ starAudits[entry.key].color }} / {{ format(starAudits[entry.key].count, 2, 2) }}</b>
+              <b>{{ $legacyText(_s(starAudits[entry.key].color)) }} / {{ $legacyText(_s(format(starAudits[entry.key].count, 2, 2))) }}</b>
               <span>Gray Star bonus</span>
-              <b>+{{ format(starAudits[entry.key].grayBoost, 2, 2) }}%</b>
+              <b>+{{ $legacyText(_s(format(starAudits[entry.key].grayBoost, 2, 2))) }}%</b>
               <span>Effective exponent</span>
-              <b>{{ formatPow(starAudits[entry.key].exponent, 2, 5) }}</b>
+              <b>{{ $legacyText(_s(formatPow(starAudits[entry.key].exponent, 2, 5))) }}</b>
               <span>Gameplay operation</span>
               <b>10^(sign(L) × |L|^p), L = log10(multiplier)</b>
               <span>Scope</span>
-              <b>{{ starAudits[entry.key].scope }}; {{ starAudits[entry.key].tierCount }} active</b>
+              <b>{{ $legacyText(_s(starAudits[entry.key].scope)) }}; {{ $legacyText(_s(starAudits[entry.key].tierCount)) }} active</b>
               <span>Direct Star step (gameplay)</span>
-              <b>{{ format(starAudits[entry.key].directStarOoM, 2, 2) }} OoM (sum of selected multiplier logs)</b>
+              <b>{{ $legacyText(_s(format(starAudits[entry.key].directStarOoM, 2, 2))) }} OoM (sum of selected multiplier logs)</b>
               <span>After downstream caps / overflows</span>
-              <b>{{ format(starAudits[entry.key].multiplierOoM, 2, 2) }} OoM (multiplier product, NOT currency gain)</b>
+              <b>{{ $legacyText(_s(format(starAudits[entry.key].multiplierOoM, 2, 2))) }} OoM (multiplier product, NOT currency gain)</b>
               <span>Propagation chain</span>
-              <b>{{ starAudits[entry.key].propagation }}</b>
+              <b>{{ $legacyText(_s(starAudits[entry.key].propagation)) }}</b>
               <span>Production endpoint</span>
-              <b>{{ starAudits[entry.key].endpointLabel }}</b>
+              <b>{{ $legacyText(_s(starAudits[entry.key].endpointLabel)) }}</b>
               <span>With Star (current)</span>
-              <b>{{ format(starAudits[entry.key].currentProduction, 2, 2) }}</b>
+              <b>{{ $legacyText(_s(format(starAudits[entry.key].currentProduction, 2, 2))) }}</b>
               <span>Without this Star</span>
-              <b>{{ format(starAudits[entry.key].withoutProduction, 2, 2) }}</b>
+              <b>{{ $legacyText(_s(format(starAudits[entry.key].withoutProduction, 2, 2))) }}</b>
               <span>Instantaneous production difference</span>
               <b v-if="starAudits[entry.key].productionOoM !== null">
-                {{ format(starAudits[entry.key].productionOoM, 2, 2) }} OoM
+                {{ $legacyText(_s(format(starAudits[entry.key].productionOoM, 2, 2))) }} OoM
               </b>
               <b v-else>Not expressible as an OoM ratio (zero production)</b>
               <span v-if="starAudits[entry.key].mismatch">Gameplay trace check</span>
@@ -1089,48 +1089,48 @@ export default {
             </div>
             <div v-else class="c-transform-detail-grid">
               <span>Effect type</span>
-              <b>{{ transformTypeString(entry) }}</b>
+              <b>{{ $legacyText(_s(transformTypeString(entry))) }}</b>
               <template v-if="entry.data.transformAggregate">
                 <span>Scope</span>
-                <b>{{ entry.data.transformAggregateScope || 'Producing dimension tiers' }}</b>
+                <b>{{ $legacyText(_s(entry.data.transformAggregateScope || 'Producing dimension tiers')) }}</b>
                 <template v-if="entry.data.transformHasValue">
                   <span>Source value</span>
-                  <b>{{ transformValueString(entry) }}</b>
+                  <b>{{ $legacyText(_s(transformValueString(entry))) }}</b>
                 </template>
                 <span>Combined Direct impact</span>
-                <b>{{ transformImpactString(entry, false) }}</b>
+                <b>{{ $legacyText(_s(transformImpactString(entry, false))) }}</b>
                 <template v-if="entry.data.transformHasFinalWithout">
                   <span>Combined Final impact</span>
-                  <b>{{ transformImpactString(entry, true) }}</b>
+                  <b>{{ $legacyText(_s(transformImpactString(entry, true))) }}</b>
                 </template>
               </template>
               <template v-else>
                 <span>Direct effect</span>
-                <b>{{ transformValueString(entry) || '—' }}</b>
+                <b>{{ $legacyText(_s(transformValueString(entry) || '—')) }}</b>
                 <span>Before this step</span>
-                <b>{{ format(entry.data.transformBefore, 2, 2) }}</b>
+                <b>{{ $legacyText(_s(format(entry.data.transformBefore, 2, 2))) }}</b>
                 <span>After this step</span>
-                <b>{{ format(entry.data.transformAfter, 2, 2) }}</b>
+                <b>{{ $legacyText(_s(format(entry.data.transformAfter, 2, 2))) }}</b>
                 <span>Direct impact</span>
-                <b>{{ transformImpactString(entry, false) }}</b>
+                <b>{{ $legacyText(_s(transformImpactString(entry, false))) }}</b>
                 <template v-if="['hardcap', 'softcap'].includes(entry.data.transformType)">
                   <span>Limit status</span>
                   <b v-if="entry.data.transformAfter.lt(entry.data.transformBefore)">
-                    Suppression at this operation: {{ transformImpactString(entry, false) }}
+                    Suppression at this operation: {{ $legacyText(_s(transformImpactString(entry, false))) }}
                   </b>
                   <b v-else>Not currently reducing this value</b>
                   <template v-if="entry.data.transformDisplay">
                     <span>Limit / threshold</span>
-                    <b>{{ entry.data.transformDisplay }}</b>
+                    <b>{{ $legacyText(_s(entry.data.transformDisplay)) }}</b>
                   </template>
                 </template>
                 <template v-if="entry.data.transformHasFinalWithout">
                   <span>Final with effect</span>
-                  <b>{{ format(entry.data.transformFinalWith, 2, 2) }}</b>
+                  <b>{{ $legacyText(_s(format(entry.data.transformFinalWith, 2, 2))) }}</b>
                   <span>Final without effect</span>
-                  <b>{{ format(entry.data.transformFinalWithout, 2, 2) }}</b>
+                  <b>{{ $legacyText(_s(format(entry.data.transformFinalWithout, 2, 2))) }}</b>
                   <span>Final impact</span>
-                  <b>{{ transformImpactString(entry, true) }}</b>
+                  <b>{{ $legacyText(_s(transformImpactString(entry, true))) }}</b>
                 </template>
               </template>
             </div>
@@ -1155,7 +1155,7 @@ export default {
       <div v-if="isDilated && !isEmpty && !usesOrdered">
         <div class="c-single-entry c-dilation-entry">
           <div>
-            {{ dilationString() }}
+            {{ $legacyText(_s(dilationString())) }}
           </div>
         </div>
       </div>
@@ -1163,7 +1163,7 @@ export default {
         v-if="usesOrdered && !isEmpty"
         class="c-no-effect c-ordered-note"
       >
-        {{ orderedNoteText }}
+        {{ $legacyText(_s(orderedNoteText)) }}
       </div>
     </div>
   </div>

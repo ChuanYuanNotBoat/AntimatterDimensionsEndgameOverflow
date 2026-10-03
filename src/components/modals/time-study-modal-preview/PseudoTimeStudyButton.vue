@@ -99,7 +99,7 @@ export default {
     :class="[classObject, studyClass]"
     :style="styleObject"
   >
-    {{ studyString }}
+    {{ $legacyText(_s(studyString)) }}
   </button>
 </template>
 

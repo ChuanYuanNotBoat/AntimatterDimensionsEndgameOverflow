@@ -112,23 +112,25 @@ export default {
     <div class="c-ra-memory-header">
       <CelestialQuoteHistory celestial="ra" />
       <div v-if="!isRaCapped">
-        Each Memory Chunk generates a base of one Memory per second<span v-if="memoriesPerChunk.gt(1)">,
-          which has been increased to {{ quantify("Memory", memoriesPerChunk, 2, 3) }} per second</span>.
-        <br>
-        Storing real time prevents Memory Chunk generation, but Memories will still be gained normally.
-        <span v-if="memoriesPerChunk.gt(1)">
+        <LocalizedText id="ade.a1b4bc18943dc99f">
+          <template #p0><span v-if="memoriesPerChunk.gt(1)">,
+          which has been increased to {{ $legacyText(_s(quantify("Memory", memoriesPerChunk, 2, 3))) }} per second</span></template>
+          <template #p1><br></template>
+          <template #p2><span v-if="memoriesPerChunk.gt(1)">
           <br>
-          This is being increased due to {{ memoryBoosts }}.
-        </span>
+          This is being increased due to {{ $legacyText(_s(memoryBoosts)) }}.
+        </span></template>
+        </LocalizedText>
       </div>
       <div v-else>
-        All Memories have been returned.
+        {{ $t('ade.4b50c128033c0247') }}
       </div>
     </div>
     <div>
-      Mouse-over the icons below the bar to see descriptions of upgrades,
-      <br>
-      and mouse-over <i class="fas fa-question-circle" /> icons for specific resource information.
+      <LocalizedText id="ade.7c66596ee52285d9">
+        <template #p0><br></template>
+        <template #p1><i class="fas fa-question-circle" /></template>
+      </LocalizedText>
     </div>
     <div class="l-ra-all-pets-container">
       <RaPet
@@ -140,9 +142,9 @@ export default {
     <div class="l-ra-non-pets">
       <button class="c-ra-run-button">
         <h2 :class="{ 'o-pelle-disabled': isDoomed }">
-          <span v-if="isRunning">You are in </span>
-          <span v-else>Start </span>
-          Ra's Reality
+          <span v-if="isRunning">{{ $t('ade.6d697f0e77ed2ce7') }} </span>
+          <span v-else>{{ $t('ade.ba692836d35e1cd7') }} </span>
+          {{ $t('ade.5dfcd933c19cfa11') }}
         </h2>
         <div
           :class="runButtonClassObject"
@@ -154,11 +156,11 @@ export default {
           v-for="(line, lineId) in runDescription"
           :key="lineId + '-ra-run-desc'"
         >
-          {{ line }}
+          {{ $legacyText(_s(line)) }}
         </span>
         <br>
         <span>
-          {{ memoryDescription }}
+          {{ $legacyText(_s(memoryDescription)) }}
         </span>
       </button>
       <div
@@ -166,11 +168,10 @@ export default {
         class="c-ra-remembrance-unlock"
       >
         <h1 :style="petStyle">
-          Remembrance
+          {{ $t('ade.6cf4a4fd1b81bf0a') }}
         </h1>
         <span :style="petStyle">
-          Whichever Celestial has Remembrance will get {{ formatX(remembranceMult) }} Memory Chunk gain. The other
-          Celestials will get {{ formatX(remembranceNerf, 1, 1) }} Memory Chunk gain.
+          {{ $t('ade.b208267cfeadfcc2', { p0: $legacyText(_s(formatX(remembranceMult))), p1: $legacyText(_s(formatX(remembranceNerf,1,1))) }) }}
         </span>
         <div
           v-if="hasRemembrance"
@@ -186,8 +187,7 @@ export default {
           v-else
           class="c-ra-remembrance-unlock-inner"
         >
-          Unlocked by getting {{ formatInt(remembranceReq) }} total Celestial Memory levels
-          (you need {{ formatInt(remembranceReq - totalLevels) }} more)
+          {{ $t('ade.e3623938743ba229', { p0: $legacyText(_s(formatInt(remembranceReq))), p1: $legacyText(_s(formatInt(remembranceReq-totalLevels))) }) }}
         </div>
       </div>
     </div>

@@ -44,8 +44,8 @@ export default {
 
 <template>
   <div :class="classObject">
-    <b>{{ displayName }}</b>
-    <i>{{ description }}</i>
-    {{ timeDisplay }}
+    <b>{{ $legacyText(_s(displayName)) }}</b>
+    <i>{{ $legacyText(_s(description)) }}</i>
+    {{ $legacyText(_s(timeDisplay)) }}
   </div>
 </template>

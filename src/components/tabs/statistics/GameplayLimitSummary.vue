@@ -39,18 +39,18 @@ export default {
     <div v-if="snapshot.groups.length" class="c-gameplay-limit-bar" aria-label="Retained output and production losses">
       <div v-for="(share, index) in snapshot.shares" :key="index"
         :style="{ height: `${100 * share}%` }" :class="{ 'c-gameplay-limit-loss': index > 0 }"
-        :title="index === 0 ? 'Retained output (OoM)' : snapshot.groups[index - 1].label">
+        :title="$legacyText(index === 0 ? 'Retained output (OoM)' : snapshot.groups[index - 1].label)">
         <i :class="index === 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'" />
       </div>
     </div>
     <button type="button" class="c-gameplay-limits-title" :aria-expanded="expanded" @click="toggle">
       <i :class="expanded ? 'far fa-minus-square' : 'far fa-plus-square'" />
       Gameplay production / overflow limits
-      <span v-if="snapshot.groups.length">{{ snapshot.groups.length }} active operation(s)</span>
+      <span v-if="snapshot.groups.length">{{ $legacyText(_s(snapshot.groups.length)) }} active operation(s)</span>
       <span v-else>None currently reducing output</span>
     </button>
     <div v-if="expanded" class="c-gameplay-limits-body">
-      <p>{{ snapshot.endpoint }}. The vertical bar separates retained output from losses in OoM.
+      <p>{{ $legacyText(_s(snapshot.endpoint)) }}. The vertical bar separates retained output from losses in OoM.
         Each reduction is measured immediately before and after the game's own
         cap operation. These losses are NOT independently additive resource production gains.</p>
       <div v-if="!snapshot.groups.length">No binding gameplay cap or compression was detected in currently
@@ -59,14 +59,14 @@ export default {
         <button type="button" class="c-gameplay-limit-row-title" :aria-expanded="!!details[group.key]"
           @click="toggleDetail(group.key)">
           <i :class="details[group.key] ? 'far fa-minus-square' : 'far fa-plus-square'" />
-          <b>{{ group.label }}</b>
-          <span>{{ group.tiers.length }} tier(s); {{ group.zero ? 'includes zero output' : lossText(group.combinedOoM) }}</span>
+          <b>{{ $legacyText(_s(group.label)) }}</b>
+          <span>{{ $legacyText(_s(group.tiers.length)) }} tier(s); {{ $legacyText(_s(group.zero ? 'includes zero output' : lossText(group.combinedOoM))) }}</span>
         </button>
         <div v-if="details[group.key]" class="c-gameplay-limit-tiers">
-          <div v-if="group.threshold">Threshold: {{ format(group.threshold, 2, 2) }}</div>
+          <div v-if="group.threshold">Threshold: {{ $legacyText(_s(format(group.threshold, 2, 2))) }}</div>
           <div v-for="tier in group.tiers" :key="tier.tier" class="c-gameplay-limit-tier">
-            <b>{{ resourceKey }}{{ tier.tier }}: {{ lossText(tier.loss) }}</b>
-            <span>{{ format(tier.before, 2, 2) }} → {{ format(tier.after, 2, 2) }}</span>
+            <b>{{ $legacyText(_s(resourceKey)) }}{{ $legacyText(_s(tier.tier)) }}: {{ $legacyText(_s(lossText(tier.loss))) }}</b>
+            <span>{{ $legacyText(_s(format(tier.before, 2, 2))) }} → {{ $legacyText(_s(format(tier.after, 2, 2))) }}</span>
           </div>
         </div>
       </div>

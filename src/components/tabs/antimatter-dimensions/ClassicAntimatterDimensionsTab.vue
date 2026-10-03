@@ -61,7 +61,7 @@ export default {
 <template>
   <div class="l-old-ui-antimatter-dim-tab">
     <AntimatterDimensionsTabHeader />
-    {{ multiplierText }}
+    {{ $legacyText(_s(multiplierText)) }}
     <TickspeedRow />
     <div class="l-dimensions-container">
       <AntimatterDimensionRow
@@ -77,9 +77,11 @@ export default {
       class="o-primary-btn--quick-reset"
       @click="quickReset"
     >
-      Perform a Dimension Boost reset
-      <span v-if="hasDimensionBoosts"> but lose a Dimension Boost</span>
-      <span v-else> for no gain</span>
+      <LocalizedText id="ade.96dcdef5b49c2c5c">
+        <template #p0><span v-if="hasDimensionBoosts"> {{ $t('ade.9ab802329b4ae6ea') }}</span>
+<span v-else> {{ $t('ade.cdd52c328e35822a') }}</span></template>
+      </LocalizedText>
+
     </PrimaryButton>
     <div class="l-flex" />
     <AntimatterDimensionProgressBar class="l-antimatter-dim-tab__progress_bar" />

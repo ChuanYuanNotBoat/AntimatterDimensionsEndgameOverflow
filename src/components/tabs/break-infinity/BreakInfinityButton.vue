@@ -44,11 +44,11 @@ export default {
 
 <template>
   <button
-    v-tooltip="tooltip"
+    v-tooltip="$legacyTooltip(tooltip)"
     :class="classObject"
     @click="clicked"
   >
-    {{ text }}
+    {{ $legacyText(_s(text)) }}
   </button>
 </template>
 

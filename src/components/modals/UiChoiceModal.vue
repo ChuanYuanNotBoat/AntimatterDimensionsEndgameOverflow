@@ -31,7 +31,7 @@ export default {
       Visual Changes
     </template>
     <div class="c-modal-message__text">
-      We noticed that you've loaded an old save; a few visual changes have been made since older versions of the game:
+      {{ $t('ade.efacef522506cd0d') }}
       <br>
       <br>
       <div class="c-visual-change-list">
@@ -41,13 +41,12 @@ export default {
           class="c-visual-change-list-entry"
         >
           <b>&bull;</b>
-          {{ entry }}
+          {{ $legacyText(_s(entry)) }}
         </div>
       </div>
       <br>
       <br>
-      You can change between the Classic UI which older versions of the game used and the newer Modern UI in the Visual
-      Options tab at any time. Would you like to swap to the Modern UI now?
+      {{ $t('ade.a37a6556e48f28c9') }}
     </div>
     <template #cancel-text>
       Remain

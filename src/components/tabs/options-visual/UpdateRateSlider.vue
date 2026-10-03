@@ -37,7 +37,7 @@ export default {
 
 <template>
   <div class="o-primary-btn o-primary-btn--option o-primary-btn--slider l-options-grid__button">
-    <b>Update rate: {{ formatInt(updateRate) }} ms</b>
+    <b>{{ $t('ade.f7ba9d9a6a886a2a', { p0: $legacyText(_s(formatInt(updateRate))) }) }}</b>
     <SliderComponent
       class="o-primary-btn--slider__slider"
       v-bind="sliderProps"

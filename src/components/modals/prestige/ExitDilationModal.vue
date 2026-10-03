@@ -62,16 +62,16 @@ export default {
     </template>
     <div class="c-modal-message__text">
       <span v-if="isDoomed">
-        Dilation is permanent. You will {{ gainText }} and reset your current Eternity.
+        {{ $t('ade.48bc5a1157e6c755', { p0: $legacyText(_s(gainText)) }) }}
       </span>
       <span v-else>
-        If you exit Dilation now, you will {{ gainText }}.
+        {{ $t('ade.df24695bb7c5abc8', { p0: $legacyText(_s(gainText)) }) }}
       </span>
       <div v-if="isInEC">
-        You will also exit your current Eternity Challenge as well.
+        {{ $t('ade.c123506602b9e371') }}
       </div>
       <br>
-      Are you sure you want to proceed?
+      {{ $t('ade.a4d500e55df8919f') }}
     </div>
     <template #confirm-text>
       {{ confirmText }}

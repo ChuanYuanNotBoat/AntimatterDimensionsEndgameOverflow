@@ -87,20 +87,21 @@ export default {
     <AutobuyerToggles />
     <OpenModalHotkeysButton />
     <div v-if="hasSeenGamespeedAlteringEffects">
-      Autobuyer intervals and time-based settings are always <b>real time</b> and therefore
-      <br>
-      unaffected by anything which may alter how fast the game itself is running.
-      <br>
-      <br>
+      <LocalizedText id="ade.2e398c8f28f236c3">
+        <template #p0><b>{{ $t('ade.54d449072573a7db') }}</b></template>
+        <template #p1><br></template>
+        <template #p2><br></template>
+        <template #p3><br></template>
+      </LocalizedText>
     </div>
     <div v-if="!hasInfinity">
-      Challenges for upgrading autobuyers are unlocked by reaching Infinity.
+      {{ $t('ade.4ad15dc21a4d8126') }}
     </div>
-    <b>Autobuyers with no displayed bulk have unlimited bulk by default.</b>
+    <b>{{ $t('ade.d52ca9781eddf5b1') }}</b>
     <b>
-      {{ isFlipped ? "Matter" : "Antimatter" }} Dimension Autobuyers can have their bulk upgraded once interval is below {{ formatInt(100) }} ms.
+      {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimension Autobuyers can have their bulk upgraded once interval is below {{ $legacyText(_s(formatInt(100))) }} ms.
     </b>
-    <b v-if="hasInstant">Autobuyers with "Instant" interval will trigger every game tick ({{ gameTickLength }}).</b>
+    <b v-if="hasInstant">{{ $t('ade.451bc63a678185e2', { p0: $legacyText(_s(gameTickLength)) }) }}</b>
     <EndgameAutobuyerBox class="c-endgame-pos" />
     <RealityAutobuyerBox class="c-reality-pos" />
     <CelestialEternityAutobuyerBox class="c-celestial-eternity-pos" />

@@ -209,47 +209,52 @@ export default {
       <PrimaryToggleButton
         v-model="hideCompletedRows"
         class="o-primary-btn--subtab-option"
-        label="Hide completed rows:"
+        :label="$t('ade.31bcdc74829da873')"
       />
       <PrimaryToggleButton
         v-if="showAutoAchieve"
         v-model="isAutoAchieveActive"
         class="o-primary-btn--subtab-option"
-        label="Auto Achievements:"
+        :label="$t('ade.a56ee5b17bce4b92')"
       />
     </div>
     <div class="c-achievements-tab__header c-achievements-tab__header--multipliers">
       <span v-if="isDoomed && !isDestroyed">
-        All Achievement multipliers have been disabled<SwapAchievementImagesButton />
+        {{ $t('ade.96f0dc593c1ee725') }}<SwapAchievementImagesButton />
       </span>
       <span v-else>
-        Achievements provide a multiplier to<SwapAchievementImagesButton />
-        <div v-html="boostText" />
+        {{ $t('ade.8f267cb91cdbcedc') }}<SwapAchievementImagesButton />
+        <div v-html="$legacyHtml(boostText)" />
       </span>
       <span v-if="showPowers">
-        Achievements also provide powers to<SwapAchievementImagesButton />
-        <div v-html="megaBoostText" />
+        {{ $t('ade.3712b1b0276990af') }}<SwapAchievementImagesButton />
+        <div v-html="$legacyHtml(megaBoostText)" />
       </span>
     </div>
     <div class="c-achievements-tab__header">
-      Achievements with a <i class="fas fa-star" /> icon also give an additional reward.
+      <LocalizedText id="ade.d85fc2050c2d7509">
+        <template #p0><i class="fas fa-star" /></template>
+      </LocalizedText>
     </div>
     <div
       v-if="showAutoAchieve"
       class="c-achievements-tab__header"
     >
       <div v-if="achCountdown.gt(0)">
-        Automatically gain the next missing Achievement in
-        {{ timeDisplayNoDecimals(achCountdown) }}<span v-if="!isAutoAchieveActive"> once Auto is turned on</span>.
-        (left-to-right, top-to-bottom)
+        <LocalizedText id="ade.8d997721e6b806ca">
+          <template #p0>{{ $legacyText(_s(timeDisplayNoDecimals(achCountdown))) }}</template>
+          <template #p1><span v-if="!isAutoAchieveActive"> {{ $t('ade.5bc9c04c07525658') }}</span></template>
+        </LocalizedText>
       </div>
       <div v-else-if="missingAchievements !== 0">
-        Automatically gain the next missing Achievement as soon as you enable Auto Achievements.
-        (left-to-right, top-to-bottom)
+        {{ $t('ade.16507e5b805ceb25') }}
       </div>
       <div v-if="totalCountdown.gt(0)">
-        You will regain all remaining achievements after {{ timeDisplayNoDecimals(totalCountdown) }} if Auto
-        Achievement <span v-if="isAutoAchieveActive">stays enabled</span><span v-else>is turned on</span>.
+        <LocalizedText id="ade.b5294398180bbe55">
+          <template #p0>{{ $legacyText(_s(timeDisplayNoDecimals(totalCountdown))) }}</template>
+          <template #p1><span v-if="isAutoAchieveActive">{{ $t('ade.b88010120c2cca9b') }}</span>
+<span v-else>{{ $t('ade.4241112a82e210a5') }}</span></template>
+        </LocalizedText>
       </div>
       <br>
     </div>

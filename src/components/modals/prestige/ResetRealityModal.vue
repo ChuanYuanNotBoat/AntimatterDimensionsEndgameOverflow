@@ -37,8 +37,7 @@ export default {
       You are about to reset your {{ resetTerm }}
     </template>
     <div class="c-modal-message__text">
-      This will reset you to the start of your {{ resetTerm }},
-      giving you no rewards from your progress in your current {{ resetTerm }}.
+      {{ $t('ade.ea6bd19db21dd3de', { p0: $legacyText(_s(resetTerm)), p1: $legacyText(_s(resetTerm)) }) }}
       <br>
       <br>
       Are you sure you want to do this?
@@ -46,9 +45,9 @@ export default {
         v-if="canReality"
         class="c-has-rewards"
       >
-        <br>
-        You can currently complete a Reality for all its normal rewards, which you will not receive if you
-        Reset here. To get rewards, use the "Make a new Reality" button.
+        <LocalizedText id="ade.552ef35d1d9c2445">
+    <template #p0><br></template>
+  </LocalizedText>
       </div>
       <br>
     </div>

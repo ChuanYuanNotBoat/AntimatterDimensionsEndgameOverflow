@@ -84,21 +84,21 @@ export default {
   <div :class="classObject">
     <div class="tickspeed-buttons">
       <button
-        v-tooltip="upgradeCount"
+        v-tooltip="$legacyTooltip(upgradeCount)"
         :class="buttonClass()"
         onclick="buyTickSpeed()"
       >
         <span v-if="isContinuumActive">
-          Tickspeed Continuum: {{ continuumString }}
+          {{ $t('ade.6e6da47fba4d818d', { p0: $legacyText(_s(continuumString)) }) }}
         </span>
         <span v-else-if="isEC9">
-          Tickspeed Unpurchasable (EC 9)
+          {{ $t('ade.1cf452a0de5ee488') }}
         </span>
         <span v-else-if="isTransient">
           Tickspeed Does Not Exist (Transient Universe)
         </span>
         <span v-else>
-          Tickspeed Cost: {{ format(cost) }}
+          {{ $t('ade.88514df31e826cee', { p0: $legacyText(_s(format(cost))) }) }}
         </span>
         <div
           v-if="hasTutorial"
@@ -111,14 +111,14 @@ export default {
         :class="{ 'o-primary-btn--disabled': !isAffordable && !isContinuumActive }"
         onclick="buyMaxTickSpeed()"
       >
-        Buy Max
+        {{ $t('ade.552c8c001016ab0a') }}
       </button>
     </div>
     <div
       v-if="hasRealityButton"
       class="tickspeed-labels"
     >
-      {{ tickspeedDisplay }} | {{ multiplierDisplay }}
+      {{ $legacyText(_s(tickspeedDisplay)) }} | {{ $legacyText(_s(multiplierDisplay)) }}
     </div>
   </div>
 </template>

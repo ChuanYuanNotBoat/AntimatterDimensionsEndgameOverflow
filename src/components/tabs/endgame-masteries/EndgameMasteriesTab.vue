@@ -111,19 +111,19 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="exportMasteryTree"
       >
-        Export tree
+        {{ $t('ade.1642003a74077996') }}
       </PrimaryButton>
       <PrimaryButton
         :class="respecClassObject"
         @click="respec = !respec"
       >
-        Respec Endgame Masteries on next Endgame
+        {{ $t('ade.212dade545279c5c') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         onclick="Modal.masteryString.show({ id: -1 })"
       >
-        Import tree
+        {{ $t('ade.c3c43e17afb220c9') }}
       </PrimaryButton>
     </div>
     <div

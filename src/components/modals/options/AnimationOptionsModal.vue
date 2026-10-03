@@ -180,7 +180,7 @@ export default {
         v-if="isS11Active"
         class="c-blobflake-slider o-primary-btn o-primary-btn--modal-option o-primary-btn--slider"
       >
-        <b>{{ quantifyInt("Blobflake", parseInt(blobSnowflakes)) }}</b>
+        <b>{{ $legacyText(_s(quantifyInt("Blobflake", parseInt(blobSnowflakes)))) }}</b>
         <SliderComponent
           class="o-primary-btn--slider__slider"
           v-bind="sliderProps"

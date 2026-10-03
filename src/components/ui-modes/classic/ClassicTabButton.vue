@@ -58,7 +58,7 @@ export default {
     class="o-tab-btn"
     @click="tab.show(true)"
   >
-    {{ tabName }}
+    {{ $legacyText(_s(tabName)) }}
     <div
       v-if="hasNotification"
       class="fas fa-circle-exclamation l-notification-icon"

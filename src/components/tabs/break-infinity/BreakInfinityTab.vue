@@ -80,8 +80,7 @@ export default {
 <template>
   <div class="l-break-infinity-tab">
     <div v-if="!isUnlocked">
-      Reduce the interval of Automatic Big Crunch Autobuyer to
-      {{ format(0.1, 1, 1) }} seconds to unlock Break Infinity.
+      {{ $t('ade.fc426c11b624a679', { p0: $legacyText(_s(format(0.1,1,1))) }) }}
     </div>
     <div
       v-if="chargeUnlocked"
@@ -91,15 +90,16 @@ export default {
         :class="disChargeClassObject"
         @click="disCharge = !disCharge"
       >
-        Respec Charged Break Infinity Upgrades on next Endgame
+        {{ $t('ade.3054693485b3302d') }}
       </PrimaryButton>
     </div>
     <div v-if="chargeUnlocked">
-      You have charged {{ formatInt(chargesUsed) }}/{{ formatInt(totalCharges) }} Break Infinity Upgrades.
-      Charged Break Infinity Upgrades have their effect altered.
-      <br>
-      Hold shift to show Charged Break Infinity Upgrades.
-      <span> You can freely respec your choices on Endgame.</span>
+      <LocalizedText id="ade.f948a96da48c677e">
+        <template #p0>{{ $legacyText(_s(formatInt(chargesUsed))) }}</template>
+        <template #p1>{{ $legacyText(_s(formatInt(totalCharges))) }}</template>
+        <template #p2><br></template>
+        <template #p3><span> {{ $t('ade.13a7a096afdcabbb') }}</span></template>
+      </LocalizedText>
     </div>
     <BreakInfinityButton class="l-break-infinity-tab__break-btn" />
     <div

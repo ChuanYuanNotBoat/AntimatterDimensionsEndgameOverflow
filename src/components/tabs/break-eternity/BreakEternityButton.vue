@@ -40,7 +40,7 @@ export default {
     :class="classObject"
     @click="clicked"
   >
-    {{ text }}
+    {{ $legacyText(_s(text)) }}
   </button>
 </template>
 

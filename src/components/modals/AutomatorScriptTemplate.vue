@@ -156,38 +156,38 @@ export default {
       {{ $t("automator.templates.header", { name: displayName }) }}
     </template>
     <div class="c-automator-template-description">
-      {{ description }}
+      {{ $legacyText(_s(description)) }}
     </div>
     <div class="c-automator-template-inputs">
-      <b>Required Information:</b>
+      <b>{{ $t('ade.0c5dabbc9f90fb7f') }}</b>
       <br>
-      Use a preset Study Tree:
+      {{ $t('ade.ff9e9b17f3e57fb3') }}
       <button
         v-for="(preset, presetNumber) in presets"
         :key="preset.name"
         class="o-primary-btn o-load-preset-button-margin"
         @click="loadPreset(preset.name, presetNumber + 1)"
       >
-        {{ preset.name ? preset.name : presetNumber + 1 }}
+        {{ $legacyText(_s(preset.name ? preset.name : presetNumber + 1)) }}
       </button>
       <button
         class="o-primary-btn o-load-preset-button-margin"
         @click="loadCurrent"
       >
-        <i>Current Tree</i>
+        <i>{{ $t('ade.01d56940b26b521f') }}</i>
       </button>
       <div
         v-for="input in inputs"
         :key="input.name"
         class="c-automator-template-entry"
       >
-        {{ input.prompt }}:
+        {{ $legacyText(_s(input.prompt)) }}:
         <span v-if="paramTypeObject(input.type).boolDisplay">
           <button
             class="o-primary-btn"
             @click="updateButton(input)"
           >
-            {{ buttonTextStrings[input.name] }}
+            {{ $legacyText(_s(buttonTextStrings[input.name])) }}
           </button>
         </span>
         <span v-else>
@@ -210,11 +210,11 @@ export default {
           :key="warning"
           class="c-automator-template-entry"
         >
-          {{ warning }}
+          {{ $legacyText(_s(warning)) }}
         </div>
       </div>
       <div v-else>
-        (If something seems wrong with the template inputs, it will show up here)
+        {{ $t('ade.e97ceabc3ea04c2e') }}
       </div>
       <br>
       <br>
@@ -224,13 +224,13 @@ export default {
       class="o-primary-btn"
       @click="copyAndClose"
     >
-      {{ isBlock ? "Create custom template block" : "Copy this template to your clipboard" }} and close this modal
+      {{ $t('ade.6144c2f9dc1cd6f5', { p0: $legacyText(_s(isBlock?"Create custom template block":"Copy this template to your clipboard")) }) }}
     </button>
     <button
       v-else
       class="o-primary-btn o-primary-btn--disabled"
     >
-      Cannot generate template (You have {{ quantifyInt("invalid input", invalidInputCount) }})
+      {{ $t('ade.f837b2cb23a7a35a', { p0: $legacyText(_s(quantifyInt("invalid input",invalidInputCount))) }) }}
     </button>
   </ModalWrapper>
 </template>

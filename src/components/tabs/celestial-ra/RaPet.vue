@@ -146,18 +146,18 @@ export default {
     >
       <div class="c-ra-pet-title">
         <!-- The full name doesn't fit here, so we shorten it as a special case -->
-        {{ pet.id === "enslaved" ? "Nameless" : name }} Level {{ formatInt(level) }}/{{ formatInt(levelCap) }}
+        {{ $t('ade.68ed22da6430b741', { p0: $legacyText(_s(pet.id==="enslaved"?"Nameless":name)), p1: $legacyText(_s(formatInt(level))), p2: $legacyText(_s(formatInt(levelCap))) }) }}
       </div>
       <div
         v-if="showScalingUpgrade"
         :key="level"
       >
-        {{ scalingUpgradeText }}
+        {{ $legacyText(_s(scalingUpgradeText)) }}
       </div>
       <br v-else>
       <div v-if="!isCapped">
         <div>
-          {{ name }} {{ pet.id === "enslaved" ? "have" : "has" }} {{ quantify("Memory", memories, 2) }}
+          {{ $legacyText(_s(name)) }} {{ $legacyText(_s(pet.id === "enslaved" ? "have" : "has")) }} {{ $legacyText(_s(quantify("Memory", memories, 2))) }}
         </div>
       </div>
       <div
@@ -176,18 +176,20 @@ export default {
                 class="c-ra-pet-upgrade__tooltip"
               >
                 <div class="c-ra-pet-upgrade__tooltip__name">
-                  {{ name }}'s Recollection
+                  {{ $t('ade.c28babe2d28e4c9d', { p0: $legacyText(_s(name)) }) }}
                 </div>
                 <div class="c-ra-pet-upgrade__tooltip__description">
-                  Gain {{ formatPercents(0.3) }} more Memories
+                  {{ $t('ade.b580fe2080f53d7e', { p0: $legacyText(_s(formatPercents(0.3))) }) }}
                 </div>
                 <div class="c-ra-pet-upgrade__tooltip__footer">
-                  Cost: {{ quantify("Memory", memoryUpgradeCost, 2, 2) }}
-                  <span v-if="memories.lte(memoryUpgradeCost)">
-                    {{ nextMemoryUpgradeEstimate }}
-                  </span>
-                  <br>
-                  Currently: {{ formatX(currentMemoryMult, 2, 2) }}
+                  <LocalizedText id="ade.8069450f30a873b6">
+                    <template #p0>{{ $legacyText(_s(quantify("Memory",memoryUpgradeCost,2,2))) }}</template>
+                    <template #p1><span v-if="memories.lte(memoryUpgradeCost)">
+                    {{ $legacyText(_s(nextMemoryUpgradeEstimate)) }}
+                  </span></template>
+                    <template #p2><br></template>
+                    <template #p3>{{ $legacyText(_s(formatX(currentMemoryMult,2,2))) }}</template>
+                  </LocalizedText>
                 </div>
               </div>
               <div
@@ -195,10 +197,10 @@ export default {
                 class="c-ra-pet-upgrade__tooltip"
               >
                 <div class="c-ra-pet-upgrade__tooltip__name">
-                  {{ name }}'s Recollection
+                  {{ $t('ade.c28babe2d28e4c9d', { p0: $legacyText(_s(name)) }) }}
                 </div>
                 <div class="c-ra-pet-upgrade__tooltip__description">
-                  Capped: {{ formatX(currentMemoryMult, 2, 2) }}
+                  {{ $t('ade.078c10c351e302b7', { p0: $legacyText(_s(formatX(currentMemoryMult,2,2))) }) }}
                 </div>
               </div>
             </button>
@@ -220,18 +222,20 @@ export default {
                 class="c-ra-pet-upgrade__tooltip"
               >
                 <div class="c-ra-pet-upgrade__tooltip__name">
-                  {{ name }}'s Fragmentation
+                  {{ $t('ade.bd40a388dfc9ac6e', { p0: $legacyText(_s(name)) }) }}
                 </div>
                 <div class="c-ra-pet-upgrade__tooltip__description">
-                  Gain {{ formatPercents(0.5) }} more Memory Chunks
+                  {{ $t('ade.98919b66c8725e6b', { p0: $legacyText(_s(formatPercents(0.5))) }) }}
                 </div>
                 <div class="c-ra-pet-upgrade__tooltip__footer">
-                  Cost: {{ quantify("Memory", chunkUpgradeCost, 2, 2) }}
-                  <span v-if="memories.lte(chunkUpgradeCost)">
-                    {{ nextMemoryChunkUpgradeEstimate }}
-                  </span>
-                  <br>
-                  Currently: {{ formatX(currentChunkMult, 2, 2) }}
+                  <LocalizedText id="ade.8069450f30a873b6">
+                    <template #p0>{{ $legacyText(_s(quantify("Memory",chunkUpgradeCost,2,2))) }}</template>
+                    <template #p1><span v-if="memories.lte(chunkUpgradeCost)">
+                    {{ $legacyText(_s(nextMemoryChunkUpgradeEstimate)) }}
+                  </span></template>
+                    <template #p2><br></template>
+                    <template #p3>{{ $legacyText(_s(formatX(currentChunkMult,2,2))) }}</template>
+                  </LocalizedText>
                 </div>
               </div>
               <div
@@ -239,10 +243,10 @@ export default {
                 class="c-ra-pet-upgrade__tooltip"
               >
                 <div class="c-ra-pet-upgrade__tooltip__name">
-                  {{ name }}'s Fragmentation
+                  {{ $t('ade.bd40a388dfc9ac6e', { p0: $legacyText(_s(name)) }) }}
                 </div>
                 <div class="c-ra-pet-upgrade__tooltip__description">
-                  Capped: {{ formatX(currentChunkMult, 2, 2) }}
+                  {{ $t('ade.078c10c351e302b7', { p0: $legacyText(_s(formatX(currentChunkMult,2,2))) }) }}
                 </div>
               </div>
             </button>
@@ -261,20 +265,24 @@ export default {
       </div>
       <div v-if="!isCapped">
         <div>
-          {{ quantify("Memory Chunk", memoryChunks, 2, 2) }}, {{ quantify("Memory", memoriesPerSecond, 2, 2) }}/sec
+          {{ $t('ade.bb93c8756f0bc82d', { p0: $legacyText(_s(quantify("Memory Chunk",memoryChunks,2,2))), p1: $legacyText(_s(quantify("Memory",memoriesPerSecond,2,2))) }) }}
         </div>
         <div>
-          Gaining {{ quantify("Memory Chunk", memoryChunksPerSecond, 2, 2) }}/sec
-          <span :ach-tooltip="chunkTooltip">
+          <LocalizedText id="ade.87afed77d13fb26b">
+            <template #p0>{{ $legacyText(_s(quantify("Memory Chunk",memoryChunksPerSecond,2,2))) }}</template>
+            <template #p1><span :ach-tooltip="chunkTooltip">
             <i class="fas fa-question-circle" />
-          </span>
+          </span></template>
+          </LocalizedText>
         </div>
       </div>
       <div v-if="hasMemoryMultiplier && !isRaCapped">
-        Multiplying all Memory production by {{ format(memoryMultiplier, 2, 3) }}
-        <span :ach-tooltip="memoryGainTooltip">
+        <LocalizedText id="ade.831896850d316123">
+          <template #p0>{{ $legacyText(_s(format(memoryMultiplier,2,3))) }}</template>
+          <template #p1><span :ach-tooltip="memoryGainTooltip">
           <i class="fas fa-question-circle" />
-        </span>
+        </span></template>
+        </LocalizedText>
       </div>
       <br v-else-if="!isRaCapped">
       <br v-if="!isRaCapped">

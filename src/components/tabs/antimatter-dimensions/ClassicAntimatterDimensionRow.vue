@@ -173,10 +173,10 @@ export default {
         @click="buySingle"
       >
         <div :class="tutorialClass()">
-          {{ singleText }}
+          {{ $legacyText(_s(singleText)) }}
         </div>
         <div class="c-dim-purchase-count-tooltip">
-          {{ boughtTooltip }}
+          {{ $legacyText(_s(boughtTooltip)) }}
         </div>
         <div
           v-if="hasTutorial"
@@ -188,9 +188,9 @@ export default {
         :class="buyTenClass"
         @click="buyUntil10"
       >
-        {{ until10Text }}
+        {{ $legacyText(_s(until10Text)) }}
         <div class="c-dim-purchase-count-tooltip">
-          {{ boughtTooltip }}
+          {{ $legacyText(_s(boughtTooltip)) }}
         </div>
       </PrimaryButton>
     </div>

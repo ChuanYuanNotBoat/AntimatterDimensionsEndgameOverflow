@@ -45,19 +45,20 @@ export default {
       HARD RESET
     </template>
     <div class="c-modal-message__text">
-      Please confirm your desire to hard reset this save slot.
-      <span class="c-modal-hard-reset-danger">Deleting your save will not unlock anything secret.</span>
-      Type in "Shrek is love, Shrek is life" to confirm.
+      {{ $t('ade.c5c57bc70944a425') }}
+      <span class="c-modal-hard-reset-danger">{{ $t('ade.29fe27d03300647d') }}</span>
+      {{ $t('ade.142f352eae3fa166') }}
       <div class="c-modal-hard-reset-danger">
-        THIS WILL WIPE YOUR SAVE.
-        <span v-if="hasExtraNG">
+        <LocalizedText id="ade.35b8af5940fc0a96">
+          <template #p0><span v-if="hasExtraNG">
           <br>
-          This will also remove any Glyph cosmetics you have unlocked from completing the game!
-        </span>
-        <span v-if="hasSpeedrun">
+          {{ $t('ade.776765326dad2152') }}
+        </span></template>
+          <template #p1><span v-if="hasSpeedrun">
           <br>
-          You will lose the ability to do a Speedrun. To restart your run, use the "Start Speedrun" button instead.
-        </span>
+          {{ $t('ade.e01c54165e7c483c') }}
+        </span></template>
+        </LocalizedText>
       </div>
     </div>
     <input
@@ -72,10 +73,10 @@ export default {
         v-if="willHardReset"
         class="c-modal-hard-reset-danger"
       >
-        Phrase confirmed - continuing will irreversibly delete your save!
+        {{ $t('ade.408dd2f31c7fd60c') }}
       </div>
       <div v-else>
-        Type in the correct phrase to hard reset.
+        {{ $t('ade.378af36731fa25a2') }}
       </div>
     </div>
     <template #confirm-text>

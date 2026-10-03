@@ -42,8 +42,8 @@ export default {
     class="o-save-timer"
     @click="save"
   >
-    <b v-if="saveDisabled">There is nothing left to save.</b>
-    <span v-else>Time since last save: {{ timeString }}</span>
+    <b v-if="saveDisabled">{{ $t('ade.22f11098af79dc57') }}</b>
+    <span v-else>{{ $t('ade.0eaa1da43d588f3f', { p0: $legacyText(_s(timeString)) }) }}</span>
   </div>
 </template>
 

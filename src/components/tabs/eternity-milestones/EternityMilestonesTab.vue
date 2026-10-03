@@ -34,9 +34,9 @@ export default {
 
 <template>
   <div class="l-eternity-milestone-grid">
-    <div>You have {{ quantify("Eternity", eternityCount, 3) }}.</div>
+    <div>{{ $t('ade.5c743de50d88eaca', { p0: $legacyText(_s(quantify("Eternity",eternityCount,3))) }) }}</div>
     <div>
-      Offline generation milestones are only active under certain conditions, mouse-over to see these conditions.
+      {{ $t('ade.739a6f07fc4d7c09') }}
     </div>
     <div
       v-for="row in rows"

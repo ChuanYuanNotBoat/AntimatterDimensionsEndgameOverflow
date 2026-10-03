@@ -40,9 +40,9 @@ export default {
 <template>
   <div>
     <br>
-    {{ perUpgrade }}
+    {{ $legacyText(_s(perUpgrade)) }}
     <br>
-    {{ tickspeedDisplay }}
+    {{ $legacyText(_s(tickspeedDisplay)) }}
     <br>
     <GameSpeedDisplay />
   </div>

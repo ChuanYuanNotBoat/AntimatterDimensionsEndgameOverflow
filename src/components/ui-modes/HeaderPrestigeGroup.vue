@@ -88,20 +88,24 @@ export default {
       v-if="hasRealityButton && !inCursedCore"
       class="c-production-text"
     >
-      <br>
-      You are getting {{ format(antimatterPerSec, 2) }} {{ isFlipped ? "matter" : "antimatter" }} per second.
-      <br>
-      You are getting {{ format(antimatterPerSecBeforeAlter, 2) }} {{ isFlipped ? "matter" : "antimatter" }}
-      per second {{ alterText }} Game Speed effects.
+      <LocalizedText id="ade.0be09bd091b5148f">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(antimatterPerSec,2))) }}</template>
+    <template #p2>{{ $legacyText(_s(isFlipped?"matter":"antimatter")) }}</template>
+    <template #p3><br></template>
+    <template #p4>{{ $legacyText(_s(format(antimatterPerSecBeforeAlter,2))) }}</template>
+    <template #p5>{{ $legacyText(_s(isFlipped?"matter":"antimatter")) }}</template>
+    <template #p6>{{ $legacyText(_s(alterText)) }}</template>
+  </LocalizedText>
     </div>
     <div
       v-if="hasRealityButton && hasSeenAlterations && !inCursedCore"
       class="c-prevent-overflow"
     >
-      You are getting {{ format(antimatterPerSecAfterAlter, 2) }} {{ isFlipped ? "matter" : "antimatter" }} per second
-      after positive {{ isFlipped ? "matter" : "antimatter" }} production alterations, and before negative
-      {{ isFlipped ? "matter" : "antimatter" }} production alterations, any positive {{ isFlipped ? "matter" : "antimatter" }}
-      production alterations that apply after certain negative ones, and Game Speed effects.
+      {{ $t('header.production.afterAlterations', {
+        amount: format(antimatterPerSecAfterAlter, 2),
+        resource: $t(isFlipped ? 'terms.matter' : 'terms.antimatter')
+      }) }}
     </div>
   </div>
 </template>

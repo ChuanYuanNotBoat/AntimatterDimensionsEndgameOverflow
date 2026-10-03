@@ -58,7 +58,7 @@ export default {
     :class="buttonClassObject"
     @click="tryUnlockNextInfinityDimension"
   >
-    {{ text }}
+    {{ $legacyText(_s(text)) }}
   </button>
 </template>
 

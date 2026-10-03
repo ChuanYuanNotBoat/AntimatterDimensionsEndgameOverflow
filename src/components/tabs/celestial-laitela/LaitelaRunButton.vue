@@ -77,7 +77,7 @@ export default {
 <template>
   <button :class="classObject()">
     <span :class="{ 'o-pelle-disabled': isDoomed }">
-      <b>Start Lai'tela's Reality</b>
+      <b>{{ $t('ade.efe1a6822c07408b') }}</b>
     </span>
     <div
       :class="runButtonClassObject()"
@@ -85,28 +85,28 @@ export default {
     />
     <div v-if="realityReward.gt(1)">
       <b>
-        All Dark Matter multipliers are {{ formatX(realityReward, 2, 2) }} higher.
+        {{ $t('ade.be27ee5587430159', { p0: $legacyText(_s(formatX(realityReward,2,2))) }) }}
       </b>
       <br>
       <span v-if="maxDimTier === 0 || hasHadronizes">
         <b>
-          You also gain an additional {{ formatX(darkEnergyBoost) }} Dark Energy.
+          {{ $t('ade.7e75b08a62a5cc00', { p0: $legacyText(_s(formatX(darkEnergyBoost))) }) }}
         </b>
       </span>
       <span v-if="hasHadronizes">
         <b>
-          You have Hadronized Lai'tela's Reality {{ formatHybridSmall(hadronizes, 3) }} times.
+          {{ $t('ade.e875a2ab45d1fe8b', { p0: $legacyText(_s(formatHybridSmall(hadronizes,3))) }) }}
         </b>
       </span>
       <span v-if="maxDimTier > 0">
         <br><br>
-        {{ completionTime }}
+        {{ $legacyText(_s(completionTime)) }}
         <br>
         <span v-if="maxDimTier <= 7">
-          <b>Highest active dimension: {{ formatInt(maxDimTier) }}</b>
+          <b>{{ $t('ade.b754bc27a18d105d', { p0: $legacyText(_s(formatInt(maxDimTier))) }) }}</b>
         </span>
         <br><br>
-        Glyph Set:
+        {{ $t('ade.6b86fcb5d4c04854') }}
         <GlyphSetPreview
           text="Fastest Destabilization Glyph Set"
           :text-hidden="true"
@@ -115,8 +115,10 @@ export default {
         />
       </span>
       <span v-else>
-        <br><br>
-        Lai'tela's Reality has been fully destabilized and cannot have its reward further improved.
+        <LocalizedText id="ade.74d966b4a517acec">
+    <template #p0><br></template>
+    <template #p1><br></template>
+  </LocalizedText>
       </span>
       <br>
     </div>
@@ -124,24 +126,21 @@ export default {
       v-for="(line, lineId) in runEffects"
       :key="lineId + '-laitela-run-desc' + maxDimTier"
     >
-      {{ line }} <br>
+      {{ $legacyText(_s(line)) }} <br>
     </div>
     <br>
-    <div>{{ runDescription }}</div>
+    <div>{{ $legacyText(_s(runDescription)) }}</div>
     <br>
     <div v-if="hadronizeUnlocked">
       <button
         class="l-laitela-hadronize-button c-laitela-hadronize-button"
         @click="hadronize"
       >
-        <b>Hadronize Laitela's Reality</b>
+        <b>{{ $t('ade.b1669604f4f094b3') }}</b>
       </button>
       <br>
       <br>
-      Hadronizing Lai'tela's Reality will restabilize all {{ formatInt(8) }} Dimensions, so you can use them again.
-      Rewards for completing Lai'tela's Reality from previous Hadronizes will persist, and you will be able to gain
-      more rewards for destabilizing Lai'tela's Reality again. Each Hadronization, the reward for destabilizing
-      Lai'tela's Reality will be multiplied by {{ formatInt(8) }}.
+      {{ $t('ade.bb3aa8f8940972d5', { p0: $legacyText(_s(formatInt(8))), p1: $legacyText(_s(formatInt(8))) }) }}
     </div>
   </button>
 </template>

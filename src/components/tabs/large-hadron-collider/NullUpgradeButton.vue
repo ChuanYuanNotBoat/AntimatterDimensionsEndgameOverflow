@@ -64,11 +64,11 @@ export default {
         type="nullUpgrades"
         class="l-hint-text--reality-upgrade c-hint-text--reality-upgrade"
       >
-        {{ config.name }}
+        {{ $legacyText(_s(config.name)) }}
       </HintText>
       <DescriptionDisplay :config="upgrade.config" />
       <EffectDisplay :config="upgrade.config" />
-      <span v-html="costText" />
+      <span v-html="$legacyHtml(costText)" />
     </button>
   </div>
 </template>

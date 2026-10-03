@@ -62,7 +62,7 @@ export default {
       This will stop your current script if it is running!
       <div v-if="errorCount">
         <br>
-        Your script has some errors which may not get converted properly to {{ otherMode }} mode. Continuing on will
+        Your script has some errors which may not get converted properly to {{ $legacyText(_s(otherMode)) }} mode. Continuing on will
         make the Automator attempt to parse these lines anyway, although some information may get lost or not be
         converted properly.
       </div>
@@ -73,18 +73,16 @@ export default {
         lines will end up being deleted since there is no block they can be converted into.
         If an error occurs at the start of a loop or IF, this may end up deleting large portions of your script!
         <span class="l-lost-text">
-          Changing editor modes right now will cause {{ quantifyInt("line", lostBlocks) }} of code to be irreversibly
-          lost!
+          {{ $t('ade.a9e3683756b84a4e', { p0: $legacyText(_s(quantifyInt("line",lostBlocks))) }) }}
         </span>
       </b>
       <br>
       <span class="l-lost-text">
-        Hiding this confirmation is not recommended, as it may cause parts of scripts to be immediately and irreversibly
-        lost if your script has errors when attempting to switch modes.
+        {{ $t('ade.99a8dac0df25cd93') }}
       </span>
       <br>
       <br>
-      Are you sure you want to change to the {{ otherMode }} editor?
+      {{ $t('ade.462974a089a3fa52', { p0: $legacyText(_s(otherMode)) }) }}
     </div>
     <template #confirm-text>
       Change Modes

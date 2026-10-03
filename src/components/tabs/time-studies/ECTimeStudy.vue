@@ -81,23 +81,28 @@ export default {
       type="studies"
       class="l-hint-text--time-study"
     >
-      EC{{ id }}
+      {{ $t('ade.a030ec68df307c4c', { p0: $legacyText(_s(id)) }) }}
     </HintText>
-    Eternity Challenge {{ id }}
-    ({{ formatInt(completions) }}<span v-if="showTotalCompletions">/{{ formatInt(5) }}</span>)
+    {{ $t('ade.27cab7b7bd51ce38', { p0: $legacyText(_s(id)), p1: $legacyText(_s(formatInt(completions))) }) }}<span v-if="showTotalCompletions">/{{ $legacyText(_s(formatInt(5))) }}</span>)
     <template v-if="hasRequirement">
-      <br>
-      Requirement:
-      <br v-if="needsFirstLinebreak">
-      <span v-if="config.secondary.path()">Use only the {{ config.secondary.path() }} path</span>
-      <span v-else>
+      <LocalizedText id="ade.b122b19881bfdf43">
+    <template #p0><br></template>
+    <template #p1><br v-if="needsFirstLinebreak"></template>
+    <template #p2><span v-if="config.secondary.path()">Use only the {{ $legacyText(_s(config.secondary.path())) }} path</span>
+<span v-else>
         {{ formatValue(requirement.current) }}/{{ formatValue(requirement.total) }}
         <br v-if="needsSecondLinebreak">
         {{ config.secondary.resource() }}
-      </span>
+      </span></template>
+  </LocalizedText>
+
     </template>
-    <span v-if="isUnlocked && !isRunning"><br>Double click to start</span>
-    <span v-else-if="isRunning"><br>Currently Running</span>
+    <span v-if="isUnlocked && !isRunning"><LocalizedText id="ade.4507268f3d49ed0d">
+    <template #p0><br></template>
+  </LocalizedText></span>
+    <span v-else-if="isRunning"><LocalizedText id="ade.153425b04fa5ad2a">
+    <template #p0><br></template>
+  </LocalizedText></span>
   </TimeStudyButton>
 </template>
 

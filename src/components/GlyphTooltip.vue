@@ -270,23 +270,23 @@ export default {
       <span
         class="c-glyph-tooltip__description"
         :style="descriptionStyle"
-        v-html="description"
+        v-html="$legacyHtml(description)"
       />
       <span class="l-glyph-tooltip__info">
-        <span v-html="levelText" />
-        <span v-html="rarityText" />
+        <span v-html="$legacyHtml(levelText)" />
+        <span v-html="$legacyHtml(rarityText)" />
       </span>
       <span v-if="showDeletionText">
         <span
           class="c-glyph-tooltip__sacrifice"
           v-on="onTouchDevice ? { click: removeGlyph } : {}"
         >
-          <span v-html="sacrificeText()" />
+          <span v-html="$legacyHtml(sacrificeText())" />
           <span v-if="sacrificeText() && refineText()"> | </span>
-          <span v-html="refineText()" />
+          <span v-html="$legacyHtml(refineText())" />
         </span>
       </span>
-      <span class="c-glyph-tooltip__sacrifice">{{ scoreText() }}</span>
+      <span class="c-glyph-tooltip__sacrifice">{{ $legacyText(_s(scoreText())) }}</span>
     </div>
     <div class="l-glyph-tooltip__effects">
       <GlyphTooltipEffect
@@ -299,7 +299,7 @@ export default {
         v-if="showChaosText"
         class="pelle-current-glyph-effects c-glyph-tooltip__effect"
       >
-        {{ chaosDescription }}
+        {{ $legacyText(_s(chaosDescription)) }}
       </div>
     </div>
   </div>

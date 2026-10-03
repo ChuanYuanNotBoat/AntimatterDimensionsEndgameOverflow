@@ -49,11 +49,11 @@ export default {
         class="fas fa-check"
       />
       <div class="c-modal__confirmation-toggle__tooltip">
-        {{ tooltipText }}
+        {{ $legacyText(_s(tooltipText)) }}
       </div>
     </div>
     <span class="c-modal__confirmation-toggle__text">
-      Don't show this message again
+      {{ $t('ade.290511794afef601') }}
     </span>
   </div>
 </template>

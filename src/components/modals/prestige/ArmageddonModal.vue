@@ -57,19 +57,16 @@ export default {
       v-if="!isDoomed"
       class="c-modal-message__text"
     >
-      Dooming your Reality will reset everything except Challenge records, Celestial progress and anything under
-      the General and Reality header on the Statistics tab. You will not gain any rewards from your progress
-      in your current Reality. Dooming your Reality will also purge most of your unprotected Glyphs and disable
-      certain game mechanics.
-      <br>
-      <br>
-      Are you sure you want to do this?
+      <LocalizedText id="ade.fd49eebd3a16869b">
+        <template #p0><br></template>
+        <template #p1><br></template>
+      </LocalizedText>
     </div>
     <div
       v-else
       class="c-modal-message__text"
     >
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
   </ModalWrapperChoice>
 </template>

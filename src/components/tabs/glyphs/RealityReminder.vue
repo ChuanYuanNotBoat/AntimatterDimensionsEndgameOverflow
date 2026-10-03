@@ -108,15 +108,15 @@ export default {
     @click="clicked"
   >
     <span v-if="!canReality">
-      You still need to unlock Reality in the Time Study Tree.
+      {{ $t('ade.8889c5dc4296809d') }}
     </span>
     <span v-else-if="suggestions.length === 0">
-      Ready to Reality! You have unlocked every available upgrade within this Reality.
+      {{ $t('ade.e32d5623fec2568a') }}
     </span>
     <span v-else>
       <i :class="dropDownIconClass" />
-      You have {{ quantifyInt("thing", suggestions.length) }}
-      you may want to do before Reality. {{ clickText }}
+      You have {{ $legacyText(_s(quantifyInt("thing", suggestions.length))) }}
+      you may want to do before Reality. {{ $legacyText(_s(clickText)) }}
       <div
         v-if="isExpanded"
         class="l-suggestions"
@@ -126,7 +126,7 @@ export default {
           v-for="suggestion in suggestions"
           :key="suggestion"
         >
-          {{ suggestion }}
+          {{ $legacyText(_s(suggestion)) }}
         </div>
       </div>
     </span>

@@ -78,23 +78,23 @@ export default {
       @click="purchaseUpgrade"
     >
       <div :class="{ 'o-pelle-disabled': isDoomed }">
-        {{ epEffectText }}
+        {{ $legacyText(_s(epEffectText)) }}
         <br>
-        {{ totalEPEffectText }}
+        {{ $legacyText(_s(totalEPEffectText)) }}
       </div>
       <br>
-      Cost: {{ quantify("Eternity Point", cost, 2, 0) }}
+      {{ $t('ade.cf1c6802b78ad829', { p0: $legacyText(_s(quantify("Eternity Point",cost,2,0))) }) }}
     </button>
     <PrimaryButton
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
       @click="upgrade.buyMax(false)"
     >
-      Max Eternity Point mult
+      {{ $t('ade.9614422a5c8ffca1') }}
     </PrimaryButton>
     <PrimaryToggleButton
       v-if="isAutoUnlocked"
       v-model="isAutobuyerActive"
-      label="Autobuy EP mult"
+      :label="$t('ade.4ad9fad8fdb3e89e')"
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
     />
   </div>

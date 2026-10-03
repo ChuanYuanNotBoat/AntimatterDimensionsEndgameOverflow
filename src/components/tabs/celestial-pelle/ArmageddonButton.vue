@@ -52,16 +52,17 @@ export default {
     :class="buttonClassObject"
     @click="manualArmageddon"
   >
-    <span v-if="isHeader">You cannot escape a Doomed Reality!<br></span>
-    <span class="c-remnant-gain-display">
-      Armageddon for
-      <span class="c-remnant-gain">{{ remnants }}</span>
-      Remnants
-    </span>
-    <br>
-    Reality Shards
-    <span class="c-reality-shard-gain">{{ format(realityShardGain, 2, 2) }}</span>/s ➜
-    <span class="c-reality-shard-gain">{{ format(nextRealityShardGain, 2, 2) }}</span>/s
+    <LocalizedText id="ade.786e87b784ea33e6">
+    <template #p0><span v-if="isHeader">{{ $t('ade.b6ddae131f31b746') }}<br></span></template>
+    <template #p1><span class="c-remnant-gain-display">
+      {{ $t('ade.b017219a1575b758') }}
+      <span class="c-remnant-gain">{{ $legacyText(_s(remnants)) }}</span>
+      {{ $t('terms.remnant', {}, 'plural') }}
+    </span></template>
+    <template #p2><br></template>
+    <template #p3><span class="c-reality-shard-gain">{{ $legacyText(_s(format(realityShardGain, 2, 2))) }}</span></template>
+    <template #p4><span class="c-reality-shard-gain">{{ $legacyText(_s(format(nextRealityShardGain, 2, 2))) }}</span></template>
+  </LocalizedText>
   </button>
 </template>
 

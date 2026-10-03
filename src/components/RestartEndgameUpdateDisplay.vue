@@ -55,8 +55,8 @@ export default {
       Congratulations! You have completed the entire game! You have two options going forward.
     </h2>
     <h3>
-      Option 1: Restart the game from the beginning. This is your {{ formattedCompletion }} completion of the game,
-      so currently you will gain a permanent {{ formatX(currentCompletions) }} multiplier to the primary currency
+      Option 1: Restart the game from the beginning. This is your {{ $legacyText(_s(formattedCompletion)) }} completion of the game,
+      so currently you will gain a permanent {{ $legacyText(_s(formatX(currentCompletions))) }} multiplier to the primary currency
       of the next update. You can improve this by getting more game completions. Before the game restarts, your savefile
       will be exported to your clipboard. It is recommended that you hold on to this savefile in case something happens.
     </h3>

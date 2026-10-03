@@ -56,7 +56,7 @@ export default {
 <template>
   <div class="l-break-celestial-infinity-tab">
     <div v-if="!isUnlocked">
-      Reach {{ formatInt(10000) }} Celestial Infinity Points to unlock Celestial Breaking of Infinity.
+      {{ $t('ade.b40a0107c23e548f', { p0: $legacyText(_s(formatInt(10000))) }) }}
     </div>
     <CelestialBreakInfinityButton class="l-break-celestial-infinity-tab__break-btn" />
     <div

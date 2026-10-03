@@ -46,18 +46,19 @@ export default {
       @click="purchaseUpgrade"
     >
       <div>
-        Gain a Power Core
-        <br>
-        Current multiplier to Accelerator Speed: {{ formatX(multiplier, 2, 0) }}
+        <LocalizedText id="ade.c036e3b83614820c">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(formatX(multiplier,2,0))) }}</template>
+        </LocalizedText>
       </div>
       <br>
-      Cost: {{ quantify("Total Hadron", cost, 2, 0) }}
+      {{ $t('ade.1a6c627524258847', { p0: $legacyText(_s(quantify("Total Hadron",cost,2,0))) }) }}
     </button>
     <PrimaryButton
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
       @click="upgrade.buyMax(false)"
     >
-      Buy max Power Cores
+      {{ $t('ade.8ca6c60929060509') }}
     </PrimaryButton>
   </div>
 </template>

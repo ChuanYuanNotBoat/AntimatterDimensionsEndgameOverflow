@@ -57,11 +57,11 @@ export default {
       Dimensional Sacrifice
     </template>
     <div class="c-modal-message__text">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
     <br>
     <div class="c-modal-message__text">
-      {{ multiplierText }}
+      {{ $legacyText(_s(multiplierText)) }}
       <br>
     </div>
   </ModalWrapperChoice>

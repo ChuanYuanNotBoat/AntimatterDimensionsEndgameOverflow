@@ -236,7 +236,7 @@ export default {
         <i :class="dropDownIconClass" />
       </span>
       <span>
-        <h3>Last {{ formatInt(10) }} {{ plural }}:</h3>
+        <h3>{{ $t('ade.15fc947dc6e5c726', { p0: $legacyText(_s(formatInt(10))), p1: $legacyText(_s(plural)) }) }}</h3>
       </span>
     </div>
     <div v-show="shown">
@@ -246,7 +246,7 @@ export default {
           :key="col"
           :style="cellStyle(col, true)"
         >
-          {{ entry }}
+          {{ $legacyText(_s(entry)) }}
         </span>
       </div>
       <div
@@ -258,11 +258,10 @@ export default {
           class="c-empty-row"
         >
           <i v-if="index === 10">
-            An average cannot be calculated with no {{ plural }}.
+            {{ $t('ade.93c887a7f1d12a3e', { p0: $legacyText(_s(plural)) }) }}
           </i>
           <i v-else>
-            You have not done {{ formatInt(index + 1) }}
-            {{ index === 0 ? singular : plural }} yet.
+            {{ $t('ade.f763286abef831c3', { p0: $legacyText(_s(formatInt(index+1))), p1: $legacyText(_s(index===0?singular:plural)) }) }}
           </i>
         </span>
         <span
@@ -274,7 +273,7 @@ export default {
             :key="10 * index + col"
             :style="cellStyle(col, false)"
           >
-            {{ entry }}
+            {{ $legacyText(_s(entry)) }}
           </span>
         </span>
       </div>

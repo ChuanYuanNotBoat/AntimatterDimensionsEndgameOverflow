@@ -195,7 +195,7 @@ export default {
         :class="buttonClass"
         @click="handleClick"
       >
-        {{ label }}
+        {{ $legacyText(_s(label)) }}
         <span :class="indicatorArrowClassObject">
           ▼
         </span>

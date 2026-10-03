@@ -200,72 +200,84 @@ const EP_BUTTON_DISPLAY_TYPE = {
   >
     <!-- Cannot Eternity -->
     <template v-if="type === -1">
-      Reach {{ format(eternityGoal, 2, 2) }}
-      <br>
-      Infinity Points
+      <LocalizedText id="ade.b1e84beb6c9bbca7">
+        <template #p0>{{ $legacyText(_s(format(eternityGoal,2,2))) }}</template>
+        <template #p1><br></template>
+      </LocalizedText>
     </template>
 
     <!-- First time -->
     <template v-else-if="type === 0">
-      Other times await... I need to become Eternal
+      {{ $t('ade.f7281ac76db60b8a') }}
     </template>
 
     <!-- Normal -->
     <template v-else-if="type === 1">
-      Eternity for
-      <span :style="amountStyle">{{ format(gainedEP, 2) }}</span>
-      <span v-if="showEPRate"> EP</span>
-      <span v-else> Eternity {{ pluralize("Point", gainedEP) }}</span>
+      {{ $t('ade.f77a45defb934d0c') }}
+      <span :style="amountStyle">{{ $legacyText(_s(format(gainedEP, 2))) }}</span>
+      <span v-if="showEPRate"> {{ $t('ade.281d26ec14ce91da') }}</span>
+      <span v-else> {{ $t('ade.0e21ae7c2a291f74', { p0: $legacyText(_s(pluralize("Point",gainedEP))) }) }}</span>
       <br>
       <template v-if="showEPRate">
-        Current: {{ format(currentEPRate, 2, 2) }} EP/min
-        <br>
-        Peak: {{ format(peakEPRate, 2, 2) }} EP/min
-        <br>
-        at {{ format(peakEPRateVal, 2, 2) }} EP
+        <LocalizedText id="ade.e23ec817b4021e60">
+          <template #p0>{{ $legacyText(_s(format(currentEPRate,2,2))) }}</template>
+          <template #p1><br></template>
+          <template #p2>{{ $legacyText(_s(format(peakEPRate,2,2))) }}</template>
+          <template #p3><br></template>
+          <template #p4>{{ $legacyText(_s(format(peakEPRateVal,2,2))) }}</template>
+        </LocalizedText>
       </template>
     </template>
 
     <!-- Challenge -->
     <template v-else-if="type === 2 || (type === 6 && !canEternity)">
-      Other challenges await... I need to become Eternal
+      {{ $t('ade.d254b2617fecda2e') }}
     </template>
 
     <!-- Dilation -->
     <template v-else-if="type === 3">
-      Eternity for <span :style="tachyonAmountStyle">{{ format(gainedTachyons, 2, 1) }}</span>
-      {{ pluralize("Tachyon Particle", gainedTachyons) }}
+      <LocalizedText id="ade.e16e11099c99bba4">
+        <template #p0><span :style="tachyonAmountStyle">{{ $legacyText(_s(format(gainedTachyons, 2, 1))) }}</span></template>
+        <template #p1>{{ $legacyText(_s(pluralize("Tachyon Particle",gainedTachyons))) }}</template>
+      </LocalizedText>
     </template>
 
     <!-- New content available -->
     <template v-else-if="type === 4 || type === 5">
       <template v-if="type === 4">
-        Eternity for <span :style="amountStyle">{{ format(gainedEP, 2, 2) }}</span> EP
+        <LocalizedText id="ade.d66c0633a1e53ef9">
+          <template #p0><span :style="amountStyle">{{ $legacyText(_s(format(gainedEP, 2, 2))) }}</span></template>
+        </LocalizedText>
       </template>
       <template v-else>
-        Eternity for <span :style="tachyonAmountStyle">{{ format(gainedTachyons, 2, 1) }}</span> TP
+        <LocalizedText id="ade.cff5b0e52cd0fcdf">
+          <template #p0><span :style="tachyonAmountStyle">{{ $legacyText(_s(format(gainedTachyons, 2, 1))) }}</span></template>
+        </LocalizedText>
       </template>
       <br>
-      You should explore a bit and look at new content before clicking me!
+      {{ $t('ade.9064e7585694a32c') }}
     </template>
 
     <!-- Challenge with multiple completions -->
     <template v-else-if="type === 6">
-      Other challenges await...
+      {{ $t('ade.7a02fb47241723d5') }}
       <template v-if="fullyCompleted">
-        <br>
-        (This challenge is already fully completed)
+        <LocalizedText id="ade.f9c256d014a32c76">
+    <template #p0><br></template>
+  </LocalizedText>
       </template>
       <template v-else>
         <br>
-        {{ quantifyInt("completion", gainedCompletions) }} on Eternity
+        {{ $t('ade.326f85d894939cb6', { p0: $legacyText(_s(quantifyInt("completion",gainedCompletions))) }) }}
         <template v-if="failedRestriction">
           <br>
-          {{ failedRestriction }}
+          {{ $legacyText(_s(failedRestriction)) }}
         </template>
         <template v-else-if="hasMoreCompletions">
-          <br>
-          Next goal at {{ format(nextGoalAt) }} IP
+          <LocalizedText id="ade.4ed17d90cf99735c">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(nextGoalAt))) }}</template>
+  </LocalizedText>
         </template>
       </template>
     </template>
@@ -278,7 +290,7 @@ const EP_BUTTON_DISPLAY_TYPE = {
     @click="switchToHypercubes"
   >
     <b>
-      You have enough Eternity Points to buy a Penteract
+      {{ $t('ade.76db66665fce7653') }}
     </b>
   </button>
 </template>

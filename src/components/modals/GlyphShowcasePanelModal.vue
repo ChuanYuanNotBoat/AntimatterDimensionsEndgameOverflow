@@ -83,7 +83,7 @@ export default {
       {{ name }}
     </template>
     <div v-if="isGlyphSelection">
-      Projected Glyph Level: {{ formatHybridLarge(gainedLevel, 3) }}
+      {{ $t('ade.5e50f7075730ad46', { p0: $legacyText(_s(formatHybridLarge(gainedLevel,3))) }) }}
     </div>
     <GlyphSetName
       v-if="showSetName"

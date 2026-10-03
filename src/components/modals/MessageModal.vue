@@ -53,19 +53,19 @@ export default {
     />
     <div
       class="c-modal-message__text"
-      v-html="message"
+      v-html="$legacyHtml(message)"
     />
     <PrimaryButton
       class="o-primary-btn--width-medium c-modal-message__okay-btn c-modal__confirm-btn"
       @click="handleClick"
     >
-      Okay
+      {{ $t('ade.897863f44ccdc0cf') }}
     </PrimaryButton>
     <div
       v-if="isThemeS12"
       class="c-modal__title"
     >
-      Message
+      {{ $t('ade.630296459f40e8a7') }}
     </div>
   </div>
 </template>

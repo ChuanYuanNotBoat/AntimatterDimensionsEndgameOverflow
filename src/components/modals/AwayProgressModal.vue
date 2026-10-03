@@ -54,7 +54,7 @@ export default {
 <template>
   <ModalWrapper class="c-modal-away-progress">
     <div class="c-modal-away-progress__header">
-      {{ headerText }}
+      {{ $legacyText(_s(headerText)) }}
     </div>
     <div
       v-if="!nothingHappened"
@@ -69,7 +69,7 @@ export default {
         @something-happened="somethingHappened = true"
       />
     </div>
-    <span v-if="!nothingHappened && somethingHappened">Note: Click an entry to hide it in the future.</span>
+    <span v-if="!nothingHappened && somethingHappened">{{ $t('ade.53e15216f776b028') }}</span>
   </ModalWrapper>
 </template>
 

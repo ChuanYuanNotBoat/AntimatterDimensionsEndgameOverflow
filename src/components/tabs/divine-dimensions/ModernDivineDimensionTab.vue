@@ -77,47 +77,49 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="maxAll"
       >
-        Max all
+        {{ $t('ade.5fd68fd3aca6ea9f') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="isAnyAutobuyerUnlocked"
         class="o-primary-btn--subtab-option"
         @click="toggleAllAutobuyers"
       >
-        Toggle all autobuyers
+        {{ $t('ade.df61aae1ac373e48') }}
       </PrimaryButton>
     </div>
     <div>
       <div v-if="canProduceEnergy">
-        You have <span class="c-divine-dim-description__accent">{{ format(divineEnergy, 2, 1) }}</span> Divine Energy.
+        <LocalizedText id="ade.859c3f53618d609a">
+          <template #p0><span class="c-divine-dim-description__accent">{{ $legacyText(_s(format(divineEnergy, 2, 1))) }}</span></template>
+        </LocalizedText>
       </div>
       <div>
         <p>
-          You have
-          <span class="c-divine-dim-description__accent">{{ format(divineMatter, 2, 1) }}</span>
-          Divine Matter,
+          {{ $t('ade.9f717812b3aa8e61') }}
+          <span class="c-divine-dim-description__accent">{{ $legacyText(_s(format(divineMatter, 2, 1))) }}</span>
+          {{ $t('ade.08590c76298b730f') }}
           <br>
-          translated to a
-          <span class="c-divine-dim-description__accent">{{ formatX(conversionFormula1, 2, 2) }}</span>
-          multiplier to Endgame and Ethereal Power gain, a
-          <span class="c-divine-dim-description__accent">{{ formatPow(conversionFormula2, 2, 3) }}</span>
-          to {{ isFlipped ? "Matter" : "Antimatter" }} Exponent while Doomed and all Machines, and a
-          <span class="c-divine-dim-description__accent">{{ formatPercents(conversionFormula3, 2, 2) }}</span>
+          {{ $t('ade.a6c4c6c292cd65e2') }}
+          <span class="c-divine-dim-description__accent">{{ $legacyText(_s(formatX(conversionFormula1, 2, 2))) }}</span>
+          {{ $t('ade.afe193dd9dce226c') }}
+          <span class="c-divine-dim-description__accent">{{ $legacyText(_s(formatPow(conversionFormula2, 2, 3))) }}</span>
+          to {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Exponent while Doomed and all Machines, and a
+          <span class="c-divine-dim-description__accent">{{ $legacyText(_s(formatPercents(conversionFormula3, 2, 2))) }}</span>
           reduction to Hadron and Remnants of Alpha Decay cap times.
         </p>
       </div>
-      <div>Divine Matter is capped at {{ format(hardcap, 2, 0) }}.</div>
-      <div v-if="!dispBoth">You are getting {{ currencyProd }} {{ incomeType }} per second.</div>
+      <div>{{ $t('ade.7d14632ac8e06f9a', { p0: $legacyText(_s(format(hardcap,2,0))) }) }}</div>
+      <div v-if="!dispBoth">{{ $t('ade.db3cc42d958e8fc5', { p0: $legacyText(_s(currencyProd)), p1: $legacyText(_s(incomeType)) }) }}</div>
       <div v-if="dispBoth">
-        <div>You are getting {{ format(matterPerSecond, 2, 0) }} Divine Matter per second.</div>
-        <div>You are getting {{ format(energyPerSecond, 2, 2) }} Divine Energy per second.</div>
+        <div>{{ $t('ade.b592c0a6ae2351c1', { p0: $legacyText(_s(format(matterPerSecond,2,0))) }) }}</div>
+        <div>{{ $t('ade.134f7c5f1dfc60e0', { p0: $legacyText(_s(format(energyPerSecond,2,2))) }) }}</div>
       </div>
       <PrimaryButton
         v-if="canProduceEnergy && !dispBoth"
         class="o-primary-btn--subtab-option"
         @click="shiftProd"
       >
-        {{ changeProdDisplay }}
+        {{ $legacyText(_s(changeProdDisplay)) }}
       </PrimaryButton>
     </div>
     <div class="l-dimensions-container">

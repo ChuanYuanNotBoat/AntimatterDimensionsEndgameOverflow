@@ -45,7 +45,7 @@ export default {
     </div>
     <div class="c-am-breakdown-content">
       <div class="c-am-header">
-        <b>Antimatter Production: {{ format(snapshot.actual, 2, 2) }}/sec</b>
+        <b>Antimatter Production: {{ $legacyText(_s(format(snapshot.actual, 2, 2))) }}/sec</b>
         <span>Gameplay endpoint</span>
       </div>
       <div class="c-am-section">
@@ -53,11 +53,11 @@ export default {
           @click="openAD = !openAD">
           <i :class="openAD ? 'far fa-minus-square' : 'far fa-plus-square'" />
           <b>Base AD1 Production</b>
-          <span>{{ format(snapshot.amount.times(snapshot.multiplier), 2, 2) }} (amount × multiplier)</span>
+          <span>{{ $legacyText(_s(format(snapshot.amount.times(snapshot.multiplier), 2, 2))) }} (amount × multiplier)</span>
         </button>
         <div v-if="openAD" class="c-am-inside">
-          <div class="c-am-metric"><span>AD1 amount</span><b>{{ format(snapshot.amount, 2, 2) }}</b></div>
-          <div class="c-am-metric"><span>AD1 multiplier (gameplay)</span><b>{{ formatX(snapshot.multiplier, 2, 2) }}</b></div>
+          <div class="c-am-metric"><span>AD1 amount</span><b>{{ $legacyText(_s(format(snapshot.amount, 2, 2))) }}</b></div>
+          <div class="c-am-metric"><span>AD1 multiplier (gameplay)</span><b>{{ $legacyText(_s(formatX(snapshot.multiplier, 2, 2))) }}</b></div>
           <MultiplierBreakdownEntry :resource="ad1Resource" :depth="1" />
         </div>
       </div>
@@ -66,7 +66,7 @@ export default {
           @click="openTickspeed = !openTickspeed">
           <i :class="openTickspeed ? 'far fa-minus-square' : 'far fa-plus-square'" />
           <b>Total Tickspeed (one producer)</b>
-          <span>{{ format(snapshot.tickRate, 2, 2) }}/sec</span>
+          <span>{{ $legacyText(_s(format(snapshot.tickRate, 2, 2))) }}/sec</span>
         </button>
         <div v-if="openTickspeed" class="c-am-inside">
           AM production uses exactly one Tickspeed rate. The separate Tickspeed statistics page
@@ -79,39 +79,39 @@ export default {
           @click="openModifiers = !openModifiers">
           <i :class="openModifiers ? 'far fa-minus-square' : 'far fa-plus-square'" />
           <b>Production powers &amp; limits</b>
-          <span>{{ format(snapshot.perGameSecond, 2, 2) }}/game sec</span>
+          <span>{{ $legacyText(_s(format(snapshot.perGameSecond, 2, 2))) }}/game sec</span>
         </button>
         <div v-if="openModifiers" class="c-am-inside">
           <div class="c-am-metric"><span>Before AD production modifiers</span>
-            <b>{{ format(snapshot.raw, 2, 2) }}/game sec</b></div>
+            <b>{{ $legacyText(_s(format(snapshot.raw, 2, 2))) }}/game sec</b></div>
           <div v-for="stage in snapshot.activeStages" :key="stage.key" class="c-am-stage"
             :class="{ 'c-am-stage--nerf': stage.before.gt(stage.after) }">
             <div class="c-am-stage-top">
-              <span>{{ stage.display || stage.key }}</span>
-              <b v-if="stage.before.gt(stage.after)">{{ reduction(stage) }}</b>
+              <span>{{ $legacyText(_s(stage.display || stage.key)) }}</span>
+              <b v-if="stage.before.gt(stage.after)">{{ $legacyText(_s(reduction(stage))) }}</b>
               <b v-else-if="stage.key === 'challengeCap'">Not binding</b>
-              <b v-else>{{ format(stage.after, 2, 2) }}/sec</b>
+              <b v-else>{{ $legacyText(_s(format(stage.after, 2, 2))) }}/sec</b>
             </div>
             <div v-if="stage.before.gt(stage.after)" class="c-am-stage-comparison">
-              Before: {{ format(stage.before, 2, 2) }} → After: {{ format(stage.after, 2, 2) }}
+              Before: {{ $legacyText(_s(format(stage.before, 2, 2))) }} → After: {{ $legacyText(_s(format(stage.after, 2, 2))) }}
             </div>
           </div>
           <div v-if="!modifiers.length && !capStages.length" class="c-am-stage">
             No active production modifiers or limits are changing the current output.
           </div>
           <div class="c-am-metric"><span>After gameplay powers and production caps</span>
-            <b>{{ format(snapshot.perGameSecond, 2, 2) }}/game sec</b></div>
+            <b>{{ $legacyText(_s(format(snapshot.perGameSecond, 2, 2))) }}/game sec</b></div>
         </div>
       </div>
-      <div class="c-am-metric c-am-conversion"><span>Game speed</span><b>{{ formatX(snapshot.speed, 2, 2) }}</b></div>
+      <div class="c-am-metric c-am-conversion"><span>{{ $t('ade.be7c3b5dbb6f2ee9') }}</span><b>{{ $legacyText(_s(formatX(snapshot.speed, 2, 2))) }}</b></div>
       <div v-if="snapshot.nc12" class="c-am-metric c-am-conversion">
         <span>NC12: additive AD2 output (after game speed)</span>
-        <b>+{{ format(snapshot.ad2Real, 2, 2) }}/sec</b>
+        <b>+{{ $legacyText(_s(format(snapshot.ad2Real, 2, 2))) }}/sec</b>
       </div>
       <div v-if="snapshot.mismatch" class="c-am-diagnostic">
         Formula check: the traced gameplay production differs from the AM/sec getter.
-        Traced: {{ format(snapshot.calculated, 2, 2) }}/sec; getter:
-        {{ format(snapshot.actual, 2, 2) }}/sec.
+        Traced: {{ $legacyText(_s(format(snapshot.calculated, 2, 2))) }}/sec; getter:
+        {{ $legacyText(_s(format(snapshot.actual, 2, 2))) }}/sec.
       </div>
       <div v-if="snapshot.voidRunning" class="c-am-diagnostic">
         Void mode credits transformed Antimatter per tick; displayed AM/sec is the normal production getter,

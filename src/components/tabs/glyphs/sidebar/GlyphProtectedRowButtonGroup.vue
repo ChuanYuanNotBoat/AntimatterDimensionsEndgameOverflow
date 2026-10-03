@@ -57,35 +57,35 @@ export default {
   <div class="o-glyph-inventory-management-group">
     <div class="l-glyph-sacrifice-options__header">
       <div
-        v-tooltip="questionMarkTooltip"
+        v-tooltip="$legacyTooltip(questionMarkTooltip)"
         class="o-questionmark"
       >
         ?
       </div>
-      Protected Slots: ({{ quantifyInt("row", protectedRows) }})
+      {{ $t('ade.6744ae859c3475f5', { p0: $legacyText(_s(quantifyInt("row",protectedRows))) }) }}
     </div>
     <button
       :class="addRowButtonClass()"
       @click="addRow"
     >
-      Add a protected row
+      {{ $t('ade.ebe90588ec41849e') }}
       <div
         v-if="isProtectedRowsMax()"
         class="c-glyph-inventory-option__tooltip"
       >
-        One row is permanently un-protected for new Glyphs
+        {{ $t('ade.dd69bc4002d43643') }}
       </div>
     </button>
     <button
       :class="removeRowButtonClass()"
       @click="removeRow"
     >
-      Remove a protected row
+      {{ $t('ade.f8849c5fee868e6b') }}
     </button>
     <ToggleButton
       v-model="moveGlyphs"
       class="c-glyph-inventory-option"
-      label="Move Glyphs on changing row count:"
+      :label="$t('ade.26cb021d5385325c')"
     />
   </div>
 </template>

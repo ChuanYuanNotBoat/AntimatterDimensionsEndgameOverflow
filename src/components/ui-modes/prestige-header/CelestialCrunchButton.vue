@@ -104,9 +104,10 @@ export default {
   >
     <!-- Cannot Crunch -->
     <template v-if="!canCrunch">
-      Reach {{ format(infinityGoal, 2, 2) }}
-      <br>
-      Celestial Matter
+      <LocalizedText id="ade.01b89efe235ee50d">
+        <template #p0>{{ $legacyText(_s(format(infinityGoal,2,2))) }}</template>
+        <template #p1><br></template>
+      </LocalizedText>
     </template>
 
     <!-- Can Crunch -->
@@ -115,17 +116,19 @@ export default {
       <b>
         <span v-if="showCIPRate">Cel Crunch for </span>
         <span v-else>Celestial Crunch for </span>
-        <span :style="amountStyle">{{ format(gainedCIP, 2) }}</span>
+        <span :style="amountStyle">{{ $legacyText(_s(format(gainedCIP, 2))) }}</span>
         <span v-if="showCIPRate"> CIP</span>
-        <span v-else> Celestial {{ pluralize("Point", gainedCIP) }} of Infinity</span>
+        <span v-else> Celestial {{ $legacyText(_s(pluralize("Point", gainedCIP))) }} of Infinity</span>
       </b>
       <template v-if="showCIPRate">
-        <br>
-        Current: {{ format(currentCIPRate, 2) }} CIP/min
-        <br>
-        Peak: {{ format(peakCIPRate, 2) }} CIP/min
-        <br>
-        at {{ format(peakCIPRateVal, 2) }} CIP
+        <LocalizedText id="ade.4c89d7dcbb0ad344">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(currentCIPRate,2))) }}</template>
+    <template #p2><br></template>
+    <template #p3>{{ $legacyText(_s(format(peakCIPRate,2))) }}</template>
+    <template #p4><br></template>
+    <template #p5>{{ $legacyText(_s(format(peakCIPRateVal,2))) }}</template>
+  </LocalizedText>
       </template>
       <div v-else />
     </template>

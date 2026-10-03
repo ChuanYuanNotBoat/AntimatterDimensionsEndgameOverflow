@@ -69,10 +69,10 @@ export default {
     @click="handleClick"
   >
     <span>
-      Unlock a Secret Achievement
-      <br>
-      <br>
-      (Double click to hide)
+      <LocalizedText id="ade.5e3ca0e89664ed21">
+        <template #p0><br></template>
+        <template #p1><br></template>
+      </LocalizedText>
     </span>
   </button>
 </template>

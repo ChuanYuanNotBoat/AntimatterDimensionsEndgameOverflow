@@ -834,7 +834,7 @@ export default {
       :style="innerStyle"
       :class="['l-glyph-component', 'c-glyph-component']"
     >
-      {{ symbol }}
+      {{ $legacyText(_s(symbol)) }}
       <template v-if="$viewModel.shiftDown || showGlyphEffectDots">
         <div
           v-for="x in glyphEffects"
@@ -865,7 +865,7 @@ export default {
       v-if="isNew"
       class="l-corner-icon l-new-glyph"
     >
-      New!
+      {{ $t('ade.d4015774830bfa21') }}
     </div>
     <div
       v-else-if="isUnequipped"
@@ -875,7 +875,7 @@ export default {
       v-if="displayedInfo"
       class="l-glyph-info"
     >
-      {{ displayedInfo }}
+      {{ $legacyText(_s(displayedInfo)) }}
     </div>
     <div
       ref="over"

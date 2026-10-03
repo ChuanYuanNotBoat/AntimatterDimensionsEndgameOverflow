@@ -65,36 +65,39 @@ export default {
   <div class="c-subtab-option-container">
     <PrimaryToggleButton
       v-model="autobuyersOn"
-      on="Pause autobuyers"
-      off="Resume autobuyers"
+      :on="$t('ade.786beb0e00462a6c')"
+      :off="$t('ade.a3aa6880f4dbac76')"
       class="o-primary-btn--subtab-option"
     />
     <PrimaryButton
       class="o-primary-btn--subtab-option"
       @click="toggleAllAutobuyers()"
     >
-      {{ allAutobuyersDisabled ? "Enable" : "Disable" }} all autobuyers
+      {{ $t('ade.f813e49e9d5c7a29', { p0: $legacyText(_s(allAutobuyersDisabled?"Enable":"Disable")) }) }}
     </PrimaryButton>
     <PrimaryButton
       class="o-primary-btn--subtab-option"
       @click="toggleAntimatterSingles()"
     >
-      Set {{ isFlipped ? "MD" : "AD" }} autobuyers to buy {{ antimatterAutobuyersBuyMax ? "singles" : "max" }}
+      {{ $t('autobuyers.setDimensionMode', {
+        dimension: isFlipped ? 'matter' : 'antimatter',
+        mode: antimatterAutobuyersBuyMax ? 'singles' : 'max'
+      }) }}
     </PrimaryButton>
     <span v-if="false">
       <PrimaryButton
         v-if="showContinuum"
         class="o-primary-btn--subtab-option"
       >
-        Continuum is disabled
+        {{ $t('ade.53815c2d338ef352') }}
       </PrimaryButton>
     </span>
     <span v-else>
       <PrimaryToggleButton
         v-if="showContinuum"
         v-model="disableContinuum"
-        on="Enable Continuum"
-        off="Disable Continuum"
+        :on="$t('ade.eb24b792fa9a367f')"
+        :off="$t('ade.a164cf8d1f4fdbb5')"
         class="o-primary-btn--subtab-option"
       />
     </span>

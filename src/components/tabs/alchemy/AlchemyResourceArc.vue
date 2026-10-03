@@ -63,7 +63,7 @@ export default {
       class="o-alchemy-node-mask"
       :class="classObject"
     >
-      {{ resource.symbol }}
+      {{ $legacyText(_s(resource.symbol)) }}
     </div>
   </div>
 </template>

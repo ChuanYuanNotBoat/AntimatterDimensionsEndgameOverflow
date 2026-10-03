@@ -155,11 +155,12 @@ export default {
       v-if="isEnslaved || isDoomed || isDisabled"
       class="c-black-hole-disabled-description"
     >
-      <i v-if="isEnslaved">
-        You must... seek... other methods...
+      <LocalizedText id="ade.e6f48289efc45371">
+    <template #p0><i v-if="isEnslaved">
+        {{ $t('ade.9eb0ecfe5a5e7989') }}
         <br>
-      </i>
-      The physics of this Reality do not allow the existence of Black Holes.
+      </i></template>
+  </LocalizedText>
     </div>
     <div
       v-else-if="!isUnlocked"
@@ -168,10 +169,10 @@ export default {
       <BlackHoleUnlockButton @blackholeunlock="startAnimation" />
       The Black Hole makes the entire game run significantly faster for a short period of time.
       <br>
-      Starts at {{ formatX(180) }} faster for {{ formatInt(10) }} seconds, once per hour.
+      Starts at {{ $legacyText(_s(formatX(180))) }} faster for {{ $legacyText(_s(formatInt(10))) }} seconds, once per hour.
       <br>
       <br>
-      Unlocking the Black Hole also gives {{ formatInt(10) }} Automator Points.
+      Unlocking the Black Hole also gives {{ $legacyText(_s(formatInt(10))) }} Automator Points.
     </div>
     <template v-else>
       <div class="c-subtab-option-container">
@@ -179,14 +180,14 @@ export default {
           class="o-primary-btn o-primary-btn--subtab-option"
           @click="togglePause"
         >
-          {{ stateChange }} Black Hole
+          {{ $t('ade.dc450295b209b64b', { p0: $legacyText(_s(stateChange)) }) }}
         </button>
         <button
           v-if="!isPermanent"
           class="o-primary-btn o-primary-btn--subtab-option l-auto-pause-button"
           @click="changePauseMode"
         >
-          Auto-pause: {{ pauseModeString }}
+          {{ $t('ade.7f1c2cde8f845880', { p0: $legacyText(_s(pauseModeString)) }) }}
         </button>
       </div>
       <canvas
@@ -202,19 +203,20 @@ export default {
           :black-hole="blackHole"
         />
         <span v-if="hasBH2 && !isPermanent">
-          <b>{{ detailedBH2 }}</b>
+          <b>{{ $legacyText(_s(detailedBH2)) }}</b>
           <br>
-          The timer for Black Hole 2 only advances while Black Hole 1 is active.
+          {{ $t('ade.461c016f2326dbf6') }}
           <br>
           Upgrades affect the internal timer; the header shows real time until next activation.
         </span>
         <br>
         <div v-if="!isPermanent">
-          Black holes become permanently active when they are active for more than {{ formatPercents(0.9999, 2) }}
-          of the time.
-          <br>
-          Active time percent: {{ formatPercents(blackHoleUptime[0], 3) }}
-          <span v-if="hasBH2">and {{ formatPercents(blackHoleUptime[1], 3) }}</span>
+          <LocalizedText id="ade.1e54b97fe44ce02d">
+            <template #p0>{{ $legacyText(_s(formatPercents(0.9999,2))) }}</template>
+            <template #p1><br></template>
+            <template #p2>{{ $legacyText(_s(formatPercents(blackHoleUptime[0],3))) }}</template>
+            <template #p3><span v-if="hasBH2">{{ $t('ade.422710640e6d2069') }} {{ $legacyText(_s(formatPercents(blackHoleUptime[1], 3))) }}</span></template>
+          </LocalizedText>
         </div>
         <BlackHoleChargingSliders
           v-if="!isLaitela"

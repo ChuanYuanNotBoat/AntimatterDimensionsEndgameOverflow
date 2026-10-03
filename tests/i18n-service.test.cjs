@@ -147,3 +147,33 @@ test('cached DescriptionDisplay text refreshes while the simulation is paused', 
   assert.equal(view.description, 'Press scrambled here');
   view.$destroy();
 });
+
+test('whole shared terms, optional grammatical forms, and English fallback update atomically', () => {
+  const { service } = setup({
+    en: { 'terms.point': { text: 'Celestial Infinity Point', plural: 'Celestial Infinity Points' },
+      header: 'You have {amount} [[terms.point|plural]].', fallback: 'Cost: [[terms.point]].' },
+    'zh-CN': { 'terms.point': '天界无限点数', header: '你有 {amount} [[terms.point|plural]]。' },
+  });
+  assert.equal(service.t('header', { amount: 'ee300' }), 'You have ee300 Celestial Infinity Points.');
+  service.setLocale('zh-CN');
+  assert.equal(service.t('header', { amount: 'ee300' }), '你有 ee300 天界无限点数。');
+  assert.equal(service.t('fallback'), 'Cost: Celestial Infinity Point.');
+  assert.equal(service.registerLocale('zh-CN', { 'terms.point': '新术语', header: '你有 {amount} [[terms.point]]。' }), true);
+  assert.equal(service.t('header', { amount: 'ee300' }), '你有 ee300 新术语。');
+  const revision = service.state.revision;
+  assert.equal(service.registerLocale('zh-CN', { header: '[[missing]]' }), false);
+  assert.equal(service.registerLocale('zh-CN', { header: '[[header]]' }), false);
+  assert.equal(service.state.revision, revision);
+  assert.equal(service.t('header', { amount: 'ee300' }), '你有 ee300 新术语。');
+});
+
+test('partial translated sentences can inherit an entire English term without splitting its words', () => {
+  const { service } = setup({
+    en: { resource: 'Celestial Infinity Points', text: 'Amount: [[resource]]' },
+    'zh-CN': { text: '数量：[[resource]]' },
+  });
+  service.setLocale('zh-CN');
+  assert.equal(service.t('text'), '数量：Celestial Infinity Points');
+  service.registerLocale('en', { resource: 'Updated Full Name', text: 'Amount: [[resource]]' });
+  assert.equal(service.t('text'), '数量：Updated Full Name');
+});

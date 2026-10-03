@@ -138,10 +138,9 @@ export default {
     <div
       class="l-dim-row__prestige-text c-dim-row__label c-dim-row__label--amount l-text-wrapper"
     >
-      {{ typeName }} ({{ sumText }}):
-      requires {{ formatHybridLarge(requirement.amount, 3) }} {{ dimName }} Dimensions
+      {{ $t('ade.f4d01c13b71e065e', { p0: $legacyText(_s(typeName)), p1: $legacyText(_s(sumText)), p2: $legacyText(_s(formatHybridLarge(requirement.amount,3))), p3: $legacyText(_s(dimName)) }) }}
       <div class="l-scaling-text-wrapper">
-        {{ hasIncreasedScaling ? costScalingText : "" }}
+        {{ $legacyText(_s(hasIncreasedScaling ? costScalingText : "")) }}
       </div>
     </div>
     <PrimaryButton
@@ -150,7 +149,7 @@ export default {
       @click.exact="buyGalaxy(true)"
       @click.shift.exact="buyGalaxy(false)"
     >
-      {{ buttonText }}
+      {{ $legacyText(_s(buttonText)) }}
       <div
         v-if="hasTutorial"
         class="fas fa-circle-exclamation l-notification-icon"

@@ -75,7 +75,7 @@ export default {
     >
       <div class="c-expansion-packs-container">
         <div class="o-symbol">
-          {{ symbol }}
+          {{ $legacyText(_s(symbol)) }}
         </div>
         <div>
           <div
@@ -83,7 +83,7 @@ export default {
             :key="descriptionKey"
             :class="textClassObject"
           >
-            {{ description }}
+            {{ $legacyText(_s(description)) }}
           </div>
           <CostDisplay
             v-if="!isBought"

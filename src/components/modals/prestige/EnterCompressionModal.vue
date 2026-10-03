@@ -39,7 +39,7 @@ export default {
       {{ entranceLabel }}
     </template>
     <div class="c-modal-message__text">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
     <template #confirm-text>
       Enter

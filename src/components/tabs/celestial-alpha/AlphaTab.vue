@@ -73,49 +73,49 @@ export default {
     <br>
     <div>
       <span class="l-alpha-text">
-        Each Alpha layer beaten also increases Endgame and Ethereal Power gain by {{ formatPercents(0.33) }}
+        {{ $t('ade.1109d491724da278', { p0: $legacyText(_s(formatPercents(0.33))) }) }}
       </span>
     </div>
     <div class="l-alpha-unlocks-and-run">
       <div class="l-alpha-unlocks">
         <div>
           <span class="l-alpha-header">
-            Layer
+            {{ $t('ade.9b241e8cf6e9837e') }}
           </span>
           <p
             v-for="(layer, idx) in layers"
             :key="idx"
           >
-            {{ layer }}
+            {{ $legacyText(_s(layer)) }}
           </p>
         </div>
         <div>
           <span class="l-alpha-header">
-            Nerf
+            {{ $t('ade.ceeca85f62c7a930') }}
           </span>
           <p
             v-for="(nerf, idy) in nerfs"
             :key="idy"
           >
-            {{ nerf }}
+            {{ $legacyText(_s(nerf)) }}
           </p>
         </div>
         <div>
           <span class="l-alpha-header">
-            Buff
+            {{ $t('ade.2ec480e8a1ddbc9a') }}
           </span>
           <p
             v-for="(buff, idz) in buffs"
             :key="idz"
           >
-            {{ buff }}
+            {{ $legacyText(_s(buff)) }}
           </p>
         </div>
       </div>
       <div class="l-alpha-run">
         <div class="c-alpha-run-description">
           <span :class="{ 'o-pelle-disabled': isDoomed || isDestroyed }">
-            Access Alpha's Reality.
+            {{ $t('ade.16f9ee73ef7ffc70') }}
           </span>
         </div>
         <div
@@ -126,11 +126,11 @@ export default {
             :class="runButtonInnerClass"
             :button-symbol="symbol"
           >
-            {{ symbol }}
+            {{ $legacyText(_s(symbol)) }}
           </div>
         </div>
         <div class="c-alpha-run-description">
-          {{ runDescription }}
+          {{ $legacyText(_s(runDescription)) }}
         </div>
       </div>
     </div>

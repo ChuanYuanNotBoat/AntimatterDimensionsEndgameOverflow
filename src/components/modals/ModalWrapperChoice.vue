@@ -102,7 +102,7 @@ export default {
         @click="doCancel"
       >
         <slot name="cancel-text">
-          Cancel
+          {{ $t('ade.998b9c48fbf51012') }}
         </slot>
       </PrimaryButton>
 
@@ -114,7 +114,7 @@ export default {
         @click="doConfirm"
       >
         <slot name="confirm-text">
-          Confirm
+          {{ $t('ade.fa23c4b0a823742b') }}
         </slot>
       </PrimaryButton>
     </div>
