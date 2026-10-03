@@ -4,6 +4,7 @@ import { DEV } from "@/env";
 import { devMigrations } from "./dev-migrations";
 import { migrations } from "./migrations";
 import { decimalMigration } from "./decimal-migrations";
+import { normalizeChapter3Save } from "./chapter3-migrations";
 
 import { deepmergeAll } from "@/utility/deepmerge";
 
@@ -477,6 +478,7 @@ export const GameStorage = {
     Lazy.invalidateAll();
 
     decimalMigration(player);
+    normalizeChapter3Save(player);
 
     let s1 = player.reality.glyphs.active;
     for (let g1 = 0; g1 < s1.length; g1++) {

@@ -1,3 +1,4 @@
+import { boundedPositivePower } from "../../finite-decimal";
 import { textRef } from "../../../i18n/text-ref";
 
 function dimInfinityMult() {
@@ -249,7 +250,7 @@ export const infinityUpgrades = {
     description: () => Ascensions.ipA.isUnlocked ? `Increase the exponent of Infinity Points by +${formatPow(0.01, 2, 2)}` : `Multiply Infinity Points from all sources by ${formatX(2)}`,
     // Normally the multiplier caps at e993k or so with 3300000 purchases, but if the cost is capped then we just give
     // an extra e7k to make the multiplier look nice
-    effect: () => Ascensions.ipA.isUnlocked ? player.IPMultPurchases.div(100).add(1) : ((player.IPMultPurchases.gte(3300000) && (!BreakEternityUpgrade.doubleIPUncap.isBought || player.disablePostReality) ? DC.E1E6 : Decimal.round(DC.D2.pow(player.IPMultPurchases)))),
+    effect: () => Ascensions.ipA.isUnlocked ? player.IPMultPurchases.div(100).add(1) : ((player.IPMultPurchases.gte(3300000) && (!BreakEternityUpgrade.doubleIPUncap.isBought || player.disablePostReality) ? DC.E1E6 : Decimal.round(boundedPositivePower(2, player.IPMultPurchases)))),
     cap: () => {
       if (Ascensions.ipA.isUnlocked) return DC.BEMAX;
       const normcap = (BreakEternityUpgrade.doubleIPUncap.isBought && !player.disablePostReality) ? DC.BEMAX : DC.E1E6;

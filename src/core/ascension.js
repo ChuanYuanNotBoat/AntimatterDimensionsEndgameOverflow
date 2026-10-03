@@ -1,3 +1,8 @@
+import { canStartEndgameChallenge } from "./endgame-challenge";
+
+const OVERCHARGE_ENERGIES = [null, "bi", "eter", "chall", "ts"];
+const OVERCHARGE_CAPS = [0, 9, 6, 32, 62];
+
 export class AscensionState {
   constructor(config) {
     this.config = config;
@@ -47,7 +52,7 @@ export const Ascension = {
 };
 
 export function tryAscend() {
-  if (!Ascension.nextAscension || player.disablePostReality) return;
+  if (!Ascension.isUnlocked || !Ascension.nextAscension || player.disablePostReality) return;
   if (Ascension.nextAscension.timeRemaining.gt(0)) return;
   Ascension.nextAscension.config.onUnlock?.();
   player.endgame.ascension++;
@@ -57,15 +62,19 @@ export function tryAscend() {
 };
 
 export function tryEnterOvercharge() {
-  if (LHC.voidRunning || LHC.nullifiedVoidRunning || player.compression.active || player.universes.current !== 0) return;
+  if (!Ascensions.ocA.isUnlocked || !canStartEndgameChallenge()) return false;
   if (player.options.confirmations.overcharge) {
     Modal.enterOvercharge.show();
   } else {
-    enterOvercharge();
+    return enterOvercharge();
   }
+  return true;
 }
 
 export function enterOvercharge() {
+  const level = player.endgame.overcharge.level;
+  if (!Ascensions.ocA.isUnlocked || !canStartEndgameChallenge() || !Number.isInteger(level) ||
+      level < 1 || level > Math.min(4, player.endgame.ascension - 5)) return false;
   Endgame.resetNoReward();
   clearCelestialRuns();
   player.endgame.overcharge.isRunning = true;
@@ -74,9 +83,28 @@ export function enterOvercharge() {
   if (player.endgame.overcharge.level >= 4) {
     Modal.message.show(`The rewards for this feature are not yet implemented. Please wait for updates.`, {}, 3);
   }
-};
+  return true;
+}
+
+export function getOverchargeEnergyGain() {
+  const overcharge = player.endgame.overcharge;
+  const key = OVERCHARGE_ENERGIES[overcharge.level];
+  if (!key || !overcharge.isRunning || Currency.eternityPoints.lt("1e4000")) return 0;
+  const current = overcharge.completions[key];
+  if (!Number.isSafeInteger(current) || current < 0) throw new Error("Invalid Overcharge energy count");
+  const remaining = Math.max(0, OVERCHARGE_CAPS[overcharge.level] - current);
+  return Currency.eternityPoints.value.log10().div(4000).log(1.1).add(1).sub(current)
+    .floor().clamp(0, remaining).toNumber();
+}
 
 export function exitOvercharge() {
+  const overcharge = player.endgame.overcharge;
+  if (!overcharge.isRunning || !OVERCHARGE_ENERGIES[overcharge.level]) return false;
+  const key = OVERCHARGE_ENERGIES[overcharge.level];
+  const reward = getOverchargeEnergyGain();
   Endgame.resetNoReward();
-  player.endgame.overcharge.isRunning = false;
-};
+  overcharge.isRunning = false;
+  overcharge.completions[key] += reward;
+  recalculateAllGlyphs();
+  return true;
+}

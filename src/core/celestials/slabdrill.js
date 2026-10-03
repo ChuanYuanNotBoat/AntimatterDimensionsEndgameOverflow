@@ -1,3 +1,5 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../finite-decimal";
+import { canStartEndgameChallenge } from "../endgame-challenge";
 import { BitUpgradeState } from "../game-mechanics";
 import { GameDatabase } from "../secret-formula/game-database";
 
@@ -41,11 +43,12 @@ export const Slabdrill = {
     return player.celestials.slabdrill.core.chaosCores;
   },
   get powerCap() {
-    return Decimal.pow10(this.cores);
+    return boundedPositivePower(10, this.cores);
   },
   powerPerSecond(diff) {
-    return (this.powerCap.sub(this.power)).times(
-      new Decimal(1).sub(Decimal.pow(2, new Decimal(0).sub(diff).div(1000).div(666))));
+    if (!Number.isFinite(diff) || diff <= 0) return DC.D0;
+    const fraction = -Math.expm1(-Math.LN2 * diff / 666000);
+    return boundedPositiveProduct(this.powerCap.sub(this.power).max(0), fraction);
   },
   get coreActive() {
     return player.celestials.slabdrill.core.isActive;
@@ -54,26 +57,27 @@ export const Slabdrill = {
     return Decimal.pow10(-this.cores).times(Decimal.pow10(this.currentStage)).times(
       player.antimatter.max(10).log10().log10().pow(3).add(1)).div(10000).times(
       SlabdrillUnlocks.dilation.isUnlocked ? 16 : 1).times(
-      SlabdrillUnlocks.reality.isUnlocked ? Slabdrill.slabPowers.chaosCores().times(66) : 1).toNumber();
+      SlabdrillUnlocks.reality.isUnlocked ? Slabdrill.slabPowers.chaosCores().times(66) : 1).clamp(0, 1).toNumber();
   },
   get huntInterval() {
     return 1000 * Math.pow(0.75, this.currentStage);
   },
   slabPowers: {
-    adMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : DC.D2.pow(Slabdrill.power.pow(0.5)),
+    adMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(2, Slabdrill.power.pow(0.5)),
     dbMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.max(1).log10().add(1).pow(4),
     galMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.max(1).log10().pow(2).div(100).add(1),
     adPow: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.max(1).log10().div(100).add(1),
-    ipMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : DC.D2.pow(Slabdrill.power.div(100).add(1).pow(0.4)),
-    idMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : DC.D2.pow(Slabdrill.power.div(1000).add(1).pow(0.5)),
-    repSpeed: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.div(1e6).add(1).pow(2),
-    tdMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : DC.D2.pow(Slabdrill.power.div(1e7).add(1).pow(0.3)),
-    epMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : DC.D2.pow(Slabdrill.power.div(1e9).add(1).pow(0.4)),
+    ipMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(2, Slabdrill.power.div(100).add(1).pow(0.4)),
+    idMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(2, Slabdrill.power.div(1000).add(1).pow(0.5)),
+    repSpeed: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(Slabdrill.power.div(1e6).add(1), 2),
+    tdMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(2, Slabdrill.power.div(1e7).add(1).pow(0.3)),
+    epMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(2, Slabdrill.power.div(1e9).add(1).pow(0.4)),
     infMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.div(1e10).add(1).pow(0.75),
-    dtMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.div(1e12).add(1).pow(2),
+    dtMult: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : boundedPositivePower(Slabdrill.power.div(1e12).add(1), 2),
     chaosCores: () => player.dilation.active || !Slabdrill.isCursed ? DC.D1 : Slabdrill.power.div(1e15).add(1).log10().add(1).pow(7)
   },
   realityWarp() {
+    if (!canStartEndgameChallenge(true) || this.isDestroyed) return false;
     player.disablePostReality = true;
     Endgame.resetNoReward();
     disChargeAllPerkUpgrades();
@@ -86,8 +90,10 @@ export const Slabdrill = {
     player.celestials.slabdrill.isCursed = true;
     recalculateAllGlyphs();
     Tab.dimensions.antimatter.show(false);
+    return true;
   },
   warpToPelleDomain() {
+    if (!this.isCursed || this.isDestroyed || this.coreActive || this.currentStage < this.layerReqs.length) return false;
     player.celestials.slabdrill.isCursed = false;
     player.celestials.slabdrill.isDestroyed = true;
     clearCelestialRuns();
@@ -109,22 +115,35 @@ export const Slabdrill = {
     player.break = true;
     Currency.antimatter.bumpTo(AntimatterDimension(9).cost);
     this.updatePelleDomainPause();
+    return true;
   },
   advanceLayer() {
-    player.celestials.slabdrill.stage++;
+    if (this.isCursed && this.currentStage < this.layerReqs.length) player.celestials.slabdrill.stage++;
+  },
+  hunt() {
+    const core = player.celestials.slabdrill.core;
+    const now = Date.now();
+    if (!this.isCursed || !core.isActive || !Number.isSafeInteger(core.chaosCores) ||
+        core.chaosCores >= Number.MAX_SAFE_INTEGER || now - core.lastFound < this.huntInterval) return false;
+    if (Math.random() < this.huntChance) core.chaosCores++;
+    core.lastFound = now;
+    return true;
   },
   enterCore() {
+    if (!this.isCursed || this.coreActive) return false;
     player.celestials.slabdrill.records = matchOnlyDeepmerge(player, player.celestials.slabdrill.records, "eternityChalls");
     finishProcessReality({ reset: true });
-    let cache = Object.keys(GameCache);
+    const cache = Object.keys(GameCache);
     for (let c = 0; c < cache.length; c++) {
-        GameCache[cache[c]].invalidate();
+      GameCache[cache[c]].invalidate();
     }
     player.celestials.slabdrill.core.isActive = true;
     player.break = true;
     Tab.dimensions.antimatter.show(true);
+    return true;
   },
   exitCore() {
+    if (!this.isCursed || !this.coreActive) return false;
     player.celestials.slabdrill.core.isActive = false;
     finishProcessReality({ reset: true });
     player = matchOnlyDeepmerge(player.celestials.slabdrill.records, player, "eternityChalls");
@@ -135,10 +154,11 @@ export const Slabdrill = {
         Autobuyer.antimatterDimension(a+1).purchase();
       }
     }
-    let cache = Object.keys(GameCache);
+    const cache = Object.keys(GameCache);
     for (let c = 0; c < cache.length; c++) {
-        GameCache[cache[c]].invalidate();
+      GameCache[cache[c]].invalidate();
     }
+    return true;
   },
   get layerReqs() {
     return ["Perform a Dimension Boost", "Create a Galaxy", "Reach Infinity", "Break Infinity", "Complete Infinity Challenge 4",

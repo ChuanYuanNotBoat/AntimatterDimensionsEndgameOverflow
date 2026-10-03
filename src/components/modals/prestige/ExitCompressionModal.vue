@@ -23,10 +23,7 @@ export default {
       this.hawkingRadiationGain.copyFrom(getHawkingRadiationGain(true));
     },
     handleYesClick() {
-      if (!player.compression.active) return;
-      rewardHR();
-      Endgame.resetNoReward();
-      player.compression.active = false;
+      exitCompression();
     },
   },
 };

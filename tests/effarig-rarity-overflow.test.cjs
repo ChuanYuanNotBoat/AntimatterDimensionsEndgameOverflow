@@ -17,7 +17,7 @@ function world(shards = 0) {
   const context = vm.createContext({
     Decimal, Math, Date,
     DecimalCurrency: class {},
-    DC: { D0: new Decimal(0), D1: new Decimal(1), E9: new Decimal(1e9) },
+    DC: { D0: new Decimal(0), D1: new Decimal(1), E9: new Decimal(1e9), BEMAX: new Decimal("10^^9000000000000000") },
     Currency: { relicShards: { value: new Decimal(shards) } },
     player: { disablePostReality: false, celestials: { effarig: { run: false } },
       records: { bestReality: { glyphLevel: new Decimal(12000) } } },
@@ -36,6 +36,7 @@ function world(shards = 0) {
     makeGlyphEffectBitmask: () => 0,
     rarityToStrength: rarity => rarity / 40 + 1,
   });
+  vm.runInContext(read('core/finite-decimal.js').replace(/^export /gm, ''), context);
   vm.runInContext(read('core/extensions.js').match(/Decimal\.prototype\.copyFrom = function\(decimal\) \{[\s\S]*?\n\};/)[0], context);
   const effarig = read('core/celestials/effarig.js');
   vm.runInContext(effarig.slice(effarig.indexOf('export const EFFARIG_STAGES'),

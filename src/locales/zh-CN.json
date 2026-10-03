@@ -8361,5 +8361,6 @@
   "ade.ffaf797c6f3c1cc3": "已停止：{p0} 有错误（无法运行）",
   "ade.ffb7afeeb72c171d": "分数：{p0}",
   "ade.ffc6fade9d3bb889": "已锁定",
-  "ade.ffc9c474deb0d023": "归一至臻"
+  "ade.ffc9c474deb0d023": "归一至臻",
+  "ui.quantity": "{amount} {resource}"
 }

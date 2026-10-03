@@ -453,7 +453,7 @@ export const singularityMilestones = {
     repeat: new Decimal(0),
     limit: 1,
     description: "Total Hadrons empower Dark Energy gain",
-    effect: () => Math.pow(player.celestials.laitela.hadrons.trueTotal, 0.05),
+    effect: () => Decimal.pow(player.celestials.laitela.hadrons.trueTotal, 0.05),
     effectFormat: x => formatPow(x, 2, 3),
     upgradeDirection: LAITELA_UPGRADE_DIRECTION.BOOSTS_LAITELA,
   },

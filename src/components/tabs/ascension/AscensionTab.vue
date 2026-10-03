@@ -47,6 +47,7 @@ export default {
         : `You will reach the next Ascension in ${TimeSpan.fromMilliseconds(this.timeToNextAscension)}.`;
     },
     nextHintDisplay() {
+      if (!this.nextAscension) return "";
       return `The next Ascension is the ${this.nextAscension?.config.name}.`;
     },
     runButtonOuterClass() {
@@ -106,8 +107,7 @@ export default {
       this.maximumEnergy = [null, 9, 6, 32, 62];
       this.highestUnlockedLevel = player.endgame.ascension - 5;
       this.currentLevel = player.endgame.overcharge.level;
-      this.pending = Decimal.clamp(Currency.eternityPoints.value.log10().div(4000).log(1.1).add(1).sub(
-        this.currEnergy).floor(), 0, this.maximumEnergy[this.currentLevel] - this.currEnergy).toNumber();
+      this.pending = getOverchargeEnergyGain();
       this.nextAt.copyFrom(Decimal.pow10(Decimal.pow(1.1, this.currEnergy + this.pending).times(4000)));
     },
     getAscension(row, column) {
@@ -117,8 +117,6 @@ export default {
       if (this.isDoomed) return;
       if (this.isRunning) {
         exitOvercharge();
-        let pendEnergy = [null, "bi", "eter", "chall", "ts"][this.currentLevel];
-        player.endgame.overcharge.completions[pendEnergy] += this.pending;
         return;
       }
       tryEnterOvercharge();

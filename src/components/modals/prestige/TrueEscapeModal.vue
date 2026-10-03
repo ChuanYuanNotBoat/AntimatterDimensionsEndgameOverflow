@@ -16,10 +16,12 @@ export default {
   },
   methods: {
     handleYesClick() {
+      if (!Slabdrill.isCursed || Slabdrill.coreActive || Slabdrill.currentStage < Slabdrill.layerReqs.length) return;
+      const escapingPlayer = player;
       runRealityAnimation();
-      setTimeout(() => { Slabdrill.warpToPelleDomain(); }, 3000);
-      setTimeout(() => { Slabdrill.quotes.ending.show(); }, 10000);
-      setTimeout(() => { Elemental.quotes.celPlus.show(); }, 11000);
+      setTimeout(() => { if (player === escapingPlayer) Slabdrill.warpToPelleDomain(); }, 3000);
+      setTimeout(() => { if (player === escapingPlayer && Slabdrill.isDestroyed) Slabdrill.quotes.ending.show(); }, 10000);
+      setTimeout(() => { if (player === escapingPlayer && Slabdrill.isDestroyed) Elemental.quotes.celPlus.show(); }, 11000);
     },
   },
 };

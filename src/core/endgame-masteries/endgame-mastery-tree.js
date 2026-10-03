@@ -57,8 +57,8 @@ export class EndgameMasteryTree {
     if (input.trim() === "") {
       return false;
     }
-    let test = input.replaceAll(/ +/gu, "");
-    EndgameMasteryTree.sets.forEach((_, x) => test = test.replaceAll(new RegExp(`${x},?`, "gu"), ""));
+    let test = input.toLowerCase().replaceAll(/ +/gu, "");
+    EndgameMasteryTree.sets.forEach((_, x) => test = test.replaceAll(new RegExp(`${x.toLowerCase()},?`, "gu"), ""));
     return /^,?((\d{2,3}(-\d{2,3})?)\b,?)*(\|\d{1,2}!?)?$/iu.test(test);
   }
 
@@ -99,7 +99,7 @@ export class EndgameMasteryTree {
   static truncateInput(input) {
     let internal = input.toLowerCase();
     // Convert every name into the ids it is a shorthand for
-    this.sets.forEach((ids, name) => (internal = internal.replace(name, ids.join())));
+    this.sets.forEach((ids, name) => (internal = internal.replaceAll(name.toLowerCase(), ids.join())));
     return internal
       .replace(/[|,]$/u, "")
       .replaceAll(" ", "")
@@ -177,7 +177,7 @@ export class EndgameMasteryTree {
   // secondary requirements
   hasRequirements(mastery, checkOnlyStructure = false) {
     // Import strings can contain repeated or undefined entries
-    if (!mastery || this.purchasedMasteries.includes(mastery)) return false;
+    if (!mastery || !mastery.isUnlocked || this.purchasedMasteries.includes(mastery)) return false;
 
     // Because the player data may not reflect the state of the EndgameMasteryTree object's purchasedMasteries,
     // we have to do all the checks here with purchasedMasteries. mastery.isBought and similar functions cannot be used.
@@ -214,13 +214,15 @@ export class EndgameMasteryTree {
 
   // Buys the specified mastery; no requirement verification beyond cost, use hasRequirements() to verify proper structure
   buySingleMastery(mastery, checkCosts) {
-    const config = mastery.config;
+    const paid = !EndgameMastery.permaMasteries.isBought || mastery.id >= 180;
+    const entanglements = this.purchasedMasteries.filter(m => m.id > 280 && m.id < 310).length;
+    let cost = 0;
+    if (paid) cost = mastery.id > 280 ? 1e6 * 2 ** entanglements : mastery.cost;
     if (checkCosts) {
-      const maxES = Currency.endgameSkills.value.add(GameCache.currentMasteryTree.value.spentSkills[0])
-        .clampMax(Number.MAX_VALUE).toNumber();
-      const hasES = this.spentSkills[0] + config.cost <= maxES;
-      if (!hasES) return;
+      const maxES = Currency.endgameSkills.value.add(GameCache.currentMasteryTree.value.spentSkills[0]);
+      if (maxES.lt(this.spentSkills[0] + cost)) return;
     }
+    this.spentSkills[0] += cost;
 
     this.purchasedMasteries.push(mastery);
   }

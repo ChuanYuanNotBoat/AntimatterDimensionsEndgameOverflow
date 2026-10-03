@@ -30,6 +30,9 @@ export function createLegacyDisplay(i18n, rules) {
     }
     const literals = parts.filter(part => !parameterPattern.test(part)).join("");
     if (literals.length < 3 || /\{p\d+\}\{p\d+\}/u.test(rule.source)) continue;
+    // An unanchored conjunction is not a sentence template. It can consume an
+    // entire paragraph and reorder its words when no complete message matches.
+    if (!parts[0].trim() && !parts.at(-1).trim() && literals.trim().length < 24) continue;
     const prefix = parts[0];
     const entry = { ...rule, parts, parameters, specificity: literals.length,
       prefix: prefix.toLowerCase(), suffix: parts.at(-1).toLowerCase(),
@@ -40,6 +43,22 @@ export function createLegacyDisplay(i18n, rules) {
     patterns.set(key, entries);
   }
   for (const entries of patterns.values()) entries.sort((a, b) => b.specificity - a.specificity);
+
+  const quantities = rules.filter(rule => rule.id.startsWith("terms.") &&
+    !rule.id.startsWith("terms.dimension.ordinal") && !["terms.on", "terms.off"].includes(rule.id))
+    .map(rule => ({ ...rule, source: rule.source ?? i18n.messageSource(rule.id, rule.form) }))
+    .filter(rule => rule.source).sort((a, b) => b.source.length - a.source.length);
+  function translateQuantity(text) {
+    for (const term of quantities) {
+      if (!text.toLowerCase().endsWith(` ${term.source.toLowerCase()}`)) continue;
+      const amount = text.slice(0, -term.source.length).trim();
+      // Accept formatted numbers only. A longer named resource cannot become an amount.
+      if (/^[+-]?(?:[\d.,eEfFgG^()+×:/⁰¹²³⁴⁵⁶⁷⁸⁹-]|\s|Infinity|Infinite)+$/u.test(amount)) {
+        return i18n.t("ui.quantity", { amount, resource: i18n.t(term.id, {}, term.form) });
+      }
+    }
+    return undefined;
+  }
 
   function choose(entries, scope) {
     const scoped = entries.filter(entry => entry.scopes.includes(scope));
@@ -61,6 +80,7 @@ export function createLegacyDisplay(i18n, rules) {
       const staticRule = choose(exact.get(normalized) ?? [], scope) ??
         (text.endsWith("s") ? choose(exact.get(normalized.slice(0, -1)) ?? [], scope) : undefined);
       if (staticRule) result = i18n.t(staticRule.id, {}, staticRule.form);
+      else if (translateQuantity(text) !== undefined) result = translateQuantity(text);
       else {
         const matches = [];
         for (const entry of [...(patterns.get(bucket(text)) ?? []), ...(patterns.get("*") ?? [])]) {

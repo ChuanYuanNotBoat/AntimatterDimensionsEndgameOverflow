@@ -131,3 +131,15 @@ test("generic patterns cannot split multiword resource names into smaller matchi
   assert.equal(display.translate("You have ee400 Celestial Infinity Points.", "full"), "你有 ee400 天界无限点数。");
   assert.equal(display.translate("You have ee400 Infinity Points.", "short"), "你有 ee400 无限点数。");
 });
+
+test('short conjunction templates cannot reorder paragraphs or split named resources', () => {
+  const { service, display } = actual();
+  service.setLocale('zh-CN');
+  const unknown = 'New game systems and future rewards are described together in this paragraph.';
+  assert.equal(display.translate(unknown, 'EffarigTab'), unknown);
+  assert.equal(display.translate('1e100 Relic Shards'), '1e100 遗迹碎片');
+  assert.equal(display.translate('1e100 Celestial Infinity Points'), '1e100 天界无限点数');
+  assert.equal(display.translate('Unreleased Infinity Points'), 'Unreleased Infinity Points');
+  service.setLocale('en');
+  assert.equal(display.translate('1e100 Relic Shards'), '1e100 Relic Shards');
+});

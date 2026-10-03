@@ -8426,7 +8426,7 @@
   "ade.fcc3ec41f95df91b": "Use it wisely.",
   "ade.fcd574451877347e": "this Endgame",
   "ade.fce0dc7fa3286c95": "Haunt",
-  "ade.fce0f6e48755a88f": "More [[terms.eternityPoint|plural]] slightly increases [[terms.relicShards]]",
+  "ade.fce0f6e48755a88f": "More [[terms.eternityPoint|plural]] slightly increases [[terms.relicShards]] gained. More distinct Glyph effects significantly increases [[terms.relicShards]] gained.",
   "ade.fce2e98252078d04": "[[terms.darkMatter]] production multiplier",
   "ade.fce82a0cdbca7970": "Have {p0} total Galaxies from all types.",
   "ade.fcf997f726827996": "You''d get those million-level Glyphs soon enough.",
@@ -8536,5 +8536,6 @@
   "ade.ffaf797c6f3c1cc3": "Stopped: \"{p0}\" has errors (Cannot run)",
   "ade.ffb7afeeb72c171d": "Score: {p0}",
   "ade.ffc6fade9d3bb889": "Locked",
-  "ade.ffc9c474deb0d023": "Completion"
+  "ade.ffc9c474deb0d023": "Completion",
+  "ui.quantity": "{amount} {resource}"
 }

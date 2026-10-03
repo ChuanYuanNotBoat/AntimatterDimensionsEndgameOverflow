@@ -1,3 +1,4 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
 export const Ethereal = {
   get isUnlocked() {
     return GalacticPowers.etherealUnlock.isUnlocked;
@@ -33,7 +34,7 @@ export const Ethereal = {
         prod.push(player.endgame.ethereal.stars[EtherealStars.all.find(s => s.id === star).config.saveKey]);
       }
     }
-    return prod.reduce(Decimal.prodReducer, DC.D1);
+    return prod.reduce(boundedPositiveProduct, DC.D1);
   },
   get isStarPowerUnlocked() {
     return player.endgame.ethereal.isStarPowerUnlocked;
@@ -165,23 +166,28 @@ export function tryAdvanceSector() {
 
 export function resetForStar(id) {
   const gainedStarType = EtherealStars.all.find(x => x.id === id);
+  if (!gainedStarType) return;
   const starKey = gainedStarType.config.saveKey;
   const resetReq = gainedStarType.config.resetReq;
   if (Currency.etherealPower.lt(resetReq) || !gainedStarType.isUnlocked) return;
-  const resetFormula = Decimal.pow(Currency.etherealPower.value.div(resetReq), 0.5 - id / 20).times(Ethereal.allStarBoost);
+  const resetFormula = boundedPositiveProduct(boundedPositivePower(Currency.etherealPower.value.div(resetReq), 0.5 - id / 20),
+    Ethereal.allStarBoost);
   player.endgame.ethereal.power = DC.D0;
   player.endgame.ethereal.sector = 1;
-  player.endgame.ethereal.stars[starKey] = player.endgame.ethereal.stars[starKey].add(resetFormula);
+  player.endgame.ethereal.stars[starKey] = boundedPositiveSum(player.endgame.ethereal.stars[starKey], resetFormula);
 }
 
 export function freeStarReset(id, diff) {
+  if (!Number.isFinite(diff) || diff <= 0) return;
   const gainedStarType = EtherealStars.all.find(x => x.id === id);
+  if (!gainedStarType) return;
   const starKey = gainedStarType.config.saveKey;
   const resetReq = gainedStarType.config.resetReq;
   if (Currency.etherealPower.lt(resetReq) || !gainedStarType.isUnlocked) return;
-  const resetFormula = Decimal.pow(Currency.etherealPower.value.div(resetReq), 0.5 - id / 20).times(Ethereal.allStarBoost).times(
-    Ethereal.starGeneration(id).times(diff).div(1000));
-  player.endgame.ethereal.stars[starKey] = player.endgame.ethereal.stars[starKey].add(resetFormula);
+  const resetFormula = boundedPositiveProduct(boundedPositiveProduct(
+    boundedPositivePower(Currency.etherealPower.value.div(resetReq), 0.5 - id / 20), Ethereal.allStarBoost),
+    boundedPositiveProduct(Ethereal.starGeneration(id), diff / 1000));
+  player.endgame.ethereal.stars[starKey] = boundedPositiveSum(player.endgame.ethereal.stars[starKey], resetFormula);
 }
 
 export function getStarPowerGainPerSecond() {

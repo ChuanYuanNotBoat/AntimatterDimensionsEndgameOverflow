@@ -6,9 +6,9 @@ import {
 } from "../../finite-decimal";
 
 function hadronEffectivenessCap() {
-  return boundedPositiveSum(
+  return boundedPositiveProduct(boundedPositiveSum(
     boundedPositiveProduct(100, Accelerators.emptiness.effectValue2),
-    EndgameMastery(251).effectOrDefault(0));
+    EndgameMastery(251).effectOrDefault(0)), DivinityMilestone.serpentPower.isReached ? 2 : 1);
 }
 
 function softenedHadronTime(baseTime, divisor = 1) {
@@ -18,6 +18,14 @@ function softenedHadronTime(baseTime, divisor = 1) {
 }
 
 export const Hadrons = {
+  updateTotals() {
+    const hadrons = this.hadrons;
+    const waves = player.compression.totalElectromagneticWaves;
+    for (const [total, base] of [["trueTotal", "total"], ["totalLight", "light"],
+      ["totalDark", "dark"], ["totalExotic", "exotic"]]) {
+      hadrons[total] = boundedPositiveSum(hadrons[base], waves);
+    }
+  },
   get hadrons() {
     return player.celestials.laitela.hadrons;
   },

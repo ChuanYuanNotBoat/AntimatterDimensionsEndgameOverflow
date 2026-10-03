@@ -807,7 +807,7 @@ export function gameLoop(passedDiff, options = {}) {
   }
 
   if (player.celestials.slabdrill.isGoodbye && player.celestials.slabdrill.goodbyeTick < 1000) {
-    player.celestials.slabdrill.goodbyeTick += realDiff;
+    player.celestials.slabdrill.goodbyeTick = Math.min(1000, player.celestials.slabdrill.goodbyeTick + realDiff);
   }
 
   if (player.celestials.slabdrill.isGoodbye && player.celestials.slabdrill.goodbyeTick >= 1000 &&
@@ -820,7 +820,7 @@ export function gameLoop(passedDiff, options = {}) {
 
   if (player.celestials.slabdrill.isGoodbye && player.celestials.slabdrill.goodbyeTick >= 3000 &&
       player.celestials.slabdrill.goodbyeTick < 8000) {
-    player.celestials.slabdrill.goodbyeTick += realDiff;
+    player.celestials.slabdrill.goodbyeTick = Math.min(8000, player.celestials.slabdrill.goodbyeTick + realDiff);
   }
 
   if (player.celestials.slabdrill.isGoodbye && player.celestials.slabdrill.goodbyeTick >= 8000 &&
@@ -830,7 +830,7 @@ export function gameLoop(passedDiff, options = {}) {
 
   if (player.celestials.slabdrill.isGoodbye && player.celestials.slabdrill.goodbyeTick >= 10000 &&
       player.celestials.slabdrill.goodbyeTick < 40000) {
-    player.celestials.slabdrill.goodbyeTick += realDiff;
+    player.celestials.slabdrill.goodbyeTick = Math.min(40000, player.celestials.slabdrill.goodbyeTick + realDiff);
   }
 
   if (player.celestials.slabdrill.goodbyeTick >= 40000 && player.celestials.slabdrill.goodbyeTick < 50000) {
@@ -1053,7 +1053,7 @@ export function gameLoop(passedDiff, options = {}) {
   DeltaTimeState.update(realDiff, diff);
 
   if (player.celestials.slabdrill.isWarping && player.celestials.slabdrill.warpTick < 2000) {
-    player.celestials.slabdrill.warpTick += realDiff;
+    player.celestials.slabdrill.warpTick = Math.min(2000, player.celestials.slabdrill.warpTick + realDiff);
   }
 
   if (player.celestials.slabdrill.isWarping && player.celestials.slabdrill.warpTick >= 2000 && player.celestials.slabdrill.warpTick < 3000) {
@@ -1394,12 +1394,7 @@ export function gameLoop(passedDiff, options = {}) {
     }
   }
 
-  const hadrons = player.celestials.laitela.hadrons;
-  const waves = player.compression.totalElectromagneticWaves.toNumber();
-  hadrons.trueTotal = hadrons.total + waves;
-  hadrons.totalLight = hadrons.light + waves;
-  hadrons.totalDark = hadrons.dark + waves;
-  hadrons.totalExotic = hadrons.exotic + waves;
+  Hadrons.updateTotals();
 
   laitelaRealityTick(realDiff);
   Achievements.autoAchieveUpdate(diff);
@@ -1412,7 +1407,7 @@ export function gameLoop(passedDiff, options = {}) {
   GameEnd.gameLoop(realDiff);
   LHC.gameLoop(realDiff);
   tryAdvanceSector();
-  if (Ascension.isUnlocked) player.endgame.ascensionTimer += realDiff;
+  if (Ascension.isUnlocked) player.endgame.ascensionTimer = finiteNumber(player.endgame.ascensionTimer + realDiff);
   tryAscend();
   player.endgame.overcharge.chargesLeft.infinite = player.endgame.overcharge.completions.bi - player.endgame.overcharge.charged.infinite.size;
   player.endgame.overcharge.chargesLeft.eternal = player.endgame.overcharge.completions.eter - player.endgame.overcharge.charged.eternal.size;
@@ -1830,16 +1825,6 @@ function updateTachyonGalaxies() {
     totalGalaxies, DilationUpgrade.galaxyMultiplier.effectValue);
 }
 
-function updateElectromagneticWaves() {
-  const electromagneticWaveMult = Effects.max(1, CompressionUpgrade.doubleWaves);
-  const thresholdMult = getElectroWaveMult();
-  player.compression.baseElectromagneticWaves = Decimal.max(player.compression.baseElectromagneticWaves,
-    Decimal.floor(Decimal.log(Currency.thermalRadiation.value.div(1000), thresholdMult)).add(1));
-  player.compression.nextThreshold = DC.E3.times(new Decimal(thresholdMult)
-    .pow(player.compression.baseElectromagneticWaves));
-  player.compression.totalElectromagneticWaves = player.compression.baseElectromagneticWaves.times(electromagneticWaveMult);
-}
-
 export function getTTPerSecond() {
   // All TT multipliers (note that this is equal to 1 pre-Ra)
   let ttMult = Effects.productDecimal(
@@ -1902,7 +1887,7 @@ export function getESPerSecond() {
   let esMult = DC.D1.timesEffectsOf(Achievement(276)).times(DivinityMilestone.serpentPower.isReached ? 10 : 1);
   // Compression ES generation
   const compressionES = CompressionUpgrade.esGenerator.isBought
-    ? CompressionUpgrade.esGenerator.effectValue.times(esMult)
+    ? boundedPositiveProduct(CompressionUpgrade.esGenerator.effectValue, esMult)
     : DC.D0;
 
   let finalES = compressionES;

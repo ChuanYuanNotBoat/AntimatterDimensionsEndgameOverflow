@@ -27,7 +27,11 @@ export default {
       this.isWarping = player.celestials.slabdrill.isWarping;
     },
     handleYesClick() {
-      player.celestials.slabdrill.isWarping = true;
+      if (canStartEndgameChallenge() && !Slabdrill.isDestroyed &&
+          CelestialEternityPlusUpgrade.oldStoneSlabAndSteelDrill.isBought) {
+        player.celestials.slabdrill.isWarping = true;
+        player.celestials.slabdrill.warpTick = 0;
+      }
     },
   },
 };

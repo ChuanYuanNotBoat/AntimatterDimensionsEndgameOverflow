@@ -1,3 +1,4 @@
+import { canStartEndgameChallenge } from "./endgame-challenge";
 import { boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "./finite-decimal";
 
 
@@ -156,6 +157,7 @@ export function requestManualReality() {
 }
 
 export function requestRealityWarp() {
+  if (!canStartEndgameChallenge() || Slabdrill.isDestroyed) return;
   if (!CelestialEternityPlusUpgrade.oldStoneSlabAndSteelDrill.isBought) return;
   if (GameEnd.creditsEverClosed) return;
   Modal.realityWarp.show();
