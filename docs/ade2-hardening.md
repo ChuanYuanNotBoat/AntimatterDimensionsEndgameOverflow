@@ -21,7 +21,7 @@ Canonical save keys, resource identities and Automator commands remain English. 
 
 ## Validation
 
-- `npm run i18n:check`: passed (8,364 of 8,375 Chinese entries; 11 English fallbacks).
+- `npm run i18n:check`: passed (8,368 of 8,379 Chinese entries; 11 English fallbacks).
 - `npm run test:i18n`: 33 passed.
 - `npm run test:chapter3`: 39 passed, including 28 new progression regressions using the real Decimal implementation and production gameplay modules.
 - Release build and `git diff --check`: passed.

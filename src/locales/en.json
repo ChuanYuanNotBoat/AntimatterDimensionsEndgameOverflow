@@ -8542,5 +8542,12 @@
   "dimensions.galaxy.scalingHeader": "Increased Galaxy cost scaling: {scalings}",
   "dimensions.galaxy.distantScaling": "Quadratic scaling past {amount} (distant)",
   "dimensions.galaxy.remoteScaling": "Exponential scaling past {amount} (remote)",
-  "dimensions.galaxy.distantCost": "Each Galaxy is more expensive past {amount} Galaxies"
+  "dimensions.galaxy.distantCost": "Each Galaxy is more expensive past {amount} Galaxies",
+  "ui.dimensionRequirement": "Requires: {amount} {dimension}",
+  "terms.matterGalaxy": {
+    "text": "Matter Galaxy",
+    "plural": "Matter Galaxies"
+  },
+  "dimensions.galaxy.distantName": "Distant {galaxies}",
+  "dimensions.galaxy.remoteName": "Remote {galaxies}"
 }

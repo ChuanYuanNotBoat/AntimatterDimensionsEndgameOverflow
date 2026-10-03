@@ -36,7 +36,15 @@ export default {
   computed: {
     isDoomed: () => Pelle.isDoomed,
     dimName() {
-      return AntimatterDimension(this.requirement.tier).displayName;
+      return this.$t("ui.dimensionName", {
+        ordinal: this.$t(`terms.dimension.ordinal${this.requirement.tier}`, {}, "ordinal"),
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural")
+      });
+    },
+    requirementTextDisplay() {
+      return this.$t("ui.dimensionRequirement", {
+        amount: formatHybridLarge(this.requirement.amount, 3), dimension: this.dimName
+      });
     },
     buttonText() {
       if (this.lockText !== null) return this.lockText;
@@ -67,12 +75,13 @@ export default {
       return sum;
     },
     typeName() {
+      const galaxies = this.$t(this.isFlipped ? "terms.matterGalaxy" : "terms.antimatterGalaxy", {}, "plural");
       switch (this.type) {
-        case GALAXY_TYPE.NORMAL: return `${this.isFlipped ? "Matter" : "Antimatter"} Galaxies`;
-        case GALAXY_TYPE.DISTANT: return `Distant ${this.isFlipped ? "Matter" : "Antimatter"} Galaxies`;
-        case GALAXY_TYPE.REMOTE: return `Remote ${this.isFlipped ? "Matter" : "Antimatter"} Galaxies`;
+        case GALAXY_TYPE.NORMAL: return galaxies;
+        case GALAXY_TYPE.DISTANT: return this.$t("dimensions.galaxy.distantName", { galaxies });
+        case GALAXY_TYPE.REMOTE: return this.$t("dimensions.galaxy.remoteName", { galaxies });
       }
-      return undefined;
+      return galaxies;
     },
     hasIncreasedScaling() {
       return this.type !== GALAXY_TYPE.NORMAL;
@@ -135,7 +144,7 @@ export default {
     <div
       class="l-dim-row__prestige-text c-dim-row__label c-dim-row__label--amount l-text-wrapper"
     >
-      {{ $t('ade.f4d01c13b71e065e', { p0: $legacyText(_s(typeName)), p1: $legacyText(_s(sumText)), p2: $legacyText(_s(formatHybridLarge(requirement.amount,3))), p3: $legacyText(_s(dimName)) }) }}
+      {{ typeName }} ({{ $legacyText(_s(sumText)) }}): {{ requirementTextDisplay }}
       <div class="l-scaling-text-wrapper">
         {{ $legacyText(_s(hasIncreasedScaling ? costScalingText : "")) }}
       </div>

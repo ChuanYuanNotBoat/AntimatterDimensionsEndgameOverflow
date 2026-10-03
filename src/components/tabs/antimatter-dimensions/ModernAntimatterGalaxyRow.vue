@@ -32,7 +32,15 @@ export default {
   computed: {
     isDoomed: () => Pelle.isDoomed,
     dimName() {
-      return AntimatterDimension(this.requirement.tier).shortDisplayName;
+      return this.$t("ui.dimensionName", {
+        ordinal: this.$t(`terms.dimension.ordinal${this.requirement.tier}`, {}, "ordinal"),
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural")
+      });
+    },
+    requirementTextDisplay() {
+      return this.$t("ui.dimensionRequirement", {
+        amount: formatHybridLarge(this.requirement.amount, 3), dimension: this.dimName
+      });
     },
     buttonText() {
       if (this.lockText !== null) return this.lockText;
@@ -68,12 +76,13 @@ export default {
       return `${sum}<span style="color: red">${instability}</span>${all}`;
     },
     typeName() {
+      const galaxies = this.$t(this.isFlipped ? "terms.matterGalaxy" : "terms.antimatterGalaxy", {}, "plural");
       switch (this.type) {
-        case GALAXY_TYPE.NORMAL: return `${this.isFlipped ? "Matter" : "Antimatter"} Galaxies`;
-        case GALAXY_TYPE.DISTANT: return `Distant ${this.isFlipped ? "Matter" : "Antimatter"} Galaxies`;
-        case GALAXY_TYPE.REMOTE: return `Remote ${this.isFlipped ? "Matter" : "Antimatter"} Galaxies`;
+        case GALAXY_TYPE.NORMAL: return galaxies;
+        case GALAXY_TYPE.DISTANT: return this.$t("dimensions.galaxy.distantName", { galaxies });
+        case GALAXY_TYPE.REMOTE: return this.$t("dimensions.galaxy.remoteName", { galaxies });
       }
-      return undefined;
+      return galaxies;
     },
     hasIncreasedScaling() {
       return this.type !== GALAXY_TYPE.NORMAL;
@@ -142,7 +151,7 @@ export default {
 <template>
   <div class="reset-container galaxy">
     <h4>{{ $legacyText(_s(typeName)) }} (<span v-html="$legacyHtml(sumText)" />)</h4>
-    <span>{{ $t('ade.bc264fe4581439b6', { p0: $legacyText(_s(formatHybridLarge(requirement.amount,3))), p1: $legacyText(_s(dimName)), p2: $legacyText(_s(isFlipped?"Matter":"Antimatter")) }) }}</span>
+    <span>{{ requirementTextDisplay }}</span>
     <span v-if="hasIncreasedScaling">{{ $legacyText(_s(costScalingText)) }}</span>
     <button
       :class="classObject"

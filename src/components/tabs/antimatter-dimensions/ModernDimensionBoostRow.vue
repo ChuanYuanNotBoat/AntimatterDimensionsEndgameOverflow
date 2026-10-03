@@ -22,7 +22,15 @@ export default {
   computed: {
     isDoomed: () => Pelle.isDoomed,
     dimName() {
-      return AntimatterDimension(this.requirement.tier).shortDisplayName;
+      return this.$t("ui.dimensionName", {
+        ordinal: this.$t(`terms.dimension.ordinal${this.requirement.tier}`, {}, "ordinal"),
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural")
+      });
+    },
+    requirementTextDisplay() {
+      return this.$t("ui.dimensionRequirement", {
+        amount: formatHybridLarge(this.requirement.amount, 3), dimension: this.dimName
+      });
     },
     boostCountText() {
       if (this.requirementText) return this.requirementText;
@@ -79,7 +87,7 @@ export default {
 <template>
   <div class="reset-container dimboost">
     <h4>{{ $legacyText(_s(dimBoostName)) }} ({{ $legacyText(_s(boostCountText)) }})</h4>
-    <span>Requires: {{ $legacyText(_s(formatHybridLarge(requirement.amount, 3))) }} {{ $legacyText(_s(dimName)) }} {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} D</span>
+    <span>{{ requirementTextDisplay }}</span>
     <span v-if="hasSurge">{{ $legacyText(_s(imaginaryText)) }}</span>
     <button
       :class="classObject"

@@ -8367,5 +8367,9 @@
   "dimensions.galaxy.scalingHeader": "星系价格增长：{scalings}",
   "dimensions.galaxy.distantScaling": "超过 {amount} 个星系后按二次函数增长（遥远星系）",
   "dimensions.galaxy.remoteScaling": "超过 {amount} 个星系后按指数增长（远端星系）",
-  "dimensions.galaxy.distantCost": "超过 {amount} 个星系后，每个星系的价格都会提高。"
+  "dimensions.galaxy.distantCost": "超过 {amount} 个星系后，每个星系的价格都会提高。",
+  "ui.dimensionRequirement": "需要：{amount} {dimension}",
+  "terms.matterGalaxy": "正物质星系",
+  "dimensions.galaxy.distantName": "遥远{galaxies}",
+  "dimensions.galaxy.remoteName": "远端{galaxies}"
 }

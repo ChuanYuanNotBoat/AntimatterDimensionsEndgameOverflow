@@ -327,6 +327,9 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
             assert.ok(result.text.includes("第三反物质维度"));
             assert.ok(!result.text.includes("第第一"));
             assert.ok(!result.text.includes("distant星系"));
+            assert.ok(!result.text.includes("反物质 D"));
+            assert.ok(result.text.includes("反物质星系"));
+            assert.match(result.text, /需要：[\s\S]*第八反物质维度/u);
           }
           reports.push({
           modern,
