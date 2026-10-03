@@ -16,11 +16,11 @@ export default {
   computed: {
     baseSpeedText() {
       if (this.isStopped) {
-        return "Stopped (storing real time)";
+        return this.$t("gameSpeed.stopped");
       }
       const speed = this.formatNumber(this.baseSpeed);
       if (this.isEC12) {
-        return `${speed} (fixed)`;
+        return this.$t("gameSpeed.fixed", { speed });
       }
       return `${speed}`;
     },
@@ -29,8 +29,8 @@ export default {
     },
     baseText() {
       if (!this.hasSeenAlteredSpeed) return null;
-      if (this.baseSpeed.eq(1)) return "The game is running at normal speed.";
-      return `Game speed is altered: ${this.baseSpeedText}`;
+      if (this.baseSpeed.eq(1)) return this.$t("gameSpeed.normal");
+      return this.$t("gameSpeed.altered", { speed: this.baseSpeedText });
     }
   },
   methods: {

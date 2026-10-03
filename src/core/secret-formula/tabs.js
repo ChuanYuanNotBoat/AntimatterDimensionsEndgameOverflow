@@ -63,6 +63,7 @@ export const tabs = [
   {
     key: "options",
     name: "Options",
+    nameKey: "tabs.options.name",
     hideAt: 1.6,
     id: 1,
     hidable: false,
@@ -70,6 +71,7 @@ export const tabs = [
       {
         key: "saving",
         name: "Saving",
+        nameKey: "tabs.options.saving",
         symbol: "<i class='fas fa-save'></i>",
         component: "OptionsSavingTab",
         id: 0,
@@ -78,6 +80,7 @@ export const tabs = [
       {
         key: "visual",
         name: "Visual",
+        nameKey: "tabs.options.visual",
         symbol: "<i class='fas fa-palette'></i>",
         component: "OptionsVisualTab",
         id: 1,
@@ -86,6 +89,7 @@ export const tabs = [
       {
         key: "gameplay",
         name: "Gameplay",
+        nameKey: "tabs.options.gameplay",
         symbol: "<i class='fas fa-wrench'></i>",
         component: "OptionsGameplayTab",
         id: 2,

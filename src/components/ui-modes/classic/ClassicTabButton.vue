@@ -24,6 +24,11 @@ export default {
       return this.tab.isOpen && Theme.currentName() !== "S9";
     }
   },
+  watch: {
+    $i18nRevision() {
+      this.update();
+    }
+  },
   methods: {
     update() {
       this.isAvailable = this.tab.isAvailable;
@@ -31,12 +36,12 @@ export default {
       this.uiClass = (typeof this.tab.config.UIClass === "function") ? this.tab.config.UIClass() : this.tab.config.UIClass;
       if (this.tabPosition < Pelle.endTabNames.length) {
         this.tabName = Pelle.transitionText(
-          this.tab.name,
+          this.tab.displayName,
           Pelle.endTabNames[this.tabPosition],
           Math.max(Math.min(GameEnd.endState - (this.tab.id) % 4 / 10, 1), 0)
         );
       } else {
-        this.tabName = this.tab.name;
+        this.tabName = this.tab.displayName;
       }
     }
   },

@@ -105,20 +105,19 @@ class AlchemyResourceState extends GameMechanicState {
 class BasicAlchemyResourceState extends AlchemyResourceState {
   constructor(config) {
     super(config);
-    // The names are capitalized, so we need to convert them to lower case
-    // in order to access highestRefinementValue values which are not capitalized.
-    this._name = config.name.toLowerCase();
+    // This historical save key is independent of the resource's display name.
+    this._saveKey = config.saveKey;
   }
 
   get highestRefinementValue() {
-    return player.celestials.ra.highestRefinementValue[this._name];
+    return player.celestials.ra.highestRefinementValue[this._saveKey];
   }
 
   set highestRefinementValue(value) {
     if (Number.isNaN(value)) throw new Error("Invalid glyph refinement value");
     // The save stores Numbers; a huge valid glyph may only raise this record
     // to the existing Ra alchemy cap, never Infinity.
-    player.celestials.ra.highestRefinementValue[this._name] =
+    player.celestials.ra.highestRefinementValue[this._saveKey] =
       Math.max(this.highestRefinementValue, Math.min(value, Ra.alchemyResourceCap));
   }
 

@@ -6,7 +6,10 @@
     "build:release": "node build/pre-build.js && vue-cli-service build && node build/post-build.js",
     "build:steam-development": "node build/pre-build.js && vue-cli-service build --mode steam-development",
     "build:steam-release": "node build/pre-build.js && vue-cli-service build --mode steam-release",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "i18n:check": "node scripts/i18n-check.cjs",
+    "i18n:audit": "node scripts/i18n-audit.cjs",
+    "test:i18n": "node --test tests/i18n-service.test.cjs tests/i18n-identities.test.cjs tests/pelle-domain-stall.test.cjs"
   },
   "dependencies": {
     "@antimatter-dimensions/notations": "^3.1.0",
@@ -20,6 +23,7 @@
     "drag-drop-touch": "^1.3.1",
     "firebase": "^9.6.6",
     "gamma": "^1.0.0",
+    "intl-messageformat": "12.1.2",
     "js-sha512": "^0.8.0",
     "memfs": "^4.2.0",
     "mousetrap": "^1.6.5",

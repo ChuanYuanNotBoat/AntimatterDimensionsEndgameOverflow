@@ -6,7 +6,7 @@ export default {
       type: Object,
       required: true
     },
-    parentName: {
+    parentKey: {
       type: String,
       required: true
     }
@@ -27,18 +27,23 @@ export default {
         "o-tab-btn": true,
         "o-tab-btn--secondary": true,
         "o-subtab-btn--active": this.isCurrentSubtab,
-        "o-tab-btn--infinity": this.parentName === "Infinity",
-        "o-tab-btn--eternity": this.parentName === "Eternity",
-        "o-tab-btn--reality": this.parentName === "Reality",
-        "o-tab-btn--celestial": this.parentName === "Celestials",
-        "o-tab-btn--endgame": this.parentName === "Endgame",
-        "o-tab-btn--cd-expansion": this.parentName === "CD Expansion",
-        "o-tab-btn--divinity": this.parentName === "Divinity",
-        "o-tab-btn--universes": this.parentName === "Universes" && this.universe === 0,
-        "o-tab-btn--universes__transient": this.parentName === "Universes" && this.universe === 1,
-        "o-tab-btn--universes__tangible": this.parentName === "Universes" && this.universe === 2
+        "o-tab-btn--infinity": this.parentKey === "infinity",
+        "o-tab-btn--eternity": this.parentKey === "eternity",
+        "o-tab-btn--reality": this.parentKey === "reality",
+        "o-tab-btn--celestial": this.parentKey === "celestials",
+        "o-tab-btn--endgame": this.parentKey === "endgame",
+        "o-tab-btn--cd-expansion": this.parentKey === "cdexpansion",
+        "o-tab-btn--divinity": this.parentKey === "divinity",
+        "o-tab-btn--universes": this.parentKey === "universes" && this.universe === 0,
+        "o-tab-btn--universes__transient": this.parentKey === "universes" && this.universe === 1,
+        "o-tab-btn--universes__tangible": this.parentKey === "universes" && this.universe === 2
       };
     },
+  },
+  watch: {
+    $i18nRevision() {
+      this.update();
+    }
   },
   methods: {
     update() {
@@ -47,8 +52,8 @@ export default {
       this.hasNotification = this.subtab.hasNotification;
       this.isCurrentSubtab = this.subtab.isOpen && Theme.currentName() !== "S9";
       this.tabName = Pelle.transitionText(
-        this.subtab.name,
-        this.subtab.name,
+        this.subtab.displayName,
+        this.subtab.displayName,
         Math.max(Math.min(GameEnd.endState - (this.subtab.id) % 4 / 10, 1), 0)
       );
     }

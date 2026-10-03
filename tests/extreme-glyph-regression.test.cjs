@@ -206,7 +206,7 @@ test('alchemy highest-refinement setter bounds huge values to existing Ra cap an
     Math,
   });
   vm.runInContext(source.slice(start, end) + '\nthis.Resource = BasicAlchemyResourceState;', ctx);
-  const resource = new ctx.Resource({ name: 'Power' });
+  const resource = new ctx.Resource({ name: 'Power', saveKey: 'power' });
   resource.highestRefinementValue = Infinity;
   assert.equal(resource.highestRefinementValue, 1e6);
   resource.highestRefinementValue = 15;

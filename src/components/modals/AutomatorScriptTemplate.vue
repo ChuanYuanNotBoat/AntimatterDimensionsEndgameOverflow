@@ -16,6 +16,14 @@ export default {
       type: String,
       required: true,
     },
+    templateId: {
+      type: String,
+      required: true,
+    },
+    nameKey: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
@@ -36,6 +44,9 @@ export default {
     };
   },
   computed: {
+    displayName() {
+      return this.$t(this.nameKey);
+    },
     presets: () => player.timestudy.presets,
     params: () => GameDatabase.reality.automator.templates.paramTypes,
     validWarnings() {
@@ -45,7 +56,7 @@ export default {
     },
     templateScript() {
       if (this.invalidInputCount !== 0) return null;
-      return new ScriptTemplate(this.templateProps, this.name);
+      return new ScriptTemplate(this.templateProps, this.templateId);
     }
   },
   // Many props in this component are generated dynamically from a GameDB entry, but Vue can only give reactive
@@ -124,14 +135,14 @@ export default {
     copyAndClose() {
       if (this.isBlock) {
         const newTemplateBlock = {
-          name: `Template: ${this.name}`,
+          name: this.$t("automator.templates.button", { name: this.displayName }),
           blocks: blockifyTextAutomator(this.templateScript.script).blocks
         };
         AutomatorData.blockTemplates.push(newTemplateBlock);
-        GameUI.notify.info("Custom template block created");
+        GameUI.notify.info(this.$t("automator.templates.blockCreated"));
       } else {
         copyToClipboard(this.templateScript.script);
-        GameUI.notify.info("Template copied to clipboard");
+        GameUI.notify.info(this.$t("automator.templates.copied"));
       }
       this.emitClose();
     }
@@ -142,7 +153,7 @@ export default {
 <template>
   <ModalWrapper class="c-automator-template-container">
     <template #header>
-      {{ name }} Template
+      {{ $t("automator.templates.header", { name: displayName }) }}
     </template>
     <div class="c-automator-template-description">
       {{ description }}

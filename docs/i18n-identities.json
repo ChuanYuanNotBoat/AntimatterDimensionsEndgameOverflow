@@ -1,0 +1,20 @@
+{
+  "meaning": "Reviewed contracts and pending dependencies, not a claim that all string indexes have been removed",
+  "contracts": [
+    { "id": "accelerator", "status": "decoupled", "identity": "config.key", "saveCompatibility": "unchanged", "files": ["src/core/large-hadron-collider.js"] },
+    { "id": "alchemy-refinement", "status": "decoupled", "identity": "config.saveKey", "saveCompatibility": "power/infinity/time/replication/dilation/effarig remain unchanged", "files": ["src/core/celestials/ra/alchemy.js", "src/core/secret-formula/celestials/alchemy.js"] },
+    { "id": "ethereal-star", "status": "decoupled", "identity": "config.saveKey", "saveCompatibility": "existing nine color fields unchanged; same keys retain CSS styles", "files": ["src/core/ethereal.js", "src/core/secret-formula/endgame/stars.js", "src/components/tabs/ethereal/StarContainer.vue"] },
+    { "id": "automator-template", "status": "decoupled", "identity": "template.id", "saveCompatibility": "commands and user script names unchanged; newly created blocks retain their creation-time title", "files": ["src/core/automator/script-templates.js", "src/core/secret-formula/script-templates.js", "src/components/modals/AutomatorScriptTemplate.vue", "src/components/tabs/automator/AutomatorDocsTemplateList.vue"] },
+    { "id": "tab", "status": "display boundary added", "identity": "key/id; .name stays canonical", "saveCompatibility": "tab bits and last-open IDs unchanged", "files": ["src/core/tabs.js", "src/components/BackgroundAnimations.vue", "src/components/ui-modes/classic/ClassicSubtabButton.vue"] },
+    { "id": "notation", "status": "display boundary added", "identity": "existing .name remains the saved identifier", "saveCompatibility": "notation/lnotation and find() use the original English name", "files": ["src/core/notations.js"] },
+    { "id": "legacy-achievement-name", "status": "pending; preserve canonical name", "files": ["src/core/storage/migrations.js"] },
+    { "id": "ra-pet-name", "status": "pending; preserve canonical name", "files": ["src/components/tabs/celestial-ra/RaPetLevelBar.vue", "src/components/tabs/celestial-ra/RaTab.vue"] },
+    { "id": "autobuyer-name", "status": "pending; preserve canonical name", "files": ["src/core/hotkeys.js", "src/components/tabs/autobuyers"] },
+    { "id": "glyph-rarity-style", "status": "pending; preserve canonical name", "files": ["src/components/GlyphComponent.vue"] },
+    { "id": "help-navigation-name", "status": "pending; preserve canonical name", "files": ["src/components/tabs/alchemy/AlchemyTab.vue", "src/components/tabs/glyphs/sidebar/GlyphFilterPanel.vue"] },
+    { "id": "study-path-name", "status": "pending; preserve canonical name", "files": ["src/core/time-studies/time-studies.js"] },
+    { "id": "prestige-layer-name", "status": "pending; preserve canonical name", "files": ["src/components/tabs/past-prestige-runs/PastPrestigeRunsContainer.vue"] },
+    { "id": "away-progress-name", "status": "pending; preserve canonical name", "files": ["src/core/away-progress.js"] },
+    { "id": "quote-speaker-name", "status": "pending; preserve canonical name", "files": ["src/core/celestials/quotes.js"] }
+  ]
+}

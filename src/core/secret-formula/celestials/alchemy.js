@@ -5,6 +5,7 @@ export const alchemyResources = {
   "power": {
     id: ALCHEMY_RESOURCE.POWER,
     name: "Power",
+    saveKey: "power",
     symbol: "Ω",
     isBaseResource: true,
     effect: amount => 1 + amount / 125000,
@@ -18,6 +19,7 @@ export const alchemyResources = {
   "infinity": {
     id: ALCHEMY_RESOURCE.INFINITY,
     name: "Infinity",
+    saveKey: "infinity",
     symbol: "∞",
     isBaseResource: true,
     effect: amount => 1 + amount / 125000,
@@ -31,6 +33,7 @@ export const alchemyResources = {
   "time": {
     id: ALCHEMY_RESOURCE.TIME,
     name: "Time",
+    saveKey: "time",
     symbol: "Δ",
     isBaseResource: true,
     effect: amount => 1 + amount / 125000,
@@ -44,6 +47,7 @@ export const alchemyResources = {
   "replication": {
     id: ALCHEMY_RESOURCE.REPLICATION,
     name: "Replication",
+    saveKey: "replication",
     symbol: "Ξ",
     isBaseResource: true,
     effect: amount => Decimal.pow10(amount / 500),
@@ -57,6 +61,7 @@ export const alchemyResources = {
   "dilation": {
     id: ALCHEMY_RESOURCE.DILATION,
     name: "Dilation",
+    saveKey: "dilation",
     symbol: "Ψ",
     isBaseResource: true,
     effect: amount => Decimal.pow10(amount / 1000),
@@ -198,6 +203,7 @@ export const alchemyResources = {
   "effarig": {
     id: ALCHEMY_RESOURCE.EFFARIG,
     name: "Effarig",
+    saveKey: "effarig",
     symbol: "Ϙ",
     isBaseResource: true,
     effect: amount => Decimal.pow10(amount / 1250),
