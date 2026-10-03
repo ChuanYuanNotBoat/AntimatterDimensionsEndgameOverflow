@@ -66,7 +66,7 @@ export default {
       #intervalSlot
     >
       <div class="c-autobuyer-box__small-text">
-        Activates every X seconds:
+        {{ $t('autobuyers.activateEvery') }}
       </div>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -83,7 +83,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Limit {{ isFlipped ? "Matter" : "Antimatter" }} Galaxies to:
+        {{ $t('autobuyers.limitResource', { resource: $t(isFlipped ? 'terms.matterGalaxy' : 'terms.antimatterGalaxy', {}, 'plural') }) }}
       </label>
       <AutobuyerInput
         :autobuyer="autobuyer"

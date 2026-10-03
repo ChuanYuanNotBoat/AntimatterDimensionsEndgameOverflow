@@ -75,9 +75,9 @@ export default {
       <ExpandingControlBox :auto-close="true">
         <template #header>
           <div class="o-primary-btn c-autobuyer-box__mode-select c-autobuyer-box__mode-select-header">
-            ▼ Current Setting: ▼
+            ▼ {{ $t('ade.18b12c94dee3f488') }} ▼
             <br>
-            {{ modeName(mode) }}
+            {{ $legacyText(modeName(mode)) }}
           </div>
         </template>
         <template #dropdown>
@@ -91,10 +91,10 @@ export default {
     </template>
     <template #toggleSlot>
       <div v-if="hasAlternateInputs">
-        Target Time (seconds):
+        {{ $t('autobuyers.targetTime') }}
       </div>
       <div v-else>
-        Target Reality Machines:
+        {{ $t('autobuyers.targetResource', { resource: $t('terms.realityMachine', {}, 'plural') }) }}
       </div>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -104,10 +104,10 @@ export default {
     </template>
     <template #checkboxSlot>
       <div v-if="hasAlternateInputs && hasRelicMode">
-        Target Relic Shards:
+        {{ $t('autobuyers.targetResource', { resource: $t('terms.relicShards') }) }}
       </div>
       <div v-else>
-        Target Glyph level:
+        {{ $t('autobuyers.targetResource', { resource: $t('terms.glyphLevel') }) }}
       </div>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -115,7 +115,7 @@ export default {
         :property="(hasAlternateInputs && hasRelicMode) ? 'shard' : 'glyph'"
       />
       <div v-if="isOverCap">
-        Autobuyer will trigger at the Glyph level cap of {{ formatHybridLarge(levelCap, 3) }}.
+        {{ $t('autobuyers.glyphLevelCap', { level: formatHybridLarge(levelCap, 3) }) }}
       </div>
     </template>
   </AutobuyerBox>

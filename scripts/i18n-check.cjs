@@ -37,6 +37,7 @@ async function main() {
         if (new Set(keys).size !== keys.length) failures.push(`Duplicate key in ${file}`);
       }
     });
+    if (/this\.isFlipped/u.test(raw)) failures.push(`Unevaluated reference interpolation in ${file}`);
     catalogs[locale] = Object.fromEntries(Object.entries(pack).filter(([id]) => id !== '$meta'));
   }
   for (const [locale, catalog] of Object.entries(catalogs)) {
@@ -132,8 +133,12 @@ async function main() {
     function check(node) {
       if (!node || seen.has(node)) return;
       seen.add(node);
-      if (node.type === 3 && !node.isComment && /[A-Za-z]{2,}/u.test(node.text)) {
-        failures.push(`New hardcoded template text in ${relative}: ${node.text.trim()}`);
+      // Interpolated nodes also contain literal text (eg "Limit {{ resource }} to:").
+      // Checking only type 3 silently misses those untranslated sentence fragments.
+      const literals = node.type === 2 ? node.tokens.filter(token => typeof token === 'string') :
+        node.type === 3 && !node.isComment ? [node.text] : [];
+      for (const literal of literals) if (/[A-Za-z]{2,}/u.test(literal)) {
+        failures.push(`New hardcoded template text in ${relative}: ${literal.trim()}`);
       }
       for (const attribute of node.attrsList ?? []) {
         if (['title', 'placeholder', 'aria-label', 'alt', 'label'].includes(attribute.name) && /[A-Za-z]/u.test(attribute.value)) {

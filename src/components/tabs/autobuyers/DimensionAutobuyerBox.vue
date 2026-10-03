@@ -63,7 +63,7 @@ export default {
         class="o-autobuyer-btn"
         @click="toggleMode"
       >
-        {{ modeDisplay }}
+        {{ $legacyText(modeDisplay) }}
       </button>
     </template>
   </AutobuyerBox>

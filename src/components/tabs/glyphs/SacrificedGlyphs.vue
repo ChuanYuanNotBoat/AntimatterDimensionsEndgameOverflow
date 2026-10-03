@@ -141,8 +141,7 @@ export default {
         {{ $t('ade.2869c2b8c0e8ea88') }}
       </div>
       <div v-else>
-        {{ $t('ade.173ddab84e47e675') }}<br>
-        when their Glyph type's total sacrifice value is above:
+        {{ $t('ade.173ddab84e47e675') }}
         <br><br>
         <b>
           <span :style="addStyle">{{ $t('ade.5842efee2cab9832', { p0: $legacyText(_s(format(addThreshold))) }) }}</span>
@@ -152,7 +151,7 @@ export default {
           <span :style="boostStyle">{{ $t('ade.89e24af321c2b785', { p0: $legacyText(_s(format(boostThreshold))) }) }}</span>
         </b>
         <br><br>
-        All effects from Glyph Sacrifice can no longer be increased once they reach {{ $legacyText(_s(format(maxSacrifice))) }}.
+        {{ $t('glyphs.sacrificeCap', { amount: format(maxSacrifice) }) }}
       </div>
     </div>
     <br>

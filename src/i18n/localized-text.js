@@ -6,7 +6,8 @@ export const LocalizedText = {
   name: "LocalizedText",
   functional: true,
   props: {
-    id: { type: String, required: true }
+    id: { type: String, required: true },
+    values: { type: Object, default: () => ({}) }
   },
   render(createElement, context) {
     const slots = {};
@@ -15,7 +16,7 @@ export const LocalizedText = {
     }
     const normalSlots = context.slots();
     for (const name of Object.keys(normalSlots)) if (!slots[name]) slots[name] = normalSlots[name];
-    const values = {};
+    const values = { ...context.props.values };
     for (const name of Object.keys(slots)) values[name] = `\uE000${name}\uE001`;
     const text = I18n.t(context.props.id, values);
     return text.split(/(\uE000p\d+\uE001)/u).flatMap(part => {

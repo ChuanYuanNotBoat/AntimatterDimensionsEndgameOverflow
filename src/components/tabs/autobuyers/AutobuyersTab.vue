@@ -99,7 +99,7 @@ export default {
     </div>
     <b>{{ $t('ade.d52ca9781eddf5b1') }}</b>
     <b>
-      {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimension Autobuyers can have their bulk upgraded once interval is below {{ $legacyText(_s(formatInt(100))) }} ms.
+      {{ $t('autobuyers.bulkUpgrade', { resource: $t(isFlipped ? 'terms.matterDimension' : 'terms.antimatterDimension'), interval: formatInt(100) }) }}
     </b>
     <b v-if="hasInstant">{{ $t('ade.451bc63a678185e2', { p0: $legacyText(_s(gameTickLength)) }) }}</b>
     <EndgameAutobuyerBox class="c-endgame-pos" />

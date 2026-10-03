@@ -57,7 +57,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Bulk Singularity Time Lower Bound:
+        {{ $t('autobuyers.singularityLower') }}
       </label>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -74,7 +74,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Bulk Singularity Time Upper Bound:
+        {{ $t('autobuyers.singularityUpper') }}
       </label>
       <AutobuyerInput
         :autobuyer="autobuyer"

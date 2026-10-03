@@ -139,11 +139,12 @@ const CEP_BUTTON_DISPLAY_TYPE = {
 
     <!-- Normal -->
     <template v-else-if="type === 1">
-      <span v-if="showCEPRate">Cel Eternity for </span>
-      <span v-else>Celestial Eternity for </span>
-      <span :style="amountStyle">{{ $legacyText(_s(format(gainedCEP, 2))) }}</span>
-      <span v-if="showCEPRate"> CEP</span>
-      <span v-else> Celestial Eternity {{ $legacyText(_s(pluralize("Point", gainedCEP))) }}</span>
+      <LocalizedText
+          :id="showCEPRate ? 'prestige.celestialEternityGainShort' : 'prestige.celestialEternityGain'"
+          :values="{ points: $t('terms.celestialEternityPoint', {}, gainedCEP.eq(1) ? 'text' : 'plural') }"
+        >
+        <template #p0><span :style="amountStyle">{{ format(gainedCEP, 2) }}</span></template>
+      </LocalizedText>
       <br>
       <template v-if="showCEPRate">
         <LocalizedText id="ade.6d0c48d52b142a2a">

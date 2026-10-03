@@ -114,11 +114,12 @@ export default {
     <template v-else>
       <div v-if="!showCIPRate" />
       <b>
-        <span v-if="showCIPRate">Cel Crunch for </span>
-        <span v-else>Celestial Crunch for </span>
-        <span :style="amountStyle">{{ $legacyText(_s(format(gainedCIP, 2))) }}</span>
-        <span v-if="showCIPRate"> CIP</span>
-        <span v-else> Celestial {{ $legacyText(_s(pluralize("Point", gainedCIP))) }} of Infinity</span>
+        <LocalizedText
+          :id="showCIPRate ? 'prestige.celestialCrunchGainShort' : 'prestige.celestialCrunchGain'"
+          :values="{ points: $t('terms.celestialInfinityPoint', {}, gainedCIP.eq(1) ? 'text' : 'plural') }"
+        >
+          <template #p0><span :style="amountStyle">{{ format(gainedCIP, 2) }}</span></template>
+        </LocalizedText>
       </b>
       <template v-if="showCIPRate">
         <LocalizedText id="ade.4c89d7dcbb0ad344">

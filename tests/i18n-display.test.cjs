@@ -157,3 +157,197 @@ test('all dimension row names retain their ordinal and whole resource name', () 
   const scaling = 'Increased Galaxy cost scaling: Exponential scaling past 5,151,048 (remote), quadratic scaling past e100 (distant)';
   assert.equal(display.translate(scaling, 'ModernAntimatterGalaxyRow'), scaling);
 });
+
+// Compile the real component templates: catalog-only tests miss leftover sentence tails.
+function renderComponent(file, state = {}, globals = {}, computed = {}) {
+  const compiler = require('vue-template-compiler');
+  const parsed = compiler.parseComponent(read(file));
+  const runtime = actual();
+  Vue.observable(runtime.service.state);
+  const passSlots = { functional: true, render(h, c) {
+    return h('div', Object.values(c.scopedSlots).flatMap(slot => slot()) || c.children);
+  } };
+  const imports = Object.fromEntries([...parsed.script.content.matchAll(/^import (\w+).*;$/gm)]
+    .map(match => [match[1], passSlots]));
+  const context = vm.createContext({ Decimal: require('break_eternity.js'), ...imports, ...globals });
+  const options = vm.runInContext(parsed.script.content.replace(/^import .*;$/gm, '')
+    .replace('export default', 'this.options ='), context);
+  vm.runInContext(read('src/i18n/localized-text.js').replace(/^import .*;$/gm, '').replace(/^export /gm, '') +
+    '\nthis.component = LocalizedText;', runtime.context);
+  const compiled = compiler.compile(parsed.template.content);
+  assert.deepEqual(compiled.errors, []);
+  options.render = vm.runInContext(`(function() { ${compiled.render} })`, context);
+  options.staticRenderFns = compiled.staticRenderFns.map(code => vm.runInContext(`(function() { ${code} })`, context));
+  const view = new Vue({ ...options, created: undefined, watch: undefined,
+    propsData: Object.fromEntries(Object.keys(options.props || {}).filter(key => key in state).map(key => [key, state[key]])),
+    components: { ...options.components, LocalizedText: runtime.context.component },
+    computed: { ...options.computed, ...computed },
+    methods: { ...options.methods, ...Object.fromEntries(Object.entries(globals).filter(([,value]) => typeof value === "function")),
+      $t: runtime.service.t, $recompute() {},
+      $legacyText: value => runtime.display.translate(value, options.name) }
+  });
+  Object.assign(view, state);
+  const text = node => node.text ?? (node.children ?? []).map(text).join('');
+  return { ...runtime, view, render: () => text(view._render()).replace(/\s+/gu, ' ').trim() };
+}
+
+test('all continuum branches render exactly one complete sentence across locale switches', () => {
+  const groups = { antimatterDimension: { groupName: 'Antimatter Dimensions' },
+    infinityDimension: { groupName: 'Infinity Dimensions' }, timeDimension: { groupName: 'Time Dimensions' } };
+  for (const [group, flipped, resource] of [
+    ['antimatterDimension', false, '反物质维度'], ['antimatterDimension', true, '正物质维度'],
+    ['infinityDimension', false, '无限维度'], ['timeDimension', false, '时间维度']
+  ]) {
+    const type = Object.assign(() => {}, groups[group]);
+    const { service, render, view } = renderComponent('src/components/tabs/autobuyers/MultipleAutobuyersBox.vue',
+      { type, continuumActive: true, infinityContinuumUnlocked: true, timeContinuumUnlocked: true, isFlipped: flipped },
+      { Autobuyer: groups });
+    const english = render();
+    assert.match(english, /now automatically and continuously scale/u);
+    service.setLocale('zh-CN');
+    const chinese = render();
+    assert.ok(chinese.includes(resource));
+    assert.equal((chinese.match(/连续统将取代/g) || []).length, 1);
+    assert.doesNotMatch(chinese, /[A-Za-z]|\$\{/u);
+    service.setLocale('en');
+    assert.equal(render(), english);
+    view.$destroy();
+  }
+});
+
+test('glyph alteration renders one explanation and the translated sacrifice cap', () => {
+  const { service, render, view } = renderComponent('src/components/tabs/glyphs/SacrificedGlyphs.vue',
+    { hasAlteration: true, maxSacrifice: new (require('break_eternity.js'))(12345) },
+    { format: value => String(value), GlyphAlteration: { additionThreshold: 10, empowermentThreshold: 20,
+      boostingThreshold: 30, baseAdditionColor: () => '', baseEmpowermentColor: () => '', baseBoostColor: () => '' } },
+    { isDoomed: () => false, types: () => [] });
+  const english = render();
+  assert.equal((english.match(/when their Glyph type/g) || []).length, 1);
+  service.setLocale('zh-CN');
+  assert.doesNotMatch(render(), /when their|All effects from|Glyph type/u);
+  assert.equal((render().match(/某个效果将得到提升/g) || []).length, 1);
+  assert.ok(render().includes('当符文献祭效果达到 12345 后'));
+  service.setLocale('en');
+  assert.equal(render(), english);
+  view.$destroy();
+});
+
+test('generated glyph names localize known structured pieces without changing the glyph set', () => {
+  const glyphs = ['reality','effarig','time','infinity','infinity'].map((type, id) => ({ type, id, effects: 0 }));
+  const canonical = JSON.stringify(glyphs);
+  const { service, view, render } = renderComponent('src/components/GlyphSetName.vue',
+    { glyphSet: glyphs, slotCount: 5 },
+    { Pelle: { isDoomed: false }, BASIC_GLYPH_TYPES: ['power','infinity','replication','time','dilation'],
+      Glyphs: { isMusicGlyph: () => false }, getSingleGlyphEffectFromBitmask: () => true },
+    { textStyle: () => ({}) });
+  assert.equal(render(), 'Real Meta Transient Infinity');
+  service.setLocale('zh-CN');
+  assert.equal(render(), '现实 元神 刹那 无限');
+  service.setLocale('en');
+  assert.equal(render(), 'Real Meta Transient Infinity');
+  assert.equal(JSON.stringify(glyphs), canonical);
+  view.$destroy();
+});
+
+test('rich messages retain styled slots while selecting singular/plural limits', () => {
+  const { service, context } = actual();
+  vm.runInContext(read('src/i18n/localized-text.js').replace(/^import .*;$/gm, '').replace(/^export /gm, '') +
+    '\nthis.component = LocalizedText;', context);
+  for (const count of [0, 1, 2]) for (const each of [false, true]) {
+    const view = new Vue({ render(h) {
+      return h('p', [h(context.component, { props: { id: 'glyphs.uniqueLimit', values: { count, each } },
+        scopedSlots: { p0: () => [String(count)], p1: () => [h('span', { class: 'colored-type' }, 'Effarig')] }
+      })]);
+    } });
+    const text = node => node.text ?? (node.children ?? []).map(text).join('');
+    service.setLocale('en');
+    assert.match(text(view._render()), new RegExp(` ${count === 1 ? 'Glyph' : 'Glyphs'} equipped`));
+    service.setLocale('zh-CN');
+    const node = view._render();
+    assert.equal(text(node), `你不能${each ? '分别' : ''}装备超过 ${count} 个Effarig符文。`);
+    assert.equal(node.children.find(n => n.tag === 'span').data.class, 'colored-type');
+    view.$destroy();
+  }
+});
+
+test('the actual special-Glyph limit template renders both styled types and its complete translated sentence', () => {
+  const { service, view, render } = renderComponent('src/components/tabs/glyphs/CurrentGlyphEffects.vue',
+    { hasEffarig: true, hasReality: true, maxSpecialGlyphs: 1 },
+    { formatInt: value => String(value), GlyphAppearanceHandler: { getBorderColor: () => '#123456' } },
+    { glyphSet: () => [], pelleGlyphText: () => '', slabbyGlyphText: () => '', showChaosText: () => false });
+  assert.ok(render().includes('You cannot have more than 1 Effarig or Reality Glyph equipped each.'));
+  service.setLocale('zh-CN');
+  assert.ok(render().includes('你不能分别装备超过 1 个鹿颈长 或 现实符文。'));
+  assert.doesNotMatch(render(), /You cannot|Glyph equipped/u);
+  service.setLocale('en');
+  assert.ok(render().includes('You cannot have more than 1 Effarig or Reality Glyph equipped each.'));
+  view.$destroy();
+});
+
+test('Replicanti effect templates translate all six complete descriptions and preserve multiplier/power slots', () => {
+  const Decimal = require('break_eternity.js');
+  for (const power of [false, true]) {
+    const { service, view, render } = renderComponent('src/components/tabs/replicanti/ReplicantiTab.vue',
+      { isUnlocked: true, hasTDMult: true, hasDTMult: true, hasIPMult: true, hasDEMult: true, hasSTMult: true,
+        hasPow: power, hasTDPow: power, hasDTPow: power, hasIPPow: power, hasDEPow: power, hasSTPow: power,
+        mult: new Decimal(123), multTD: new Decimal(234), multDT: new Decimal(345),
+        multIP: new Decimal(456), multDE: new Decimal(567), multST: new Decimal(678),
+        pow: 1.5, powTD: 1.6, powDT: 1.7, powIP: 1.8, powDE: 1.9, powST: 2 },
+      { format: value => String(value), formatInt: value => String(value), formatX: value => `×${value}`,
+        formatPow: value => `^${value}`, GlyphAlteration: { isAdded: () => true } },
+      { isDoomed: () => false, hasMaxText: () => false, replicantiChanceSetup: () => ({}),
+        replicantiIntervalSetup: () => ({}), maxGalaxySetup: () => ({}) });
+    const english = render();
+    assert.equal((english.match(/ multiplier /g) || []).length, 6);
+    assert.equal((english.match(/ power /g) || []).length, power ? 6 : 0);
+    service.setLocale('zh-CN');
+    const chinese = render();
+    assert.equal((chinese.match(/倍率加成/g) || []).length, 6);
+    assert.equal((chinese.match(/指数加成/g) || []).length, power ? 6 : 0);
+    assert.doesNotMatch(chinese, /multiplier|on all|from Glyphs|from an Alpha|from a Compression/u);
+    for (const amount of [123,234,345,456,567,678]) assert.ok(chinese.includes(`×${amount}`));
+    service.setLocale('en');
+    assert.equal(render(), english);
+    view.$destroy();
+  }
+});
+
+test('imported reference expressions never appear as literal JavaScript in display translations', () => {
+  const { service, display } = actual();
+  service.setLocale('zh-CN');
+  assert.doesNotMatch(read('src/locales/zh-CN.json'), /this\.isFlipped/u);
+  assert.match(display.translate('Matter Dimension Autobuyers can have their bulk upgraded once interval is below 100 ms.'),
+    /正物质维度.*100 毫秒/u);
+  assert.match(display.translate('Antimatter Dimension Autobuyers can have their bulk upgraded once interval is below 100 ms.'),
+    /反物质维度.*100 毫秒/u);
+});
+
+test('Hadron quantities render available and additional amounts without a template Decimal constructor', () => {
+  const { service, view, render } = renderComponent('src/components/tabs/celestial-laitela/HadronsPane.vue',
+    { lightHadrons: 10, totalLightHadrons: 14, darkHadrons: 20, totalDarkHadrons: 25,
+      exoticHadrons: 30, totalExoticHadrons: 36, hasDark: true, hasExotic: true },
+    { formatHybridSmall: value => String(value), format: value => String(value), formatDecimalPercents: () => '0%' },
+    { hadronTime: () => '1h', effect5Text: () => '', effect5Percent: () => 0 });
+  const english = render();
+  assert.ok(english.includes('You have 10(+4) Light Hadrons.'));
+  assert.ok(english.includes('You have 20(+5) Dark Hadrons.'));
+  assert.ok(english.includes('You have 30(+6) Exotic Hadrons.'));
+  service.setLocale('zh-CN');
+  assert.ok(render().includes('你拥有 10(+4) 个强子。'));
+  assert.ok(render().includes('你拥有 20(+5) 个暗强子。'));
+  assert.ok(render().includes('你拥有 30(+6) 个奇迹强子。'));
+  service.setLocale('en');
+  assert.equal(render(), english);
+  view.$destroy();
+});
+
+test('Replicanti upgrade autobuyer names use whole shared terms while canonical names remain English', () => {
+  const { service, display } = actual();
+  service.setLocale('zh-CN');
+  for (const [canonical, translated] of [['Replicanti Chance','复制概率'],['Replicanti Interval','复制间隔'],
+    ['Replicanti Max Galaxies','复制器星系上限']]) {
+    const buyer = { name: canonical };
+    assert.equal(display.translate(buyer.name, 'SingleAutobuyerInRow'), translated);
+    assert.equal(buyer.name, canonical);
+  }
+});

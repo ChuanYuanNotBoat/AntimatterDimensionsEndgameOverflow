@@ -123,25 +123,19 @@ export default {
     v-else-if="isADBox && continuumActive"
     class="c-autobuyer-box-row"
   >
-    Continuum replaces your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimension and Tickspeed Autobuyers, as your production multipliers
-    <br>
-    now automatically and continuously scale based on how many purchases you would have had otherwise.
+    {{ $t('autobuyers.continuum', { resource: $t('autobuyers.continuumDimensionsTickspeed', { dimensions: $t(isFlipped ? 'terms.matterDimension' : 'terms.antimatterDimension') }) }) }}
   </span>
   <span
     v-else-if="isIDBox && continuumActive && infinityContinuumUnlocked"
     class="c-autobuyer-box-row"
   >
-    {{ $t('ade.598fc1353fac64aa') }}
-    <br>
-    now automatically and continuously scale based on how many purchases you would have had otherwise.
+    {{ $t('autobuyers.continuum', { resource: $t('terms.infinityDimension') }) }}
   </span>
   <span
     v-else-if="isTDBox && continuumActive && timeContinuumUnlocked"
     class="c-autobuyer-box-row"
   >
-    {{ $t('ade.81c688126d28b0fc') }}
-    <br>
-    now automatically and continuously scale based on how many purchases you would have had otherwise.
+    {{ $t('autobuyers.continuum', { resource: $t('terms.timeDimension') }) }}
   </span>
 </template>
 

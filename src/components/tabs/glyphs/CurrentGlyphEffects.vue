@@ -35,15 +35,8 @@ export default {
     isSoftcapActive() {
       return this.effects.length && !this.effects.every(e => e.value.capped === false) || this.pelleChaosEffect.hasCappedEffect;
     },
-    uniqueGlyphText() {
-      if (!this.hasEffarig && !this.hasReality) return "";
-      const uniqueGlyphs = [];
-      if (this.hasEffarig) uniqueGlyphs.push(
-        `<span style="color: ${GlyphAppearanceHandler.getBorderColor("effarig")};">Effarig</span>`);
-      if (this.hasReality) uniqueGlyphs.push(
-        `<span style="animation: a-reality-glyph-description-cycle 10s infinite;">Reality</span>`);
-      return `You cannot have more than ${formatInt(this.maxSpecialGlyphs)} ${uniqueGlyphs.join(" or ")}
-        ${this.maxSpecialGlyphs !== 1 ? "Glyphs" : "Glyph"} equipped${uniqueGlyphs.length > 1 ? " each." : "."}`;
+    effarigStyle() {
+      return { color: GlyphAppearanceHandler.getBorderColor("effarig") };
     },
     noEffects() {
       return !this.effects.length;
@@ -116,7 +109,16 @@ export default {
     </div>
     <GlyphSetName :glyph-set="glyphSet" />
     <br v-if="isSoftcapActive || hasEffarig || hasReality">
-    <span v-html="$legacyHtml(uniqueGlyphText)" />
+    <span v-if="hasEffarig || hasReality">
+      <LocalizedText id="glyphs.uniqueLimit" :values="{ count: maxSpecialGlyphs, each: hasEffarig && hasReality }">
+        <template #p0>{{ formatInt(maxSpecialGlyphs) }}</template>
+        <template #p1>
+          <span v-if="hasEffarig" :style="effarigStyle">{{ $legacyText('Effarig') }}</span>
+          <template v-if="hasEffarig && hasReality">{{ $t('glyphs.or') }}</template>
+          <span v-if="hasReality" style="animation: a-reality-glyph-description-cycle 10s infinite;">{{ $legacyText('Reality') }}</span>
+        </template>
+      </LocalizedText>
+    </span>
     <div
       v-if="isSoftcapActive"
       class="l-current-glyph-effects__capped-header"
