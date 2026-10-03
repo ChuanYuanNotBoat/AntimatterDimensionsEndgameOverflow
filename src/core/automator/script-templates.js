@@ -13,27 +13,27 @@
  *  object instead of parsing it as-needed higher up in the call chain reduces boilerplate code
  */
 export class ScriptTemplate {
-  constructor(params, templateName) {
+  constructor(params, templateId) {
     this.lines = [];
     this.warnings = [];
-    switch (templateName) {
-      case "Climb EP":
+    switch (templateId) {
+      case "climbEP":
         this.templateClimbEP(params);
         break;
-      case "Grind Eternities":
+      case "grindEternities":
         this.templateGrindEternities(params);
         break;
-      case "Grind Infinities":
+      case "grindInfinities":
         this.templateGrindInfinities(params);
         break;
-      case "Complete Eternity Challenge":
+      case "completeEC":
         this.templateDoEC(params);
         break;
-      case "Unlock Dilation":
+      case "unlockDilation":
         this.templateUnlockDilation(params);
         break;
       default:
-        throw new Error(`Unrecognized template name ${templateName} in ScriptTemplate`);
+        throw new Error(`Unrecognized template id ${templateId} in ScriptTemplate`);
     }
   }
 

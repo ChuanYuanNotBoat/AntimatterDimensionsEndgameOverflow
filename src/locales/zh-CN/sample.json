@@ -1,0 +1,15 @@
+{
+  "infinityUpgrades.timeMult.description": "{state, select, cursed {你的反物质维度获得基于游玩时间的倍数加成} other {{matter, select, matter {物质} other {反物质}}维度获得基于游玩时间的倍数加成}}",
+  "infinityUpgrades.timeMult.charged": "{matter, select, matter {物质} other {反物质}}维度获得基于总游戏时间和特蕾莎等级的指数加成",
+  "analysis.state.timeDisabled": "此宇宙禁用时间维度生产。",
+  "analysis.state.slabdrillDimensions": "Slabdrill 当前启用 AD1 至 AD{tier}；更高维度的倍率固定为 1。",
+  "automator.templates.climbEP": "提升 EP",
+  "automator.templates.grindEternities": "刷永恒次数",
+  "automator.templates.grindInfinities": "刷无限次数",
+  "automator.templates.completeEC": "完成永恒挑战",
+  "automator.templates.unlockDilation": "解锁时间膨胀",
+  "automator.templates.button": "模板：{name}",
+  "automator.templates.header": "{name}模板",
+  "automator.templates.blockCreated": "已创建自定义模板块",
+  "automator.templates.copied": "已将模板复制到剪贴板"
+}

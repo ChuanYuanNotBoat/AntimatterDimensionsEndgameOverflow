@@ -1,10 +1,13 @@
 import * as ADLNotations from "adnot-beport-large";
 import * as ADNotations from "adnot-beport-small";
 
+import { t } from "../i18n";
+
 export const Notation = (function() {
   const N = ADNotations;
-  const notation = type => {
+  const notation = (type, nameKey) => {
     const n = new type();
+    Object.defineProperty(n, "displayName", { get: () => t(nameKey) });
     n.setAsCurrent = () => {
       player.options.notation = n.name;
       ui.notationName = n.name;
@@ -16,35 +19,36 @@ export const Notation = (function() {
     return n;
   };
   return {
-    scientific: notation(N.ScientificNotation),
-    engineering: notation(N.EngineeringNotation),
-    letters: notation(N.LettersNotation),
-    standard: painful(notation(N.StandardNotation)),
-    emoji: painful(notation(N.EmojiNotation)),
-    mixedScientific: notation(N.MixedScientificNotation),
-    mixedEngineering: notation(N.MixedEngineeringNotation),
-    logarithm: notation(N.LogarithmNotation),
-    brackets: painful(notation(N.BracketsNotation)),
-    infinity: notation(N.InfinityNotation),
-    roman: painful(notation(N.RomanNotation)),
-    dots: painful(notation(N.DotsNotation)),
-    zalgo: painful(notation(N.ZalgoNotation)),
-    hex: painful(notation(N.HexNotation)),
-    imperial: painful(notation(N.ImperialNotation)),
-    clock: painful(notation(N.ClockNotation)),
-    prime: painful(notation(N.PrimeNotation)),
-    bar: painful(notation(N.BarNotation)),
-    shi: painful(notation(N.ShiNotation)),
-    blind: painful(notation(N.BlindNotation)),
-    blobs: painful(notation(N.BlobsNotation)),
-    all: painful(notation(N.AllNotation))
+    scientific: notation(N.ScientificNotation, "notations.small.scientific"),
+    engineering: notation(N.EngineeringNotation, "notations.small.engineering"),
+    letters: notation(N.LettersNotation, "notations.small.letters"),
+    standard: painful(notation(N.StandardNotation, "notations.small.standard")),
+    emoji: painful(notation(N.EmojiNotation, "notations.small.emoji")),
+    mixedScientific: notation(N.MixedScientificNotation, "notations.small.mixedScientific"),
+    mixedEngineering: notation(N.MixedEngineeringNotation, "notations.small.mixedEngineering"),
+    logarithm: notation(N.LogarithmNotation, "notations.small.logarithm"),
+    brackets: painful(notation(N.BracketsNotation, "notations.small.brackets")),
+    infinity: notation(N.InfinityNotation, "notations.small.infinity"),
+    roman: painful(notation(N.RomanNotation, "notations.small.roman")),
+    dots: painful(notation(N.DotsNotation, "notations.small.dots")),
+    zalgo: painful(notation(N.ZalgoNotation, "notations.small.zalgo")),
+    hex: painful(notation(N.HexNotation, "notations.small.hex")),
+    imperial: painful(notation(N.ImperialNotation, "notations.small.imperial")),
+    clock: painful(notation(N.ClockNotation, "notations.small.clock")),
+    prime: painful(notation(N.PrimeNotation, "notations.small.prime")),
+    bar: painful(notation(N.BarNotation, "notations.small.bar")),
+    shi: painful(notation(N.ShiNotation, "notations.small.shi")),
+    blind: painful(notation(N.BlindNotation, "notations.small.blind")),
+    blobs: painful(notation(N.BlobsNotation, "notations.small.blobs")),
+    all: painful(notation(N.AllNotation, "notations.small.all"))
   };
 }());
 
 export const LNotation = (function() {
   const N = ADLNotations;
-  const notation = type => {
+  const notation = (type, nameKey) => {
     const n = new type();
+    Object.defineProperty(n, "displayName", { get: () => t(nameKey) });
     n.setAsCurrent = () => {
       player.options.lnotation = n.name;
       ui.lnotationName = n.name;
@@ -52,15 +56,15 @@ export const LNotation = (function() {
     return n;
   };
   return {
-    extendedScientific: notation(N.ExtendedScientificNotation),
-    stackedScientific: notation(N.StackedScientificNotation),
-    semiStackedScientific: notation(N.SemiStackedScientificNotation),
-    extendedLogarithm: notation(N.ExtendedLogarithmNotation),
-    tetrational: notation(N.TetrationalNotation),
-    trueTetrational: notation(N.TrueTetrationalNotation),
-    hyperE: notation(N.HyperENotation),
-    simpleExtendedScientific: notation(N.SimpleExtendedScientificNotation),
-    stackedMixedScientific: notation(N.StackedMixedScientificNotation)
+    extendedScientific: notation(N.ExtendedScientificNotation, "notations.large.extendedScientific"),
+    stackedScientific: notation(N.StackedScientificNotation, "notations.large.stackedScientific"),
+    semiStackedScientific: notation(N.SemiStackedScientificNotation, "notations.large.semiStackedScientific"),
+    extendedLogarithm: notation(N.ExtendedLogarithmNotation, "notations.large.extendedLogarithm"),
+    tetrational: notation(N.TetrationalNotation, "notations.large.tetrational"),
+    trueTetrational: notation(N.TrueTetrationalNotation, "notations.large.trueTetrational"),
+    hyperE: notation(N.HyperENotation, "notations.large.hyperE"),
+    simpleExtendedScientific: notation(N.SimpleExtendedScientificNotation, "notations.large.simpleExtendedScientific"),
+    stackedMixedScientific: notation(N.StackedMixedScientificNotation, "notations.large.stackedMixedScientific")
   };
 }());
 

@@ -35,6 +35,11 @@ export default {
       return this.tab.isOpen;
     }
   },
+  watch: {
+    $i18nRevision() {
+      this.update();
+    }
+  },
   methods: {
     update() {
       this.isAvailable = this.tab.isAvailable;
@@ -45,12 +50,12 @@ export default {
       this.uiClass = (typeof this.tab.config.UIClass === "function") ? this.tab.config.UIClass() : this.tab.config.UIClass;
       if (this.tabPosition < Pelle.endTabNames.length) {
         this.tabName = Pelle.transitionText(
-          this.tab.name,
+          this.tab.displayName,
           Pelle.endTabNames[this.tabPosition],
           Math.clamp(GameEnd.endState - (this.tab.id % 4) / 10, 0, 1)
         );
       } else {
-        this.tabName = this.tab.name;
+        this.tabName = this.tab.displayName;
       }
     },
     isCurrentSubtab(id) {
@@ -98,7 +103,7 @@ export default {
             class="fas fa-circle-exclamation l-notification-icon"
           />
           <div class="o-subtab__tooltip">
-            {{ subtab.name }}
+            {{ subtab.displayName }}
           </div>
         </div>
       </template>

@@ -3,6 +3,7 @@ import ExpandingControlBox from "@/components/ExpandingControlBox";
 import OpenModalHotkeysButton from "@/components/OpenModalHotkeysButton";
 import OptionsButton from "@/components/OptionsButton";
 import PrimaryToggleButton from "@/components/PrimaryToggleButton";
+import SelectLanguageDropdown from "./SelectLanguageDropdown";
 import SelectLargeNotationDropdown from "./SelectLargeNotationDropdown";
 import SelectNotationDropdown from "@/components/tabs/options-visual/SelectNotationDropdown";
 import SelectThemeDropdown from "@/components/tabs/options-visual/SelectThemeDropdown";
@@ -21,32 +22,36 @@ export default {
     SelectNotationDropdown,
     SelectSidebarDropdown,
     SelectLargeNotationDropdown,
+    SelectLanguageDropdown,
   },
   data() {
     return {
       theme: "",
       notation: "",
       lnotation: "",
-      sidebarResource: "",
+      sidebarResourceID: 0,
       headerTextColored: true,
     };
   },
   computed: {
     sidebarDB: () => GameDatabase.sidebarResources,
     themeLabel() {
-      return `Theme: ${Themes.find(this.theme).displayName()}`;
+      return this.$t("options.visual.theme", { name: Themes.find(this.theme).displayName() });
     },
     notationLabel() {
-      return `Notation: ${this.notation}`;
+      return this.$t("options.visual.notation", { name: Notations.find(this.notation).displayName });
     },
     postNotationLabel() {
-      return `Large Notation: ${this.lnotation}`;
+      return this.$t("options.visual.largeNotation", { name: LNotations.find(this.lnotation).displayName });
     },
     sidebarLabel() {
-      return `Sidebar (Modern UI): ${this.sidebarResource}`;
+      const name = this.sidebarResourceID === 0
+        ? this.$t("options.visual.latestResource")
+        : this.sidebarDB.find(entry => entry.id === this.sidebarResourceID).optionName;
+      return this.$t("options.visual.sidebar", { name });
     },
     UILabel() {
-      return `UI: ${this.$viewModel.newUI ? "Modern" : "Classic"}`;
+      return this.$t("options.visual.ui", { mode: this.$viewModel.newUI ? "modern" : "classic" });
     }
   },
   watch: {
@@ -60,9 +65,7 @@ export default {
       this.theme = Theme.currentName();
       this.notation = options.notation;
       this.lnotation = options.lnotation;
-      this.sidebarResource = player.options.sidebarResourceID === 0
-        ? "Latest Resource"
-        : this.sidebarDB.find(e => e.id === player.options.sidebarResourceID).optionName;
+      this.sidebarResourceID = options.sidebarResourceID;
       this.headerTextColored = options.headerTextColored;
     },
   }
@@ -72,6 +75,7 @@ export default {
 <template>
   <div class="l-options-tab">
     <div class="l-options-grid">
+      <SelectLanguageDropdown />
       <div class="l-options-grid__row">
         <OptionsButton
           class="o-primary-btn--option_font-large"
@@ -84,7 +88,7 @@ export default {
           class="o-primary-btn--option"
           onclick="Modal.newsOptions.show();"
         >
-          Open News Options
+          {{ $t("options.visual.news") }}
         </OptionsButton>
       </div>
       <div class="l-options-grid__row">
@@ -110,7 +114,7 @@ export default {
           class="o-primary-btn--option"
           onclick="Modal.notation.show();"
         >
-          Open Exponent Notation Options
+          {{ $t("options.visual.exponent") }}
         </OptionsButton>
       </div>
       <div class="l-options-grid__row">
@@ -118,19 +122,19 @@ export default {
           class="o-primary-btn--option"
           onclick="Modal.animationOptions.show();"
         >
-          Open Animation Options
+          {{ $t("options.visual.animation") }}
         </OptionsButton>
         <OptionsButton
           class="o-primary-btn--option"
           onclick="Modal.infoDisplayOptions.show()"
         >
-          Open Info Display Options
+          {{ $t("options.visual.info") }}
         </OptionsButton>
         <OptionsButton
           class="o-primary-btn--option"
           onclick="Modal.awayProgressOptions.show()"
         >
-          Open Away Progress Options
+          {{ $t("options.visual.away") }}
         </OptionsButton>
       </div>
       <div class="l-options-grid__row">
@@ -138,12 +142,12 @@ export default {
           class="o-primary-btn--option"
           onclick="Modal.hiddenTabs.show()"
         >
-          Modify Visible Tabs
+          {{ $t("options.visual.tabs") }}
         </OptionsButton>
         <PrimaryToggleButton
           v-model="headerTextColored"
           class="o-primary-btn--option l-options-grid__button"
-          label="Relative prestige gain text coloring:"
+          :label="$t('options.visual.coloring')"
         />
         <ExpandingControlBox
           v-if="$viewModel.newUI"

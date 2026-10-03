@@ -30,7 +30,7 @@ export const Ethereal = {
     let prod = [];
     for (let star = 0; star < 9; star++) {
       if (EtherealStars.all.find(s => s.id === star).hasStar) {
-        prod.push(player.endgame.ethereal.stars[EtherealStars.all.find(s => s.id === star).config.name]);
+        prod.push(player.endgame.ethereal.stars[EtherealStars.all.find(s => s.id === star).config.saveKey]);
       }
     }
     return prod.reduce(Decimal.prodReducer, DC.D1);
@@ -89,7 +89,7 @@ export class EtherealStarState {
   }
 
   get hasStar() {
-    return player.endgame.ethereal.stars[this.config.name].gte(1);
+    return player.endgame.ethereal.stars[this.config.saveKey].gte(1);
   }
 }
 
@@ -170,23 +170,23 @@ export function tryAdvanceSector() {
 
 export function resetForStar(id) {
   const gainedStarType = EtherealStars.all.find(x => x.id === id);
-  const starName = gainedStarType.config.name;
+  const starKey = gainedStarType.config.saveKey;
   const resetReq = gainedStarType.config.resetReq;
   if (Currency.etherealPower.lt(resetReq) || !gainedStarType.isUnlocked) return;
   const resetFormula = Decimal.pow(Currency.etherealPower.value.div(resetReq), 0.5 - id / 20).times(Ethereal.allStarBoost);
   player.endgame.ethereal.power = DC.D0;
   player.endgame.ethereal.sector = 1;
-  player.endgame.ethereal.stars[starName] = player.endgame.ethereal.stars[starName].add(resetFormula);
+  player.endgame.ethereal.stars[starKey] = player.endgame.ethereal.stars[starKey].add(resetFormula);
 }
 
 export function freeStarReset(id, diff) {
   const gainedStarType = EtherealStars.all.find(x => x.id === id);
-  const starName = gainedStarType.config.name;
+  const starKey = gainedStarType.config.saveKey;
   const resetReq = gainedStarType.config.resetReq;
   if (Currency.etherealPower.lt(resetReq) || !gainedStarType.isUnlocked) return;
   const resetFormula = Decimal.pow(Currency.etherealPower.value.div(resetReq), 0.5 - id / 20).times(Ethereal.allStarBoost).times(
     Ethereal.starGeneration(id).times(diff).div(1000));
-  player.endgame.ethereal.stars[starName] = player.endgame.ethereal.stars[starName].add(resetFormula);
+  player.endgame.ethereal.stars[starKey] = player.endgame.ethereal.stars[starKey].add(resetFormula);
 }
 
 export function getStarPowerGainPerSecond() {

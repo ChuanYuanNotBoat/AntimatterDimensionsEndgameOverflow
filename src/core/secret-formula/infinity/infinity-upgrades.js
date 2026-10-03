@@ -1,3 +1,5 @@
+import { textRef } from "../../../i18n/text-ref";
+
 function dimInfinityMult() {
   return Currency.infinitiesTotal.value.times(0.2).plus(1);
 }
@@ -9,12 +11,16 @@ export const infinityUpgrades = {
   totalTimeMult: {
     id: "timeMult",
     cost: () => Math.pow(1, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
-    description: () => Slabdrill.isCursed ? "Your Antimatter Dimension gains a multiplier based on time played" :
-      `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a multiplier based on time played`,
+    description: textRef("infinityUpgrades.timeMult.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "normal",
+      matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => Decimal.pow(Time.totalTimePlayed.totalMinutes.div(2), 0.15),
     formatEffect: value => formatX(value, 2, 2),
     charged: {
-      description: () => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a power effect based on time played and Teresa level`,
+      description: textRef("infinityUpgrades.timeMult.charged", () => ({
+        matter: player.universes.current === 2 ? "matter" : "antimatter"
+      })),
       effect: () => 1 +
         Decimal.log10(Decimal.log10(Time.totalTimePlayed.totalMilliseconds)).times(
         Math.pow(Ra.pets.teresa.level * Ra.unlocks.chargeBoost.effectOrDefault(1) * (player.disablePostReality ? 1 : AlphaUnlocks.autoCrunchChallenge.effects.buff.effectOrDefault(1)), 0.5)).div(150).toNumber(),

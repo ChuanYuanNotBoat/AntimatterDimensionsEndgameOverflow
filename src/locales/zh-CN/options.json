@@ -1,0 +1,22 @@
+{
+  "options.language.label": "语言",
+  "options.language.changed": "语言已切换为{language}。",
+  "options.language.coverage": "翻译仍在进行中，未翻译的内容将回退到英文。",
+  "options.visual.theme": "主题：{name}",
+  "options.visual.notation": "记数法：{name}",
+  "options.visual.largeNotation": "大数记数法：{name}",
+  "options.visual.sidebar": "侧边栏（现代界面）：{name}",
+  "options.visual.latestResource": "最新资源",
+  "options.visual.ui": "界面：{mode, select, modern {现代} other {经典}}",
+  "options.visual.news": "新闻设置",
+  "options.visual.exponent": "指数记数法设置",
+  "options.visual.animation": "动画设置",
+  "options.visual.info": "信息显示设置",
+  "options.visual.away": "离线进度显示设置",
+  "options.visual.tabs": "调整可见标签页",
+  "options.visual.coloring": "按相对重置收益给文字着色：",
+  "tabs.options.name": "选项",
+  "tabs.options.saving": "存档",
+  "tabs.options.visual": "视觉",
+  "tabs.options.gameplay": "游戏"
+}

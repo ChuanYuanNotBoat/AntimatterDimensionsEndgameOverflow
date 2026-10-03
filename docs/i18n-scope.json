@@ -1,0 +1,15 @@
+{
+  "stage": "foundation; partial translation with English fallback",
+  "templatesWithoutStaticEnglish": [
+    "src/components/GameSpeedDisplay.vue",
+    "src/components/DescriptionDisplay.vue",
+    "src/components/tabs/options-visual/OptionsVisualTab.vue",
+    "src/components/tabs/options-visual/SelectLanguageDropdown.vue"
+  ],
+  "remaining": [
+    "Progression, prestige, challenges, achievements, glyphs, and most ADE systems",
+    "Most multiplier labels and explanations",
+    "Automator documentation, input prompts, errors, and historical logs",
+    "Help pages, news, quotes, credits, boot pages, and text inside assets"
+  ]
+}

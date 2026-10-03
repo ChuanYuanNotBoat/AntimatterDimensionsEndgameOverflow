@@ -2,12 +2,15 @@ import VTooltip from "v-tooltip";
 import VueGtag from "vue-gtag";
 
 import { DEV } from "@/env";
+import { installI18n } from "@/i18n/vue-adapter";
 
 import { useLongPress, useRepeatingClick } from "./longpress";
 import { notify } from "./notify";
 import { state } from "./ui.init";
 
 import GameUIComponent from "@/components/GameUIComponent";
+
+installI18n(Vue);
 
 Vue.mixin({
   computed: {

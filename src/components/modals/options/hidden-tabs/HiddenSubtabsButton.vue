@@ -65,7 +65,7 @@ export default {
         v-html="subtab.symbol"
       />
       <div class="l-hide-modal-button__subtab-name">
-        {{ subtab.name }}
+        {{ subtab.displayName }}
       </div>
     </div>
   </div>

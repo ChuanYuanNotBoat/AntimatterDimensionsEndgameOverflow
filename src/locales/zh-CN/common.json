@@ -1,0 +1,9 @@
+{
+  "common.on": "开启",
+  "common.off": "关闭",
+  "common.messageUnavailable": "暂时无法显示此文本。",
+  "gameSpeed.stopped": "已停止（储存现实时间）",
+  "gameSpeed.fixed": "{speed}（固定值）",
+  "gameSpeed.normal": "游戏目前以正常速度运行。",
+  "gameSpeed.altered": "游戏速度倍率：{speed}"
+}

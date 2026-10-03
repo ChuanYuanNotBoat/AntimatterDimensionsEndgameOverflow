@@ -1,3 +1,5 @@
+import { t as translate } from "../i18n";
+
 class SubtabState {
   constructor(parent, config) {
     this._parent = parent;
@@ -6,6 +8,10 @@ class SubtabState {
 
   get name() {
     return typeof this.config.name === "function" ? this.config.name() : this.config.name;
+  }
+
+  get displayName() {
+    return this.config.nameKey ? translate(this.config.nameKey) : this.name;
   }
 
   get symbol() {
@@ -97,6 +103,10 @@ class TabState {
 
   get name() {
     return typeof this.config.name === "function" ? this.config.name() : this.config.name;
+  }
+
+  get displayName() {
+    return this.config.nameKey ? translate(this.config.nameKey) : this.name;
   }
 
   get key() {
