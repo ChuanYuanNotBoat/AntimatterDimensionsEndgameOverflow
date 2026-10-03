@@ -1,3 +1,5 @@
+import { boundedPositivePower } from "../../finite-decimal";
+
 export const endgameMasteries = [
   {
     id: 11,
@@ -384,7 +386,7 @@ export const endgameMasteries = [
     requirement: [211],
     reqType: EM_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: "Multiply Divine Energy gain based on Hadrons",
-    effect: () => player.disablePostReality ? DC.D1 : Decimal.pow10(new Decimal(player.celestials.laitela.hadrons.trueTotal).pow(1.25))
+    effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(10, boundedPositivePower(player.celestials.laitela.hadrons.trueTotal, 1.25))
   },
   {
     id: 222,
@@ -495,7 +497,7 @@ export const endgameMasteries = [
     requirement: [271, 272, 273, 274],
     reqType: EM_REQUIREMENT_TYPE.ENTANGLEMENT,
     description: "Multiply Thermal Radiation based on Celestial Points",
-    effect: () => player.disablePostReality ? DC.D1 : player.endgame.celestialPoints.max(10).log10().log10().pow(0.75),
+    effect: () => player.disablePostReality ? DC.D1 : player.endgame.celestialPoints.max(10).log10().log10().pow(0.75).max(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -504,7 +506,7 @@ export const endgameMasteries = [
     requirement: [271, 272, 273, 274],
     reqType: EM_REQUIREMENT_TYPE.ENTANGLEMENT,
     description: "Multiply Thermal Radiation based on Celestial Points of Eternity",
-    effect: () => player.disablePostReality ? DC.D1 : player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000).pow(8),
+    effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000), 8).max(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -513,7 +515,7 @@ export const endgameMasteries = [
     requirement: [271, 272, 273, 274],
     reqType: EM_REQUIREMENT_TYPE.ENTANGLEMENT,
     description: "Multiply Thermal Radiation based on Nebulae",
-    effect: () => player.disablePostReality ? DC.D1 : player.celestials.pelle.divinity.nebulae.log10().pow(0.3),
+    effect: () => player.disablePostReality ? DC.D1 : player.celestials.pelle.divinity.nebulae.max(10).log10().pow(0.3),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -522,7 +524,7 @@ export const endgameMasteries = [
     requirement: [281],
     reqType: EM_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: "Empower Galactic Power based on Celestial Points",
-    effect: () => player.disablePostReality ? DC.D1 : player.endgame.celestialPoints.max(10).log10().log10().pow(0.15),
+    effect: () => player.disablePostReality ? DC.D1 : player.endgame.celestialPoints.max(10).log10().log10().pow(0.15).max(1),
     formatEffect: value => formatPow(value, 2, 3)
   },
   {
@@ -531,7 +533,7 @@ export const endgameMasteries = [
     requirement: [282],
     reqType: EM_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: "Empower Galactic Power based on Celestial Points of Eternity",
-    effect: () => player.disablePostReality ? DC.D1 : player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000).pow(1.5),
+    effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000), 1.5).max(1),
     formatEffect: value => formatPow(value, 2, 3)
   },
   {
@@ -540,7 +542,7 @@ export const endgameMasteries = [
     requirement: [283],
     reqType: EM_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: "Empower Galactic Power based on Nebulae",
-    effect: () => player.disablePostReality ? DC.D1 : player.celestials.pelle.divinity.nebulae.log10().pow(0.05),
+    effect: () => player.disablePostReality ? DC.D1 : player.celestials.pelle.divinity.nebulae.max(10).log10().pow(0.05),
     formatEffect: value => formatPow(value, 2, 3)
   },
   {

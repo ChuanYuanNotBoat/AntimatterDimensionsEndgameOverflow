@@ -19,12 +19,7 @@ export default {
   },
   methods: {
     handleYesClick() {
-      if (player.compression.active) return;
-      Endgame.resetNoReward();
-      clearCelestialRuns();
-      player.compression.active = true;
-      recalculateAllGlyphs();
-      Tab.dimensions.antimatter.show(false);
+      enterCompression();
     },
   },
 };

@@ -1,5 +1,7 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
+
 function rebuyableCost(initialCost, increment, id) {
-  return Decimal.multiply(initialCost, Decimal.pow(increment, player.compression.rebuyables[id]));
+  return boundedPositiveProduct(initialCost, boundedPositivePower(increment, player.compression.rebuyables[id]));
 }
 function rebuyable(config) {
   return {
@@ -23,10 +25,10 @@ export const compressionUpgrades = {
     initialCost: 1e4,
     increment: 10,
     description: () => "Double Thermal Radiation gain",
-    effect: bought => Decimal.pow(2, bought),
+    effect: bought => boundedPositivePower(2, bought),
     formatEffect: value => formatX(value, 2),
     formatCost: value => format(value, 2),
-    purchaseCap: () => Number.MAX_VALUE
+    purchaseCap: () => Number.MAX_SAFE_INTEGER
   }),
   waveThreshold: rebuyable({
     id: 2,
@@ -49,10 +51,10 @@ export const compressionUpgrades = {
     initialCost: 1e7,
     increment: 20,
     description: () => "Triple the amount of Hawking Radiation gained",
-    effect: bought => DC.D3.pow(bought),
+    effect: bought => boundedPositivePower(3, bought),
     formatEffect: value => formatX(value, 2),
     formatCost: value => format(value, 2),
-    purchaseCap: () => Number.MAX_VALUE
+    purchaseCap: () => Number.MAX_SAFE_INTEGER
   }),
   doubleWaves: {
     id: 4,
@@ -73,21 +75,21 @@ export const compressionUpgrades = {
     id: 6,
     cost: 5e7,
     description: () => `Gain a multiplier to ${player.universes.current === 2 ? "MDs" : "ADs"} based on Thermal Radiation and real time this Endgame applying after the Compression nerf`,
-    effect: () => Currency.thermalRadiation.value.pow(Time.thisEndgameRealTime.totalMinutes.pow(0.75)).clampMin(1),
+    effect: () => boundedPositivePower(Currency.thermalRadiation.value, Time.thisEndgameRealTime.totalMinutes.pow(0.75)).clampMin(1),
     formatEffect: value => formatX(value, 2, 1)
   },
   adBigMultTR: {
     id: 7,
     cost: 2e12,
     description: () => `Gain another multiplier to ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions based on Thermal Radiation that applies after the Compression nerf`,
-    effect: () => Currency.thermalRadiation.value.pow(1000).clampMin(1),
+    effect: () => boundedPositivePower(Currency.thermalRadiation.value, 1000).clampMin(1),
     formatEffect: value => formatX(value, 2, 1)
   },
   entanglementSplit: {
     id: 8,
     cost: 1e10,
     description: "You can purchase all three Entanglement Paths in the Mastery Tree and empower all Machines based on TR",
-    effect: () => Currency.thermalRadiation.value.max(1).log10().div(308).add(1).pow(2),
+    effect: () => boundedPositivePower(Currency.thermalRadiation.value.max(1).log10().div(308).add(1), 2),
     formatEffect: value => formatPow(value, 2, 3)
   },
   compressionPenalty: {

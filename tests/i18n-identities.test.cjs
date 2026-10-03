@@ -58,11 +58,12 @@ test('Ethereal manual and free resets read and write the existing star field', (
   const end = source.indexOf('export function getStarPowerGainPerSecond', start);
   const star = { id: 0, isUnlocked: true, config: { name: '红色', saveKey: 'red', resetReq: 1e25 } };
   const context = vm.createContext({
-    Decimal, DC: { D0: new Decimal(0) },
+    Decimal, DC: { D0: new Decimal(0), D1: new Decimal(1), BEMAX: new Decimal('10^^9000000000000000') },
     player: { endgame: { ethereal: { stars: { red: new Decimal(7) }, power: new Decimal(1e29), sector: 2 } } },
     Currency: { etherealPower: { value: new Decimal(1e29), lt: () => false } },
     EtherealStars: { all: [star] }, Ethereal: { allStarBoost: new Decimal(1), starGeneration: () => new Decimal(1) },
   });
+  vm.runInContext(strip(read('core/finite-decimal.js')), context);
   vm.runInContext(strip(source.slice(start, end)), context);
   context.resetForStar(0);
   assert.equal(context.player.endgame.ethereal.stars.red.toString(), '107');

@@ -1,4 +1,5 @@
 <script>
+import { boundedPositiveQuotient } from "@/core/finite-decimal";
 import CelestialQuoteHistory from "@/components/CelestialQuoteHistory";
 import EffarigRunUnlockReward from "./EffarigRunUnlockReward";
 import EffarigUnlockButton from "./EffarigUnlockButton";
@@ -65,8 +66,8 @@ export default {
       return this.isRunning ? "c-effarig-run-button__inner--running" : "c-effarig-run-button__inner--not-running";
     },
     runDescription() {
-      return `${GameDatabase.celestials.descriptions[1].effects()}\n
-      ${GameDatabase.celestials.descriptions[1].description()}`;
+      return `${this.$legacyText(GameDatabase.celestials.descriptions[1].effects())}\n
+      ${this.$legacyText(GameDatabase.celestials.descriptions[1].description())}`;
     },
     showShardsRate() {
       return this.currentShardsRate;
@@ -86,10 +87,10 @@ export default {
         ? 1 : Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost.effectOrDefault(1)));
       this.shardMaxRarityIncrease.copyFrom(Effarig.rarityCapIncrease.div(100));
       this.shardsGained.copyFrom(Effarig.shardsGained);
-      this.currentShardsRate.copyFrom(this.shardsGained.div(Time.thisRealityRealTime.totalMinutes));
+      this.currentShardsRate.copyFrom(boundedPositiveQuotient(this.shardsGained, Time.thisRealityRealTime.totalMinutes));
       this.amplification.copyFrom(simulatedRealityCount(false));
       this.amplifiedShards.copyFrom(this.shardsGained.times(this.amplification.add(1)));
-      this.amplifiedShardsRate.copyFrom(this.amplifiedShards.div(Time.thisRealityRealTime.totalMinutes));
+      this.amplifiedShardsRate.copyFrom(boundedPositiveQuotient(this.amplifiedShards, Time.thisRealityRealTime.totalMinutes));
       this.quote = Effarig.quote;
       this.runUnlocked = EffarigUnlock.run.isUnlocked;
       this.isRunning = Effarig.isRunning;
@@ -151,10 +152,7 @@ export default {
         <div class="c-effarig-relic-description">
           <br>
           {{ $t('ade.fce0f6e48755a88f') }}
-          <br>
-          gained. More distinct Glyph effects significantly
-          <br>
-          increases Relic Shards gained.
+
         </div>
         <EffarigUnlockButton
           v-for="(unlock, i) in shopUnlocks"

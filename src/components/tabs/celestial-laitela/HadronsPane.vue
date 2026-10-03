@@ -220,20 +220,20 @@ export default {
     <div class="c-laitela-hadrons-row">
       <h2>
         You have
-        {{ $legacyText(_s(formatHybridSmall(lightHadrons, 3))) }}<span v-if="totalLightHadrons > lightHadrons">(+{{ $legacyText(_s(formatHybridSmall(totalLightHadrons - lightHadrons, 3))) }})</span>
+        {{ $legacyText(_s(formatHybridSmall(lightHadrons, 3))) }}<span v-if="new Decimal(totalLightHadrons).gt(lightHadrons)">(+{{ $legacyText(_s(formatHybridSmall(new Decimal(totalLightHadrons).sub(lightHadrons), 3))) }})</span>
         {{ $legacyText(_s(pluralize("Light Hadron", totalLightHadrons))) }}
       </h2>
       <h2 v-if="hasDark">
         <LocalizedText id="ade.884971f9825801e2">
           <template #p0>{{ $legacyText(_s(formatHybridSmall(darkHadrons,3))) }}</template>
-          <template #p1><span v-if="totalDarkHadrons > darkHadrons">(+{{ $legacyText(_s(formatHybridSmall(totalDarkHadrons - darkHadrons, 3))) }})</span></template>
+          <template #p1><span v-if="new Decimal(totalDarkHadrons).gt(darkHadrons)">(+{{ $legacyText(_s(formatHybridSmall(new Decimal(totalDarkHadrons).sub(darkHadrons), 3))) }})</span></template>
           <template #p2>{{ $legacyText(_s(pluralize("Dark Hadron",totalDarkHadrons))) }}</template>
         </LocalizedText>
       </h2>
       <h2 v-if="hasExotic">
         <LocalizedText id="ade.884971f9825801e2">
           <template #p0>{{ $legacyText(_s(formatHybridSmall(exoticHadrons,3))) }}</template>
-          <template #p1><span v-if="totalExoticHadrons > exoticHadrons">(+{{ $legacyText(_s(formatHybridSmall(totalExoticHadrons - exoticHadrons, 3))) }})</span></template>
+          <template #p1><span v-if="new Decimal(totalExoticHadrons).gt(exoticHadrons)">(+{{ $legacyText(_s(formatHybridSmall(new Decimal(totalExoticHadrons).sub(exoticHadrons), 3))) }})</span></template>
           <template #p2>{{ $legacyText(_s(pluralize("Exotic Hadron",totalExoticHadrons))) }}</template>
         </LocalizedText>
       </h2>

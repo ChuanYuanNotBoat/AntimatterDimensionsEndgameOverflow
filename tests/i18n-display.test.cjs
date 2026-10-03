@@ -131,3 +131,29 @@ test("generic patterns cannot split multiword resource names into smaller matchi
   assert.equal(display.translate("You have ee400 Celestial Infinity Points.", "full"), "你有 ee400 天界无限点数。");
   assert.equal(display.translate("You have ee400 Infinity Points.", "short"), "你有 ee400 无限点数。");
 });
+
+test('short conjunction templates cannot reorder paragraphs or split named resources', () => {
+  const { service, display } = actual();
+  service.setLocale('zh-CN');
+  const unknown = 'New game systems and future rewards are described together in this paragraph.';
+  assert.equal(display.translate(unknown, 'EffarigTab'), unknown);
+  assert.equal(display.translate('1e100 Relic Shards'), '1e100 遗迹碎片');
+  assert.equal(display.translate('1e100 Celestial Infinity Points'), '1e100 天界无限点数');
+  assert.equal(display.translate('Unreleased Infinity Points'), 'Unreleased Infinity Points');
+  service.setLocale('en');
+  assert.equal(display.translate('1e100 Relic Shards'), '1e100 Relic Shards');
+});
+
+test('all dimension row names retain their ordinal and whole resource name', () => {
+  const { service, display } = actual();
+  service.setLocale('zh-CN');
+  const ordinals = ['第一','第二','第三','第四','第五','第六','第七','第八','第九'];
+  for (const resource of [['Antimatter Dimension','反物质维度'],['Infinity Dimension','无限维度'],['Matter Dimension','正物质维度']]) {
+    for (let tier = 1; tier <= 9; tier++) {
+      const suffix = tier === 1 ? 'st' : tier === 2 ? 'nd' : tier === 3 ? 'rd' : 'th';
+      assert.equal(display.translate(`${tier}${suffix} ${resource[0]}`), ordinals[tier-1]+resource[1]);
+    }
+  }
+  const scaling = 'Increased Galaxy cost scaling: Exponential scaling past 5,151,048 (remote), quadratic scaling past e100 (distant)';
+  assert.equal(display.translate(scaling, 'ModernAntimatterGalaxyRow'), scaling);
+});

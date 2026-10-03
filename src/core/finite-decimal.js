@@ -170,3 +170,10 @@ export function finiteNumber(input, fallback = 0, maxAbs = Number.MAX_VALUE) {
 export function minimumPositiveDecimal() {
   return floorPositive();
 }
+
+// Bound height before converting it to Number for break_eternity's tetration API.
+export function boundedTetrate10(height) {
+  const bounded = boundedSignedValue(height, "tetration height");
+  if (bounded.gte(ceiling().slog())) return ceiling();
+  return boundedPositiveValue(Decimal.tetrate(10, bounded.toNumber()), "tetration result");
+}

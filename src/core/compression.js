@@ -1,25 +1,38 @@
 import { RebuyableMechanicState, SetPurchasableMechanicState } from "./game-mechanics";
+import { canStartEndgameChallenge } from "./endgame-challenge";
+import { finiteDecimal, isFiniteDecimal, boundedPositivePower, boundedPositiveProduct,
+  boundedPositiveSum, boundedSignedProduct } from "./finite-decimal";
 
 export function startCompressionRequest() {
-  if (!PlayerProgress.compressionUnlocked()) return;
-  if (LHC.voidRunning || LHC.nullifiedVoidRunning || player.endgame.overcharge.isRunning || player.universes.current !== 0) return;
+  if (!PlayerProgress.compressionUnlocked()) return false;
   if (player.compression.active) {
-    if (player.options.confirmations.compression) {
-      Modal.exitCompression.show();
-    } else {
-      rewardHR();
-      Endgame.resetNoReward();
-      player.compression.active = false;
-    }
-  } else if (player.options.confirmations.compression) {
-    Modal.enterCompression.show();
+    if (!player.options.confirmations.compression) return exitCompression();
+    Modal.exitCompression.show();
   } else {
-    Endgame.resetNoReward();
-    clearCelestialRuns();
-    player.compression.active = true;
-    recalculateAllGlyphs();
-    Tab.dimensions.antimatter.show(false);
+    if (!canStartEndgameChallenge()) return false;
+    if (!player.options.confirmations.compression) return enterCompression();
+    Modal.enterCompression.show();
   }
+  return true;
+}
+
+export function enterCompression() {
+  if (!PlayerProgress.compressionUnlocked() || !canStartEndgameChallenge()) return false;
+  Endgame.resetNoReward();
+  clearCelestialRuns();
+  player.compression.active = true;
+  recalculateAllGlyphs();
+  Tab.dimensions.antimatter.show(false);
+  return true;
+}
+
+export function exitCompression() {
+  if (!player.compression.active) return false;
+  rewardHR();
+  Endgame.resetNoReward();
+  player.compression.active = false;
+  recalculateAllGlyphs();
+  return true;
 }
 
 const COMP_UPG_NAMES = [
@@ -28,33 +41,64 @@ const COMP_UPG_NAMES = [
 ];
 
 export function buyCompressionUpgrade(id, bulk = 1) {
-  if (GameEnd.creditsEverClosed) return false;
-  // Upgrades 1-3 are rebuyable, and can be automatically bought in bulk with a perk shop upgrade
+  if (GameEnd.creditsEverClosed || !Number.isInteger(id) || id < 1 || id > 10 ||
+      !PlayerProgress.compressionUnlocked()) return false;
   const upgrade = CompressionUpgrade[COMP_UPG_NAMES[id]];
   if (id > 3) {
-    if (player.compression.upgrades.has(id)) return false;
-    if (!Currency.thermalRadiation.purchase(upgrade.cost)) return false;
+    if (player.compression.upgrades.has(id) || !Currency.thermalRadiation.purchase(upgrade.cost)) return false;
     player.compression.upgrades.add(id);
-    if (id === 4) player.compression.totalElectromagneticWaves = player.compression.totalElectromagneticWaves.times(2);
-  } else {
-    const upgAmount = player.compression.rebuyables[id];
-    if (Currency.thermalRadiation.lt(upgrade.cost) || upgAmount >= upgrade.config.purchaseCap) return false;
-
-    let buying = Decimal.affordGeometricSeries(Currency.thermalRadiation.value,
-      upgrade.config.initialCost, upgrade.config.increment, upgAmount).toNumber();
-    buying = Math.clampMax(buying, bulk);
-    buying = Math.clampMax(buying, upgrade.purchaseCap - upgAmount);
-    const cost = Decimal.sumGeometricSeries(buying, upgrade.config.initialCost, upgrade.config.increment, upgAmount);
-    Currency.thermalRadiation.subtract(cost);
-    player.compression.rebuyables[id] += buying;
-    if (id === 2) {
-      if (true) Currency.thermalRadiation.reset();
-      player.compression.nextThreshold = DC.E3;
-      player.compression.baseElectromagneticWaves = DC.D0;
-      player.compression.totalElectromagneticWaves = DC.D0;
-    }
+    if (id === 4) updateElectromagneticWaves();
+    return true;
+  }
+  const current = player.compression.rebuyables[id];
+  const cap = Math.min(Number.MAX_SAFE_INTEGER, upgrade.purchaseCap);
+  if (!Number.isSafeInteger(current) || current < 0 || current >= cap ||
+      !(bulk > 0) || (!Number.isFinite(bulk) && bulk !== Infinity)) return false;
+  const limit = Math.min(cap - current, Math.floor(bulk));
+  const budget = finiteDecimal(Currency.thermalRadiation.value, "Compression purchase budget");
+  if (budget.lt(0)) throw new Error("Negative Compression purchase budget");
+  const price = count => Decimal.sumGeometricSeries(count,
+    upgrade.config.initialCost, upgrade.config.increment, current);
+  // Search actual total prices. An inverse converted to Number can be Infinity or lose purchases.
+  let affordable = 0;
+  let upper = limit;
+  while (affordable < upper) {
+    const middle = affordable + Math.ceil((upper - affordable) / 2);
+    const cost = price(middle);
+    if (isFiniteDecimal(cost) && cost.gt(0) && cost.lte(budget)) affordable = middle;
+    else upper = middle - 1;
+  }
+  if (affordable === 0 || !Currency.thermalRadiation.purchase(price(affordable))) return false;
+  player.compression.rebuyables[id] += affordable;
+  if (id === 2) {
+    Currency.thermalRadiation.reset();
+    player.compression.nextThreshold = DC.E3;
+    player.compression.baseElectromagneticWaves = DC.D0;
+    player.compression.totalElectromagneticWaves = DC.D0;
   }
   return true;
+}
+
+export function updateElectromagneticWaves() {
+  const thresholdMult = getElectroWaveMult();
+  const radiation = Currency.thermalRadiation.value;
+  if (radiation.gte(1000)) {
+    let earned = radiation.log10().sub(3).div(Math.log10(thresholdMult)).floor().add(1);
+    // Correct logarithm rounding at exact thresholds without looping over earned waves.
+    for (let i = 0; i < 2; i++) {
+      const next = earned.add(1);
+      if (next.eq(earned)) break;
+      if (radiation.gte(Decimal.pow(thresholdMult, earned).times(1000))) earned = next;
+      else if (earned.gt(0) && radiation.lt(Decimal.pow(thresholdMult, earned.sub(1)).times(1000))) {
+        earned = earned.sub(1);
+      } else break;
+    }
+    player.compression.baseElectromagneticWaves = player.compression.baseElectromagneticWaves.max(earned);
+  }
+  player.compression.nextThreshold = boundedPositiveProduct(1000,
+    boundedPositivePower(thresholdMult, player.compression.baseElectromagneticWaves));
+  player.compression.totalElectromagneticWaves = boundedPositiveProduct(
+    player.compression.baseElectromagneticWaves, Effects.max(1, CompressionUpgrade.doubleWaves));
 }
 
 export function getElectroWaveMult(thresholdUpgrade) {
@@ -65,34 +109,34 @@ export function getElectroWaveMult(thresholdUpgrade) {
 }
 
 export function getThermalRadiationGainPerSecond() {
-  let trRate = new Decimal(Currency.hawkingRadiation.value)
+  const trRate = new Decimal(Currency.hawkingRadiation.value)
     .timesEffectsOf(
       CompressionUpgrade.trGain,
       EndgameMastery(281),
       EndgameMastery(282),
       EndgameMastery(283),
       Achievement(276)
-    ).times(DivinityMilestone.serpentPower.isReached ? 10 : 1);
-  return trRate;
+    );
+  return boundedPositiveProduct(trRate, DivinityMilestone.serpentPower.isReached ? 10 : 1);
 }
 
 export function getNextThermalRadiationGainPerSecond() {
-  let trRate = new Decimal(Currency.hawkingRadiation.value.add(getHawkingRadiationGain(true)))
+  const trRate = boundedPositiveSum(Currency.hawkingRadiation.value, getHawkingRadiationGain(true))
     .timesEffectsOf(
       CompressionUpgrade.trGain,
       EndgameMastery(281),
       EndgameMastery(282),
       EndgameMastery(283),
       Achievement(276)
-    ).times(DivinityMilestone.serpentPower.isReached ? 10 : 1);
-  return trRate;
+    );
+  return boundedPositiveProduct(trRate, DivinityMilestone.serpentPower.isReached ? 10 : 1);
 }
 
 export function hawkingRadiationMultiplier() {
-  return DC.D1.timesEffectsOf(
+  return boundedPositiveProduct(DC.D1.timesEffectsOf(
     CompressionUpgrade.hrGain,
     Achievement(276)
-  ).times(DivinityMilestone.powerBurst.isReached ? 10 : 1).times(DivinityMilestone.serpentPower.isReached ? 10 : 1);
+  ), (DivinityMilestone.powerBurst.isReached ? 10 : 1) * (DivinityMilestone.serpentPower.isReached ? 10 : 1));
 }
 
 export function rewardHR() {
@@ -105,13 +149,13 @@ export function rewardHR() {
 // act dynamically on this fixed base value elsewhere solves that issue
 export function getBaseHR(antimatter, requireInfinity) {
   if (!Player.canCrunch && requireInfinity) return DC.D0;
-  let baseHR = Decimal.pow10(Decimal.log10(Decimal.log10(antimatter).div(308)).pow(0.5).times(2));
-  return baseHR;
+  if (Decimal.lt(antimatter, Decimal.pow10(308))) return DC.D0;
+  return boundedPositivePower(10, Decimal.log10(Decimal.log10(antimatter).div(308)).sqrt().times(2));
 }
 
 // Returns the TP that would be gained this run
 export function getHR(antimatter, requireInfinity) {
-  return getBaseHR(antimatter, requireInfinity).times(hawkingRadiationMultiplier());
+  return boundedPositiveProduct(getBaseHR(antimatter, requireInfinity), hawkingRadiationMultiplier());
 }
 
 // Returns the amount of TP gained, subtracting out current TP; used for displaying gained TP, text on the
@@ -143,8 +187,9 @@ export function compressedMultiplier(value) {
   const log10 = value.log10();
   const antimatterPenalty = player.antimatter.max(10).log10().log10().div(500).min(0.01);
   const timePenalty = Decimal.pow(CompressionUpgrade.compressionPenalty.isBought ? 0.98 : 0.99, Time.thisEndgameRealTime.totalHours.cbrt());
-  const compressionPenalty = Decimal.pow(antimatterPenalty, timePenalty);
-  return Decimal.pow10(new Decimal(Decimal.sign(log10)).times(Decimal.pow(Decimal.abs(log10), compressionPenalty)));
+  const compressionPenalty = boundedPositivePower(antimatterPenalty, timePenalty);
+  return boundedPositivePower(10, boundedSignedProduct(Decimal.sign(log10),
+    boundedPositivePower(Decimal.abs(log10), compressionPenalty)));
 }
 
 class CompressionUpgradeState extends SetPurchasableMechanicState {
@@ -157,7 +202,7 @@ class CompressionUpgradeState extends SetPurchasableMechanicState {
   }
 
   onPurchased() {
-    if (this.id === 4) player.compression.totalElectromagneticWaves = player.compression.totalElectromagneticWaves.times(2);
+    if (this.id === 4) updateElectromagneticWaves();
   }
 }
 
@@ -175,7 +220,8 @@ class RebuyableCompressionUpgradeState extends RebuyableMechanicState {
   }
 
   get isCapped() {
-    return this.config.reachedCap();
+    return !Number.isSafeInteger(this.boughtAmount) ||
+      this.boughtAmount >= Math.min(Number.MAX_SAFE_INTEGER, this.purchaseCap);
   }
 
   get purchaseCap() {
@@ -183,7 +229,7 @@ class RebuyableCompressionUpgradeState extends RebuyableMechanicState {
   }
 
   purchase(bulk) {
-    buyCompressionUpgrade(this.config.id, bulk);
+    return buyCompressionUpgrade(this.config.id, bulk);
   }
 }
 

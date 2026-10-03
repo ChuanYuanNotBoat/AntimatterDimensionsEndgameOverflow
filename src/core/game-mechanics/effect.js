@@ -24,9 +24,9 @@ export class Effect {
     const addGetter = (property, v, label) => {
       if (isConstant(v)) {
         property.writable = false;
-        property.value = finiteEffectValue(v, label);
+        property.value = finiteEffectValue(v, `${label} (${this.constructor.name}:${this._config?.id ?? ""})`);
       } else if (isFunction(v)) {
-        property.get = () => finiteEffectValue(v(), label);
+        property.get = () => finiteEffectValue(v(), `${label} (${this.constructor.name}:${this._config?.id ?? ""})`);
       } else {
         throw new Error("Unknown getter type.");
       }
@@ -59,10 +59,10 @@ export class Effect {
       } else if (isFunction(effect)) {
         effectValueProperty.configurable = true;
         effectValueProperty.get = () => {
-          const first = finiteEffectValue(effect());
+          const first = finiteEffectValue(effect(), `effect value (${this.constructor.name}:${this._config?.id ?? ""})`);
           const specializedProperty = createProperty();
-          if (isNumber(first)) specializedProperty.get = () => Math.min(finiteEffectValue(effect()), this.cap);
-          else if (isDecimal(first)) specializedProperty.get = () => Decimal.min(finiteEffectValue(effect()), this.cap);
+          if (isNumber(first)) specializedProperty.get = () => Math.min(finiteEffectValue(effect(), `effect value (${this.constructor.name}:${this._config?.id ?? ""})`), this.cap);
+          else if (isDecimal(first)) specializedProperty.get = () => Decimal.min(finiteEffectValue(effect(), `effect value (${this.constructor.name}:${this._config?.id ?? ""})`), this.cap);
           else throw new Error("Unknown effect value type.");
           Object.defineProperty(this, "effectValue", specializedProperty);
           return specializedProperty.get();
@@ -84,18 +84,18 @@ export class Effect {
       } else if (isFunction(effect)) {
         effectValueProperty.configurable = true;
         effectValueProperty.get = () => {
-          const first = finiteEffectValue(effect());
+          const first = finiteEffectValue(effect(), `effect value (${this.constructor.name}:${this._config?.id ?? ""})`);
           const specializedProperty = createProperty();
           if (isNumber(first)) {
             specializedProperty.get = () => {
               const capValue = this.cap;
-              const value = finiteEffectValue(effect());
+              const value = finiteEffectValue(effect(), `effect value (${this.constructor.name}:${this._config?.id ?? ""})`);
               return capValue === undefined ? value : Math.min(value, capValue);
             };
           } else if (isDecimal(first)) {
             specializedProperty.get = () => {
               const capValue = this.cap;
-              const value = finiteEffectValue(effect());
+              const value = finiteEffectValue(effect(), `effect value (${this.constructor.name}:${this._config?.id ?? ""})`);
               return capValue === undefined ? value : Decimal.min(value, capValue);
             };
           } else throw new Error("Unknown effect value type.");

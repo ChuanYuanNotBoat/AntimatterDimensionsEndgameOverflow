@@ -991,10 +991,10 @@ window.player = {
         light: 0,
         dark: 0,
         exotic: 0,
-        trueTotal: 0,
-        totalLight: 0,
-        totalDark: 0,
-        totalExotic: 0
+        trueTotal: DC.D0,
+        totalLight: DC.D0,
+        totalDark: DC.D0,
+        totalExotic: DC.D0
       }
     },
     pelle: {
@@ -1381,19 +1381,19 @@ window.player = {
       records: {
         antimatter: DC.E1,
         dimensions: {
-          antimatter: Array.range(0, 8).map(() => ({
+          antimatter: Array.range(0, 9).map(() => ({
             bought: DC.D0,
             costBumps: DC.D0,
             amount: DC.D0
           })),
-          infinity: Array.range(0, 8).map(tier => ({
+          infinity: Array.range(0, 9).map(tier => ({
             isUnlocked: false,
             bought: DC.D0,
             amount: DC.D0,
             cost: [DC.E8, DC.E9, DC.E10, DC.E20, DC.E140, DC.E200, DC.E250, DC.E280, new Decimal(Infinity)][tier],
             baseAmount: DC.D0
           })),
-          time: Array.range(0, 8).map(tier => ({
+          time: Array.range(0, 9).map(tier => ({
             cost: [DC.D1, DC.D5, DC.E2, DC.E3, DC.E2350, DC.E2650, DC.E3000, DC.E3350, new Decimal(Infinity)][tier],
             amount: DC.D0,
             bought: DC.D0
@@ -1774,11 +1774,13 @@ window.player = {
       chargesLeft: {
         infinite: 0,
         eternal: 0,
+        complex: 0,
         temporal: 0
       },
       discharge: {
         infinite: false,
         eternal: false,
+        complex: false,
         temporal: false
       },
       allowComplex: true

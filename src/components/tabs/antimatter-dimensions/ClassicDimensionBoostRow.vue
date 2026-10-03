@@ -20,13 +20,22 @@ export default {
       creditsClosed: false,
       requirementText: null,
       hasTutorial: false,
+      isFlipped: false,
       hasSurge: false
     };
   },
   computed: {
     isDoomed: () => Pelle.isDoomed,
     dimName() {
-      return AntimatterDimension(this.requirement.tier).displayName;
+      return this.$t("ui.dimensionName", {
+        ordinal: this.$t(`terms.dimension.ordinal${this.requirement.tier}`, {}, "ordinal"),
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural")
+      });
+    },
+    requirementTextDisplay() {
+      return this.$t("ui.dimensionRequirement", {
+        amount: formatHybridLarge(this.requirement.amount, 3), dimension: this.dimName
+      });
     },
     boostCountText() {
       if (this.requirementText) return this.requirementText;
@@ -69,6 +78,7 @@ export default {
       if (this.isDoomed) this.requirementText = formatHybridLarge(this.purchasedBoosts, 3);
       this.hasTutorial = Tutorial.isActive(TUTORIAL_STATE.DIMBOOST);
       this.hasSurge = Ascensions.dbA.isUnlocked;
+      this.isFlipped = player.universes.current === 2;
     },
     dimensionBoost(bulk) {
       if (!DimBoost.requirement.isSatisfied || !DimBoost.canBeBought) return;
@@ -82,7 +92,7 @@ export default {
   <div class="c-dimension-row c-antimatter-dim-row c-antimatter-prestige-row">
     <div class="l-dim-row__prestige-text c-dim-row__label c-dim-row__label--amount">
       {{ $legacyText(_s(dimBoostName)) }} ({{ $legacyText(_s(boostCountText)) }}):
-      requires {{ $legacyText(_s(formatHybridLarge(requirement.amount, 3))) }} {{ $legacyText(_s(dimName)) }} Dimensions
+      {{ requirementTextDisplay }}
       <span v-if="hasSurge">{{ $legacyText(_s(imaginaryText)) }}</span>
     </div>
     <PrimaryButton

@@ -1,3 +1,4 @@
+import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "../../finite-decimal";
 import { GameMechanicState } from "../../game-mechanics";
 
 import { deepmergeAll } from "@/utility/deepmerge";
@@ -228,7 +229,7 @@ const SingularityMilestoneThresholds = (function() {
 
 export const Singularity = {
   get cap() {
-    return Decimal.pow(10, player.celestials.laitela.singularityCapIncreases).times(200);
+    return boundedPositiveProduct(boundedPositivePower(10, player.celestials.laitela.singularityCapIncreases), 200);
   },
 
   get gainPerCapIncrease() {
@@ -238,14 +239,19 @@ export const Singularity = {
 
   get singularitiesGained() {
     const entropicCondensing = (EndgameMastery(131).isBought && !player.disablePostReality)
-      ? Decimal.pow(new Decimal(ImaginaryUpgrade(10).effectOrDefault(1)).add(1), Decimal.max(new Decimal(ImaginaryUpgrade(10).effectOrDefault(1)), 1))
+      ? boundedPositivePower(boundedPositiveSum(ImaginaryUpgrade(10).effectOrDefault(1), 1),
+        Decimal.max(ImaginaryUpgrade(10).effectOrDefault(1), 1))
       : new Decimal(ImaginaryUpgrade(10).effectOrDefault(0)).add(1);
-    return Decimal.floor(Decimal.pow(this.gainPerCapIncrease, player.celestials.laitela.singularityCapIncreases).times(
-      SingularityMilestone.singularityMult.effectOrDefault(new Decimal(1)).times(entropicCondensing).times(
-      DualityUpgrade(10).effectOrDefault(1)))).times(Hadrons.singularityMultiplier).powEffectsOf(
-      SingularityMilestone.divinitySingPower, SingularityMilestone.hadronEffect1Improvement, Achievement(277)).pow(
-      DivinityMilestone.powerBurst.isReached ? player.records.bestEndgame.galaxies.max(10).log10().log10().sub(4).max(0).div(5).add(1).pow(3) : 1).pow(
-      DivinityMilestone.serpentPower.isReached ? 2 : 1);
+    let gained = boundedPositiveProduct(boundedPositivePower(this.gainPerCapIncrease,
+      player.celestials.laitela.singularityCapIncreases), boundedPositiveProduct(
+      SingularityMilestone.singularityMult.effectOrDefault(DC.D1), boundedPositiveProduct(entropicCondensing,
+        DualityUpgrade(10).effectOrDefault(1)))).floor();
+    gained = boundedPositiveProduct(gained, Hadrons.singularityMultiplier).powEffectsOf(
+      SingularityMilestone.divinitySingPower, SingularityMilestone.hadronEffect1Improvement, Achievement(277));
+    const burst = DivinityMilestone.powerBurst.isReached
+      ? boundedPositivePower(player.records.bestEndgame.galaxies.max(10).log10().log10().sub(4).max(0).div(5).add(1), 3)
+      : DC.D1;
+    return boundedPositivePower(boundedPositivePower(gained, burst), DivinityMilestone.serpentPower.isReached ? 2 : 1);
   },
 
   // Time (in seconds) to go from 0 DE to the condensing requirement
@@ -268,20 +274,15 @@ export const Singularity = {
   },
 
   increaseCap() {
-    if (player.celestials.laitela.singularityCapIncreases.gt(5e11)) {
-      player.celestial.laitela.singularityCapIncreases
-        .add(Decimal.pow10(new Decimal(player.celestial.laitela.singularityCapIncreases.log(10)).sub(10).floor()));
-    }
-    player.celestials.laitela.singularityCapIncreases = player.celestials.laitela.singularityCapIncreases.add(1);
+    const current = player.celestials.laitela.singularityCapIncreases;
+    const step = current.gt(5e11) ? Decimal.pow10(current.log10().sub(10).floor()) : DC.D0;
+    player.celestials.laitela.singularityCapIncreases = boundedPositiveSum(current, boundedPositiveSum(step, 1));
   },
 
   decreaseCap() {
-    if (player.celestials.laitela.singularityCapIncreases.eq(0)) return;
-    if (player.celestials.laitela.singularityCapIncreases.gt(5e11)) {
-      player.celestial.laitela.singularityCapIncreases
-        .sub(Decimal.pow10(new Decimal(player.celestial.laitela.singularityCapIncreases.log(10)).sub(10).floor()));
-    }
-    player.celestials.laitela.singularityCapIncreases = player.celestials.laitela.singularityCapIncreases.sub(1);
+    const current = player.celestials.laitela.singularityCapIncreases;
+    const step = current.gt(5e11) ? Decimal.pow10(current.log10().sub(10).floor()) : DC.D0;
+    player.celestials.laitela.singularityCapIncreases = current.sub(boundedPositiveSum(step, 1)).max(0);
   },
 
   perform() {

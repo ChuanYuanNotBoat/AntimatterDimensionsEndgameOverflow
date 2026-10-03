@@ -2292,7 +2292,7 @@ export const normalAchievements = [
     id: 274,
     name: "Covalent Bonding",
     get description() { return `Obtain ${formatInt(200)} Hadrons.` },
-    checkRequirement: () => player.celestials.laitela.hadrons.trueTotal >= 200,
+    checkRequirement: () => Decimal.gte(player.celestials.laitela.hadrons.trueTotal, 200),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     progress: () => Achievement(274).isUnlocked ? DC.D1 : Decimal.clamp(new Decimal(player.celestials.laitela.hadrons.trueTotal).div(200), 0, 1)
   },

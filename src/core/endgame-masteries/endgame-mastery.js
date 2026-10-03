@@ -72,7 +72,7 @@ export class EndgameMasteryState extends EndgameMasteriesState {
   }
 
   get canBeBought() {
-    return this.checkRequirement() && this.checkSetRequirement();
+    return this.isUnlocked && this.checkRequirement() && this.checkSetRequirement();
   }
 
   get isEffectActive() {
@@ -153,7 +153,7 @@ export function EndgameMastery(id) {
  * @returns {EndgameMasteryState[]}
  */
 EndgameMastery.boughtEM = function() {
-  return player.endgameMasteries.masteries.map(id => EndgameMastery(id));
+  return [...new Set(player.endgameMasteries.masteries)].map(id => EndgameMastery(id)).filter(Boolean);
 };
 
 EndgameMastery.preferredPaths = {

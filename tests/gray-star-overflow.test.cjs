@@ -12,7 +12,8 @@ function world(amount) {
   const formatted = [];
   const context = vm.createContext({
     Decimal, window: {},
-    DC: { D0: new Decimal(0) },
+    DC: { D0: new Decimal(0), D1: new Decimal(1), BEMAX: new Decimal('10^^9000000000000000') },
+    Universes: {stellarAugmentersToGrayStarEffectiveness:new Decimal(1)},
     player: { disablePostReality: false, endgame: { ethereal: { stars: { gray: new Decimal(amount) } } } },
     format: value => {
       assert.ok(Decimal.isFinite(value));
@@ -20,10 +21,11 @@ function world(amount) {
       return value.toString();
     },
   });
+  vm.runInContext(read('finite-decimal.js').replace(/^export /gm, ''), context);
   vm.runInContext(read('format.js'), context);
   context.formatDecimalPercents = context.window.formatDecimalPercents;
   context.formatPercents = context.window.formatPercents;
-  vm.runInContext(read('secret-formula/endgame/stars.js').replace('export const stars =', 'this.stars ='), context);
+  vm.runInContext(read('secret-formula/endgame/stars.js').replace(/^import\s+[^;]+;\n/gm, '').replace('export const stars =', 'this.stars ='), context);
   return { context, formatted };
 }
 

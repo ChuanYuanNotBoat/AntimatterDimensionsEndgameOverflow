@@ -1,3 +1,4 @@
+import { canStartEndgameChallenge } from "./endgame-challenge";
 import { GameMechanicState, RebuyableMechanicState, SetPurchasableMechanicState } from "./game-mechanics";
 import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "./finite-decimal";
 
@@ -273,7 +274,8 @@ class PowerCoreState extends GameMechanicState {
   }
 
   get isAffordable() {
-    return player.celestials.laitela.hadrons.trueTotal >= this.cost;
+    return Number.isSafeInteger(this.boughtAmount) && this.boughtAmount < Number.MAX_SAFE_INTEGER &&
+      Decimal.gte(player.celestials.laitela.hadrons.trueTotal, this.cost);
   }
 
   get cost() {
@@ -285,7 +287,6 @@ class PowerCoreState extends GameMechanicState {
   }
 
   set boughtAmount(value) {
-    const diff = Math.clampMin(value - player.endgame.largeHadronCollider.powerCores, 0);
     player.endgame.largeHadronCollider.powerCores = value;
     this.cachedCost.invalidate();
     this.cachedEffectValue.invalidate();
@@ -306,24 +307,22 @@ class PowerCoreState extends GameMechanicState {
   }
 
   costInv() {
-    let cur = player.celestials.laitela.hadrons.trueTotal;
-    return Math.floor(cur / 5 - 14);
+    return new Decimal(player.celestials.laitela.hadrons.trueTotal).div(5).sub(14)
+      .floor().clamp(0, Number.MAX_SAFE_INTEGER).toNumber();
   }
 
-  buyMax(auto) {
+  buyMax() {
     if (!this.isAffordable) return false;
-    let bulk = Math.floor(this.costInv());
-    if (bulk < 1) return false;
-    const price = this.costAfterCount(bulk - 1);
-    bulk = Math.max(bulk - this.boughtAmount, 0);
-    if (bulk === 0) return false;
-    this.boughtAmount = this.boughtAmount + bulk;
-    let i = 0;
-    while (player.celestials.laitela.hadrons.trueTotal > this.costAfterCount(this.boughtAmount) &&
-    i < 50 && this.boughtAmount < 9e15) {
-      this.boughtAmount = this.boughtAmount + 1;
-      i += 1;
+    const money = new Decimal(player.celestials.laitela.hadrons.trueTotal);
+    let affordable = this.boughtAmount;
+    let upper = Number.MAX_SAFE_INTEGER;
+    while (affordable < upper) {
+      const middle = affordable + Math.ceil((upper - affordable) / 2);
+      if (money.gte(this.costAfterCount(middle - 1))) affordable = middle;
+      else upper = middle - 1;
     }
+    if (affordable === this.boughtAmount) return false;
+    this.boughtAmount = affordable;
     return true;
   }
 
@@ -332,15 +331,14 @@ class PowerCoreState extends GameMechanicState {
   }
 
   costAfterCount(count) {
-    return 5 * count + 75;
+    return new Decimal(count).times(5).add(75);
   }
 }
 
 LHC.powerCores = new PowerCoreState();
 
 export function enterTheVoid() {
-  if (Slabdrill.isCursed || player.endgame.overcharge.isRunning || player.compression.active || player.universes.current !== 0) return;
-  if (GameEnd.creditsEverClosed) return;
+  if (!canStartEndgameChallenge() || !ExpansionPack.alphaPack.isBought) return false;
   player.disablePostReality = true;
   Endgame.resetNoReward();
   disChargeAllPerkUpgrades();
@@ -377,30 +375,31 @@ export function enterTheVoid() {
   if (NullUpgrade.limerick4.isBought) {
     if (!player.dilation.studies.includes(1)) player.dilation.studies.push(1);
   }
-};
+  return true;
+}
 
 export function exitTheVoid() {
-  if (Slabdrill.isCursed || player.endgame.overcharge.isRunning || player.compression.active || player.universes.current !== 0) return;
-  if (GameEnd.creditsEverClosed) return;
+  if (!LHC.voidRunning || GameEnd.creditsEverClosed) return false;
   player.disablePostReality = false;
   Endgame.resetNoReward();
   player.endgame.overcharge.allowComplex = true;
   player.endgame.largeHadronCollider.void.isRunning = false;
-};
+  return true;
+}
 
 export function enterNullifiedVoid() {
-  if (Slabdrill.isCursed) return;
-  if (GameEnd.creditsEverClosed) return;
+  if (!canStartEndgameChallenge() || !player.endgame.largeHadronCollider.void.nullified || !ExpansionPack.alphaPack.isBought) return false;
   Endgame.resetNoReward();
   player.endgame.largeHadronCollider.void.isRunning = true;
-};
+  return true;
+}
 
 export function exitNullifiedVoid() {
-  if (Slabdrill.isCursed) return;
-  if (GameEnd.creditsEverClosed) return;
+  if (!player.endgame.largeHadronCollider.void.nullifiedVoidRunning || GameEnd.creditsEverClosed) return false;
   Endgame.resetNoReward();
   player.endgame.largeHadronCollider.void.isRunning = false;
-};
+  return true;
+}
 
 export class NullUpgradeState extends SetPurchasableMechanicState {
   get name() {

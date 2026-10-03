@@ -1,5 +1,5 @@
 import { DimensionState } from "./dimension";
-import { boundedPositivePower, boundedPositiveProduct } from "../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct, boundedTetrate10 } from "../finite-decimal";
 
 // Multiplier applied to all Antimatter Dimensions, regardless of tier. This is cached using a Lazy
 // and invalidated every update.
@@ -883,24 +883,24 @@ class AntimatterDimensionState extends DimensionState {
       checkpoint = production;
       if (production.gt(1) && player.endgame.overcharge.isRunning) {
         const slog = production.slog();
-        production = Decimal.tetrate(10, slog.times(0.75).toNumber());
+        production = boundedTetrate10(slog.times(0.75));
       }
       record?.("overcharge", "softcap", checkpoint, "Overcharge tetration compression");
       checkpoint = production;
       if (production.gt(1) && player.endgame.overcharge.isRunning) {
-        if (DivinityMilestone.powerBurst.isReached) production = production.pow(Time.thisEndgameRealTime.totalSeconds.max(1).log10().pow(0.5).div(10).add(1));
+        if (DivinityMilestone.powerBurst.isReached) production = boundedPositivePower(production, Time.thisEndgameRealTime.totalSeconds.max(1).log10().pow(0.5).div(10).add(1));
       }
       record?.("overchargePowerBurst", "power", checkpoint, "Divinity Power Burst after Overcharge");
       checkpoint = production;
       if (production.gt(1) && player.universes.current === 1) {
         const slog = production.slog();
-        production = Decimal.tetrate(10, slog.times(0.9).toNumber());
+        production = boundedTetrate10(slog.times(0.9));
       }
       record?.("transientUniverse", "softcap", checkpoint, "Transient Universe: production tetration transform");
       checkpoint = production;
       if (production.gt(1) && player.universes.current === 2) {
         const slog = production.slog();
-        production = Decimal.tetrate(10, slog.times(0.5).add(1).add(Currency.molecularMass.value.max(1).slog().div(2).sub(1).max(0)).toNumber());
+        production = boundedTetrate10(slog.times(0.5).add(1).add(Currency.molecularMass.value.max(1).slog().div(2).sub(1).max(0)));
       }
       record?.("tangibleUniverse", "formula", checkpoint, "Tangible Universe: Molecular Mass production transform");
     } else if (tier === 1 && diagnostic) {

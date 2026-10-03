@@ -115,7 +115,7 @@ test('Chapter 3 unlocks accept Decimal Divinity counts without implicit conversi
   const context = contextFor(0);
   context.NormalChallenge = () => ({ isCharged: false });
   context.GalacticPowers = { stelliferousUniverse: { isUnlocked: false } };
-  vm.runInContext(read('core/universes.js').replace(/^export /gm, '') + '\nthis.Universes = Universes;', context);
+  vm.runInContext(read('core/universes.js').replace(/^import\s+[^;]+;\n/gm, '').replace(/^export /gm, '') + '\nthis.Universes = Universes;', context);
   const requirements = [...read('core/secret-formula/achievements/normal-achievements.js')
     .matchAll(/checkRequirement: (\(\) => player\.celestials\.pelle\.divinities[^,]+),/g)]
     .map(match => vm.runInContext(`(${match[1]})`, context));

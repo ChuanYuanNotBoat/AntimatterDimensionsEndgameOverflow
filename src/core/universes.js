@@ -1,3 +1,6 @@
+import { canStartEndgameChallenge } from "./endgame-challenge";
+import { boundedPositivePower, boundedPositiveProduct } from "./finite-decimal";
+
 export const Universes = {
   get areUnlocked() {
     for (let u = 1; u < 9; u++) {
@@ -18,7 +21,8 @@ export const Universes = {
         unlocked = false;
         break;
       case 4:
-        unlocked = GalacticPowers.stelliferousUniverse.isUnlocked;
+        // Entry and rewards are not implemented yet.
+        unlocked = false;
         break;
       case 5:
         unlocked = false;
@@ -50,6 +54,7 @@ export const Universes = {
 };
 
 export function tryEnterUniverse(id) {
+  if (!Universes.isUnlocked(id) || !canStartEndgameChallenge()) return false;
   let name;
   switch (id) {
     case 1:
@@ -81,44 +86,50 @@ export function tryEnterUniverse(id) {
       break;
   }
   if (player.options.confirmations.universes) {
-    Modal.enterUniverse.show({ name: name, number: id });
+    Modal.enterUniverse.show({ name, number: id });
   } else {
-    enterUniverse(id);
+    return enterUniverse(id);
   }
+  return true;
 }
 
 export function enterUniverse(id) {
-  if (LHC.voidRunning || LHC.nullifiedVoidRunning || player.endgame.overcharge.isRunning || player.compression.active) return;
+  if (!Universes.isUnlocked(id) || !canStartEndgameChallenge()) return false;
   Endgame.resetNoReward();
   clearCelestialRuns();
   player.universes.current = id;
   recalculateAllGlyphs();
   Tab.dimensions.antimatter.show(false);
-};
+  return true;
+}
 
 export function exitUniverse(id) {
+  if (![1, 2].includes(id) || player.universes.current !== id) return false;
+  const peak = id === 1 ? player.universes.highestTransientAntimatter : player.universes.highestTangibleMatter;
+  const reward = boundedPositivePower(peak.max(1e10).log10().log10(), 3);
   Endgame.resetNoReward();
   player.universes.current = 0;
   if (id === 1) {
     player.universes.relativisticParticles = DC.D0;
-    player.universes.ephemeralLight = player.universes.ephemeralLight.add(
-      player.universes.highestTransientAntimatter.max(1e10).log10().log10().pow(3).sub(player.universes.ephemeralLight).max(0));
-  }
-  if (id === 2) {
+    player.universes.ephemeralLight = player.universes.ephemeralLight.max(reward);
+  } else {
     player.universes.molecularMass = DC.D0;
-    player.universes.stellarAugmenters = player.universes.stellarAugmenters.add(
-      player.universes.highestTangibleMatter.max(1e10).log10().log10().pow(3).sub(player.universes.stellarAugmenters).max(0));
+    player.universes.stellarAugmenters = player.universes.stellarAugmenters.max(reward);
   }
-};
+  recalculateAllGlyphs();
+  return true;
+}
 
 export function getRelativisticParticlesPerSecond() {
   if (player.universes.current !== 1) return DC.D0;
-  return player.antimatter.max(10).log10().times(Time.thisEndgameRealTime.totalSeconds).pow(2.5);
+  return boundedPositivePower(boundedPositiveProduct(player.antimatter.max(10).log10(),
+    Time.thisEndgameRealTime.totalSeconds), 2.5);
 }
 
 export function getMolecularMassPerSecond() {
   if (player.universes.current !== 2) return DC.D0;
-  return player.antimatter.max(10).log10().times(Time.thisEndgameRealTime.totalSeconds).pow(2);
+  return boundedPositivePower(boundedPositiveProduct(player.antimatter.max(10).log10(),
+    Time.thisEndgameRealTime.totalSeconds), 2);
 }
 
 export function universesUI(id) {

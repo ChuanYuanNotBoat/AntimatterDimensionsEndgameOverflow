@@ -383,11 +383,13 @@ class EternityUpgradeState extends SetPurchasableMechanicState {
     return this.isBought &&
       this.hasChargeEffect &&
       !this.isCharged &&
-      player.endgame.overcharge.chargesLeft.eternal !== 0;
+      player.endgame.overcharge.completions.eter > player.endgame.overcharge.charged.eternal.size;
   }
 
   charge() {
+    if (!this.canCharge) return false;
     player.endgame.overcharge.charged.eternal.add(this.id);
+    return true;
   }
 
   disCharge() {

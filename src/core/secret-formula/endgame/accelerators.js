@@ -27,7 +27,7 @@ export const accelerators = {
         resource: "potency",
         requirement: 0.4,
         description: () => `Total Hadrons increase the ${player.universes.current === 2 ? "Matter" : "Antimatter"} Hardcap`,
-        effect: () => player.disablePostReality ? 0 : Math.clamp(Math.floor(Math.pow(2 * Math.max(player.celestials.laitela.hadrons.trueTotal - 100, 0) + 0.25, 0.5) - 0.5), 0, 25),
+        effect: () => player.disablePostReality ? 0 : Math.clamp(Math.floor(Math.pow(2 * new Decimal(player.celestials.laitela.hadrons.trueTotal).sub(100).clamp(0, 325).toNumber() + 0.25, 0.5) - 0.5), 0, 25),
         formatEffect: value => `${format(LHC.breakingPoint.root(Decimal.pow10(value)), 2)} ➜ ${format(LHC.breakingPoint, 2)}`
       },
       {

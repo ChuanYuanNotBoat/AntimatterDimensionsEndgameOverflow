@@ -75,6 +75,7 @@ class NormalChallengeState extends GameMechanicState {
   }
 
   tryCharge() {
+    if (!player.endgame.overcharge.allowComplex || !this.config.charged || this.id < 1) return;
     if (Math.min(player.endgame.overcharge.completions.chall, 12) >= this.id) {
       player.endgame.overcharge.charged.complex.add(this.id);
     }

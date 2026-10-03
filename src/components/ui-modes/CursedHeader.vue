@@ -41,9 +41,7 @@ export default {
       this.cores = player.celestials.slabdrill.core.chaosCores;
     },
     hunt() {
-      if (!this.canHunt) return;
-      if (Math.random() <= this.findChance) player.celestials.slabdrill.core.chaosCores++;
-      player.celestials.slabdrill.core.lastFound = Date.now();
+      Slabdrill.hunt();
     },
     changeTabs() {
       if (ui.view.subtab === "antimatter") Tab.celestials.slabdrill.show(true);
