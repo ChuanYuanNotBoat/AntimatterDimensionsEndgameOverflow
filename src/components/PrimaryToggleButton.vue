@@ -15,12 +15,12 @@ export default {
     on: {
       type: String,
       required: false,
-      default: "ON"
+      default: undefined
     },
     off: {
       type: String,
       required: false,
-      default: "OFF"
+      default: undefined
     },
     value: {
       type: Boolean,
@@ -29,7 +29,8 @@ export default {
   },
   computed: {
     displayText() {
-      return `${this.label} ${this.value ? this.on : this.off}`.trim();
+      const state = this.value ? (this.on ?? this.$t("common.on")) : (this.off ?? this.$t("common.off"));
+      return `${this.label} ${state}`.trim();
     }
   },
 };
@@ -43,4 +44,3 @@ export default {
     {{ displayText }}
   </PrimaryButton>
 </template>
-

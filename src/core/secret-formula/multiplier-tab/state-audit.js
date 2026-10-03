@@ -1,11 +1,13 @@
+import { t } from "../../../i18n";
+
 // State rules outside the resource multiplier products. Keep these separate from
 // source impacts: a purchase limit or disabled producer is not a multiplier.
 export function multiplierStateNotes(resource) {
   const notes = [];
   const universe = player.universes.current;
-  if (resource === "ID" && universe === 2) notes.push("Tangible Universe disables Infinity Dimension production.");
+  if (resource === "ID" && universe === 2) notes.push(t("analysis.state.infinityDisabled"));
   if (resource === "TD" && (universe === 1 || universe === 2)) {
-    notes.push("This Universe disables Time Dimension production.");
+    notes.push(t("analysis.state.timeDisabled"));
   }
   if (["AD", "ID", "TD", "gamespeed"].includes(resource) && universe === 2) {
     notes.push("Tangible Universe disables Singularity Milestone effects.");
@@ -18,7 +20,7 @@ export function multiplierStateNotes(resource) {
   }
   if (resource === "AD" && Slabdrill.isCursed) {
     const unlocked = Math.max(Math.min(Math.floor((player.celestials.slabdrill.goodbyeTick - 30000) / 1000), 10), 2) - 1;
-    notes.push(`Slabdrill currently enables AD1 through AD${unlocked}; later multipliers are fixed at 1.`);
+    notes.push(t("analysis.state.slabdrillDimensions", { tier: formatInt(unlocked) }));
     notes.push("Slabdrill moves Sacrifice and unascended TS214 to AD1, and applies the IC8 reward as a power.");
   }
   if (resource === "ID" && SlabdrillUnlocks.timeStudy181.isUnlocked) {

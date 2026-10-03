@@ -44,7 +44,7 @@ export default {
     rewardClassObject() {
       return {
         "o-star__container": true,
-        [`o-star__container--${this.config.name}`]: true,
+        [`o-star__container--${this.config.saveKey}`]: true,
       };
     },
     showPending() {
@@ -60,7 +60,7 @@ export default {
   methods: {
     update() {
       this.isUnlocked = this.star.isUnlocked;
-      this.amount.copyFrom(player.endgame.ethereal.stars[this.config.name]);
+      this.amount.copyFrom(player.endgame.ethereal.stars[this.config.saveKey]);
       this.reward.copyFrom(this.star.rewardForDisplay(this.displayedAmount));
       this.pending.copyFrom(Decimal.pow(Currency.etherealPower.value.div(
         this.config.resetReq), 0.5 - this.star.id / 20).times(Ethereal.allStarBoost));

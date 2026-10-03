@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     tabName() {
-      return this.tab.name;
+      return this.tab.displayName;
     },
     subtabs() {
       return this.tab.subtabs;

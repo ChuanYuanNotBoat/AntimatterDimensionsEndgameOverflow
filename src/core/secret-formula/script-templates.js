@@ -54,8 +54,9 @@ export const automatorTemplates = {
     * so that all of the required fields show up in the proper input formats. Actual script formatting requires
     * additionally writing a method to be called in the constructor of the ScriptTemplate class
     * {
-    *  @property {String} name          Name of script template, also used as a key within the constructor for
-    *   ScriptTemplate objects
+    *  @property {String} id            Stable dispatch key for the ScriptTemplate constructor
+    *  @property {String} name          Canonical English name, kept separate from display text
+    *  @property {String} nameKey       Message key for the localized template name
     *  @property {String} description   Text description of what the template does when used in the automator
     *  @property {Object[]} inputs      Fields of the param object which need to be filled for the template to
     *   have all the information it needs. Contains the name of the field, the type (drawn from paramTypes above),
@@ -66,7 +67,9 @@ export const automatorTemplates = {
     */
   scripts: [
     {
+      id: "climbEP",
       name: "Climb EP",
+      nameKey: "automator.templates.climbEP",
       description: `This script performs repeated Eternities, attempting to re-purchase a Time Study Tree every
         Eternity. Autobuyer settings must be supplied for the Infinity and Eternity Autobuyers. The script will
         repeat until a final Eternity Point value is reached.`,
@@ -98,7 +101,9 @@ export const automatorTemplates = {
       },
     },
     {
+      id: "grindEternities",
       name: "Grind Eternities",
+      nameKey: "automator.templates.grindEternities",
       description: `This script performs repeated fast Eternities after buying a specified Time Study Tree.
         Auto-Infinity will be set to "Times Highest" with a specified number of crunches and Auto-Eternity will
         trigger as soon as possible. The script will repeat until a final Eternity count is reached.`,
@@ -118,7 +123,9 @@ export const automatorTemplates = {
       },
     },
     {
+      id: "grindInfinities",
       name: "Grind Infinities",
+      nameKey: "automator.templates.grindInfinities",
       description: `This script buys a specified Time Study Tree and then configures your Autobuyers for gaining
         Infinities. It will repeat until a final Infinity count is reached; the count can be for Banked Infinities,
         in which case it will get all Infinities before performing a single Eternity.`,
@@ -142,7 +149,9 @@ export const automatorTemplates = {
       },
     },
     {
+      id: "completeEC",
       name: "Complete Eternity Challenge",
+      nameKey: "automator.templates.completeEC",
       description: `This script buys a specified Time Study Tree and then unlocks a specified Eternity Challenge.
         Then it will set your Infinity Autobuyer to your specified settings and enter the Eternity Challenge.
         Finally, it will wait until at least the desired number of completions before triggering an Eternity to
@@ -170,7 +179,9 @@ export const automatorTemplates = {
       },
     },
     {
+      id: "unlockDilation",
       name: "Unlock Dilation",
+      nameKey: "automator.templates.unlockDilation",
       description: `This script performs repeated Eternities, attempting to re-purchase a Time Study Tree every
         Eternity. Settings must be supplied for the Eternity Autobuyer; your Infinity Autobuyer will be
         turned off. The script loops until you have the total Time Theorem requirement to unlock Dilation, and then

@@ -1,7 +1,6 @@
 <script>
+import { isTextRef, resolveText } from "@/i18n/text-ref";
 import wordShift from "@/core/word-shift";
-
-import { isFunction, isString } from "@/utility";
 
 /* eslint-disable no-empty-function */
 export default {
@@ -49,47 +48,13 @@ export default {
     }
   },
   watch: {
+    $i18nRevision() {
+      this.configureDescription();
+    },
     config: {
       immediate: true,
-      handler(config) {
-        this.updateFunction = () => { };
-        const description = config?.description;
-        // Descriptions in config entries are occasionally used both as standalone statements and mid-sentence,
-        // so we explicitly capitalize them here because this only shows up in standalone places
-        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
-        this.isVisible = description !== undefined;
-        if (!this.isVisible) return;
-
-        if (isString(description)) {
-          this.description = capitalize(description);
-          return;
-        }
-
-        if (!isFunction(description)) {
-          throw new Error(`DescriptionDisplay config.description has ` +
-            ` unsupported type "${typeof description}"`);
-        }
-
-        const value = description();
-
-        if (isString(value)) {
-          // This is a special case for scrambling EC6 description text
-          if (this.config.scrambleText) {
-            this.description = capitalize(value).replace("*", wordShift.wordCycle(this.config.scrambleText, true));
-            this.updateFunction = () =>
-              this.description = capitalize(description())
-                .replace("*", wordShift.wordCycle(this.config.scrambleText, true));
-            return;
-          }
-          this.description = capitalize(value);
-          this.updateFunction = () => this.description = capitalize(description());
-          return;
-
-
-        }
-
-        throw new Error(`DescriptionDisplay config.description is a function ` +
-          `which returns unsupported type "${typeof value}"`);
+      handler() {
+        this.configureDescription();
       }
     }
   },
@@ -97,6 +62,23 @@ export default {
     this.updateFunction = () => { };
   },
   methods: {
+    configureDescription() {
+      this.updateFunction = () => { };
+      const description = this.config?.description;
+      this.isVisible = description !== undefined;
+      if (!this.isVisible) return;
+      const refresh = () => {
+        const value = resolveText(description);
+        const capitalized = value.charAt(0).toUpperCase() + value.slice(1);
+        this.description = this.config.scrambleText && typeof description !== "string"
+          ? capitalized.replace("*", wordShift.wordCycle(this.config.scrambleText, true))
+          : capitalized;
+      };
+      refresh();
+      if (typeof description === "function" || (isTextRef(description) && typeof description.values === "function")) {
+        this.updateFunction = refresh;
+      }
+    },
     update() {
       this.updateFunction();
     }

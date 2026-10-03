@@ -24,7 +24,7 @@ export default {
       this.blockTemplates = AutomatorData.blockTemplates;
     },
     showModal(template) {
-      Modal.automatorScriptTemplate.show(template);
+      Modal.automatorScriptTemplate.show({ ...template, templateId: template.id });
     },
     unpackTemplateBlocks(event) {
       const templateBlocks = this.blockTemplates[this.selectedTemplateID].blocks;
@@ -62,11 +62,11 @@ export default {
     your Automator.
     <button
       v-for="template in templates"
-      :key="template.name"
+      :key="template.id"
       class="o-primary-btn c-automator-docs-template--button l-automator__button"
       @click="showModal(template)"
     >
-      Template: {{ template.name }}
+      {{ $t("automator.templates.button", { name: $t(template.nameKey) }) }}
     </button>
     Since you are currently in the {{ isBlock ? "Block" : "Text" }} editor, this panel will {{ pasteText }}.
     <br>
