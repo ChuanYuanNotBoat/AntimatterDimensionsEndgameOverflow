@@ -148,13 +148,13 @@ export default {
     :class="autobuyerBoxRowClass"
   >
     <div class="l-autobuyer-box__header">
-      {{ name }}
+      {{ $legacyText(_s(name)) }}
       <AutobuyerIntervalLabel
         v-if="showInterval"
         :autobuyer="autobuyer"
       />
       <div v-if="isShowingStateInfo">
-        {{ extraInfo }}
+        {{ $legacyText(_s(extraInfo)) }}
       </div>
     </div>
     <div class="c-autobuyer-box-row__intervalSlot">
@@ -189,9 +189,9 @@ export default {
     :class="autobuyerBuyBoxClass"
     @click="purchase"
   >
-    {{ name }}
+    {{ $legacyText(_s(name)) }}
     <br>
-    Requirement: {{ format(antimatterCost) }} Total {{ isFlipped ? "Matter" : "Antimatter" }} {{ showEternity }}
+    Requirement: {{ $legacyText(_s(format(antimatterCost))) }} Total {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} {{ $legacyText(_s(showEternity)) }}
   </div>
 </template>
 

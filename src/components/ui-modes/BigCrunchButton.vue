@@ -32,7 +32,7 @@ export default {
         v-if="!smallCrunch"
         class="l-spacing"
       >
-        The world has collapsed due to excess {{ isFlipped ? "matter" : "antimatter" }}.
+        {{ $t('ade.b33a09a7def4ac77', { p0: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
       </h3>
       <button
         :class="{
@@ -41,7 +41,7 @@ export default {
         }"
         @click="handleClick"
       >
-        Big Crunch
+        {{ $t('ade.16f3a21802956894') }}
       </button>
     </div>
     <div v-else>
@@ -54,13 +54,13 @@ export default {
         }"
         @click="handleClick"
       >
-        Big Crunch
+        {{ $t('ade.16f3a21802956894') }}
       </button>
       <div
         v-if="!smallCrunch"
         class="o-emptiness"
       >
-        The world has collapsed due to excess of {{ isFlipped ? "matter" : "antimatter" }}.
+        {{ $t('ade.2d5964cb19aca060', { p0: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
       </div>
     </div>
   </span>

@@ -67,7 +67,7 @@ export default {
     :class="classObject"
     @click="subtab.show(true)"
   >
-    {{ tabName }}
+    {{ $legacyText(_s(tabName)) }}
     <div
       v-if="hasNotification"
       class="fas fa-circle-exclamation l-notification-icon"

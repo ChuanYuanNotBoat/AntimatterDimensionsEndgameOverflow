@@ -143,57 +143,56 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="maxAll"
       >
-        Max all
+        {{ $t('ade.4df159d13ecdd149') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="isAnyAutobuyerUnlocked && !isEC8Running"
         class="o-primary-btn--subtab-option"
         @click="toggleAllAutobuyers"
       >
-        Toggle all autobuyers
+        {{ $t('ade.4b652887fb44f382') }}
       </PrimaryButton>
     </div>
     <div>
       <p>
-        You have
-        <span class="c-infinity-dim-description__accent">{{ format(infinityPower, 2, 1) }}</span>
-        Infinity Power,
+        {{ $t('ade.9f717812b3aa8e61') }}
+        <span class="c-infinity-dim-description__accent">{{ $legacyText(_s(format(infinityPower, 2, 1))) }}</span>
+        {{ $t('ade.a3d6a0d2b9ed9f9d') }}
         <br>
         <span v-if="!isEC9Running">
-          increased by
-          <span class="c-infinity-dim-description__accent">{{ formatPow(conversionRate, 2, 3) }}</span>
+          <LocalizedText id="ade.4bab93012bc5e520">
+            <template #p0><span class="c-infinity-dim-description__accent">{{ $legacyText(_s(formatPow(conversionRate, 2, 3))) }}</span></template>
+          </LocalizedText>
         </span>
         <span v-else>
-          translated
+          {{ $t('ade.c49489009c660834') }}
         </span>
-        to a
-        <span class="c-infinity-dim-description__accent">{{ formatX(dimMultiplier, 2, 1) }}</span>
-        multiplier on all
-        <span v-if="!isEC9Running">{{ isFlipped ? "Matter" : "Antimatter" }} Dimensions.</span>
+        {{ $t('ade.78738e88cda9fee1') }}
+        <span class="c-infinity-dim-description__accent">{{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}</span>
+        {{ $t('ade.d4830b8713ebe808') }}
+        <span v-if="!isEC9Running">{{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimensions.</span>
         <span v-else>Time Dimensions due to Eternity Challenge 9.</span>
       </p>
     </div>
     <div>
       <p>
         <span v-if="isEndgameUnlocked">
-          Your Infinity Dimension Compression Magnitude is
-          <span class="c-infinity-dim-compression-description__accent">{{ format(infinityDimCompressionMagnitude, 2, 3) }}</span>,
-          which raises all Infinity Dimension Multipliers' Exponents to the power of
-          <span class="c-infinity-dim-compression-description__accent">{{ format(infinityDimOverflow, 2, 3) }}</span>
-          while above
-          <span>{{ formatPostBreak(infinityDimStart, 2, 1) }}</span>.
+          <LocalizedText id="ade.1dfafd31cd3e4d19">
+            <template #p0><span class="c-infinity-dim-compression-description__accent">{{ $legacyText(_s(format(infinityDimCompressionMagnitude, 2, 3))) }}</span></template>
+            <template #p1><span class="c-infinity-dim-compression-description__accent">{{ $legacyText(_s(format(infinityDimOverflow, 2, 3))) }}</span></template>
+            <template #p2><span>{{ $legacyText(_s(formatPostBreak(infinityDimStart, 2, 1))) }}</span></template>
+          </LocalizedText>
         </span>
       </p>
     </div>
     <div>
       <p>
         <span v-if="hasSecond">
-          Your Infinity Dimension Compression^2 Magnitude is
-          <span class="c-infinity-dim-compression-description__accent">{{ format(infinityDimCompressionMagnitude2, 2, 3) }}</span>,
-          which raises all Infinity Dimension Multipliers' Exponents to the power of
-          <span class="c-infinity-dim-compression-description__accent">{{ format(infinityDimOverflow2, 2, 3) }}</span>
-          while above
-          <span>{{ formatPostBreak(infinityDimStart2, 2, 1) }}</span>.
+          <LocalizedText id="ade.828c58b87141fa8d">
+            <template #p0><span class="c-infinity-dim-compression-description__accent">{{ $legacyText(_s(format(infinityDimCompressionMagnitude2, 2, 3))) }}</span></template>
+            <template #p1><span class="c-infinity-dim-compression-description__accent">{{ $legacyText(_s(format(infinityDimOverflow2, 2, 3))) }}</span></template>
+            <template #p2><span>{{ $legacyText(_s(formatPostBreak(infinityDimStart2, 2, 1))) }}</span></template>
+          </LocalizedText>
         </span>
       </p>
     </div>
@@ -210,42 +209,41 @@ export default {
         @click="buyTesseract"
       >
         <p>
-          Buy a Tesseract ({{ tesseractCountString }})
+          {{ $t('ade.bf9553f8ec47314b', { p0: $legacyText(_s(tesseractCountString)) }) }}
         </p>
-        <p>Increase dimension caps by {{ format(nextDimCapIncrease, 2) }}</p>
-        <p><b>Costs: {{ format(tesseractCost) }} IP</b></p>
+        <p>{{ $t('ade.91a7f0be67445b5e', { p0: $legacyText(_s(format(nextDimCapIncrease,2))) }) }}</p>
+        <p><b>{{ $t('ade.b6422de7cef264f6', { p0: $legacyText(_s(format(tesseractCost))) }) }}</b></p>
       </button>
       <br>
       <PrimaryToggleButton
         v-if="isAutoUnlocked"
         :value="isAutoActive"
-        :on="autobuyerTextDisplay"
-        :off="autobuyerTextDisplay"
+        :on="$legacyText(autobuyerTextDisplay)"
+        :off="$legacyText(autobuyerTextDisplay)"
         class="l--spoon-btn-group__little-spoon o-primary-btn--tesseract-toggle"
         @input="handleAutoToggle"
       />
     </div>
     <div>
-      Free Tesseracts are softcapped past {{ format(freeTesseractSoftcap, 2, 2) }}.
+      {{ $t('ade.2792dc9a8effa3f0', { p0: $legacyText(_s(format(freeTesseractSoftcap,2,2))) }) }}
       <div v-if="!isAlphaDestroyed">
         <br>
-        This softcap causes Tesseracts past {{ format(freeTesseractSoftcap, 2, 2) }} to eternally approach
-        a hardcap of {{ format(freeTesseractHardcap, 2, 2) }} without ever actually reaching it.
+        This softcap causes Tesseracts past {{ $legacyText(_s(format(freeTesseractSoftcap, 2, 2))) }} to eternally approach
+        a hardcap of {{ $legacyText(_s(format(freeTesseractHardcap, 2, 2))) }} without ever actually reaching it.
       </div>
     </div>
     <div v-if="isEnslavedRunning">
-      All Infinity Dimensions are limited to a single purchase.
+      {{ $t('ade.69ece4c5c95dc4a0') }}
     </div>
     <div v-else>
-      All Infinity Dimensions except for the 8th are limited to a maximum of {{ format(totalDimCap, 2) }}
-      purchases each.
+      {{ $t('ade.9d7ca3a2a69a9e9a', { p0: $legacyText(_s(format(totalDimCap,2))) }) }}
     </div>
-    <div>You are getting {{ format(powerPerSecond, 2, 0) }} {{ incomeType }} per second.</div>
+    <div>{{ $t('ade.217b3418d2644884', { p0: $legacyText(_s(format(powerPerSecond,2,0))), p1: $legacyText(_s(incomeType)) }) }}</div>
     <b
       v-if="isEC8Running"
       class="l-infinity-dim-tab__ec8-purchases"
     >
-      You have {{ quantifyInt("purchase", EC8PurchasesLeft) }} left within Eternity Challenge 8.
+      {{ $t('ade.875da51e48016c03', { p0: $legacyText(_s(quantifyInt("purchase",EC8PurchasesLeft))) }) }}
     </b>
     <div class="l-dimensions-container">
       <InfinityDimensionRow
@@ -255,7 +253,7 @@ export default {
       />
     </div>
     <div v-if="showLockedDimCostNote">
-      Hold shift to see the Infinity Point cost for locked Infinity Dimensions.
+      {{ $t('ade.1be3f49bbe5e362c') }}
     </div>
   </div>
 </template>

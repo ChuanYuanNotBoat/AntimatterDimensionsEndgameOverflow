@@ -21,9 +21,10 @@ export default {
     v-show="isVisible"
     class="c-infinity-tab__header"
   >
-    You have
-    <span class="c-infinity-tab__infinity-points">{{ format(infinityPoints, 2) }}</span>
-    {{ pluralize("Infinity Point", infinityPoints) }}.
+    <LocalizedText id="ade.cd1ff500c8f2ac78">
+      <template #p0><span class="c-infinity-tab__infinity-points">{{ $legacyText(_s(format(infinityPoints, 2))) }}</span></template>
+      <template #p1>{{ $legacyText(_s(pluralize("Infinity Point",infinityPoints))) }}</template>
+    </LocalizedText>
   </div>
 </template>
 

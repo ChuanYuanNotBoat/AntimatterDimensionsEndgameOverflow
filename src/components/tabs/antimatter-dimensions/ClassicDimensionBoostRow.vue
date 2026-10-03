@@ -81,9 +81,9 @@ export default {
 <template>
   <div class="c-dimension-row c-antimatter-dim-row c-antimatter-prestige-row">
     <div class="l-dim-row__prestige-text c-dim-row__label c-dim-row__label--amount">
-      {{ dimBoostName }} ({{ boostCountText }}):
-      requires {{ formatHybridLarge(requirement.amount, 3) }} {{ dimName }} Dimensions
-      <span v-if="hasSurge">{{ imaginaryText }}</span>
+      {{ $legacyText(_s(dimBoostName)) }} ({{ $legacyText(_s(boostCountText)) }}):
+      requires {{ $legacyText(_s(formatHybridLarge(requirement.amount, 3))) }} {{ $legacyText(_s(dimName)) }} Dimensions
+      <span v-if="hasSurge">{{ $legacyText(_s(imaginaryText)) }}</span>
     </div>
     <PrimaryButton
       :enabled="isBuyable"
@@ -91,7 +91,7 @@ export default {
       @click.exact="dimensionBoost(true)"
       @click.shift.exact="dimensionBoost(false)"
     >
-      {{ unlockedByBoost }}
+      {{ $legacyText(_s(unlockedByBoost)) }}
       <div
         v-if="hasTutorial"
         class="fas fa-circle-exclamation l-notification-icon"

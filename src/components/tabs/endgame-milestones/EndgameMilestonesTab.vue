@@ -34,7 +34,7 @@ export default {
 
 <template>
   <div class="l-endgame-milestone-grid">
-    <div>You have {{ quantify("Endgame", endgameCount, 3) }}.</div>
+    <div>{{ $t('ade.ae5c9b4f89fb6342', { p0: $legacyText(_s(quantify("Endgame",endgameCount,3))) }) }}</div>
     <div
       v-for="row in rows"
       :key="row"

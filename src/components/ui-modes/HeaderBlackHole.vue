@@ -90,7 +90,7 @@ export default {
         class="o-primary-btn--buy-max c-primary-btn--black-hole-header"
         onclick="BlackHoles.togglePause()"
       >
-        {{ pauseText }}
+        {{ $legacyText(_s(pauseText)) }}
       </PrimaryButton>
       <span v-if="canCharge">
         <PrimaryButton
@@ -98,17 +98,17 @@ export default {
           onclick="Enslaved.toggleStoreBlackHole()"
         >
           <span v-if="isCharging">
-            Stop Charging
+            {{ $t('ade.f70e16412a0437a1') }}
           </span>
           <span v-else>
-            Charge
+            {{ $t('ade.5d11cdfbd0e04287') }}
           </span>
         </PrimaryButton>
       </span>
       <span
         v-if="displaySingle"
         class="c-black-hole-status-text"
-        v-html="'🌀:' + singleState"
+        v-html="$legacyHtml('🌀:' + singleState)"
       />
       <span v-else>
         <HeaderBlackHoleStatusText
@@ -123,14 +123,14 @@ export default {
           :class="{ 'o-small-discharge-text': hasLongText }"
           onclick="Enslaved.useStoredTime(false)"
         >
-          {{ dischargeText }}
+          {{ $legacyText(_s(dischargeText)) }}
         </PrimaryButton>
       </span>
       <span v-if="canAutoRelease">
         <PrimaryToggleButton
           v-model="isAutoReleasing"
           class="o-primary-btn--buy-max c-primary-btn--black-hole-header"
-          label="Pulse:"
+          :label="$t('ade.95d2d8dd9e5b8116')"
         />
       </span>
     </span>
@@ -139,7 +139,7 @@ export default {
         class="o-toggle-btn c-primary-btn--black-hole-header"
         @click="toggleCelestialMatterMultiplier"
       >
-        Toggle Celestial Matter
+        {{ $t('ade.2b74702fd408b1b4') }}
       </PrimaryButton>
     </span>
   </span>

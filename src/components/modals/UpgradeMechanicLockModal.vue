@@ -55,20 +55,19 @@ export default {
       {{ upgradeStr }} Condition Lock
     </template>
     <div class="c-modal-message__text">
-      Are you sure you wish to {{ lockEvent }}? Doing this right now will cause you to
-      <span class="l-emphasis">
-        fail the requirement for the {{ upgradeStr }} "{{ upgrade.name }}"
-      </span>
-      <span :ach-tooltip="upgrade.requirement">
+      <LocalizedText id="ade.7ea20e0ef95f0338">
+        <template #p0>{{ $legacyText(_s(lockEvent)) }}</template>
+        <template #p1><span class="l-emphasis">
+        fail the requirement for the {{ $legacyText(_s(upgradeStr)) }} "{{ $legacyText(_s(upgrade.name)) }}"
+      </span></template>
+        <template #p2><span :ach-tooltip="upgrade.requirement">
         <i class="fas fa-question-circle" />
-      </span>
-      <br>
-      <br>
-      Selecting "Cancel" will close this modal with no effect, while selecting "Disable Lock" will disable the
-      requirement check for this upgrade and prevent this message from reappearing unless you turn it back on.
-      <br>
-      <br>
-      Neither of these options will perform the action you just attempted, so you will need to try again.
+      </span></template>
+        <template #p3><br></template>
+        <template #p4><br></template>
+        <template #p5><br></template>
+        <template #p6><br></template>
+      </LocalizedText>
     </div>
     <template #confirm-text>
       Disable Lock

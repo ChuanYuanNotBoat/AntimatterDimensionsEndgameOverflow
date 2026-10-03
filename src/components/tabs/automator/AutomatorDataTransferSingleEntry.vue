@@ -49,35 +49,35 @@ export default {
 <template>
   <div class="l-entry-padding">
     <button
-      v-tooltip="'Export Full Script Data'"
+      v-tooltip="$legacyTooltip('Export Full Script Data')"
       class="l-button-margin fas fa-file-export"
       @click="exportData(script.id)"
     />
-    <b>Script name: {{ script.name }}</b>
+    <b>{{ $t('ade.59ff1122f104872c', { p0: _s(script.name) }) }}</b>
     <br>
     <span v-if="hasPresets">
       <span
         :class="iconClass(hidePresets)"
         @click="hidePresets = !hidePresets"
       />
-      References {{ quantifyInt("recognized study preset", presets.length) }}
+      {{ $t('ade.d900706fc8193f1d', { p0: $legacyText(_s(quantifyInt("recognized study preset",presets.length))) }) }}
       <span v-if="!hidePresets">
         <div
           v-for="id in presets"
           :key="id"
         >
-          <span v-if="presetData[id].name">"{{ presetData[id].name }}" (slot {{ id + 1 }}):</span>
-          <span v-else>Preset slot {{ id + 1 }}:</span>
+          <span v-if="presetData[id].name">{{ $t('ade.1d7a50f8cea51aba', { p0: $legacyText(_s(presetData[id].name)), p1: $legacyText(_s(id+1)) }) }}</span>
+          <span v-else>{{ $t('ade.f2e1ead874505141', { p0: $legacyText(_s(id+1)) }) }}</span>
           <br>
           <div class="l-value-padding">
-            <span v-if="presetData[id].studies">{{ presetData[id].studies }}</span>
-            <i v-else>Empty Study Preset</i>
+            <span v-if="presetData[id].studies">{{ $legacyText(_s(presetData[id].studies)) }}</span>
+            <i v-else>{{ $t('ade.503e55bc4d637db7') }}</i>
           </div>
         </div>
       </span>
     </span>
     <span v-else>
-      Does not reference any study presets.
+      {{ $t('ade.d710eef22c0e2e6d') }}
     </span>
     <br>
     <span v-if="hasConstants">
@@ -85,22 +85,22 @@ export default {
         :class="iconClass(hideConstants)"
         @click="hideConstants = !hideConstants"
       />
-      References {{ quantifyInt("defined constant", constants.length) }}
+      {{ $t('ade.d900706fc8193f1d', { p0: $legacyText(_s(quantifyInt("defined constant",constants.length))) }) }}
       <span v-if="!hideConstants">
         <div
           v-for="name in constants"
           :key="name"
         >
-          "{{ name }}":
+          "{{ $legacyText(_s(name)) }}":
           <br>
           <div class="l-value-padding">
-            {{ constantData[name] }}
+            {{ $legacyText(_s(constantData[name])) }}
           </div>
         </div>
       </span>
     </span>
     <span v-else>
-      Does not reference any defined constants.
+      {{ $t('ade.187e0f359865d651') }}
     </span>
   </div>
 </template>

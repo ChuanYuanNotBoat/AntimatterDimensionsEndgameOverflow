@@ -46,17 +46,17 @@ export default {
     <div class="c-modal">
       <div class="modal-progress-bar">
         <div class="modal-progress-bar__label">
-          {{ progress.label }}
+          {{ $legacyText(_s(progress.label)) }}
         </div>
         <div>
-          {{ infoText }}
+          {{ $legacyText(_s(infoText)) }}
         </div>
         <div class="modal-progress-bar__margin">
           <div>
-            {{ progress.progressName }}: {{ formatInt(progress.current) }}/{{ formatInt(progress.max) }}
+            {{ $legacyText(_s(progress.progressName)) }}: {{ $legacyText(_s(formatInt(progress.current))) }}/{{ $legacyText(_s(formatInt(progress.max))) }}
           </div>
           <div>
-            Remaining: {{ remainingTime }}
+            {{ $t('ade.ebe307db117ff676', { p0: $legacyText(_s(remainingTime)) }) }}
           </div>
           <div class="modal-progress-bar__hbox">
             <div class="modal-progress-bar__bg">

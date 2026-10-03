@@ -89,7 +89,7 @@ export default {
       @click="S12Windows.isMinimised = true"
     />
     <span class="c-modal__title">
-      {{ tabName }}
+      {{ $legacyText(_s(tabName)) }}
     </span>
     <div
       :key="newGameKey"

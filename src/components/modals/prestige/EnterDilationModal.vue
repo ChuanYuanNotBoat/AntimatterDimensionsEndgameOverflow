@@ -61,10 +61,10 @@ export default {
       {{ entranceLabel }}
     </template>
     <div class="c-modal-message__text">
-      {{ EPSinceLabel }}
+      {{ $legacyText(_s(EPSinceLabel)) }}
       <br>
       <br>
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
     <template #confirm-text>
       Enter

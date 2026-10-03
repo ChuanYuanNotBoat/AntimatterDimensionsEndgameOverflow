@@ -119,21 +119,21 @@ export default {
         class="c-credits-section"
         :style="{ opacity: roleOpacity }"
       >
-        {{ pluralize(roles[currRole], currRole === 11 ? 1 : relevantPeople(currRole).length) }}
+        {{ $legacyText(_s(pluralize(roles[currRole], currRole === 11 ? 1 : relevantPeople(currRole).length))) }}
       </h2>
       <div>
         <div
           class="c-credit-entry"
           :style="{ opacity: personOpacity }"
         >
-          {{ relevantPeople(currRole)[currPerson].name }}
+          {{ $legacyText(_s(relevantPeople(currRole)[currPerson].name)) }}
           <span v-if="relevantPeople(currRole)[currPerson].name2">
-            ({{ relevantPeople(currRole)[currPerson].name2 }})
+            ({{ $legacyText(_s(relevantPeople(currRole)[currPerson].name2)) }})
           </span>
           <br>
           <br>
           <span v-if="currRole === 11">
-            {{ relevantPeople(currRole)[currPerson].thanks }}
+            {{ $legacyText(_s(relevantPeople(currRole)[currPerson].thanks)) }}
           </span>
         </div>
       </div>
@@ -144,7 +144,7 @@ export default {
       class="c-credits-header"
       :style="{ opacity: roleOpacity }"
     >
-      Thank you so much for playing!
+      {{ $t('ade.a801f5725791ab04') }}
     </h1>
   </div>
 </template>

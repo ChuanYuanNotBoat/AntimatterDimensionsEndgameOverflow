@@ -56,7 +56,7 @@ export default {
         type="resurgenceUpgrades"
         class="l-hint-text--resurgence-upgrade c-hint-text--resurgence-upgrade"
       >
-        {{ config.name }}
+        {{ $legacyText(_s(config.name)) }}
       </HintText>
       <span>
         <DescriptionDisplay :config="config" />

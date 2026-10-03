@@ -40,12 +40,12 @@ export default {
       Delete this Glyph Set
     </template>
     <div class="c-modal-message__text">
-      Please confirm your desire to delete this Glyph Set:
+      {{ $t('ade.a7ee3d186c991ec6') }}
       <GlyphSetPreview
         :is-in-modal="true"
         :glyphs="glyphSet"
       />
-      This will not affect your actual Glyphs, only the saved preset.
+      {{ $t('ade.ac12463e8123f272') }}
     </div>
     <template #confirm-text>
       Delete

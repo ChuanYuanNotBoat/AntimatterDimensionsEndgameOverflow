@@ -158,8 +158,8 @@ export default {
       />
     </div>
     <div class="o-pelle-rift-bar-percentage">
-      {{ formatPercents(percentage, 3) }}
-      <span v-if="!isMaxed">({{ isActive ? "Filling" : "Idle" }})</span>
+      {{ $legacyText(_s(formatPercents(percentage, 3))) }}
+      <span v-if="!isMaxed">({{ $legacyText(_s(isActive ? "Filling" : "Idle")) }})</span>
     </div>
     <CustomizeableTooltip
       class="o-pelle-rift-bar-milestone-hover-container"

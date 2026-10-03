@@ -56,41 +56,36 @@ export default {
     </template>
     <div class="c-reality-glyph-creation">
       <div>
-        Create a level {{ formatHybridLarge(realityGlyphLevel, 3) }} Reality Glyph.
-        Rarity will always be {{ formatPercents(1) }} and
-        level scales on your current Reality Resource amount (which is all consumed). All other Alchemy Resources will
-        be unaffected. Reality Glyphs have unique effects, some of which are only available with higher level Glyphs.
-        Reality Glyphs can also be sacrificed to increase all Memory Chunk gain. Like Effarig Glyphs,
-        you cannot equip more than one at the same time.
+        {{ $t('ade.414f0274a4300021', { p0: $legacyText(_s(formatHybridLarge(realityGlyphLevel,3))), p1: $legacyText(_s(formatPercents(1))) }) }}
       </div>
       <div class="o-available-effects-container">
         <div class="o-available-effects">
-          Available Effects:
+          {{ $t('ade.7eff2b3cffd28f65') }}
         </div>
         <div
           v-for="(effect, index) in possibleEffects"
           :key="index"
         >
-          {{ formatGlyphEffect(effect) }}
+          {{ $legacyText(_s(formatGlyphEffect(effect))) }}
         </div>
       </div>
       <PrimaryButton
         v-if="isDoomed"
         :enabled="false"
       >
-        You cannot create Reality Glyphs while Doomed
+        {{ $t('ade.6234e5c51f805844') }}
       </PrimaryButton>
       <PrimaryButton
         v-else-if="realityGlyphLevel.neq(0)"
         @click="createRealityGlyph"
       >
-        Create a Reality Glyph!
+        {{ $t('ade.453e2534bda3ca77') }}
       </PrimaryButton>
       <PrimaryButton
         v-else
         :enabled="false"
       >
-        Reality Glyph level must be higher than {{ formatInt(0) }}
+        {{ $t('ade.0c5b24d76ecc05c3', { p0: $legacyText(_s(formatInt(0))) }) }}
       </PrimaryButton>
     </div>
   </ModalWrapper>

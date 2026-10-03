@@ -56,27 +56,34 @@ export default {
     :class="isUnlocked ? 'o-dilation-btn--unlocked' : 'o-dilation-btn--locked'"
     @click="dilate()"
   >
-    <span v-if="!isUnlocked">Purchase the Dilation Study to unlock.</span>
+    <span v-if="!isUnlocked">{{ $t('ade.56de18fb8a84375c') }}</span>
     <span v-else-if="!isRunning">
-      Dilate time.
+      {{ $t('ade.c227871f17dbd6ab') }}
       <div v-if="showRequirement">
-        Requires {{ format(remnantRequirement, 2) }} Remnants
+        {{ $t('ade.f0f91df63a44450d', { p0: $legacyText(_s(format(remnantRequirement,2))) }) }}
       </div>
     </span>
     <span v-else-if="canEternity && hasGain">
-      {{ disableText }}
-      <br>
-      Gain {{ quantify("Tachyon Particle", tachyonGain, 2, 1) }}.
+      <LocalizedText id="ade.89ca63d5500cadb7">
+        <template #p0>{{ $legacyText(_s(disableText)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(quantify("Tachyon Particle",tachyonGain,2,1))) }}</template>
+      </LocalizedText>
     </span>
     <span v-else-if="hasGain">
-      {{ disableText }}
-      <br>
-      Reach {{ quantify("Infinity Point", eternityGoal, 1, 0) }} to Eternity and gain Tachyon Particles.
+      <LocalizedText id="ade.7a9eb41ae2dae795">
+        <template #p0>{{ $legacyText(_s(disableText)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(quantify("Infinity Point",eternityGoal,1,0))) }}</template>
+      </LocalizedText>
     </span>
     <span v-else>
-      {{ disableText }}
-      <br>
-      Reach {{ format(requiredForGain, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }} to gain more Tachyon Particles.
+      <LocalizedText id="ade.85df24ba7729fe0a">
+        <template #p0>{{ $legacyText(_s(disableText)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(format(requiredForGain,2,1))) }}</template>
+        <template #p3>{{ $legacyText(_s(isFlipped?"matter":"antimatter")) }}</template>
+      </LocalizedText>
     </span>
   </button>
 </template>

@@ -136,8 +136,8 @@ export default {
     <template #header>
       Import Automator Script Data
     </template>
-    This will create a new Automator script at the end of your list.
-    <span v-if="isImportingExtraData">This will also import additional data related to the script.</span>
+    {{ $t('ade.6a866091b17c5430') }}
+    <span v-if="isImportingExtraData">{{ $t('ade.48d3602872ee07df') }}</span>
     <input
       ref="input"
       v-model="input"
@@ -147,9 +147,9 @@ export default {
       @keyup.esc="emitClose"
     >
     <div v-if="isValid">
-      Script name: {{ scriptName }}
+      {{ $t('ade.59ff1122f104872c', { p0: _s(scriptName) }) }}
       <br>
-      Line count: {{ lineCount }}
+      {{ $t('ade.7e5e313a46128d55', { p0: $legacyText(_s(lineCount)) }) }}
       <div v-if="hasPresets">
         <br>
         Study Presets:
@@ -158,43 +158,41 @@ export default {
           :key="id"
           class="c-import-data-name"
         >
-          <span v-if="preset.name">"{{ preset.name }}" (slot {{ preset.id + 1 }})</span>
-          <span v-else>Preset slot #{{ preset.id + 1 }}</span>
+          <span v-if="preset.name">{{ $t('ade.7015703be905cda2', { p0: $legacyText(_s(preset.name)), p1: $legacyText(_s(preset.id+1)) }) }}</span>
+          <span v-else>{{ $t('ade.8a27d80fd0dc12a6', { p0: $legacyText(_s(preset.id+1)) }) }}</span>
         </span>
         <div
           v-if="!ignorePresets && overwrittenPresetCount > 0"
           class="l-has-errors"
         >
-          {{ formatInt(overwrittenPresetCount) }} of your existing presets
-          will be overwritten by imported presets!
+          {{ $t('ade.acc3e4cd8297e089', { p0: $legacyText(_s(formatInt(overwrittenPresetCount))) }) }}
         </div>
         <br>
         <button
           class="o-primary-btn"
           @click="ignorePresets = !ignorePresets"
         >
-          {{ presetButtonText }}
+          {{ $legacyText(_s(presetButtonText)) }}
         </button>
       </div>
       <div v-if="hasConstants">
         <br>
-        Constants:
+        {{ $t('ade.41572b6194f9a179') }}
         <span
           v-for="(constant, id) in importedConstants"
           :key="id + 10"
           class="c-import-data-name"
         >
-          "{{ constant.key }}"
+          "{{ $legacyText(_s(constant.key)) }}"
         </span>
         <div
           v-if="!ignoreConstants && (willOverwriteConstant || extraConstants > 0)"
           class="l-has-errors"
         >
-          <span v-if="willOverwriteConstant">Some of your existing constants will be overwritten!</span>
+          <span v-if="willOverwriteConstant">{{ $t('ade.4cb291e0a4cd492b') }}</span>
           <br v-if="willOverwriteConstant && extraConstants > 0">
           <span v-if="extraConstants > 0">
-            {{ quantifyInt("constant", extraConstants) }} will not be imported due to the
-            {{ maxConstantCount }} constant limit.
+            {{ $t('ade.55e5593e29475500', { p0: $legacyText(_s(quantifyInt("constant",extraConstants))), p1: $legacyText(_s(maxConstantCount)) }) }}
           </span>
         </div>
         <br>
@@ -202,7 +200,7 @@ export default {
           class="o-primary-btn"
           @click="ignoreConstants = !ignoreConstants"
         >
-          {{ constantButtonText }}
+          {{ $legacyText(_s(constantButtonText)) }}
         </button>
       </div>
       <br>
@@ -210,14 +208,14 @@ export default {
         v-if="hasErrors"
         class="l-has-errors"
       >
-        This script has errors which need to be fixed before it can be run!
+        {{ $t('ade.6d83fbfec0fffd2d') }}
       </div>
       <div v-if="hasErrors && isImportingExtraData">
-        <i>Some errors may be fixed with the additional data being imported.</i>
+        <i>{{ $t('ade.0aeaddc6becacbd3') }}</i>
       </div>
     </div>
     <div v-else-if="input.length !== 0">
-      Invalid Automator data string
+      {{ $t('ade.b609825c10dabd7e') }}
     </div>
     <template #confirm-text>
       Import

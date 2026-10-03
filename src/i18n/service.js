@@ -2,11 +2,52 @@ import { IntlMessageFormat } from "intl-messageformat";
 
 export const LANGUAGE_STORAGE_KEY = "ade.language";
 
+// A language file contains text, optional grammatical forms, and its own metadata.
+// References are explicit whole entries, not replacements of individual words.
+export function resolveCatalog(catalog, fallback = {}) {
+  const resolved = new Map();
+  const visiting = new Set();
+  function forms(entry) {
+    if (typeof entry === "string") return { text: entry };
+    if (!entry || typeof entry !== "object" || Array.isArray(entry) || typeof entry.text !== "string" ||
+        Object.values(entry).some(value => typeof value !== "string")) {
+      throw new TypeError("Messages must be text or named text forms");
+    }
+    return entry;
+  }
+  function expand(key, form = "text", useFallback = false) {
+    const token = `${useFallback ? "fallback:" : ""}${key}|${form}`;
+    if (resolved.has(token)) return resolved.get(token);
+    if (visiting.has(token)) throw new Error(`Circular message reference: ${key}`);
+    const source = useFallback ? fallback : catalog;
+    if (!Object.hasOwn(source, key)) {
+      if (!useFallback && Object.hasOwn(fallback, key)) return expand(key, form, true);
+      throw new Error(`Unknown message reference: ${key}`);
+    }
+    visiting.add(token);
+    const entry = forms(source[key]);
+    // Languages without separate plural/case forms translate the term once.
+    const message = (entry[form] ?? entry.text).replace(/\[\[([\w.-]+)(?:\|([\w.-]+))?\]\]/gu,
+      (whole, reference, variant) => expand(reference, variant ?? "text", useFallback));
+    visiting.delete(token);
+    resolved.set(token, message);
+    return message;
+  }
+  const messages = new Map();
+  for (const [key, entry] of Object.entries(catalog)) {
+    if (key === "$meta") continue;
+    if (!key) throw new TypeError("Messages must have nonempty keys");
+    for (const form of Object.keys(forms(entry))) messages.set(`${key}|${form}`, expand(key, form));
+  }
+  return messages;
+}
+
 // Keep this service independent of Vue, player, and the simulation clock.
 // eslint-disable-next-line no-console
 export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn = console.warn }) {
   const state = { locale: defaultLocale, revision: 0 };
   const packs = new Map();
+  const rawPacks = new Map();
   const warnings = new Set();
   let storage;
   let documentRef;
@@ -27,14 +68,21 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
       if (!canonical || !catalog || typeof catalog !== "object" || Array.isArray(catalog)) {
         throw new TypeError("Invalid locale catalog");
       }
-      const messages = new Map();
-      for (const [key, message] of Object.entries(catalog)) {
-        if (!key || typeof message !== "string") throw new TypeError("Messages must have string keys and values");
-        messages.set(key, new IntlMessageFormat(message, canonical));
+      const candidates = new Map(rawPacks);
+      candidates.set(canonical, catalog);
+      const compiled = new Map();
+      const affected = canonical === defaultLocale ? candidates : new Map([[canonical, catalog]]);
+      for (const [id, candidate] of affected) {
+        const messages = new Map();
+        for (const [key, message] of resolveCatalog(candidate, candidates.get(defaultLocale))) {
+          messages.set(key, new IntlMessageFormat(message, id));
+        }
+        compiled.set(id, messages);
       }
-      // Compile the entire candidate before changing the active pack.
-      packs.set(canonical, messages);
-      if (canonical === state.locale) state.revision++;
+      // Rebuild references atomically, including terms inherited from English.
+      rawPacks.set(canonical, catalog);
+      for (const [id, messages] of compiled) packs.set(id, messages);
+      if (canonical === state.locale || canonical === defaultLocale) state.revision++;
       return true;
     } catch (error) {
       report(`catalog:${locale}`, error);
@@ -54,10 +102,10 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
   }
 
   function unavailable() {
-    return packs.get(defaultLocale)?.get("common.messageUnavailable")?.format() ?? "Message unavailable.";
+    return packs.get(defaultLocale)?.get("common.messageUnavailable|text")?.format() ?? "Message unavailable.";
   }
 
-  function t(key, values = {}) {
+  function t(key, values = {}, form = "text") {
     // Vue makes this small state object observable; core code needs no Vue import.
     const locale = state.locale;
     const revision = state.revision;
@@ -68,7 +116,8 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
       return unavailable();
     }
     for (const candidate of new Set([locale, defaultLocale])) {
-      const message = packs.get(candidate)?.get(key);
+      const messages = packs.get(candidate);
+      const message = messages?.get(`${key}|${form}`) ?? messages?.get(`${key}|text`);
       if (!message) {
         report(`missing:${candidate}:${key}`, revision);
         continue;
@@ -82,6 +131,15 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
       }
     }
     return unavailable();
+  }
+
+  function messageSource(key, form = "text") {
+    const messages = packs.get(defaultLocale);
+    const message = messages?.get(`${key}|${form}`) ?? messages?.get(`${key}|text`);
+    if (!message) return undefined;
+    const nodes = message.getAst();
+    if (nodes.some(node => ![0, 1].includes(node.type))) return undefined;
+    return nodes.map(node => (node.type === 0 ? node.value : `{${node.value}}`)).join("");
   }
 
   function updateDocument() {
@@ -126,6 +184,10 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
     updateDocument();
   }
 
-  for (const [locale, catalog] of Object.entries(catalogs)) registerLocale(locale, catalog);
-  return { state, t, setLocale, registerLocale, initialize };
+  // Load the default first so partial packs can reference its terms.
+  if (catalogs[defaultLocale]) registerLocale(defaultLocale, catalogs[defaultLocale]);
+  for (const [locale, catalog] of Object.entries(catalogs)) {
+    if (locale !== defaultLocale) registerLocale(locale, catalog);
+  }
+  return { state, t, setLocale, registerLocale, initialize, messageSource };
 }

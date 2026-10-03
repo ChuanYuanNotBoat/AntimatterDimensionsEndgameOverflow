@@ -198,32 +198,32 @@ export default {
     <div class="c-glyph-sacrifice-options c-glyph-sacrifice-options-container">
       <div class="c-filter-extra-btns c-top-left">
         <i
-          v-tooltip="'Export filter settings'"
+          v-tooltip="$legacyTooltip('Export filter settings')"
           class="fas fa-file-export l-top-left-btn"
           @click="exportFilterSettings"
         />
         <i
-          v-tooltip="'Import filter settings'"
+          v-tooltip="$legacyTooltip('Import filter settings')"
           class="fas fa-file-import l-top-left-btn"
           @click="importFilterSettings"
         />
       </div>
       <div class="c-filter-extra-btns c-top-right">
         <i
-          v-tooltip="autoRealityTooltip"
+          v-tooltip="$legacyTooltip(autoRealityTooltip)"
           class="fas fa-recycle l-top-right-btn"
           :class="{ 'o-quick-reality' : autoRealityForFilter }"
           @click="toggleAutoReality"
         />
         <i
-          v-tooltip="questionmarkTooltip"
+          v-tooltip="$legacyTooltip(questionmarkTooltip)"
           class="fas fa-question-circle l-top-right-btn o-borderless"
           @click="showFilterHowTo"
         />
       </div>
-      Current Filter Mode:
+      {{ $t('ade.ee1a5883b94b257b') }}
       <br>
-      {{ filterMode(mode) }}
+      {{ $legacyText(_s(filterMode(mode))) }}
       <br>
       <div class="c-glyph-filter-mode-container">
         <div
@@ -233,7 +233,7 @@ export default {
           @click="setMode(index)"
         >
           <div class="c-glyph-sacrifice-options__option__tooltip">
-            {{ filterMode(index) }}
+            {{ $legacyText(_s(filterMode(index))) }}
           </div>
         </div>
       </div>
@@ -242,19 +242,18 @@ export default {
       v-if="mode === modes.LOWEST_SACRIFICE"
       class="c-glyph-sacrifice-options__advanced"
     >
-      <br>
-      Glyph score is assigned based on type. Priority is given to Glyphs belonging to the type of which you have
-      the least total Glyph Sacrifice value.
-      <br>
-      <br>
-      This mode never keeps Glyphs, but will instead always sacrifice the Glyph it chooses.
+      <LocalizedText id="ade.0a4c7e4a3c52057f">
+    <template #p0><br></template>
+    <template #p1><br></template>
+    <template #p2><br></template>
+  </LocalizedText>
     </div>
     <div
       v-if="mode === modes.EFFECT_COUNT"
       class=" c-glyph-sacrifice-options__advanced"
     >
       <br>
-      Glyphs must have at least
+      {{ $t('ade.1194fea495963abe') }}
       <input
         ref="effectCount"
         type="number"
@@ -264,14 +263,14 @@ export default {
         :value="effectCount"
         @blur="setEffectCount"
       >
-      effects to be chosen. Rarer Glyphs are preferred in ties.
+      {{ $t('ade.3458746491c69ada') }}
     </div>
     <div
       v-if="mode === modes.RARITY_THRESHOLD"
       class="l-glyph-sacrifice-options__rarity-sliders"
     >
       <span class="c-glyph-sacrifice-options__advanced">
-        Any Glyphs with rarity below these thresholds will be sacrificed.
+        {{ $t('ade.d0b258c7201aace3') }}
       </span>
       <div
         v-for="type in glyphTypes"
@@ -298,16 +297,16 @@ export default {
       class="c-glyph-sacrifice-options__advanced"
     >
       <div>
-        Glyph Type:
+        {{ $t('ade.0433668cadebdfa6') }}
         <span
           v-for="type in glyphTypes"
           :key="type.id"
-          v-tooltip="type.id.capitalize()"
+          v-tooltip="$legacyTooltip(type.id.capitalize())"
           class="l-glyph-sacrifice-options__advanced-type-select c-glyph-sacrifice-options__advanced-type-select"
           :style="advancedTypeSelectStyle(type)"
           @click="advancedType=type.id"
         >
-          {{ getSymbol(type.id) }}
+          {{ $legacyText(_s(getSymbol(type.id))) }}
         </span>
       </div>
       <br>
@@ -339,16 +338,16 @@ export default {
       class="c-glyph-sacrifice-options__advanced"
     >
       <div>
-        Glyph Type:
+        {{ $t('ade.0433668cadebdfa6') }}
         <span
           v-for="type in glyphTypes"
           :key="type.id"
-          v-tooltip="type.id.capitalize()"
+          v-tooltip="$legacyTooltip(type.id.capitalize())"
           class="l-glyph-sacrifice-options__advanced-type-select c-glyph-sacrifice-options__advanced-type-select"
           :style="advancedTypeSelectStyle(type)"
           @click="advancedType=type.id"
         >
-          {{ getSymbol(type.id) }}
+          {{ $legacyText(_s(getSymbol(type.id))) }}
         </span>
       </div>
       <br>
@@ -364,24 +363,22 @@ export default {
       v-if="mode === modes.LOWEST_ALCHEMY"
       class="c-glyph-sacrifice-options__advanced"
     >
-      <br>
-      Glyph score is assigned based on current Alchemy Resource totals. Priority is given to the Glyph type with
-      the lowest associated alchemy resource total.
-      <br>
-      <br>
-      This mode never keeps Glyphs.
+      <LocalizedText id="ade.2df2b30b2bac2f93">
+    <template #p0><br></template>
+    <template #p1><br></template>
+    <template #p2><br></template>
+  </LocalizedText>
     </div>
     <div
       v-if="mode === modes.ALCHEMY_VALUE"
       class="c-glyph-sacrifice-options__advanced"
     >
-      <br>
-      Glyphs will be assigned values based on <i>current</i> refinement value, accounting for the type-specific
-      resource caps. Priority is given to Glyphs which are worth the most alchemy resources; Glyphs which would
-      cause you to hit a cap are effectively worth less.
-      <br>
-      <br>
-      This mode never keeps Glyphs.
+      <LocalizedText id="ade.5dc99cb8e57a5da9">
+    <template #p0><br></template>
+    <template #p1><i>{{ $t('ade.46ae793437107ed9') }}</i></template>
+    <template #p2><br></template>
+    <template #p3><br></template>
+  </LocalizedText>
     </div>
   </div>
 </template>

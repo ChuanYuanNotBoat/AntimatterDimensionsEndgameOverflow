@@ -114,7 +114,7 @@ export default {
       />
       <span v-if="showWorstChallenge">
         <br>
-        {{ worstChallengeString }}
+        {{ $legacyText(_s(worstChallengeString)) }}
       </span>
       <EffectDisplay
         v-if="!isDisabled"
@@ -122,8 +122,10 @@ export default {
         :config="config"
       />
       <template v-if="!isDisabled && isImprovedByTS31">
-        <br>
-        After TS31: {{ formatX(ts31Effect, 2, 2) }}
+        <LocalizedText id="ade.028e93b8a11c69cd">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(formatX(ts31Effect,2,2))) }}</template>
+  </LocalizedText>
       </template>
     </span>
     <CostDisplay

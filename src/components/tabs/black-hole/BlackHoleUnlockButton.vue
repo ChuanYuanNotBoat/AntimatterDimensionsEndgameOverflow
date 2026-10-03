@@ -31,9 +31,10 @@ export default {
     class="l-reality-upgrade-btn c-reality-upgrade-btn c-reality-upgrade-btn--black-hole-unlock"
     @click="unlock"
   >
-    Unleash the Black Hole
-    <br>
-    Cost: {{ formatInt(100) }} Reality Machines
+    <LocalizedText id="ade.cbfa8c10c6ad99a0">
+      <template #p0><br></template>
+      <template #p1>{{ $legacyText(_s(formatInt(100))) }}</template>
+    </LocalizedText>
   </button>
 </template>
 

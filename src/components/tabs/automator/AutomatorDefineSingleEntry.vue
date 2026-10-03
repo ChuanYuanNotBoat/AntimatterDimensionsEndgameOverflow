@@ -105,14 +105,14 @@ export default {
       v-model="aliasString"
       class="c-define-textbox c-alias"
       :class="{ 'l-limit-textbox' : aliasString.length === maxNameLength }"
-      placeholder="New constant..."
+      :placeholder="$t('ade.7f98381d3d0751fe')"
       :maxlength="maxNameLength"
       @focusin="handleFocus(true)"
       @focusout="handleFocus(false)"
     >
     <span
       v-if="aliasString"
-      v-tooltip="errorTooltip()"
+      v-tooltip="$legacyTooltip(errorTooltip())"
       class="o-arrow-padding"
     >
       🠈
@@ -122,14 +122,14 @@ export default {
       v-model="valueString"
       class="c-define-textbox c-value"
       :class="{ 'l-limit-textbox' : valueString && valueString.length === maxValueLength }"
-      placeholder="Value for constant..."
+      :placeholder="$t('ade.37432fb7d35ca540')"
       :maxlength="maxValueLength"
       @focusin="handleFocus(true)"
       @focusout="handleFocus(false)"
     >
     <button
       v-if="aliasString"
-      v-tooltip="'Delete this constant'"
+      v-tooltip="$legacyTooltip('Delete this constant')"
       class="c-delete-button fas fa-eraser"
       @click="deleteConstant"
     />

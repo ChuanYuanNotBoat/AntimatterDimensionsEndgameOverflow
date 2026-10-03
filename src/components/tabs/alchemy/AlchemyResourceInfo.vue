@@ -98,20 +98,19 @@ export default {
     :class="classObject"
   >
     <span class="c-alchemy-resource-info__title">
-      {{ resource.symbol }} {{ resource.name }} {{ resource.symbol }}
+      {{ $legacyText(_s(resource.symbol)) }} {{ $legacyText(_s(resource.name)) }} {{ $legacyText(_s(resource.symbol)) }}
     </span>
     <span v-if="isDoomed">
-      Destroyed by Pelle
+      {{ $t('ade.b597f1eb6bca762f') }}
     </span>
     <span v-else>
-      {{ capped ? "Capped" : "Current" }}: {{ resourceAmount }}/{{ resourceCap }}
-      (Recent change: <span v-html="formattedFlow" />)
+      {{ $t('ade.8d78d72ef7f2ec39', { p0: $legacyText(_s(capped?"Capped":"Current")), p1: $legacyText(_s(resourceAmount)), p2: $legacyText(_s(resourceCap)) }) }} <span v-html="$legacyHtml(formattedFlow)" />)
     </span>
-    <span v-if="isBaseResource">Base Resource</span>
-    <span v-else>Reaction: {{ isReactionActive ? "Active" : "Inactive" }} ({{ reactionText }})</span>
+    <span v-if="isBaseResource">{{ $t('ade.51f45ea25e8df212') }}</span>
+    <span v-else>{{ $t('ade.98b7e45c8ad1e2c4', { p0: $legacyText(_s(isReactionActive?"Active":"Inactive")), p1: $legacyText(_s(reactionText)) }) }}</span>
     <span :class="{ 'o-pelle-disabled': isDoomed }">
       <EffectDisplay
-        label="Effect"
+        :label="$t('ade.08a065501690937f')"
         :config="effectConfig"
       />
     </span>
@@ -120,7 +119,7 @@ export default {
     v-else
     :class="classObject"
   >
-    Unlock requirement: {{ unlockRequirement }}
+    {{ $t('ade.fdb472239bac2bec', { p0: $legacyText(_s(unlockRequirement)) }) }}
   </div>
 </template>
 

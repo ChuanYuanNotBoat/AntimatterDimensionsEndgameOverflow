@@ -47,9 +47,9 @@ export default {
       You are about to delete a Glyph
     </template>
     <div class="c-modal-message__text">
-      Deleting a Glyph will remove the Glyph from your inventory!
+      {{ $t('ade.d44f3c5da1bac407') }}
       <div class="c-modal-hard-reset-danger">
-        There is no benefit in deleting a Glyph before you have unlocked Glyph Sacrifice!
+        {{ $t('ade.3b9ae5ae5fe0a35d') }}
       </div>
     </div>
   </ModalWrapperChoice>

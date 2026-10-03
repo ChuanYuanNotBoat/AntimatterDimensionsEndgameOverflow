@@ -30,7 +30,7 @@ export default {
         class="c-automator-docs--button l-return-button fas fa-arrow-left"
         @click="selectedCommand = -1"
       />
-      Return to the Command List
+      {{ $t('ade.8bc0ba2fcd6829e9') }}
     </div>
     <AutomatorDocsManPage
       v-if="selectedCommand !== -1"
@@ -40,16 +40,16 @@ export default {
       v-else
       class="c-automator-docs-page"
     >
-      Click on an underlined command to see more details on syntax, usage, and functionality.
+      {{ $t('ade.2d4808df46ad7118') }}
       <br>
       <br>
-      <span>Command List:</span>
+      <span>{{ $t('ade.a8243d18ac560861') }}</span>
       <br>
       <div
         v-for="(category, i) in categoryNames"
         :key="i"
       >
-        {{ category }} ({{ commandsInCategory(i).length }} commands)
+        {{ $t('ade.9bc8e750dee9935c', { p0: $legacyText(_s(category)), p1: $legacyText(_s(commandsInCategory(i).length)) }) }}
         <div
           v-for="command in commandsInCategory(i)"
           :key="command.id"
@@ -57,16 +57,13 @@ export default {
           @click="selectedCommand = command.id"
         >
           <span v-if="command.isUnlocked()">
-            {{ command.keyword }}
+            {{ $legacyText(_s(command.keyword)) }}
           </span>
         </div>
       </div>
       <br>
       <span>
-        Note: In the SYNTAX note on each command, <u>underlined</u> inputs are <i>required</i> inputs which you must
-        fill and inputs in [square brackets] are optional (if used, they should be input <i>without</i> the brackets).
-        Any other parts should be typed in as they appear. Unless otherwise stated, all of the inputs are
-        case-insensitive. Some commands may have more than one valid format, which will appear on separate lines.
+        {{ $t('ade.22a36123117b9362') }} <u>{{ $t('ade.ecf342d6d69d2465') }}</u> {{ $t('ade.02a1658707bc4427') }} <i>{{ $t('ade.c27a54b559e5eacd') }}</i> {{ $t('ade.7f2e46ce9db8a812') }} <i>{{ $t('ade.16e5f1b6c6fd4e01') }}</i> {{ $t('ade.de3afddf95829e72') }}
       </span>
     </div>
   </div>

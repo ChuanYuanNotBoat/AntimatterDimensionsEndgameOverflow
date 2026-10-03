@@ -68,15 +68,15 @@ export default {
 
 <template>
   <div :class="classObject">
-    <span class="l-milestone-title">{{ milestone.name }}</span>
-    <span :style="timeStyle(currTime)">Current run: {{ timeString(currTime) }}</span>
+    <span class="l-milestone-title">{{ $legacyText(_s(milestone.name)) }}</span>
+    <span :style="timeStyle(currTime)">{{ $t('ade.fe3025a4d51b1987', { p0: $legacyText(_s(timeString(currTime))) }) }}</span>
     <span
       v-if="refTime"
       :style="timeStyle(refTime)"
     >
-      Run {{ runIndices[0] }}: {{ timeString(refTime, true) }}
+      Run {{ $legacyText(_s(runIndices[0])) }}: {{ $legacyText(_s(timeString(refTime, true))) }}
     </span>
-    <span :style="timeStyle(bestTime)">Best ({{ runIndices[1] }}): {{ timeString(bestTime, true) }}</span>
+    <span :style="timeStyle(bestTime)">Best ({{ $legacyText(_s(runIndices[1])) }}): {{ $legacyText(_s(timeString(bestTime, true))) }}</span>
   </div>
 </template>
 

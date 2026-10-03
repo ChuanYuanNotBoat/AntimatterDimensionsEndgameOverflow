@@ -76,14 +76,11 @@ export default {
     <template #header>
       Exponent Notation Settings
     </template>
-    You can adjust what your numbers look like when very large. With small values, the exponent will
-    be directly displayed with no additional formatting. Larger values will have commas inserted into the exponent
-    for clarity, and the largest values will apply notation formatting to the exponent in order to shorten it. You can
-    adjust the two thresholds between these regions below:
+    {{ $t('ade.5b17941942699c89') }}
     <br>
     <br>
     <div class="c-single-slider">
-      <b class="o-digit-text">Minimum for commas in exponent: {{ formatInt(commaDigits) }} digits</b>
+      <b class="o-digit-text">{{ $t('ade.b77a037a87d1e1c2', { p0: $legacyText(_s(formatInt(commaDigits))) }) }}</b>
       <SliderComponent
         class="o-primary-btn--slider__slider o-slider"
         v-bind="sliderProps"
@@ -92,7 +89,7 @@ export default {
       />
     </div>
     <div class="c-single-slider">
-      <b class="o-digit-text">Minimum for notation in exponent: {{ formatInt(notationDigits) }} digits</b>
+      <b class="o-digit-text">{{ $t('ade.18bb29a49917d855', { p0: $legacyText(_s(formatInt(notationDigits))) }) }}</b>
       <SliderComponent
         class="o-primary-btn--slider__slider o-slider"
         v-bind="sliderProps"
@@ -101,21 +98,18 @@ export default {
       />
     </div>
     <br>
-    Sample numbers for exponent formatting:
+    {{ $t('ade.303089fc51dac5ce') }}
     <div class="c-sample-numbers">
       <span
         v-for="(num, id) in sampleNums"
         :key="id"
         class="o-single-number"
       >
-        {{ formatPostBreak(num) }}
+        {{ $legacyText(_s(formatPostBreak(num))) }}
       </span>
     </div>
     <br>
-    Note: The interface is generally optimized for Scientific notation with settings of {{ formatInt(5) }}
-    and {{ formatInt(9) }} digits. Some text may look odd or overflow out of boxes if you
-    differ significantly from these values. Additionally, these settings might not cause any visual changes
-    when using certain notations.
+    {{ $t('ade.ff343a52d04d7f62', { p0: $legacyText(_s(formatInt(5))), p1: $legacyText(_s(formatInt(9))) }) }}
   </ModalWrapper>
 </template>
 

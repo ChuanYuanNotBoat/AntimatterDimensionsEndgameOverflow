@@ -42,11 +42,11 @@ export default {
       ENTER USERNAME
     </template>
     <div class="c-modal-message__text">
-      Please confirm your username.
-      <span class="c-modal-username-danger">You can only choose your username once.</span>
-      Type in your desired username to confirm.
+      {{ $t('ade.e65d6dc1ef77828e') }}
+      <span class="c-modal-username-danger">{{ $t('ade.868eaff87fd7c191') }}</span>
+      {{ $t('ade.3426051e3d0c639c') }}
       <div class="c-modal-username-danger">
-        THIS ACTION IS IRREVERSIBLE
+        {{ $t('ade.301a62b9206692ea') }}
       </div>
     </div>
     <input
@@ -61,10 +61,10 @@ export default {
         v-if="notEmpty"
         class="c-modal-username-danger"
       >
-        Username confirmed - are you sure this is your desired username?
+        {{ $t('ade.2d0e0630cf5a660a') }}
       </div>
       <div v-else>
-        Please type something.
+        {{ $t('ade.fddf2cefcbedcd68') }}
       </div>
     </div>
     <template #confirm-text>

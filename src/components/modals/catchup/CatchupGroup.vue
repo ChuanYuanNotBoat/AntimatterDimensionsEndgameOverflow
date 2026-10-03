@@ -40,7 +40,7 @@ export default {
       class="o-catchup-group-title"
       @click="collapsed = !collapsed"
     >
-      <i :class="dropDownIconClass" /> {{ name }}
+      <i :class="dropDownIconClass" /> {{ $legacyText(_s(name)) }}
     </span>
     <div v-if="!collapsed">
       <CatchupEntry

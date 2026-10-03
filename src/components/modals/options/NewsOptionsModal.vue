@@ -158,10 +158,10 @@ export default {
       class="o-primary-btn o-primary-btn--option-wide"
       onclick="GameOptions.toggleNews()"
     >
-      {{ newsOnOffLabel }}
+      {{ $legacyText(_s(newsOnOffLabel)) }}
     </PrimaryButton>
     <div class="o-primary-btn o-primary-btn--option-wide o-primary-btn--slider">
-      <b>{{ formatInt(parseInt(repeatBuffer)) }} message repeat buffer</b>
+      <b>{{ $t('ade.ded213d2f0af198e', { p0: $legacyText(_s(formatInt(parseInt(repeatBuffer)))) }) }}</b>
       <SliderComponent
         class="o-primary-btn--slider__slider"
         v-bind="sliderPropsRepeatBuffer"
@@ -170,7 +170,7 @@ export default {
       />
     </div>
     <div class="o-primary-btn o-primary-btn--option-wide o-primary-btn--slider">
-      <b>{{ formatPercents(parseFloat(AIChance)) }} AI messages</b>
+      <b>{{ $t('ade.febb231fc6cdcb1a', { p0: $legacyText(_s(formatPercents(parseFloat(AIChance)))) }) }}</b>
       <SliderComponent
         class="o-primary-btn--slider__slider"
         v-bind="sliderPropsAIChance"
@@ -179,7 +179,7 @@ export default {
       />
     </div>
     <div class="o-primary-btn o-primary-btn--option-wide o-primary-btn--slider">
-      <b>{{ formatPercents(parseFloat(ENDChance)) }} Endgame messages</b>
+      <b>{{ $t('ade.0a0f3836be5fe6e5', { p0: $legacyText(_s(formatPercents(parseFloat(ENDChance)))) }) }}</b>
       <SliderComponent
         class="o-primary-btn--slider__slider"
         v-bind="sliderPropsENDChance"
@@ -188,7 +188,7 @@ export default {
       />
     </div>
     <div class="o-primary-btn o-primary-btn--option-wide o-primary-btn--slider">
-      <b>{{ formatPercents(parseFloat(StoryChance)) }} Life's and Midnight's Story </b>
+      <b>{{ $t('ade.aec3369293bd59fb', { p0: $legacyText(_s(formatPercents(parseFloat(StoryChance)))) }) }} </b>
       <SliderComponent
         class="o-primary-btn--slider__slider"
         v-bind="sliderPropsStoryChance"
@@ -197,7 +197,7 @@ export default {
       />
     </div>
     <div class="o-primary-btn o-primary-btn--option-wide o-primary-btn--slider">
-      <b>{{ formatPercents(parseFloat(MatureChance)) }} Mature Messages </b>
+      <b>{{ $t('ade.89f34de4f9ee899f', { p0: $legacyText(_s(formatPercents(parseFloat(MatureChance)))) }) }} </b>
       <SliderComponent
         class="o-primary-btn--slider__slider"
         v-bind="sliderPropsMatureChance"
@@ -206,7 +206,7 @@ export default {
       />
     </div>
     <div class="o-primary-btn o-primary-btn--option-wide o-primary-btn--slider">
-      <b>{{ formatPercents(parseFloat(speed)) }} scroll speed</b>
+      <b>{{ $t('ade.f4f598ddae52fa2a', { p0: $legacyText(_s(formatPercents(parseFloat(speed)))) }) }}</b>
       <SliderComponent
         class="o-primary-btn--slider__slider"
         v-bind="sliderPropsSpeed"

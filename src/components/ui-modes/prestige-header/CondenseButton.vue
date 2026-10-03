@@ -104,27 +104,32 @@ export default {
   >
     <!-- Cannot Condense -->
     <template v-if="!canCondense">
-      Reach {{ format(condenseGoal, 2, 2) }}
-      <br>
-      Divine Matter
+      <LocalizedText id="ade.c32684925c48a062">
+        <template #p0>{{ $legacyText(_s(format(condenseGoal,2,2))) }}</template>
+        <template #p1><br></template>
+      </LocalizedText>
     </template>
 
     <!-- Can Condense -->
     <template v-else>
       <div v-if="!showVSRate" />
       <b>
-        Condense for
-        <span :style="amountStyle">{{ format(gainedVS, 2) }}</span>
-        <span v-if="showVSRate"> VS</span>
-        <span v-else> Divine {{ pluralize("Star", gainedVS) }}</span>
+        <LocalizedText id="ade.41e96020dad9079c">
+          <template #p0><span :style="amountStyle">{{ $legacyText(_s(format(gainedVS, 2))) }}</span></template>
+          <template #p1><span v-if="showVSRate"> {{ $t('ade.738b01a2ed5c0ead') }}</span>
+<span v-else> {{ $t('ade.36ed436a071e2592', { p0: $legacyText(_s(pluralize("Star",gainedVS))) }) }}</span></template>
+        </LocalizedText>
+
       </b>
       <template v-if="showVSRate">
-        <br>
-        Current: {{ format(currentVSRate, 2) }} VS/min
-        <br>
-        Peak: {{ format(peakVSRate, 2) }} VS/min
-        <br>
-        at {{ format(peakVSRateVal, 2) }} VS
+        <LocalizedText id="ade.f23aebad36428775">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(currentVSRate,2))) }}</template>
+    <template #p2><br></template>
+    <template #p3>{{ $legacyText(_s(format(peakVSRate,2))) }}</template>
+    <template #p4><br></template>
+    <template #p5>{{ $legacyText(_s(format(peakVSRateVal,2))) }}</template>
+  </LocalizedText>
       </template>
       <div v-else />
     </template>

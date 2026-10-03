@@ -52,13 +52,13 @@ export default {
 
     <div class="c-modal-message__text">
       <span v-if="isRestarting">
-        You will immediately re-enter {{ challengeName }} again after confirming this modal.
+        {{ $t('ade.844e063c122338c3', { p0: $legacyText(_s(challengeName)) }) }}
       </span>
       <span v-else>
-        This will place you back into a regular {{ normalName }} without any restrictions.
+        {{ $t('ade.766be5e6bc7a1642', { p0: $legacyText(_s(normalName)) }) }}
       </span>
       <span v-if="hasHigherLayers">
-        Other effects coming from higher-layer restrictions will still continue to apply.
+        {{ $t('ade.903fefd81c40e492') }}
       </span>
     </div>
     <template #confirm-text>

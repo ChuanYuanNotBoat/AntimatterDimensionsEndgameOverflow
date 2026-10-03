@@ -136,29 +136,29 @@ export default {
         class="o-primary-btn l-button-container"
         @click="changeBuyMode"
       >
-        {{ getUntil10Display() }}
+        {{ $legacyText(_s(getUntil10Display())) }}
       </button>
       <PrimaryButton
         v-show="isSacrificeUnlocked"
-        v-tooltip="sacrificeTooltip"
+        v-tooltip="$legacyTooltip(sacrificeTooltip)"
         :enabled="isSacrificeAffordable"
         class="o-primary-btn--sacrifice"
         @click="sacrifice"
       >
-        <span v-if="isSacrificeAffordable">{{ sacText }}</span>
+        <span v-if="isSacrificeAffordable">{{ $legacyText(_s(sacText)) }}</span>
         <span v-else-if="isFullyAutomated && disabledCondition !== ''">
-          Dimensional Sacrifice is Automated (Achievement 118)
+          {{ $t('ade.71d85f2a7cae3dd0') }}
         </span>
-        <span v-else>Dimensional Sacrifice Disabled ({{ disabledCondition }})</span>
+        <span v-else>{{ $t('ade.5209c28e0d12bc4a', { p0: $legacyText(_s(disabledCondition)) }) }}</span>
       </PrimaryButton>
       <button
         class="o-primary-btn l-button-container"
         @click="maxAll"
       >
-        Max All (M)
+        {{ $t('ade.3bf163fe6d81e351') }}
       </button>
     </div>
-    <span v-if="!inCursedCore">{{ multiplierText }}</span>
+    <span v-if="!inCursedCore">{{ $legacyText(_s(multiplierText)) }}</span>
     <TickspeedRow v-if="!inCursedCore" />
     <div class="l-dimensions-container">
       <AntimatterDimensionRow
@@ -177,9 +177,11 @@ export default {
         class="o-primary-btn--quick-reset"
         onclick="softReset(-1, true, true)"
       >
-        Perform a Dimension Boost reset
-        <span v-if="hasDimensionBoosts"> but lose a Dimension Boost</span>
-        <span v-else> for no gain</span>
+        <LocalizedText id="ade.cdf2ce794845c4e4">
+          <template #p0><span v-if="hasDimensionBoosts"> {{ $t('ade.9ab802329b4ae6ea') }}</span>
+<span v-else> {{ $t('ade.cdd52c328e35822a') }}</span></template>
+        </LocalizedText>
+
       </PrimaryButton>
       <AntimatterGalaxyRow />
     </div>

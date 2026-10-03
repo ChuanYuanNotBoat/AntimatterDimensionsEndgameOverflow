@@ -120,7 +120,7 @@ export default {
         />
       </div>
       <span class="c-modal__confirmation-toggle__text">
-        Make button glow when new milestones have been reached
+        {{ $t('ade.aa05d3c340e633aa') }}
       </span>
     </div>
     <div class="l-singularity-milestone-modal-container-outer">
@@ -137,33 +137,37 @@ export default {
         class="c-singularity-milestone-modal-sort-button"
         @click="cycleButton(0)"
       >
-        To Milestone:
-        <br>
-        {{ resourceStr }}
+        <LocalizedText id="ade.494c958286104279">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(resourceStr)) }}</template>
+        </LocalizedText>
       </button>
       <button
         class="c-singularity-milestone-modal-sort-button"
         @click="cycleButton(1)"
       >
-        Sort by:
-        <br>
-        {{ sortStr }}
+        <LocalizedText id="ade.1cebf45505d916f4">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(sortStr)) }}</template>
+        </LocalizedText>
       </button>
       <button
         class="c-singularity-milestone-modal-sort-button"
         @click="cycleButton(2)"
       >
-        Completed Milestones:
-        <br>
-        {{ completedStr }}
+        <LocalizedText id="ade.5eee67a8557b67bb">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(completedStr)) }}</template>
+        </LocalizedText>
       </button>
       <button
         class="c-singularity-milestone-modal-sort-button"
         @click="cycleButton(3)"
       >
-        Sort Order:
-        <br>
-        {{ orderStr }}
+        <LocalizedText id="ade.4c1bf836721a5b37">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(orderStr)) }}</template>
+        </LocalizedText>
       </button>
     </div>
   </ModalWrapper>

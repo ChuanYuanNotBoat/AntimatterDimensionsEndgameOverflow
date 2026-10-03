@@ -34,9 +34,10 @@ export default {
       class="c-prestige-button-container"
     >
       <div class="c-divine-stars">
-        You have
-        <span class="c-game-header__vs-amount">{{ format(divineStars, 2) }}</span>
-        {{ pluralize("Divine Star", divineStars) }}.
+        <LocalizedText id="ade.cd1ff500c8f2ac78">
+          <template #p0><span class="c-game-header__vs-amount">{{ $legacyText(_s(format(divineStars, 2))) }}</span></template>
+          <template #p1>{{ $legacyText(_s(pluralize("Divine Star",divineStars))) }}</template>
+        </LocalizedText>
       </div>
       <CondenseButton />
     </div>
@@ -45,9 +46,10 @@ export default {
       class="c-prestige-button-container"
     >
       <div class="c-divine-stars">
-        You have
-        <span class="c-game-header__neb-amount">{{ format(nebulae, 2) }}</span>
-        {{ pluralize("Nebula", nebulae) }}.
+        <LocalizedText id="ade.cd1ff500c8f2ac78">
+          <template #p0><span class="c-game-header__neb-amount">{{ $legacyText(_s(format(nebulae, 2))) }}</span></template>
+          <template #p1>{{ $legacyText(_s(pluralize("Nebula",nebulae))) }}</template>
+        </LocalizedText>
       </div>
       <SupernovaButton />
     </div>

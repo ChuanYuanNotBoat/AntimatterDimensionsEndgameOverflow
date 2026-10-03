@@ -211,7 +211,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse1"
           />
-          Pelle Achievement Enabling
+          {{ $t('ade.1899029922833747') }}
         </div>
         <div
           v-if="!isCollapsed1"
@@ -231,7 +231,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse2"
           />
-          Pelle Destruction Upgrades
+          {{ $t('ade.744024790d36ab35') }}
         </div>
         <div
           v-if="!isCollapsed2"
@@ -251,7 +251,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse3"
           />
-          Pelle Reality Upgrade Enabling
+          {{ $t('ade.815012b1c486b6e9') }}
         </div>
         <div
           v-if="!isCollapsed3"
@@ -271,7 +271,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse4"
           />
-          Pelle Imaginary Upgrade Enabling
+          {{ $t('ade.feb5e5dafc6e466b') }}
         </div>
         <div
           v-if="!isCollapsed4"
@@ -291,7 +291,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse5"
           />
-          Pelle Celestial Reward Enabling
+          {{ $t('ade.5fabba096759aa39') }}
         </div>
         <div
           v-if="!isCollapsed5"
@@ -311,7 +311,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse6"
           />
-          Pelle Perk Enabling
+          {{ $t('ade.35c891cf8fc70c40') }}
         </div>
         <div
           v-if="!isCollapsed6"
@@ -331,7 +331,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse7"
           />
-          Pelle Alchemy Enabling
+          {{ $t('ade.a50fa7f6424ecd70') }}
         </div>
         <div
           v-if="!isCollapsed7"
@@ -351,7 +351,7 @@ export default {
             class="c-collapse-icon-clickable"
             @click="toggleCollapse8"
           />
-          Pelle Strike Disabling
+          {{ $t('ade.b45568242a21350a') }}
         </div>
         <div
           v-if="!isCollapsed8"

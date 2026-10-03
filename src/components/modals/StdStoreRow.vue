@@ -31,13 +31,13 @@ export default {
 <template>
   <div class="c-modal-store-btn-container">
     <div class="o-modal-store-label">
-      {{ amount }} STDs
+      {{ $legacyText(_s(amount)) }} STDs
     </div>
     <button
       class="o-modal-store-btn"
       @click="purchase"
     >
-      $<span>{{ cost }}</span>
+      $<span>{{ $legacyText(_s(cost)) }}</span>
     </button>
   </div>
 </template>

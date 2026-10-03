@@ -49,26 +49,26 @@ export default {
     <div>
       <br>
       <div class="c-stellar-text">
-        You have <span class="c-universes-text--header">{{ format(stellarAugmenters, 2, 2) }}</span> Stellar Augmenters.
+        You have <span class="c-universes-text--header">{{ $legacyText(_s(format(stellarAugmenters, 2, 2))) }}</span> Stellar Augmenters.
         <br>
         Stellar Augmenters are currently providing a
-        <span class="c-universes-text--header">+{{ formatDecimalPercents(formula, 2, 2) }}</span>
+        <span class="c-universes-text--header">+{{ $legacyText(_s(formatDecimalPercents(formula, 2, 2))) }}</span>
         to Gray Star Effectiveness.
       </div>
       <br>
       <div class="c-tangible-universe-text">
         Your highest Matter reached in the Tangible Universe is
-        <span class="c-universes-text--header">{{ format(highestMatter, 2, 1) }}</span>.
+        <span class="c-universes-text--header">{{ $legacyText(_s(format(highestMatter, 2, 1))) }}</span>.
       </div>
       <br>
       <div class="c-tangible-universe-text">
         You have
-        <span class="c-universes-text--header">{{ format(molecularMass, 2, 2) }}</span>
+        <span class="c-universes-text--header">{{ $legacyText(_s(format(molecularMass, 2, 2))) }}</span>
         Molecular Mass.
-        <span class="c-universes-text--header">+{{ format(massPerSecond, 2, 2) }}/s</span>
+        <span class="c-universes-text--header">+{{ $legacyText(_s(format(massPerSecond, 2, 2))) }}/s</span>
         <br>
         Molecular Mass is currently adding to the final tetration of Matter generation by
-        <span class="c-universes-text--header">+{{ format(massBoost, 2, 4) }}</span>
+        <span class="c-universes-text--header">+{{ $legacyText(_s(format(massBoost, 2, 4))) }}</span>
         while inside the Tangible Universe.
         <br>
         Molecular Mass resets on exiting the Tangible Universe.
@@ -80,7 +80,7 @@ export default {
       class="o-tangible-universe-btn"
       @click="enterUniverse"
     >
-      {{ tangibleUniverseButtonText }}
+      {{ $legacyText(_s(tangibleUniverseButtonText)) }}
     </button>
   </div>
 </template>

@@ -107,7 +107,7 @@ export default {
 
 <template>
   <ModalWrapperChoice @confirm="confirmPrefs">
-    <h2>Compression Split Preference</h2>
+    <h2>{{ $t('ade.fabb3f5cd1d520f1') }}</h2>
     <div class="l-modal-split-preferences">
       <button
         v-for="(id, name) in compressionOptions"
@@ -119,15 +119,15 @@ export default {
           v-if="isPreferred(name)"
           class="l-dim-path-priority o-dim-path-priority"
         >
-          {{ isPreferred(name) }}
+          {{ $legacyText(_s(isPreferred(name))) }}
         </div>
         <div>
-          {{ name }}
+          {{ $legacyText(_s(name)) }}
         </div>
       </button>
     </div>
     <br>
-    <h2>Currency Split Preference</h2>
+    <h2>{{ $t('ade.1460313914164a06') }}</h2>
     <div class="l-modal-split-preferences">
       <button
         v-for="(id, name) in currencyOptions"
@@ -139,10 +139,10 @@ export default {
           v-if="isPreferred(name)"
           class="l-dim-path-priority o-dim-path-priority"
         >
-          {{ isPreferred(name) }}
+          {{ $legacyText(_s(isPreferred(name))) }}
         </div>
         <div>
-          {{ name }}
+          {{ $legacyText(_s(name)) }}
         </div>
       </button>
     </div>
@@ -159,10 +159,10 @@ export default {
           v-if="isPreferred(name)"
           class="l-dim-path-priority o-dim-path-priority"
         >
-          {{ isPreferred(name) }}
+          {{ $legacyText(_s(isPreferred(name))) }}
         </div>
         <div>
-          {{ name }}
+          {{ $legacyText(_s(name)) }}
         </div>
       </button>
     </div>

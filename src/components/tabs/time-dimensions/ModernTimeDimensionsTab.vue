@@ -72,58 +72,56 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="maxAll"
       >
-        Max all
+        {{ $t('ade.4df159d13ecdd149') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="areAutobuyersUnlocked"
         class="o-primary-btn--subtab-option"
         @click="toggleAllAutobuyers"
       >
-        Toggle all autobuyers
+        {{ $t('ade.4b652887fb44f382') }}
       </PrimaryButton>
     </div>
     <div>
       <p>
-        You have gained
-        <span class="c-time-dim-description__accent">{{ formatHybridLarge(totalUpgrades, 3) }}</span> Tickspeed upgrades from
-        <span class="c-time-dim-description__accent">{{ format(timeShards, 2, 1) }}</span> Time Shards.
+        <LocalizedText id="ade.6d51dbc4fb6ca33d">
+          <template #p0><span class="c-time-dim-description__accent">{{ $legacyText(_s(formatHybridLarge(totalUpgrades, 3))) }}</span></template>
+          <template #p1><span class="c-time-dim-description__accent">{{ $legacyText(_s(format(timeShards, 2, 1))) }}</span></template>
+        </LocalizedText>
       </p>
       <p>
-        Next Tickspeed upgrade at
-        <span class="c-time-dim-description__accent">{{ format(upgradeThreshold, 2, 1) }}</span>, increasing by
-        <span class="c-time-dim-description__accent">{{ formatX(multPerTickspeed, 2, 2) }}</span> per
-        Tickspeed upgrade gained.
+        <LocalizedText id="ade.484ab26a905d6607">
+          <template #p0><span class="c-time-dim-description__accent">{{ $legacyText(_s(format(upgradeThreshold, 2, 1))) }}</span></template>
+          <template #p1><span class="c-time-dim-description__accent">{{ $legacyText(_s(formatX(multPerTickspeed, 2, 2))) }}</span></template>
+        </LocalizedText>
       </p>
     </div>
     <div>
       <p>
         <span v-if="isEndgameUnlocked">
-          Your Time Dimension Compression Magnitude is
-          <span class="c-time-dim-compression-description__accent">{{ format(timeDimCompressionMagnitude, 2, 3) }}</span>,
-          which raises all Time Dimension Multipliers' Exponents to the power of
-          <span class="c-time-dim-compression-description__accent">{{ format(timeDimOverflow, 2, 3) }}</span>
-          while above
-          <span>{{ formatPostBreak(timeDimStart, 2, 1) }}</span>.
+          <LocalizedText id="ade.04a5a5b762d766d6">
+            <template #p0><span class="c-time-dim-compression-description__accent">{{ $legacyText(_s(format(timeDimCompressionMagnitude, 2, 3))) }}</span></template>
+            <template #p1><span class="c-time-dim-compression-description__accent">{{ $legacyText(_s(format(timeDimOverflow, 2, 3))) }}</span></template>
+            <template #p2><span>{{ $legacyText(_s(formatPostBreak(timeDimStart, 2, 1))) }}</span></template>
+          </LocalizedText>
         </span>
       </p>
     </div>
     <div>
       <p>
         <span v-if="hasSecond">
-          Your Time Dimension Compression^2 Magnitude is
-          <span class="c-time-dim-compression-description__accent">{{ format(timeDimCompressionMagnitude2, 2, 3) }}</span>,
-          which raises all Time Dimension Multipliers' Exponents to the power of
-          <span class="c-time-dim-compression-description__accent">{{ format(timeDimOverflow2, 2, 3) }}</span>
-          while above
-          <span>{{ formatPostBreak(timeDimStart2, 2, 1) }}</span>.
+          <LocalizedText id="ade.29104e60deca169e">
+            <template #p0><span class="c-time-dim-compression-description__accent">{{ $legacyText(_s(format(timeDimCompressionMagnitude2, 2, 3))) }}</span></template>
+            <template #p1><span class="c-time-dim-compression-description__accent">{{ $legacyText(_s(format(timeDimOverflow2, 2, 3))) }}</span></template>
+            <template #p2><span>{{ $legacyText(_s(formatPostBreak(timeDimStart2, 2, 1))) }}</span></template>
+          </LocalizedText>
         </span>
       </p>
     </div>
     <div>
-      The amount each additional upgrade requires will start
-      increasing above {{ formatHybridLarge(tickspeedSoftcap, 3) }} Tickspeed upgrades.
+      {{ $t('ade.c0a41734167ae070', { p0: $legacyText(_s(formatHybridLarge(tickspeedSoftcap,3))) }) }}
     </div>
-    <div>You are getting {{ format(shardsPerSecond, 2, 0) }} {{ incomeType }} per second.</div>
+    <div>{{ $t('ade.d7aacbaaf60681d1', { p0: $legacyText(_s(format(shardsPerSecond,2,0))), p1: $legacyText(_s(incomeType)) }) }}</div>
     <div class="l-dimensions-container">
       <NewTimeDimensionRow
         v-for="tier in 8"
@@ -133,16 +131,15 @@ export default {
       />
     </div>
     <div>
-      Time Dimension costs jump at {{ format(costIncreases[0], 2, 2) }} and
-      {{ format(costIncreases[1]) }} Eternity Points,
+      {{ $t('ade.183959b48cc99716', { p0: $legacyText(_s(format(costIncreases[0],2,2))), p1: $legacyText(_s(format(costIncreases[1]))) }) }}
       <br>
-      and costs increase much faster after {{ format(costIncreases[2]) }} Eternity Points.
+      {{ $t('ade.bef8654b479df5fe', { p0: $legacyText(_s(format(costIncreases[2]))) }) }}
       <br>
       <div v-if="showLockedDimCostNote">
-        Hold shift to see the Eternity Point cost for locked Time Dimensions.
+        {{ $t('ade.bf16249a88df4a3b') }}
       </div>
       <div v-if="hasCap">
-        Any 8th Time Dimensions purchased above {{ format(1e8) }} will not further increase the multiplier.
+        Any 8th Time Dimensions purchased above {{ $legacyText(_s(format(1e8))) }} will not further increase the multiplier.
       </div>
     </div>
   </div>

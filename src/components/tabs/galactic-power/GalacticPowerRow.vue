@@ -47,7 +47,7 @@ export default {
 <template>
   <div v-show="isUnlocked">
     <div class="c-galactic-power-text">
-      {{ title }} {{ description }}.
+      {{ $legacyText(_s(title)) }} {{ $legacyText(_s(description)) }}.
     </div>
     <div class="c-galactic-power-text">
       <EffectDisplay

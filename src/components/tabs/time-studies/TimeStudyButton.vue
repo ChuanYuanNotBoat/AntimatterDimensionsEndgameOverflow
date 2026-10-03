@@ -192,7 +192,7 @@ export class TimeStudySetup {
       name="Time Theorem"
     />
     <div v-else-if="!doomedRealityStudy && !isDisabledByEnslaved">
-      Cost: {{ customCostStr }}
+      {{ $t('ade.d2367df3c5e60ec7', { p0: $legacyText(_s(customCostStr)) }) }}
     </div>
   </button>
 </template>

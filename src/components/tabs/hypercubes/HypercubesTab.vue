@@ -210,18 +210,18 @@ export default {
           @click="buyTesseract"
         >
           <p>
-            Buy a Tesseract ({{ tesseractCountString }})
+            {{ $t('ade.bf9553f8ec47314b', { p0: $legacyText(_s(tesseractCountString)) }) }}
           </p>
-          <p>Increase Infinity Dimension caps by {{ format(nextInfinityDimCapIncrease, 2) }}</p>
-          <p><b>Costs: {{ format(tesseractCost) }} IP</b></p>
-          <p>Total Tesseract effect: {{ format(totalInfinityDimCap, 2) }}</p>
+          <p>{{ $t('ade.05c5371dbbe26d3e', { p0: $legacyText(_s(format(nextInfinityDimCapIncrease,2))) }) }}</p>
+          <p><b>{{ $t('ade.4e555efd48a9dbc5', { p0: $legacyText(_s(format(tesseractCost))) }) }}</b></p>
+          <p>{{ $t('ade.96bb78a5e16b1913', { p0: $legacyText(_s(format(totalInfinityDimCap,2))) }) }}</p>
         </button>
         <br>
         <PrimaryToggleButton
           v-if="isTesseractAutoUnlocked"
           :value="isTesseractAutoActive"
-          :on="tesseractAutobuyerTextDisplay"
-          :off="tesseractAutobuyerTextDisplay"
+          :on="$legacyText(tesseractAutobuyerTextDisplay)"
+          :off="$legacyText(tesseractAutobuyerTextDisplay)"
           class="l--spoon-btn-group__little-spoon o-primary-btn--tesseract-toggle"
           @input="handleTesseractAutoToggle"
         />
@@ -236,11 +236,11 @@ export default {
           @click="buyPenteract"
         >
           <p>
-            {{ penteractLockString }}
+            {{ $legacyText(_s(penteractLockString)) }}
           </p>
-          <p>Reduce Time Dimension threshold softcap by {{ formatDecimalPercents(nextFreeTickspeedReduction, 2, 2) }}</p>
-          <p><b>Costs: {{ format(penteractCost) }} EP</b></p>
-          <p>Total Penteract effect: {{ formatPow(totalFreeTickspeedReduction, 2, 4) }}</p>
+          <p>{{ $t('ade.547a94730a6d9aad', { p0: $legacyText(_s(formatDecimalPercents(nextFreeTickspeedReduction,2,2))) }) }}</p>
+          <p><b>{{ $t('ade.76c056749f43fe3e', { p0: $legacyText(_s(format(penteractCost))) }) }}</b></p>
+          <p>{{ $t('ade.ef92386b4ca00826', { p0: $legacyText(_s(formatPow(totalFreeTickspeedReduction,2,4))) }) }}</p>
         </button>
       </div>
       <div class="l-hypercubes-btn">
@@ -253,11 +253,11 @@ export default {
           @click="buyHexeract"
         >
           <p>
-            {{ hexeractLockString }}
+            {{ $legacyText(_s(hexeractLockString)) }}
           </p>
-          <p>Reduce Dark Matter Dimension threshold softcaps by {{ formatDecimalPercents(nextDarkMatterSoftcapReduction, 2, 2) }}</p>
-          <p><b>Costs: {{ format(hexeractCost) }} DM</b></p>
-          <p>Total Hexeract effect: {{ formatPow(totalDarkMatterSoftcapReduction, 2, 4) }}</p>
+          <p>{{ $t('ade.6f5d9e4339c39d48', { p0: $legacyText(_s(formatDecimalPercents(nextDarkMatterSoftcapReduction,2,2))) }) }}</p>
+          <p><b>{{ $t('ade.38218b664d4e0ef9', { p0: $legacyText(_s(format(hexeractCost))) }) }}</b></p>
+          <p>{{ $t('ade.e41b3d54f199e1e4', { p0: $legacyText(_s(formatPow(totalDarkMatterSoftcapReduction,2,4))) }) }}</p>
         </button>
       </div>
     </div>
@@ -272,11 +272,11 @@ export default {
           @click="buyHepteract"
         >
           <p>
-            {{ hepteractLockString }}
+            {{ $legacyText(_s(hepteractLockString)) }}
           </p>
-          <p>Reduce Celestial Dimension Softcap power by {{ formatDecimalPercents(nextCelestialDimSoftcapReduction, 2, 2) }}</p>
-          <p><b>Costs: {{ format(hepteractCost) }} CP</b></p>
-          <p>Total Hepteract effect: {{ formatPow(totalCelestialDimSoftcapReduction, 2, 4) }}</p>
+          <p>{{ $t('ade.0c29dc553caee349', { p0: $legacyText(_s(formatDecimalPercents(nextCelestialDimSoftcapReduction,2,2))) }) }}</p>
+          <p><b>{{ $t('ade.c739c5d78ddfb126', { p0: $legacyText(_s(format(hepteractCost))) }) }}</b></p>
+          <p>{{ $t('ade.8163c7b6bee32496', { p0: $legacyText(_s(formatPow(totalCelestialDimSoftcapReduction,2,4))) }) }}</p>
         </button>
       </div>
       <div class="l-hypercubes-btn">
@@ -289,11 +289,11 @@ export default {
           @click="buyOcteract"
         >
           <p>
-            {{ octeractLockString() }}
+            {{ $legacyText(_s(octeractLockString())) }}
           </p>
-          <p>Increase the strength of all cubes by {{ formatPercents(nextTotalCubeBoost, 2, 2) }}</p>
-          <p><b>Costs: {{ format(octeractCost) }} {{ octeractResourceString() }}</b></p>
-          <p>Total Octeract effect: {{ formatX(totalCubeBoost, 2, 2) }}</p>
+          <p>{{ $t('ade.f8793a6733bdb71c', { p0: $legacyText(_s(formatPercents(nextTotalCubeBoost,2,2))) }) }}</p>
+          <p><b>{{ $t('ade.cb92c4fb073b5667', { p0: $legacyText(_s(format(octeractCost))), p1: $legacyText(_s(octeractResourceString())) }) }}</b></p>
+          <p>{{ $t('ade.4c0ee24c92919ab0', { p0: $legacyText(_s(formatX(totalCubeBoost,2,2))) }) }}</p>
         </button>
       </div>
     </div>

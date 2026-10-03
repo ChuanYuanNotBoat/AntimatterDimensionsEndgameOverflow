@@ -64,7 +64,7 @@ export default {
 <template>
   <div class="l-break-eternity-tab">
     <div v-if="!isUnlocked">
-      Reach {{ format(antimatterReq, 2, 1) }} {{ isFlipped ? "matter" : "antimatter" }} with at least one Endgamed stat
+      Reach {{ $legacyText(_s(format(antimatterReq, 2, 1))) }} {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }} with at least one Endgamed stat
       to unlock Break Eternity
     </div>
     <BreakEternityButton class="l-break-eternity-tab__break-btn" />
@@ -86,7 +86,7 @@ export default {
       </div>
     </div>
     <div>
-      All Break Eternity Upgrades can only be purchased with {{ isFlipped ? "Matter" : "Antimatter" }} gained outside Pelle.
+      All Break Eternity Upgrades can only be purchased with {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} gained outside Pelle.
     </div>
   </div>
 </template>

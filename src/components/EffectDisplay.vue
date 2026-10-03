@@ -147,6 +147,6 @@ export default {
 <template>
   <span v-if="isVisible && effectDisplay !== undefined">
     <br v-if="br">
-    {{ labelDisplay }}{{ effectDisplay }}
+    {{ $legacyText(_s(labelDisplay)) }}{{ $legacyText(_s(effectDisplay)) }}
   </span>
 </template>

@@ -59,7 +59,7 @@ export default {
       'c-taskbar-icon': true,
       'c-taskbar-icon--active': isCurrentTab
     }"
-    :title="tab.name"
+    :title="$legacyText(tab.name)"
     @mouseenter="S12Windows.tabs.setHoveringTab(tab)"
     @mouseleave="S12Windows.tabs.unsetHoveringTab()"
     @click="tab.show(true); S12Windows.isMinimised = false; S12Windows.tabs.unsetHoveringTab(true);"

@@ -65,14 +65,14 @@ export default {
 <template>
   <div class="c-shop-button-container">
     <div class="o-shop-button-description">
-      {{ purchase.description }}
+      {{ $legacyText(_s(purchase.description)) }}
       <br>
       <span
         v-if="purchase.shouldDisplayMult"
         class="o-shop-button-multiplier"
         :class="{ 'o-shop-button-multiplier--disabled': iapDisabled }"
       >
-        Currently {{ purchase.formatEffect(currentMult) }}, next: {{ purchase.formatEffect(nextMult) }}
+        Currently {{ $legacyText(_s(purchase.formatEffect(currentMult))) }}, next: {{ $legacyText(_s(purchase.formatEffect(nextMult))) }}
       </span>
     </div>
     <div>
@@ -90,7 +90,7 @@ export default {
           >
             Choose Set
           </button>
-          Chosen Set: {{ chosenSet }}
+          Chosen Set: {{ $legacyText(_s(chosenSet)) }}
         </div>
       </div>
       <div
@@ -101,7 +101,7 @@ export default {
           All Sets unlocked!
         </div>
         <div v-else>
-          Will unlock {{ quantify("set", lockedCount) }}
+          Will unlock {{ $legacyText(_s(quantify("set", lockedCount))) }}
         </div>
       </div>
     </div>
@@ -109,7 +109,7 @@ export default {
       :class="purchaseButtonObject()"
       @click="performPurchase"
     >
-      Cost: {{ cost }}
+      Cost: {{ $legacyText(_s(cost)) }}
       <img
         src="images/std_coin.png"
         class="o-shop-button-button__img"
@@ -119,7 +119,7 @@ export default {
       v-if="!purchase.isUnlocked()"
       class="o-shop-button-locked-text"
     >
-      This affects a feature you have not unlocked yet ({{ purchase.lockText }})
+      This affects a feature you have not unlocked yet ({{ $legacyText(_s(purchase.lockText)) }})
     </div>
   </div>
 </template>

@@ -105,35 +105,35 @@ export default {
 
 <template>
   <div class="c-glyph-customization-group">
-    <b>Custom Glyph Appearance</b>
+    <b>{{ $t('ade.a6065688c5b7bb85') }}</b>
     <PrimaryToggleButton
       v-model="enabled"
       class="o-primary-btn--subtab-option"
-      on="Enabled"
-      off="Disabled"
+      :on="$t('ade.b62610f2dc23aace')"
+      :off="$t('ade.ca0c9d78501a2151')"
     />
     <br>
     <div v-if="hasCustomSets">
-      Reset Appearances to Default:
+      {{ $t('ade.c782bf5e363710ce') }}
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         :class="{ 'o-primary-btn--disabled' : !enabled }"
         @click="resetAll"
       >
-        All Types
+        {{ $t('ade.140549175cdcd8dc') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         :class="{ 'o-primary-btn--disabled' : !enabled }"
         @click="resetSingle"
       >
-        This Type
+        {{ $t('ade.e5e1b88d15bffd05') }}
       </PrimaryButton>
       <br>
-      <i>This will not reset any individually-modified Glyphs.</i>
+      <i>{{ $t('ade.c36bbd13d523ddcb') }}</i>
       <br>
       <br>
-      Glyph Type:
+      {{ $t('ade.0433668cadebdfa6') }}
       <br>
       <div class="c-type-selection">
         <div
@@ -143,7 +143,7 @@ export default {
           @click="selectedIndex = index"
         >
           <GlyphComponent
-            v-tooltip="type.capitalize()"
+            v-tooltip="$legacyTooltip(type.capitalize())"
             v-bind="glyphIconProps"
             :glyph="fakeGlyph(type)"
           />
@@ -153,25 +153,26 @@ export default {
         :key="selectedIndex + enabled + defaultKeySwap"
         :type="cosmeticTypes[selectedIndex]"
       />
-      Note: Some options may cause very poor color contrast or readability on certain themes with certain Glyph types.
+      {{ $t('ade.e622c4f8c2687a8f') }}
     </div>
     <div v-else>
-      You currently have no available options for changing the default appearance of your Glyphs. To unlock some, visit
-      the Shop Tab or beat the game.
-      <br>
-      <br>
-      <span v-if="hasSpecialTypes">
-        Enabling this setting will allow you to change individual Glyphs to special cosmetic types you have unlocked.
+      <LocalizedText id="ade.163f010847118a64">
+        <template #p0><br></template>
+        <template #p1><br></template>
+        <template #p2><span v-if="hasSpecialTypes">
+        {{ $t('ade.ded8b289c5d021c8') }}
       </span>
-      <span v-else>
-        Enabling or disabling this option will currently do nothing.
-      </span>
+<span v-else>
+        {{ $t('ade.10608a2436e64ed9') }}
+      </span></template>
+      </LocalizedText>
+
     </div>
     <PrimaryButton
       class="o-primary-btn--subtab-option"
       @click="resetIndividual"
     >
-      Reset all individual Glyph cosmetics
+      {{ $t('ade.3ad8ef491c384dd0') }}
     </PrimaryButton>
   </div>
 </template>

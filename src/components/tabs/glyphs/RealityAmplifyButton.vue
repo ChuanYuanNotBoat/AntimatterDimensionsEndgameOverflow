@@ -47,20 +47,22 @@ export default {
   <button
     v-if="isVisible"
     :class="buttonClass"
-    :ach-tooltip="tooltip"
+    :ach-tooltip="$legacyText(tooltip)"
     @click="toggleActive"
   >
     <div v-if="isDoomed">
-      You cannot amplify Doomed Realities.
+      {{ $t('ade.daa4ec4baa9c5e83') }}
     </div>
     <div v-else-if="canAmplify">
-      <span v-if="isActive">Will be amplified:</span>
-      <span v-else>Amplify this Reality:</span>
-      <br>
-      All rewards ×{{ formatInt(ratio) }}
+      <LocalizedText id="ade.e1126e64a70afaa6">
+    <template #p0><span v-if="isActive">{{ $t('ade.4316d79b99843de0') }}</span>
+<span v-else>{{ $t('ade.864564e4113a1a02') }}</span></template>
+    <template #p1><br></template>
+    <template #p2>{{ $legacyText(_s(formatInt(ratio))) }}</template>
+  </LocalizedText>
     </div>
     <div v-else>
-      Not enough stored real time to amplify.
+      {{ $t('ade.fade8e78315d2c14') }}
     </div>
   </button>
 </template>

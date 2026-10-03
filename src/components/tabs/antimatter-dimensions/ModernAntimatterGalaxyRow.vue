@@ -144,15 +144,15 @@ export default {
 
 <template>
   <div class="reset-container galaxy">
-    <h4>{{ typeName }} (<span v-html="sumText" />)</h4>
-    <span>Requires: {{ formatHybridLarge(requirement.amount, 3) }} {{ dimName }} {{ isFlipped ? "Matter" : "Antimatter" }} D</span>
-    <span v-if="hasIncreasedScaling">{{ costScalingText }}</span>
+    <h4>{{ $legacyText(_s(typeName)) }} (<span v-html="$legacyHtml(sumText)" />)</h4>
+    <span>{{ $t('ade.bc264fe4581439b6', { p0: $legacyText(_s(formatHybridLarge(requirement.amount,3))), p1: $legacyText(_s(dimName)), p2: $legacyText(_s(isFlipped?"Matter":"Antimatter")) }) }}</span>
+    <span v-if="hasIncreasedScaling">{{ $legacyText(_s(costScalingText)) }}</span>
     <button
       :class="classObject"
       @click.exact="buyGalaxy(true)"
       @click.shift.exact="buyGalaxy(false)"
     >
-      {{ buttonText }}
+      {{ $legacyText(_s(buttonText)) }}
       <div
         v-if="hasTutorial"
         class="fas fa-circle-exclamation l-notification-icon"

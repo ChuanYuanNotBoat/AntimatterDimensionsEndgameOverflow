@@ -49,9 +49,9 @@ export default {
     <ChallengeTabHeader />
     <div>
       An active Big Crunch Autobuyer will Crunch immediately when
-      reaching an Infinity Challenge's {{ isFlipped ? "matter" : "antimatter" }} goal, regardless of settings.
+      reaching an Infinity Challenge's {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }} goal, regardless of settings.
     </div>
-    <div>{{ nextAtDisplay }}</div>
+    <div>{{ $legacyText(_s(nextAtDisplay)) }}</div>
     <ChallengeGrid
       v-slot="{ challenge }"
       :challenges="challenges"

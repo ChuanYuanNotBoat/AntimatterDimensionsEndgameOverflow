@@ -156,7 +156,7 @@ export default {
     <DescriptionDisplay :config="config" />
     <div class="l-pelle-upgrade-gap" />
     <div v-if="effectText">
-      {{ effectText.prefix }} {{ effectText.value }}
+      {{ $legacyText(_s(effectText.prefix)) }} {{ $legacyText(_s(effectText.value)) }}
       <template v-if="effectText.next">
         ➜ <span
           :class="{
@@ -164,7 +164,7 @@ export default {
             'c-improved-effect--unavailable': !canBuy,
           }"
         >
-          {{ effectText.next }}
+          {{ $legacyText(_s(effectText.next)) }}
         </span>
       </template>
       <div class="l-pelle-upgrade-gap" />

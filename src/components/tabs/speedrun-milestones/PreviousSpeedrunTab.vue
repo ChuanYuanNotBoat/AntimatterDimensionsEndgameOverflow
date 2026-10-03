@@ -82,10 +82,10 @@ export default {
 
 <template>
   <div class="c-previous-runs">
-    <b>You have completed {{ quantify("speedrun", numRuns, 0, 0, x => x) }} prior to this playthrough.</b>
-    <b>Statistics of previous runs are below, mouseover icons for more details.</b>
-    <b>Click the magnifying glass to compare the milestones on a particular run to this run.</b>
-    <b>{{ spectateText }}</b>
+    <b>You have completed {{ $legacyText(_s(quantify("speedrun", numRuns, 0, 0, x => x))) }} prior to this playthrough.</b>
+    <b>{{ $t('ade.5bbbeac483e3843a') }}</b>
+    <b>{{ $t('ade.0b5325cba7263a19') }}</b>
+    <b>{{ $legacyText(_s(spectateText)) }}</b>
     <br>
     <div
       v-if="highestIndex > 10"
@@ -96,7 +96,7 @@ export default {
         :class="{ 'o-primary-btn--disabled' : runPage === 0 }"
         @click="changePage(-1)"
       />
-      Showing runs {{ 10 * runPage + 1 }} to {{ 10 * (runPage + 1) }} ({{ highestIndex }} total runs)
+      {{ $t('ade.fa63671c167d0b04', { p0: $legacyText(_s(10*runPage+1)), p1: $legacyText(_s(10*(runPage+1))), p2: $legacyText(_s(highestIndex)) }) }}
       <PrimaryButton
         class="o-primary-btn--subtab-option fas fa-arrow-right"
         :class="{ 'o-primary-btn--disabled' : runPage + 1 > highestIndex / 10 }"
@@ -128,16 +128,24 @@ export default {
     <br>
     <div class="c-legend">
       <div class="c-legend-cell">
-        <span class="o-box l-milestone-none" /> Not reached this run
+        <LocalizedText id="ade.ac8821d806517d92">
+    <template #p0><span class="o-box l-milestone-none" /></template>
+  </LocalizedText>
       </div>
       <div class="c-legend-cell">
-        <span class="o-box l-milestone-slow" /> Slower than comparison
+        <LocalizedText id="ade.2051534bb3d22979">
+    <template #p0><span class="o-box l-milestone-slow" /></template>
+  </LocalizedText>
       </div>
       <div class="c-legend-cell">
-        <span class="o-box l-milestone-fast" /> Faster than comparison
+        <LocalizedText id="ade.a808dda81bd66920">
+    <template #p0><span class="o-box l-milestone-fast" /></template>
+  </LocalizedText>
       </div>
       <div class="c-legend-cell">
-        <span class="o-box l-milestone-fastest" /> Faster than best
+        <LocalizedText id="ade.7e34cbc9087205b0">
+    <template #p0><span class="o-box l-milestone-fastest" /></template>
+  </LocalizedText>
       </div>
     </div>
     <div class="l-speedrun-milestone-tab">

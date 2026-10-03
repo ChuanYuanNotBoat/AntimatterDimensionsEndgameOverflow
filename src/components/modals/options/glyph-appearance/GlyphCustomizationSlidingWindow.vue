@@ -170,7 +170,7 @@ export default {
           :style="boxStyle(defaultOption)"
           @click="select(undefined)"
         >
-          {{ optionChar(defaultOption) }}
+          {{ $legacyText(_s(optionChar(defaultOption))) }}
         </div>
       </div>
       <div class="c-extra-options">
@@ -202,7 +202,7 @@ export default {
                 :style="boxStyle(singleOption)"
                 @click="select(singleOption)"
               >
-                {{ optionChar(singleOption) }}
+                {{ $legacyText(_s(optionChar(singleOption))) }}
               </div>
             </div>
           </div>
@@ -213,7 +213,7 @@ export default {
       v-else
       class="c-no-options"
     >
-      You have no custom options for changing Glyph {{ attrString }}s.
+      You have no custom options for changing Glyph {{ $legacyText(_s(attrString)) }}s.
     </div>
   </div>
 </template>

@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const babel = require('@babel/core');
 const compiler = require('vue-template-compiler');
+const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const parse = source => babel.parseSync(source, { configFile: false, babelrc: false, sourceType: 'module' });
 
@@ -19,19 +20,32 @@ async function main() {
   const catalogs = {};
   const signatures = {};
   const failures = [];
-  for (const locale of fs.readdirSync(path.join(root, 'src/locales'))) {
-    const catalog = catalogs[locale] = {};
+  const runtime = {};
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/i18n/service.js'), 'utf8')
+    .replace(/^import .*;$/gm, '').replace(/^export /gm, '') + '\nthis.resolve = resolveCatalog;', runtime);
+  const packFiles = fs.readdirSync(path.join(root, 'src/locales')).filter(file => file.endsWith('.json'));
+  for (const file of packFiles) {
+    const locale = file.slice(0, -5);
+    const raw = fs.readFileSync(path.join(root, 'src/locales', file), 'utf8');
+    const pack = JSON.parse(raw);
+    if (pack.$meta?.id !== locale || !pack.$meta?.nativeName || !['ltr', 'rtl'].includes(pack.$meta?.direction)) {
+      failures.push(`Invalid metadata: ${file}`);
+    }
+    babel.traverse(parse(`(${raw})`), {
+      ObjectExpression({ node }) {
+        const keys = node.properties.map(property => property.key.value);
+        if (new Set(keys).size !== keys.length) failures.push(`Duplicate key in ${file}`);
+      }
+    });
+    catalogs[locale] = Object.fromEntries(Object.entries(pack).filter(([id]) => id !== '$meta'));
+  }
+  for (const [locale, catalog] of Object.entries(catalogs)) {
     signatures[locale] = {};
-    for (const file of files(path.join(root, 'src/locales', locale)).filter(name => name.endsWith('.json'))) {
-      const raw = fs.readFileSync(file, 'utf8');
-      const parsed = JSON.parse(raw);
-      const properties = parse(`(${raw})`).program.body[0].expression.properties;
-      const keys = properties.map(property => property.key.value);
-      if (new Set(keys).size !== keys.length) failures.push(`Duplicate key in ${file}`);
-      for (const [id, message] of Object.entries(parsed)) {
-        if (Object.hasOwn(catalog, id)) failures.push(`Duplicate ${locale} message: ${id}`);
-        catalog[id] = message;
-        if (typeof message !== 'string') { failures.push(`${locale}:${id} must be text`); continue; }
+    let messages;
+    try { messages = runtime.resolve(catalog, catalogs.en); }
+    catch (error) { failures.push(`${locale}: ${error.message}`); continue; }
+    for (const [token, message] of messages) {
+      const [id, form] = token.split('|');
         try {
           const ast = new IntlMessageFormat(message, locale).getAst();
           const argumentsByName = {};
@@ -49,12 +63,12 @@ async function main() {
             }
           }
           visit(ast);
-          signatures[locale][id] = JSON.stringify({
+          if (form === 'text') signatures[locale][id] = JSON.stringify({
             arguments: Object.entries(argumentsByName).sort().map(([name, types]) => [name, [...types].sort()]),
             selectors: Object.entries(selectors).sort(),
           });
         } catch (error) { failures.push(`${locale}:${id}: ${error.message}`); }
-      }
+
     }
   }
   const english = catalogs.en;
@@ -94,6 +108,7 @@ async function main() {
       seen.add(node);
       if (node.type === 2) collectReferences(`(${node.expression});`);
       for (const attribute of node.attrsList ?? []) {
+        if (node.tag === 'LocalizedText' && attribute.name === 'id') references.add(attribute.value);
         if (/^(?::|v-bind:)/u.test(attribute.name) || ['v-if', 'v-else-if', 'v-show', 'v-text', 'v-html'].includes(attribute.name)) {
           collectReferences(`(${attribute.value});`);
         }
@@ -104,6 +119,11 @@ async function main() {
     if (component.template) collectTemplate(compiler.compile(component.template.content).ast);
   }
   for (const id of references) if (!Object.hasOwn(english, id)) failures.push(`Missing base message: ${id}`);
+  for (const relative of ['src/i18n/adechinese-rules.json', 'src/i18n/display-terms.json']) {
+    for (const rule of JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'))) {
+      if (!Object.hasOwn(english, rule.id)) failures.push(`Missing display message: ${rule.id}`);
+    }
+  }
   const scope = JSON.parse(fs.readFileSync(path.join(root, 'docs/i18n-scope.json')));
   for (const relative of scope.templatesWithoutStaticEnglish) {
     const template = compiler.parseComponent(fs.readFileSync(path.join(root, relative), 'utf8')).template?.content;

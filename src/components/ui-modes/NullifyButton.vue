@@ -27,7 +27,7 @@ export default {
   <span v-if="shouldDisplay">
     <div v-if="isModern">
       <h3 class="l-spacing">
-        The Entropy has become too much... I must Nullify the Multiverse...
+        {{ $t('ade.ca6298f15b80a3df') }}
       </h3>
       <button
         :class="{
@@ -35,7 +35,7 @@ export default {
         }"
         @click="handleClick"
       >
-        NULLIFY
+        {{ $t('ade.207eb6ca7a2e18b1') }}
       </button>
     </div>
     <div v-else>
@@ -47,10 +47,10 @@ export default {
         }"
         @click="handleClick"
       >
-        NULLIFY
+        {{ $t('ade.207eb6ca7a2e18b1') }}
       </button>
       <div class="o-emptiness">
-        The Entropy has become too much... I must Nullify the Multiverse...
+        {{ $t('ade.ca6298f15b80a3df') }}
       </div>
     </div>
   </span>

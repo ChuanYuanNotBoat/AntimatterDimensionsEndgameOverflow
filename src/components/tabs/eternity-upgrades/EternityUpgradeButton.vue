@@ -81,7 +81,7 @@ export default {
       :config="config"
     />
     <div v-if="!isBought && hasEU2">
-      Auto: {{ format(config.cost / 1e10) }} Eternity Points
+      {{ $t('ade.4ea2049259d599d9', { p0: $legacyText(_s(format(config.cost/1e10))) }) }}
     </div>
     <CostDisplay
       v-else-if="!isBought"

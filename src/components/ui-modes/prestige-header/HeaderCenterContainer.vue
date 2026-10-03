@@ -70,14 +70,19 @@ export default {
     <div
       v-if="showEndgame && !inCursedCore"
     >
-      You have <span class="cp-text">{{ format(celestialPoints, 2) }}</span> {{ pluralize("Celestial Point", celestialPoints) }}.
-      You have <span class="dp-text">{{ format(doomedParticles, 2) }}</span> {{ pluralize("Doomed Particle", doomedParticles) }}.
-    <br>
+      <LocalizedText id="ade.e8217b3bfbaa8572">
+        <template #p0><span class="cp-text">{{ $legacyText(_s(format(celestialPoints, 2))) }}</span></template>
+        <template #p1>{{ $legacyText(_s(pluralize("Celestial Point",celestialPoints))) }}</template>
+        <template #p2><span class="dp-text">{{ $legacyText(_s(format(doomedParticles, 2))) }}</span></template>
+        <template #p3>{{ $legacyText(_s(pluralize("Doomed Particle",doomedParticles))) }}</template>
+        <template #p4><br></template>
+      </LocalizedText>
     </div>
     <span>
-      You have
-      <span class="c-game-header__antimatter">{{ format(antimatter, 2, 1) }}</span>
-      {{ isFlipped ? "matter" : "antimatter" }}.
+      <LocalizedText id="ade.5108ddf8ae4f9fdf">
+        <template #p0><span class="c-game-header__antimatter">{{ $legacyText(_s(format(antimatter, 2, 1))) }}</span></template>
+        <template #p1>{{ $legacyText(_s(isFlipped?"matter":"antimatter")) }}</template>
+      </LocalizedText>
     </span>
     <div
       v-if="hasRealityButton && !inCursedCore"
@@ -98,7 +103,7 @@ export default {
       />
     </div>
     <div v-else-if="!inCursedCore">
-      You are getting {{ format(antimatterPerSec, 2) }} {{ isFlipped ? "matter" : "antimatter" }} per second.
+      {{ $t('ade.d6f6a1aba24ec060', { p0: $legacyText(_s(format(antimatterPerSec,2))), p1: $legacyText(_s(isFlipped?"matter":"antimatter")) }) }}
       <br>
       <HeaderTickspeedInfo />
     </div>

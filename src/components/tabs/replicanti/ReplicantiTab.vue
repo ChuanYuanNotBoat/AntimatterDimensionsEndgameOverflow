@@ -248,49 +248,52 @@ export default {
       class="o-primary-btn--replicanti-unlock"
       onclick="Replicanti.unlock();"
     >
-      Unlock Replicanti
-      <br>
-      Cost: {{ format(unlockCost) }} IP
+      <LocalizedText id="ade.498b0d81cbc24c29">
+        <template #p0><br></template>
+        <template #p1>{{ $legacyText(_s(format(unlockCost))) }}</template>
+      </LocalizedText>
     </PrimaryButton>
     <template v-else>
       <div
         v-if="isDoomed"
         class="modified-cap"
       >
-        Your Replicanti cap has been removed due to the second {{ scrambledText }} milestone.
+        {{ $t('ade.afd89ac862dd97e8', { p0: $legacyText(_s(scrambledText)) }) }}
       </div>
       <div
         v-else-if="hasRaisedCap"
         class="modified-cap"
       >
-        Completion of Effarig's Infinity is giving you the following rewards:
-        <br>
-        Your Replicanti cap without TS192 is now {{ format(replicantiCap, 2) }}
-        ({{ capMultText }})
-        <br>
-        {{ quantifyHybridLarge("extra Replicanti Galaxy", effarigInfinityBonusRG) }}
-        (Next Replicanti Galaxy at {{ format(nextEffarigRGThreshold, 2) }} cap)
+        <LocalizedText id="ade.9a72b954caac3702">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(format(replicantiCap,2))) }}</template>
+          <template #p2>{{ $legacyText(_s(capMultText)) }}</template>
+          <template #p3><br></template>
+          <template #p4>{{ $legacyText(_s(quantifyHybridLarge("extra Replicanti Galaxy",effarigInfinityBonusRG))) }}</template>
+          <template #p5>{{ $legacyText(_s(format(nextEffarigRGThreshold,2))) }}</template>
+        </LocalizedText>
       </div>
       <p class="c-replicanti-description">
-        You have
-        <span class="c-replicanti-description__accent">{{ format(amount, 2, 0) }}</span>
-        Replicanti, translated to
+        {{ $t('ade.9f717812b3aa8e61') }}
+        <span class="c-replicanti-description__accent">{{ $legacyText(_s(format(amount, 2, 0))) }}</span>
+        {{ $t('ade.725ceb7988129483') }}
         <br>
-        <span v-html="boostText" />
+        <span v-html="$legacyHtml(boostText)" />
       </p>
       <div
         v-if="hasMaxText"
         class="c-replicanti-description"
       >
-        Your maximum Replicanti reached this Reality is
-        <span
+        <LocalizedText id="ade.d65e6452b9bc7772">
+          <template #p0><span
           v-tooltip="toMaxTooltip"
           class="max-accent"
-        >{{ format(maxReplicanti, 2) }}</span>.
+        >{{ $legacyText(_s(format(maxReplicanti, 2))) }}</span></template>
+        </LocalizedText>
       </div>
       <br>
       <div v-if="isInEC8">
-        You have {{ quantifyInt("purchase", ec8Purchases) }} left within Eternity Challenge 8.
+        {{ $t('ade.e4e425979e5a13b3', { p0: $legacyText(_s(quantifyInt("purchase",ec8Purchases))) }) }}
       </div>
       <div class="l-replicanti-upgrade-row">
         <ReplicantiUpgradeButton :setup="replicantiChanceSetup" />
@@ -298,19 +301,21 @@ export default {
         <ReplicantiUpgradeButton :setup="maxGalaxySetup" />
       </div>
       <div>
-        The Max Replicanti Galaxy upgrade can be purchased endlessly, but costs increase
-        <br>
-        more rapidly above {{ formatInt(distantRG) }} Replicanti Galaxies
-        and even more so above {{ formatInt(remoteRG) }} Replicanti Galaxies.
+        <LocalizedText id="ade.ff86e1431a9a73d9">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(formatInt(distantRG))) }}</template>
+          <template #p2>{{ $legacyText(_s(formatInt(remoteRG))) }}</template>
+        </LocalizedText>
       </div>
       <br>
       <div
         v-if="isContingent"
         class="contingency-text"
       >
-        Your Replicanti Galaxies have become Contingent. This is because they are taking up too much space in the Universe.
-        <br>
-        This effect started at {{ formatInt(contingentRG) }} Replicanti Galaxies, and will continue until the End of Time.
+        <LocalizedText id="ade.f7716856298b4c2e">
+          <template #p0><br></template>
+          <template #p1>{{ $legacyText(_s(formatInt(contingentRG))) }}</template>
+        </LocalizedText>
       </div>
       <br><br>
       <ReplicantiGainText />

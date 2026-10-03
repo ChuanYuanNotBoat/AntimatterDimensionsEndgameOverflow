@@ -86,7 +86,7 @@ export default {
 
 <template>
   <div>
-    {{ symbol }}:
+    {{ $legacyText(_s(symbol)) }}:
     <span v-if="settingsChanged">
       <span class="c-single-row">
         <span
@@ -94,21 +94,21 @@ export default {
           :class="topLevelClassObject('rarity')"
           ach-tooltip="Setting for Rarity Threshold and Specified Effect"
         >
-          {{ rarityStr }}
+          {{ $legacyText(_s(rarityStr)) }}
         </span>
         <span
           class="c-effects-count"
           :class="topLevelClassObject('effectCount')"
           ach-tooltip="Number of effects in Specified Effect"
         >
-          Minimum Effects: {{ effectStr }}
+          {{ $t('ade.c2882b5ac11cf564', { p0: $legacyText(_s(effectStr)) }) }}
         </span>
         <span
           class="c-target-score"
           :class="topLevelClassObject('score')"
           ach-tooltip="Threshold for Effect Score"
         >
-          Score: {{ scoreStr }}
+          {{ $t('ade.ffb7afeeb72c171d', { p0: $legacyText(_s(scoreStr)) }) }}
         </span>
       </span>
       <br>
@@ -118,9 +118,9 @@ export default {
           :key="effect.bitmaskIndex"
           class="c-single-score"
           :class="effectClassObject(effect)"
-          :ach-tooltip="getEffectDesc(effect)"
+          :ach-tooltip="$legacyText(getEffectDesc(effect))"
         >
-          {{ effectScoreStr(effect) }}
+          {{ $legacyText(_s(effectScoreStr(effect))) }}
         </span>
       </span>
       <span
@@ -133,14 +133,14 @@ export default {
           :key="effect.bitmaskIndex"
           class="c-single-score o-cell"
           :class="effectClassObject(effect)"
-          :ach-tooltip="getEffectDesc(effect)"
+          :ach-tooltip="$legacyText(getEffectDesc(effect))"
         >
-          {{ effectScoreStr(effect) }}
+          {{ $legacyText(_s(effectScoreStr(effect))) }}
         </span>
       </span>
     </span>
     <span v-else>
-      (No changes)
+      {{ $t('ade.a44e155f852cd8d8') }}
     </span>
   </div>
 </template>

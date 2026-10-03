@@ -62,14 +62,14 @@ export default {
       <div class="c-accelerator-row">
         <div class="c-accelerator-column c-accelerator-status">
           <h2 class="c-accelerator-name-header">
-            {{ acceleratorName() }}
+            {{ $legacyText(_s(acceleratorName())) }}
           </h2>
           <div class="c-accelerator-info-container">
             <div
               v-for="(effect, idx) in effects"
               :key="idx"
             >
-              {{ effect || "" }}
+              {{ $legacyText(_s(effect || "")) }}
             </div>
           </div>
         </div>
@@ -79,16 +79,16 @@ export default {
         <div class="c-accelerator-status">
           <div class="c-accelerator-fill-status">
             <h2 class="c-accelerator-name-header">
-              {{ acceleratorName() }}
+              {{ $legacyText(_s(acceleratorName())) }}
             </h2>
             <div class="c-accelerator-info-container">
-              Drains {{ drainResource() }} to fill.
+              {{ $t('ade.438e049081eaea93', { p0: $legacyText(_s(drainResource())) }) }}
               <br>
               <template v-if="!isMaxed">
-                Current Amount: {{ formatAccelerator(resource) }}
+                {{ $t('ade.2b31c9b3927ce7f2', { p0: $legacyText(_s(formatAccelerator(resource))) }) }}
               </template>
               <br>
-              Total Filled: {{ formatAccelerator(accelerator.totalFill) }}
+              {{ $t('ade.55e3f69d7e0e815b', { p0: $legacyText(_s(formatAccelerator(accelerator.totalFill))) }) }}
             </div>
           </div>
         </div>

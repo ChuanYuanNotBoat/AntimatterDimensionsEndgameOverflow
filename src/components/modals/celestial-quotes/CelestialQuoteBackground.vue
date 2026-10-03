@@ -50,7 +50,7 @@ export default {
       :key="index"
       class="c-modal-celestial-quote c-modal-celestial-quote__symbol"
       :style="styleObject(celestial, 0.2, true)"
-      v-html="celestialSymbols[index]"
+      v-html="$legacyHtml(celestialSymbols[index])"
     />
     <span
       v-for="(celestial, index) in celestials"

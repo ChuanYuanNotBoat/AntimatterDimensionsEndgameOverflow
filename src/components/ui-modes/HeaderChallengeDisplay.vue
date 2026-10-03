@@ -272,7 +272,7 @@ export default {
       :class="textClassObject()"
       @click="textClicked"
     >
-      You are currently in {{ challengeDisplay }}
+      {{ $t('ade.d8a85e4647dbb7c0', { p0: $legacyText(_s(challengeDisplay)) }) }}
     </span>
     <FailableEcText v-if="isInFailableEC" />
     <span class="l-padding-line" />
@@ -280,7 +280,7 @@ export default {
       v-if="showExit"
       @click="exitButtonClicked"
     >
-      {{ exitText }}
+      {{ $legacyText(_s(exitText)) }}
     </PrimaryButton>
   </div>
 </template>

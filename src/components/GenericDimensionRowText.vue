@@ -68,13 +68,13 @@ export default {
   <div :class="dimensionClass()">
     <div :class="adjustableTextClass()">
       <span class="c-dim-row__large">
-        {{ name }}
+        {{ $legacyText(_s(name)) }}
       </span>
       <span
         v-if="!isCursedCore"
         class="c-dim-row__small"
       >
-        {{ multiplierText }}
+        {{ $legacyText(_s(multiplierText)) }}
       </span>
     </div>
     <div
@@ -82,18 +82,18 @@ export default {
       :class="adjustableTextClass()"
     >
       <span class="c-dim-row__small">
-        {{ multiplierText }}
+        {{ $legacyText(_s(multiplierText)) }}
       </span>
     </div>
     <div :class="adjustableTextClass()">
       <span class="c-dim-row__large">
-        {{ amountText }}
+        {{ $legacyText(_s(amountText)) }}
       </span>
       <span
         v-if="rate.neq(0) && showPercentage"
         class="c-dim-row__small"
       >
-        {{ rateText }}
+        {{ $legacyText(_s(rateText)) }}
       </span>
     </div>
   </div>

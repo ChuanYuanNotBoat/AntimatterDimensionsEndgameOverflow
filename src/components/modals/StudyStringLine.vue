@@ -29,13 +29,15 @@ export default {
 <template>
   <div class="l-modal-import-tree__tree-info-line">
     <div v-if="tree.timeTheorems === 0 && tree.spaceTheorems === 0">
-      <i>Importing this {{ importDestString }} will not purchase any new Time Studies.</i>
+      <i>{{ $t('ade.6968b52dd3d82aa8', { p0: $legacyText(_s(importDestString)) }) }}</i>
     </div>
     <div v-else>
-      Importing {{ importDestString }} will purchase:
-      <br>
-      {{ tree.newStudies }}
-      (Cost: {{ formatTheoremCost(tree.timeTheorems, tree.spaceTheorems) }})
+      <LocalizedText id="ade.8a980e575b786860">
+        <template #p0>{{ $legacyText(_s(importDestString)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(tree.newStudies)) }}</template>
+        <template #p3>{{ $legacyText(_s(formatTheoremCost(tree.timeTheorems,tree.spaceTheorems))) }}</template>
+      </LocalizedText>
     </div>
     <br>
   </div>

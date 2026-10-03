@@ -6,62 +6,43 @@ export default {
 
 <template>
   <div>
-    Welcome to the Antimatter Dimensions Automator!
+    {{ $t('ade.bf36aca0aa666faa') }}
     <br>
     <br>
-    This page is an introduction page which gives a very broad overview of everything you can do with the Automator.
-    Specific details on various functionality can be found in the How To Play or their respective tabs (when relevant).
+    {{ $t('ade.5a0c96006d356e75') }}
     <br>
     <br>
-    <b>Scripting Language:</b> The Automator uses a custom scripting language in order to perform certain game actions
-    for you. Click <div class="fas fa-list c-automator-button-icon" /> to bring up a list of available commands. You can
-    also define constants as shorthand names for various values on the
-    <div class="fas fa-book c-automator-button-icon" /> page.
+    <b>{{ $t('ade.01dba020c7fc5259') }}</b> {{ $t('ade.db74be56801219bd') }} <div class="fas fa-list c-automator-button-icon" /> {{ $t('ade.ea8814c8813af8d9') }}
+    <div class="fas fa-book c-automator-button-icon" /> {{ $t('ade.f37968dd1df366bf') }}
     <br>
     <br>
-    <b>Layout:</b> This Automator itself is split up into two halves; the left half contains your script and controls
-    for starting, stopping, and repeating its execution, and the right half contains Automator information. Clicking
-    <div class="fas fa-expand-arrows-alt c-automator-button-icon" /> in the top-right corner will expand the Automator
-    to take up the whole browser page for easier editing.
+    <b>{{ $t('ade.add464d968a64261') }}</b> {{ $t('ade.638b4d7bdf0711d0') }}
+    <div class="fas fa-expand-arrows-alt c-automator-button-icon" /> {{ $t('ade.59b6b9cc2295ce07') }}
     <br>
     <br>
-    <b>Editor Modes:</b> There are two different editors you can use to write your automator scripts - a block-based
-    editor (default) and a text-based editor. You can swap between the two editor types with the switch in the
-    top-right corner of the left half. Note that scripts with errors may not properly convert between the two modes,
-    which can cause part of your script to be deleted.
+    <b>{{ $t('ade.717149b4bb4750e1') }}</b> {{ $t('ade.d10ec88e1f0a91e5') }}
     <br>
     <br>
-    <b>Making Scripts:</b> You can switch between multiple scripts or make new scripts using the dropdown on the
-    second row of buttons. The current script can be renamed or deleted with the
-    <div class="fas fa-edit c-automator-button-icon" /> and
-    <div class="fas fa-trash c-automator-button-icon" /> buttons. The Automator will always contain at
-    least one script for you to edit; deleting your last one will automatically create a new blank one.
+    <b>{{ $t('ade.4df79921917fe3a4') }}</b> {{ $t('ade.eead2337dec48543') }}
+    <div class="fas fa-edit c-automator-button-icon" /> {{ $t('ade.422710640e6d2069') }}
+    <div class="fas fa-trash c-automator-button-icon" /> {{ $t('ade.7793495e2f198ebd') }}
     <br>
     <br>
-    <b>Writing Scripts:</b> Scripts in the block editor are made by going to the block tab
-    <div class="fas fa-cubes c-automator-button-icon" />, while scripts in the text editor are made by typing into
-    the left half as a text box. In either editor mode, you can also use some smaller premade scripts from the
-    template generator <div class="fas fa-file-code c-automator-button-icon" />. You can undo or redo a limited
-    number of edits using <div class="fas fa-arrow-rotate-left c-automator-button-icon" /> or
-    <div class="fas fa-arrow-rotate-right c-automator-button-icon" />, or by using the respective hotkeys. Edit history
-    is cleared upon switching, converting, or deleting scripts.
+    <b>{{ $t('ade.6d529771695d7800') }}</b> {{ $t('ade.97cd9bd6ca4bcaa3') }}
+    <div class="fas fa-cubes c-automator-button-icon" />{{ $t('ade.d91b342dfeb1c11d') }} <div class="fas fa-file-code c-automator-button-icon" />{{ $t('ade.09b6a1f2a5e7ba65') }} <div class="fas fa-arrow-rotate-left c-automator-button-icon" /> {{ $t('ade.a3559db683680b55') }}
+    <div class="fas fa-arrow-rotate-right c-automator-button-icon" />{{ $t('ade.8c4fd8813540e33e') }}
     <br>
     <br>
-    <b>Debugging:</b> The two main tools you have for fixing your scripts are the Error Log
-    <div class="fas fa-exclamation-triangle c-automator-button-icon" /> for when you can't get your script to run at
-    all, and the Event Log <div class="fas fa-eye c-automator-button-icon" /> for when it runs but doesn't do what you
-    expect it to do.
+    <b>{{ $t('ade.a801e93833cdb22d') }}</b> {{ $t('ade.f1b778c2184162a9') }}
+    <div class="fas fa-exclamation-triangle c-automator-button-icon" /> {{ $t('ade.b20f4ed76b7b9d56') }} <div class="fas fa-eye c-automator-button-icon" /> {{ $t('ade.b27af426e0dd0517') }}
     <br>
     <br>
-    <b>Importing/Exporting:</b> Automator scripts can be exported and imported in text format by using the
-    <div class="fas fa-file-export c-automator-button-icon" /> and
-    <div class="fas fa-file-import c-automator-button-icon" /> buttons respectively. You can also access additional
-    extended exporting options <div class="fas fa-window-restore c-automator-button-icon" /> if desired.
+    <b>{{ $t('ade.dda1a8f4064209d9') }}</b> {{ $t('ade.85b0409670670844') }}
+    <div class="fas fa-file-export c-automator-button-icon" /> {{ $t('ade.422710640e6d2069') }}
+    <div class="fas fa-file-import c-automator-button-icon" /> {{ $t('ade.947a771c6b536991') }} <div class="fas fa-window-restore c-automator-button-icon" /> {{ $t('ade.8e81bf26f787989d') }}
     <br>
     <br>
-    <b>Script saving:</b> Script changes are not immediately saved to your computer under all conditions;
-    check the Automator How To Play entries for more details. Additionally there are two character limits to reduce lag,
-    shown above the automator panels.
+    <b>{{ $t('ade.f00e1837f1749015') }}</b> {{ $t('ade.5b7f536ec2cd6795') }}
   </div>
 </template>
 

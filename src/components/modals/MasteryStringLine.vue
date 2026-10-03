@@ -28,13 +28,15 @@ export default {
 <template>
   <div class="l-modal-import-tree__tree-info-line">
     <div v-if="tree.endgameSkills === 0">
-      <i>Importing this {{ importDestString }} will not purchase any new Endgame Masteries.</i>
+      <i>{{ $t('ade.125a7f57930a32bd', { p0: $legacyText(_s(importDestString)) }) }}</i>
     </div>
     <div v-else>
-      Importing {{ importDestString }} will purchase:
-      <br>
-      {{ tree.newMasteries }}
-      (Cost: {{ formatSkillCost(tree.endgameMasteries) }})
+      <LocalizedText id="ade.585e92526268f173">
+        <template #p0>{{ $legacyText(_s(importDestString)) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(tree.newMasteries)) }}</template>
+        <template #p3>{{ $legacyText(_s(formatSkillCost(tree.endgameMasteries))) }}</template>
+      </LocalizedText>
     </div>
     <br>
   </div>

@@ -59,20 +59,20 @@ export default {
 <template>
   <div class="c-modal-message l-modal-content--centered">
     <div class="c-modal-message__text">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
     </div>
     <div v-if="messageIndex < 3">
       <PrimaryButton
         class="o-primary-btn--width-medium c-modal-message__okay-btn"
         @click="handleLeftButtonClick"
       >
-        {{ messageIndex < 2 ? "Delete" : "Cancel" }}
+        {{ $legacyText(_s(messageIndex < 2 ? "Delete" : "Cancel")) }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--width-medium c-modal-message__okay-btn"
         @click="handleRightButtonClick"
       >
-        {{ messageIndex >= 2 ? "Delete" : "Cancel" }}
+        {{ $legacyText(_s(messageIndex >= 2 ? "Delete" : "Cancel")) }}
       </PrimaryButton>
     </div>
     <div v-else>
@@ -80,7 +80,7 @@ export default {
         class="o-primary-btn--width-medium c-modal-message__okay-btn"
         @click="handleNoClick"
       >
-        Thank you
+        {{ $t('ade.d2dff8b191caaa8d') }}
       </PrimaryButton>
     </div>
   </div>

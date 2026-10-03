@@ -30,7 +30,7 @@ export default {
 <template>
   <PrimaryToggleButton
     :value="value"
-    :label="text"
+    :label="$legacyText(text)"
     class="o-primary-btn--modal-option"
     :style="styleObject"
     @input="emitInput"

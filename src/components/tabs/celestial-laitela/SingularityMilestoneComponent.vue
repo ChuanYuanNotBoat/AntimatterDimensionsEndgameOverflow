@@ -129,17 +129,17 @@ export default {
     />
     <span :class="{ 'o-pelle-disabled': isDoomed }">
       <b v-if="!isMaxed">
-        {{ progressDisplay }}
+        {{ $legacyText(_s(progressDisplay)) }}
       </b>
       <p>
-        <span v-html="upgradeDirectionIcon" /> {{ description }}
+        <span v-html="$legacyHtml(upgradeDirectionIcon)" /> {{ $legacyText(_s(description)) }}
       </p>
       <b>
-        {{ effectDisplay }}
-        <span v-if="!isUnique && !isMaxed">➜ {{ nextEffectDisplay }}</span>
+        {{ $legacyText(_s(effectDisplay)) }}
+        <span v-if="!isUnique && !isMaxed">➜ {{ $legacyText(_s(nextEffectDisplay)) }}</span>
       </b>
       <div class="c-laitela-milestone__completions">
-        {{ completionsDisplay }}
+        {{ $legacyText(_s(completionsDisplay)) }}
       </div>
     </span>
   </div>

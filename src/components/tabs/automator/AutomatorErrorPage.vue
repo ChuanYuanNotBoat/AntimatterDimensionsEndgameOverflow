@@ -21,35 +21,30 @@ export default {
 <template>
   <div class="c-automator-docs-page">
     <div v-if="errors.length === 0">
-      No script errors found!
+      {{ $t('ade.e3abc85bbe8202d7') }}
     </div>
     <div v-else>
-      <b>Your script has the following {{ quantify("error", errors.length) }}:</b>
+      <b>Your script has the following {{ $legacyText(_s(quantify("error", errors.length))) }}:</b>
       <br>
       <span
         v-for="(error, i) in errors"
         :key="i"
       >
-        <b>On line {{ error.startLine }}:</b>
+        <b>{{ $t('ade.e065043be7e80514', { p0: $legacyText(_s(error.startLine)) }) }}</b>
         <button
-          v-tooltip="'Jump to line'"
+          v-tooltip="$legacyTooltip('Jump to line')"
           class="c-automator-docs--button fas fa-arrow-circle-right"
           @click="scrollToLine(error.startLine)"
         />
         <div class="c-automator-docs-page__indented">
-          {{ error.info }}
+          {{ $legacyText(_s(error.info)) }}
         </div>
         <div class="c-automator-docs-page__indented">
-          <i>Suggested fix: {{ error.tip }}</i>
+          <i>{{ $t('ade.ec978b2387687339', { p0: $legacyText(_s(error.tip)) }) }}</i>
         </div>
       </span>
       <i>
-        Note: Sometimes errors may cause the automator to be unable to scan the rest of the script properly.
-        This may result in some errors "disappearing" due to other errors occurring in earlier lines, or
-        errors in a command which has an inner block (eg. commands like IF or WHILE) causing errors to appear
-        on correctly-formatted later commands.
-        Additionally, some of the suggested fixes may be potentially misleading due to the cause of
-        the error being unclear.
+        {{ $t('ade.ecee5233eb8a05f4') }}
       </i>
     </div>
   </div>

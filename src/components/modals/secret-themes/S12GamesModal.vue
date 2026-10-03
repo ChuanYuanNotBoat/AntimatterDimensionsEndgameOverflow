@@ -26,7 +26,7 @@ export default {
 <template>
   <ModalWrapper class="c-modal-s12-games">
     <div class="c-modal__title">
-      Games
+      {{ $t('ade.220c46d5ffd1be40') }}
     </div>
     <S12GameEntries />
     <div class="c-modal-s12-games__magnified-display">
@@ -36,7 +36,7 @@ export default {
           :src="`images/s12/${S12Games.entries[S12Games.selected].image}`"
         >
         <b class="c-modal-s12-games__magnified-display__text">
-          {{ S12Games.entries[S12Games.selected].name }}
+          {{ $legacyText(_s(S12Games.entries[S12Games.selected].name)) }}
         </b>
       </template>
     </div>

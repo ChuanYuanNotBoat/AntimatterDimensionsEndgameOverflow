@@ -77,7 +77,7 @@ export default {
       <DescriptionDisplay :config="config" />
       <EffectDisplay
         :config="effectConfig"
-        :label="config.effectTitle"
+        :label="$legacyText(config.effectTitle)"
       />
       <CostDisplay
         v-if="!isCapped"
@@ -88,7 +88,7 @@ export default {
     <PrimaryToggleButton
       v-if="isAutoUnlocked"
       v-model="isAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.b03d394e4095f4eb')"
       class="l--spoon-btn-group__little-spoon-reality-btn o-primary-btn--reality-upgrade-toggle"
     />
   </div>

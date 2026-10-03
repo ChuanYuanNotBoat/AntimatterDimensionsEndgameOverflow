@@ -138,24 +138,25 @@ export default {
         :class="disChargeClassObject"
         @click="disCharge = !disCharge"
       >
-        Respec Charged Infinity Upgrades on next {{ isDoomed ? "Armageddon" : "Reality" }}
+        {{ $t('ade.c1e9afea63fd42b8', { p0: $legacyText(_s(isDoomed?"Armageddon":"Reality")) }) }}
       </PrimaryButton>
     </div>
     <div v-if="chargeUnlocked">
-      You have charged {{ formatInt(chargesUsed) }}/{{ formatInt(totalCharges) }} Infinity Upgrades.
-      Charged Infinity Upgrades have their effect altered.
-      <br>
-      Hold shift to show Charged Infinity Upgrades.
-      <span v-if="!isDoomed || !alwaysRecpec"> You can freely respec your choices on Reality.</span>
+      <LocalizedText id="ade.2d983edcd6d26d1a">
+        <template #p0>{{ $legacyText(_s(formatInt(chargesUsed))) }}</template>
+        <template #p1>{{ $legacyText(_s(formatInt(totalCharges))) }}</template>
+        <template #p2><br></template>
+        <template #p3><span v-if="!isDoomed || !alwaysRecpec"> {{ $t('ade.6edffa3f07a1285a') }}</span></template>
+      </LocalizedText>
     </div>
     <div v-if="isUseless">
-      You cannot Charge Infinity Upgrades while Doomed.
+      {{ $t('ade.fc1557f7fe456d01') }}
     </div>
     <div v-if="isDoomed && !isUseless && alwaysRecpec">
-      Charged Infinity Upgrades always reset on Armageddon, until you can keep your Break Infinity Upgrades on Armageddon.
+      {{ $t('ade.b526c2fc81811e92') }}
     </div>
     <br>
-    Within each column, the upgrades must be purchased from top to bottom.
+    {{ $t('ade.c72bfd4c23e25751') }}
     <br>
     <div class="l-infinity-upgrade-grid l-infinity-upgrades-tab__grid">
       <div
@@ -188,8 +189,8 @@ export default {
     <div v-if="eternityUnlocked && bottomRowUnlocked && isSoftcapApplicable">
       The Infinity Point multiplier becomes more expensive
       <br>
-      above {{ formatPostBreak(ipMultSoftCap, 2, 1) }} Infinity
-      Points<span v-if="!isUncapped">, and cannot be purchased past {{ formatPostBreak(ipMultHardCap, 2, 1) }} Infinity Points</span>.
+      above {{ $legacyText(_s(formatPostBreak(ipMultSoftCap, 2, 1))) }} Infinity
+      Points<span v-if="!isUncapped">{{ $t('ade.a18e181fd8031a41', { p0: $legacyText(_s(formatPostBreak(ipMultHardCap,2,1))) }) }}</span>.
     </div>
   </div>
 </template>

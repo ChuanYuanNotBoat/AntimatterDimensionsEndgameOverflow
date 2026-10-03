@@ -164,16 +164,16 @@ export default {
         :class="buttonClass()"
         @click="buyTimeDimension"
       >
-        {{ buttonContents }}
+        {{ $legacyText(_s(buttonContents)) }}
         <div class="c-dim-purchase-count-tooltip">
-          <span v-html="tooltipContents" />
+          <span v-html="$legacyHtml(tooltipContents)" />
         </div>
       </PrimaryButton>
       <PrimaryToggleButton
         v-if="areAutobuyersUnlocked"
         v-model="isAutobuyerOn"
         class="o-primary-btn--buy-td-auto"
-        label="Auto:"
+        :label="$t('ade.fc5aa8b492c774bf')"
       />
       <PrimaryButton
         v-else
@@ -181,7 +181,7 @@ export default {
         :class="maxButtonClass()"
         @click="buyMaxTimeDimension"
       >
-        Buy Max
+        {{ $t('ade.552c8c001016ab0a') }}
       </PrimaryButton>
     </div>
   </div>

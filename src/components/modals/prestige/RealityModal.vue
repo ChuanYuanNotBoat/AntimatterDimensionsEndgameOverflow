@@ -147,11 +147,11 @@ export default {
       v-if="firstReality"
       class="c-modal-message__text"
     >
-      {{ firstRealityText }}
+      {{ $legacyText(_s(firstRealityText)) }}
     </div>
 
     <div class="c-modal-message__text">
-      {{ gained }}
+      {{ $legacyText(_s(gained)) }}
     </div>
     <div
       v-if="!firstReality"
@@ -169,22 +169,22 @@ export default {
       />
     </div>
     <div v-if="!firstReality">
-      {{ levelStats }}
+      {{ $legacyText(_s(levelStats)) }}
       <br>
       <b class="o-warning">
-        {{ warnText }}
+        {{ $legacyText(_s(warnText)) }}
       </b>
     </div>
     <div v-if="simRealities.gt(1)">
       <br>
       After choosing this Glyph the game will simulate the rest of your Realities,
       <br>
-      automatically choosing another {{ quantifyHybridSmall("Glyph", simRealities.sub(1)) }}
+      automatically choosing another {{ $legacyText(_s(quantifyHybridSmall("Glyph", simRealities.sub(1)))) }}
       based on your Glyph filter settings.
     </div>
     <div v-if="willAutoPurge">
       <br>
-      Auto-purge is currently enabled; your selected Glyph
+      {{ $t('ade.d68e693176ae3e99') }}
       <br>
       may not appear in your inventory after it triggers.
     </div>
@@ -193,17 +193,16 @@ export default {
       class="o-warning"
     >
       <span v-if="simRealities.gt(1)">
-        You will be simulating more Realities than you have open inventory space for;
-        this may result in some Glyphs being Sacrificed.
+        {{ $t('ade.7f9d4d1fede2d15b') }}
       </span>
       <span v-else>
-        You do not have any free inventory space - your selected Glyph will be automatically
-        {{ canSacrifice ? "Sacrificed" : "deleted" }}!
+        {{ $t('ade.1079d8858fd3c7e1', { p0: $legacyText(_s(canSacrifice?"Sacrificed":"deleted")) }) }}
       </span>
     </div>
     <div v-if="confirmationToDisable">
-      <br>
-      You can force this modal to appear (even if disabled) by Shift-clicking the Reality button.
+      <LocalizedText id="ade.8d32c9c72b7298d2">
+    <template #p0><br></template>
+  </LocalizedText>
     </div>
     <template
       v-if="canSacrifice && canConfirm"

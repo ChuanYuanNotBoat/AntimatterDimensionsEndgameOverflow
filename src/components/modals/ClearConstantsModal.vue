@@ -35,7 +35,7 @@ export default {
       Are you sure you wish to delete all of your currently-defined automator constants?
       <br>
       <span class="l-lost-text">
-        This will irreversibly delete {{ quantify("constant", constantCount) }}!
+        This will irreversibly delete {{ $legacyText(_s(quantify("constant", constantCount))) }}!
       </span>
     </div>
     <template #confirm-text>

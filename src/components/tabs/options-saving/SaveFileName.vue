@@ -26,13 +26,13 @@ export default {
 
 <template>
   <div class="o-primary-btn o-primary-btn--option o-primary-btn--input l-options-grid__button">
-    <b>Save file name:</b>
-    <span ach-tooltip="Set a custom name (up to 16 alphanumeric characters, including space and hyphen)">
+    <b>{{ $t('ade.ef3a06688c6f23f7') }}</b>
+    <span :ach-tooltip="$t('ade.fd3c73a701343244')">
       <input
         class="c-custom-save-name__input"
         type="text"
         maxlength="16"
-        placeholder="Custom save name"
+        :placeholder="$t('ade.b6b73a4efaa45067')"
         :value="saveFileName"
         @change="handleChange"
       >

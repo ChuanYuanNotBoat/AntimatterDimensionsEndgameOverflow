@@ -43,7 +43,7 @@ export default {
       :value="optionMode"
       @click="changeMode(optionMode)"
     >
-      {{ modeNameFn(optionMode) }}
+      {{ $legacyText(_s(modeNameFn(optionMode))) }}
     </div>
   </div>
 </template>

@@ -142,7 +142,7 @@ export default {
             x="0"
             :y="legendLineY(idx)"
           >
-            {{ line }}
+            {{ $legacyText(_s(line)) }}
           </tspan>
         </text>
       </g>

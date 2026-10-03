@@ -25,13 +25,13 @@ export default {
         <span class="l-slabdrill-header__large">𓆗</span>
       </span>
       <span class="o-slabdrill-milestone__text">
-        <span class="l-slabdrill-header">Strike {{ unlock.requirement }}: {{ unlock.name }}.</span>
+        <span class="l-slabdrill-header">Strike {{ $legacyText(_s(unlock.requirement)) }}: {{ $legacyText(_s(unlock.name)) }}.</span>
         <br>
         <br>
-        <span class="l-slabdrill-header">Penalty: {{ unlock.nerfDescription() }}.</span>
+        <span class="l-slabdrill-header">Penalty: {{ $legacyText(_s(unlock.nerfDescription())) }}.</span>
         <br>
         <br>
-        <span class="l-slabdrill-header">Reward: {{ unlock.buffDescription() }}.</span>
+        <span class="l-slabdrill-header">Reward: {{ $legacyText(_s(unlock.buffDescription())) }}.</span>
       </span>
     </button>
   </div>

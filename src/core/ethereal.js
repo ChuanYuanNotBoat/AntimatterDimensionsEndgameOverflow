@@ -149,23 +149,18 @@ export function tryAdvanceSector() {
     return;
   }
 
-  const logarithm = power.ln();
-  const highestPossibleSector = Decimal.floor(logarithm.div(Decimal.lambertw(logarithm))).add(1);
-  if ([highestPossibleSector.sign, highestPossibleSector.layer, highestPossibleSector.mag]
-    .some(x => !Number.isFinite(x)) || highestPossibleSector.lt(1) || highestPossibleSector.gte(limit)) {
-    throw new Error("Invalid Ethereal sector inverse");
+  // Near the integer-storage boundary, Lambert W loses several whole sectors,
+  // so correcting its estimate by one is insufficient. Search the actual s^s
+  // requirements instead. The lower bound is affordable and the upper bound
+  // is unaffordable (checked above); at most 53 comparisons are needed.
+  let affordable = current;
+  let unaffordable = limit - 1;
+  while (unaffordable - affordable > 1) {
+    const middle = affordable + Math.floor((unaffordable - affordable) / 2);
+    if (power.gte(Decimal.pow(middle, middle))) affordable = middle;
+    else unaffordable = middle;
   }
-  let target = Math.round(highestPossibleSector.toNumber());
-  if (!Number.isSafeInteger(target)) throw new Error("Unsafe Ethereal sector conversion");
-  // Lambert W and Decimal flooring can be off by one at an exact threshold.
-  // Confirm the advancement against the actual s^s requirement.
-  if (target > current + 1 && power.lt(Decimal.pow(target - 1, target - 1))) target--;
-  if (target < limit && power.gte(Decimal.pow(target, target))) target++;
-  if (target <= current) target = current + 1;
-  if (target > current + 1 && power.lt(Decimal.pow(target - 1, target - 1))) {
-    throw new Error("Ethereal sector inverse exceeds affordable threshold");
-  }
-  player.endgame.ethereal.sector = target;
+  player.endgame.ethereal.sector = affordable + 1;
 }
 
 export function resetForStar(id) {

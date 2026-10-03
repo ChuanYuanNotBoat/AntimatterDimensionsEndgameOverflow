@@ -77,7 +77,7 @@ export default {
 <template>
   <div class="l-spoon-btn-group">
     <button
-      :ach-tooltip="timeEstimate"
+      :ach-tooltip="$legacyText(timeEstimate)"
       :class="classObject"
       @click="upgrade.purchase()"
       @mouseover="isHovering = true"

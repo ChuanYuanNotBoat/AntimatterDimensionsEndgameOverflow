@@ -157,16 +157,16 @@ export default {
         </button>
         <p class="timetheorems">
           <span class="c-tt-amount">
-            {{ quantify("Time Theorem", theoremAmount, 2, 0, formatTimeTheoremType) }}
+            {{ $legacyText(_s(quantify("Time Theorem", theoremAmount, 2, 0, formatTimeTheoremType))) }}
           </span>
           <span v-if="showST">
             <br>
-            {{ quantifyInt("Space Theorem", STamount) }}
+            {{ $legacyText(_s(quantifyInt("Space Theorem", STamount))) }}
           </span>
         </p>
         <div class="l-load-tree-area">
           <div class="l-tree-load-button-wrapper">
-            <span class="c-ttshop__save-load-text">{{ saveLoadText }}</span>
+            <span class="c-ttshop__save-load-text">{{ $legacyText(_s(saveLoadText)) }}</span>
             <TimeStudySaveLoadButton
               v-for="saveslot in 6"
               :key="saveslot"
@@ -177,8 +177,7 @@ export default {
             <span
               v-if="hasTTGen"
               class="checkbox-margin"
-              ach-tooltip="This shows TT generation by default and total TT if you hold shift.
-                Check this box to swap this behavior."
+              :ach-tooltip="$t('ade.843bebc6d6419ef6')"
             >
               <input
                 v-model="invertTTgenDisplay"
@@ -189,10 +188,10 @@ export default {
               >
             </span>
             <span v-if="showTTGen">
-              You are gaining {{ TTgenRateText }}.
+              You are gaining {{ $legacyText(_s(TTgenRateText)) }}.
             </span>
             <span v-else>
-              You have {{ totalTimeTheoremText }}.
+              You have {{ $legacyText(_s(totalTimeTheoremText)) }}.
             </span>
           </div>
         </div>
@@ -226,13 +225,13 @@ export default {
             class="o-tt-top-row-button c-tt-buy-button c-tt-buy-button--unlocked"
             @click="buyMaxTheorems"
           >
-            Buy max
+            {{ $t('ade.9bd664051a0c4776') }}
           </button>
           <PrimaryToggleButton
             v-if="!minimized && hasTTAutobuyer"
             v-model="isAutobuyerOn"
             class="o-tt-autobuyer-button c-tt-buy-button c-tt-buy-button--unlocked"
-            label="Auto:"
+            :label="$t('ade.fc5aa8b492c774bf')"
           />
         </div>
       </div>

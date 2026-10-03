@@ -56,8 +56,7 @@ export default {
 <template>
   <div class="c-dimension-row c-antimatter-dim-row c-antimatter-prestige-row">
     <div class="l-dim-row__prestige-text c-dim-row__label c-dim-row__label--amount">
-      Celestial Dimension Boost ({{ boostCountText }}):
-      requires {{ formatHybridLarge(requirement.amount, 3) }} Celestial Matter
+      {{ $t('ade.6910cabe17ba9729', { p0: $legacyText(_s(boostCountText)), p1: $legacyText(_s(formatHybridLarge(requirement.amount,3))) }) }}
     </div>
     <PrimaryButton
       :enabled="isBuyable"
@@ -65,7 +64,7 @@ export default {
       @click.exact="celestialDimensionBoost(true)"
       @click.shift.exact="celestialDimensionBoost(false)"
     >
-      {{ unlockedByBoost }}
+      {{ $legacyText(_s(unlockedByBoost)) }}
     </PrimaryButton>
   </div>
 </template>

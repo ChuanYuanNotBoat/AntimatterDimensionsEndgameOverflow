@@ -53,17 +53,17 @@ export default {
     <span v-else-if="canInfinity && hasGain">
       Disable Compression.
       <br>
-      Gain {{ quantify("Hawking Radiation", hawkingRadiationGain, 2, gainSpaces) }}.
+      Gain {{ $legacyText(_s(quantify("Hawking Radiation", hawkingRadiationGain, 2, gainSpaces))) }}.
     </span>
     <span v-else-if="canInfinity">
       Disable Compression.
       <br>
-      Reach {{ format(requiredForGain, 2, 1) }} antimatter to gain more Hawking Radiation.
+      Reach {{ $legacyText(_s(format(requiredForGain, 2, 1))) }} antimatter to gain more Hawking Radiation.
     </span>
     <span v-else>
       Disable Compression.
       <br>
-      Reach {{ quantify("Antimatter", infinityGoal, 1, 0) }} to gain Hawking Radiation.
+      Reach {{ $legacyText(_s(quantify("Antimatter", infinityGoal, 1, 0))) }} to gain Hawking Radiation.
     </span>
   </button>
 </template>

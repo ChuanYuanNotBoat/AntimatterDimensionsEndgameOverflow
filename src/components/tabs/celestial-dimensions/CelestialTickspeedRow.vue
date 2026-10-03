@@ -57,12 +57,12 @@ export default {
   <div :class="classObject">
     <div class="celestial-tickspeed-buttons">
       <button
-        v-tooltip="upgradeCount"
+        v-tooltip="$legacyTooltip(upgradeCount)"
         :class="buttonClass()"
         onclick="buyCelestialTickSpeed()"
       >
         <span>
-          Celestial Tickspeed Cost: {{ format(cost) }}
+          {{ $t('ade.4e59a9c1715f70a7', { p0: $legacyText(_s(format(cost))) }) }}
         </span>
       </button>
       <button
@@ -70,11 +70,11 @@ export default {
         :class="{ 'o-primary-btn--disabled': !isAffordable }"
         onclick="buyMaxCelestialTickSpeed()"
       >
-        Buy Max
+        {{ $t('ade.6c1858ad1ff1fc9e') }}
       </button>
     </div>
     <div class="celestial-tickspeed-labels">
-      {{ celestialTickspeedDisplay }} | {{ multiplierDisplay }}
+      {{ $legacyText(_s(celestialTickspeedDisplay)) }} | {{ $legacyText(_s(multiplierDisplay)) }}
     </div>
   </div>
 </template>

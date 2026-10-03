@@ -36,19 +36,20 @@ export default {
   <div class="l-challenges-tab">
     <ChallengeTabHeader />
     <div>
-      Some Normal Challenges have requirements to be able to run that challenge.
+      {{ $t('ade.dc6ab157ae4ae24d') }}
     </div>
     <div>
       If you have an active Big Crunch Autobuyer, it will attempt to Crunch
-      as soon as possible when reaching Infinite {{ isFlipped ? "matter" : "antimatter" }}.
+      as soon as possible when reaching Infinite {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }}.
     </div>
     <div v-if="showCharge">
-      <br>
-      {{ formatInt(charges) }}/{{ formatInt(12) }} Normal Challenges have been charged.
-      You are not able to pick which Normal Challenges get charged. Instead, they will be charged
-      sequentially using the first {{ formatInt(12) }} Complex Energy.
-      <br>
-      You can hold shift to see the effects of all Normal Challenges after they are charged.
+      <LocalizedText id="ade.e41f8ad682ecbec7">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(formatInt(charges))) }}</template>
+    <template #p2>{{ $legacyText(_s(formatInt(12))) }}</template>
+    <template #p3>{{ $legacyText(_s(formatInt(12))) }}</template>
+    <template #p4><br></template>
+  </LocalizedText>
     </div>
     <ChallengeGrid
       v-slot="{ challenge }"

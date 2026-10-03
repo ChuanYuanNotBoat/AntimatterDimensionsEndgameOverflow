@@ -57,20 +57,19 @@ export default {
 <template>
   <div class="l-endgame-milestone-grid">
     <div>
-      <span class="c-galactic-power-description-text">You have </span>
-      <span :style="galacticPowerAmountStyle">{{ format(galacticPower, 2, 2) }}</span>
-      <span class="c-galactic-power-description-text"> Galactic Power. </span>
-      <span :style="galacticPowerAmountStyle">+{{ format(galacticPowerPerSecond, 2, 2) }}/s</span>
+      <span class="c-galactic-power-description-text">{{ $t('ade.9f717812b3aa8e61') }} </span>
+      <span :style="galacticPowerAmountStyle">{{ $legacyText(_s(format(galacticPower, 2, 2))) }}</span>
+      <span class="c-galactic-power-description-text"> {{ $t('ade.29388d475f861061') }} </span>
+      <span :style="galacticPowerAmountStyle">{{ $t('ade.7401cbf5f86d95e0', { p0: $legacyText(_s(format(galacticPowerPerSecond,2,2))) }) }}</span>
     </div>
     <div>
       <span class="c-galactic-power-description-text">
-        Galactic Power income is significantly based on total Galaxies,
-        but is also increased based on current Celestial Matter and Imaginary Machine amounts.
+        {{ $t('ade.5afec10e5e0c1246') }}
       </span>
     </div>
     <div v-if="isDoomed">
       <span class="c-galactic-power-description-text">
-        Pelle has restricted you from producing Galactic Power while Doomed!
+        {{ $t('ade.479a030878545f07') }}
       </span>
     </div>
     <div
@@ -86,7 +85,7 @@ export default {
       />
     </div>
     <div>
-      <span class="c-galactic-power-description-text">{{ nextAtDisplay }}</span>
+      <span class="c-galactic-power-description-text">{{ $legacyText(_s(nextAtDisplay)) }}</span>
     </div>
   </div>
 </template>

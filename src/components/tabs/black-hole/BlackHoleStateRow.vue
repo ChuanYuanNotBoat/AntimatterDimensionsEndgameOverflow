@@ -42,18 +42,18 @@ export default {
 
 <template>
   <h3 v-if="isUnlocked">
-    {{ description }} State:
+    {{ $t('ade.e894551e179e8eae', { p0: $legacyText(_s(description)) }) }}
     <template v-if="isPermanent">
-      Permanently Active
+      {{ $t('ade.16e80fe0d5ebc50c') }}
     </template>
     <template v-else-if="isActive">
-      Active ({{ nextChange }} remaining)
+      {{ $t('ade.c7a26c915b9fbe63', { p0: $legacyText(_s(nextChange)) }) }}
     </template>
     <template v-else-if="id === 2 && isCharged">
-      Charged (Activates with Black Hole 1, {{ nextChange }} remaining)
+      {{ $t('ade.7fe9cc7f927d11b2', { p0: $legacyText(_s(nextChange)) }) }}
     </template>
     <template v-else>
-      Inactive (Activation in {{ nextChange }})
+      {{ $t('ade.6b333b36e09875a7', { p0: $legacyText(_s(nextChange)) }) }}
     </template>
   </h3>
 </template>

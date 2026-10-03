@@ -1068,7 +1068,7 @@ export default {
             ]"
             ></div>
             <div ref="tooltip0" :class="['ad-slider-tooltip-' + tooltipDirection[0], 'ad-slider-tooltip-wrap']">
-              <span class="ad-slider-tooltip" :style="tooltipStyles[0]">{{ xformatter ? formatting(val[0]) : val[0] }}</span>
+              <span class="ad-slider-tooltip" :style="tooltipStyles[0]">{{ $legacyText(_s(xformatter ? formatting(val[0]) : val[0])) }}</span>
             </div>
           </div>
           <div
@@ -1096,7 +1096,7 @@ export default {
             ]"
             ></div>
             <div ref="tooltip1" :class="['ad-slider-tooltip-' + tooltipDirection[1], 'ad-slider-tooltip-wrap']">
-              <span class="ad-slider-tooltip" :style="tooltipStyles[1]">{{ xformatter ? formatting(val[1]) : val[1] }}</span>
+              <span class="ad-slider-tooltip" :style="tooltipStyles[1]">{{ $legacyText(_s(xformatter ? formatting(val[1]) : val[1])) }}</span>
             </div>
           </div>
         </template>
@@ -1116,10 +1116,10 @@ export default {
           >
             <div :class="['l-ad-slider__dot-handle', 'c-ad-slider__dot-handle', dotClass]"
                  :style="[sliderStyles, focusFlag && focusSlider === 0 ? focusStyles : null]">
-              {{dotContents(0)}}
+              {{ $legacyText(_s(dotContents(0))) }}
             </div>
             <div :class="['ad-slider-tooltip-' + tooltipDirection, 'ad-slider-tooltip-wrap']">
-              <span class="ad-slider-tooltip" :style="tooltipStyles">{{ xformatter ? formatting(val) : val }}</span>
+              <span class="ad-slider-tooltip" :style="tooltipStyles">{{ $legacyText(_s(xformatter ? formatting(val) : val)) }}</span>
             </div>
           </div>
         </template>
@@ -1141,7 +1141,7 @@ export default {
               class="ad-slider-piecewise-label"
               :style="[ labelStyle, isActive(piecewiseObj.index) ? labelActiveStyle : null ]"
             >
-              {{ piecewiseObj.label }}
+              {{ $legacyText(_s(piecewiseObj.label)) }}
             </span>
           </li>
         </ul>
@@ -1157,7 +1157,7 @@ export default {
             :style="tooltipMergedPosition"
           >
             <span class="ad-slider-tooltip" :style="tooltipStyles">
-              {{ tooltipFormatHelper }}
+              {{ $legacyText(_s(tooltipFormatHelper)) }}
             </span>
           </div>
         </div>

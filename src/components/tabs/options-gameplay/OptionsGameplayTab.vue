@@ -110,29 +110,29 @@ export default {
           class="o-primary-btn--option"
           onclick="Modal.confirmationOptions.show()"
         >
-          Open Confirmation Options
+          {{ $t('ade.48c358a39d2c0eec') }}
         </OptionsButton>
         <PrimaryToggleButton
           v-model="hotkeys"
           class="o-primary-btn--option l-options-grid__button"
-          label="Hotkeys:"
-          on="Enabled"
-          off="Disabled"
+          :label="$t('ade.9e59c60f0ec0fb09')"
+          :on="$t('ade.0879d3b651abd64d')"
+          :off="$t('ade.e31bf0078a370875')"
         />
         <PrimaryToggleButton
           v-model="automaticTabSwitching"
           class="o-primary-btn--option l-options-grid__button l-toggle-button"
-          label="Switch tabs on some events (e.g. entering challenges):"
+          :label="$t('ade.771afdb18c062e7d')"
         />
       </div>
       <div class="l-options-grid__row">
         <PrimaryToggleButton
           v-model="offlineProgress"
           class="o-primary-btn--option l-options-grid__button"
-          label="Offline progress:"
+          :label="$t('ade.409fe6184cd8d9fe')"
         />
         <div class="o-primary-btn o-primary-btn--option o-primary-btn--slider l-options-grid__button">
-          <b>Offline ticks: {{ formatInt(offlineTicks) }}</b>
+          <b>{{ $t('ade.142cee80bcd6f753', { p0: $legacyText(_s(formatInt(offlineTicks))) }) }}</b>
           <SliderComponent
             class="o-primary-btn--slider__slider"
             v-bind="sliderPropsOfflineTicks"
@@ -143,7 +143,7 @@ export default {
         <PrimaryToggleButton
           v-model="hibernationCatchup"
           class="o-primary-btn--option l-options-grid__button"
-          label="Run suspended time as offline:"
+          :label="$t('ade.690b7907142fae22')"
         />
       </div>
       <div class="l-options-grid__row">
@@ -151,7 +151,7 @@ export default {
           v-if="automatorUnlocked"
           class="o-primary-btn o-primary-btn--option o-primary-btn--slider l-options-grid__button"
         >
-          <b>Automator Log Max: {{ formatInt(parseInt(automatorLogSize)) }}</b>
+          <b>{{ $t('ade.00a25fea292a79b8', { p0: $legacyText(_s(formatInt(parseInt(automatorLogSize)))) }) }}</b>
           <SliderComponent
             class="o-primary-btn--slider__slider"
             v-bind="sliderPropsAutomatorLogSize"

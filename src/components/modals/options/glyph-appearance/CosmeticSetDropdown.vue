@@ -24,7 +24,7 @@ export default {
         class="o-primary-btn l-select-theme__item c-select-theme__item"
         @click="select(set)"
       >
-        {{ set.name }}
+        {{ $legacyText(_s(set.name)) }}
       </div>
     </div>
   </div>

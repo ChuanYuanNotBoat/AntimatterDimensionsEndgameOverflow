@@ -107,15 +107,15 @@ export default {
 
 <template>
   <div class="reset-container galaxy">
-    <h4>{{ typeName }} ({{ sumText }})</h4>
-    <span>Requires: {{ formatHybridLarge(requirement.amount, 3) }} Cel Matter</span>
-    <span v-if="hasIncreasedScaling">{{ costScalingText }}</span>
+    <h4>{{ $legacyText(_s(typeName)) }} ({{ $legacyText(_s(sumText)) }})</h4>
+    <span>{{ $t('ade.93182c08bbf707cb', { p0: $legacyText(_s(formatHybridLarge(requirement.amount,3))) }) }}</span>
+    <span v-if="hasIncreasedScaling">{{ $legacyText(_s(costScalingText)) }}</span>
     <button
       :class="classObject"
       @click.exact="buyCelestialGalaxy(true)"
       @click.shift.exact="buyCelestialGalaxy(false)"
     >
-      {{ buttonText }}
+      {{ $legacyText(_s(buttonText)) }}
     </button>
   </div>
 </template>

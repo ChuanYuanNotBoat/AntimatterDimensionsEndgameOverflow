@@ -89,7 +89,7 @@ export default {
       v-if="line.showCelestialName"
       class="c-modal-celestial-name"
     >
-      {{ celestialName }}
+      {{ $legacyText(_s(celestialName)) }}
     </span>
 
     <i
@@ -98,7 +98,7 @@ export default {
     />
 
     <span class="l-modal-celestial-quote__text">
-      {{ message }}
+      {{ $legacyText(_s(message), `${quote.celestial}:${quote.id}`) }}
     </span>
 
     <i

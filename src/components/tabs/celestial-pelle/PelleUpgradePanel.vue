@@ -70,7 +70,7 @@ export default {
         class="c-collapse-icon-clickable"
         @click="toggleCollapse"
       />
-      Pelle Upgrades
+      {{ $t('ade.d40d519d2c823e0f') }}
     </div>
     <div
       v-if="!isCollapsed"
@@ -89,11 +89,15 @@ export default {
         </div>
         <div class="c-armageddon-resources-container">
           <div>
-            You have <span class="c-remnants-amount">{{ format(remnants, 2) }}</span> Remnants.
+            <LocalizedText id="ade.361e91aba33980b5">
+              <template #p0><span class="c-remnants-amount">{{ $legacyText(_s(format(remnants, 2))) }}</span></template>
+            </LocalizedText>
           </div>
           <div>
-            You have <span class="c-remnants-amount">{{ format(realityShards, 2) }}</span> Reality Shards.
-            <span class="c-remnants-amount">+{{ format(shardRate, 2, 2) }}/s</span>
+            <LocalizedText id="ade.f9ad562b4ad5b4d7">
+              <template #p0><span class="c-remnants-amount">{{ $legacyText(_s(format(realityShards, 2))) }}</span></template>
+              <template #p1><span class="c-remnants-amount">+{{ $legacyText(_s(format(shardRate, 2, 2))) }}/s</span></template>
+            </LocalizedText>
           </div>
         </div>
       </div>
@@ -109,7 +113,7 @@ export default {
         class="o-pelle-button"
         @click="toggleBought"
       >
-        {{ showBought ? "Showing bought upgrades" : "Bought upgrades hidden" }}
+        {{ $legacyText(_s(showBought ? "Showing bought upgrades" : "Bought upgrades hidden")) }}
       </button>
       <div
         v-if="allUpgrades.length"
@@ -129,7 +133,7 @@ export default {
         />
       </div>
       <div v-else>
-        No upgrades to show!
+        {{ $t('ade.11b52cbcdeb43d10') }}
       </div>
     </div>
   </div>

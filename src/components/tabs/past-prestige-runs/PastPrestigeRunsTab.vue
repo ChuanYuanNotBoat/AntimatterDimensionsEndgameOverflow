@@ -78,7 +78,7 @@ export default {
         class="o-primary-btn o-primary-btn--subtab-option"
         @click="cycleButton()"
       >
-        Showing {{ resourceText }}
+        {{ $t('ade.beb4f3553863f951', { p0: $legacyText(_s(resourceText)) }) }}
       </button>
     </div>
     <PastPrestigeRunsContainer

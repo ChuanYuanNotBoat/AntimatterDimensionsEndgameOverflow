@@ -45,12 +45,12 @@ export default {
     v-bind="$attrs"
     @click="emitInput(!value)"
   >
-    {{ displayText }}
+    {{ $legacyText(_s(displayText)) }}
     <div
       v-if="tooltipClass"
       :class="tooltipClass"
     >
-      {{ tooltipContent }}
+      {{ $legacyText(_s(tooltipContent)) }}
     </div>
   </button>
 </template>

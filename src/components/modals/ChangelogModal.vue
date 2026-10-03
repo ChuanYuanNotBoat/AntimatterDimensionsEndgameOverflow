@@ -41,7 +41,7 @@ export default {
     <ModalCloseButton @click="emitClose" />
     <div class="l-changelog-header">
       <div class="c-changelog-title">
-        Changelog
+        {{ $t('ade.093f5c6acea3fa19') }}
       </div>
     </div>
     <div class="l-changelog-container">
@@ -56,18 +56,18 @@ export default {
             }"
             @click="setShownEntry(entry)"
           >
-            {{ formatDate(entry.date) }}
+            {{ $legacyText(_s(formatDate(entry.date))) }}
           </div>
         </div>
       </div>
       <div class="l-changelog-info">
         <div class="c-changelog-body--title">
-          {{ formatDate(shownEntry.date) }}<span v-if="shownEntry.name">: "{{ shownEntry.name }}" update</span>
+          {{ $legacyText(_s(formatDate(shownEntry.date))) }}<span v-if="shownEntry.name">: "{{ $legacyText(_s(shownEntry.name)) }}" update</span>
         </div>
         <div
           ref="changelogBody"
           class="l-changelog-body c-changelog-body"
-          v-html="shownEntry.info"
+          v-html="$legacyHtml(shownEntry.info)"
         />
       </div>
     </div>

@@ -130,20 +130,22 @@ export default {
       <span class="fas fa-arrow-up" />
       <div class="c-ra-pet-upgrade__tooltip">
         <div class="c-ra-pet-upgrade__tooltip__name">
-          Level {{ pet.name }} to {{ formatInt(level + 1) }}
+          {{ $t('ade.71f5289520c488b1', { p0: $legacyText(_s(pet.name)), p1: $legacyText(_s(formatInt(level+1))) }) }}
         </div>
         <div class="c-ra-pet-upgrade__tooltip__description">
-          {{ reward }}
+          {{ $legacyText(_s(reward)) }}
           <div
             v-if="showNextScalingUpgrade"
             :style="{ 'margin-top': nextUnlock.reward ? '0.6rem' : '0' }"
           >
-            {{ nextScalingUpgrade }}
+            {{ $legacyText(_s(nextScalingUpgrade)) }}
           </div>
         </div>
         <div class="c-ra-pet-upgrade__tooltip__footer">
-          Cost: {{ quantify("Memory", requiredMemories, 2, 2) }}
-          <span v-if="memories.lte(requiredMemories)">{{ nextLevelEstimate }}</span>
+          <LocalizedText id="ade.a53897122abec7f9">
+            <template #p0>{{ $legacyText(_s(quantify("Memory",requiredMemories,2,2))) }}</template>
+            <template #p1><span v-if="memories.lte(requiredMemories)">{{ $legacyText(_s(nextLevelEstimate)) }}</span></template>
+          </LocalizedText>
         </div>
       </div>
     </button>

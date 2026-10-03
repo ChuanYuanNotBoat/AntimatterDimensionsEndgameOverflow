@@ -92,10 +92,10 @@ export default {
 
 <template>
   <button
-    v-tooltip="{
+    v-tooltip="$legacyTooltip({
       content: automatorModeTooltip,
       hideOnTargetClick: false
-    }"
+    })"
     :class="{
       'c-slider-toggle-button': true,
       'c-slider-toggle-button--right': isTextAutomator,

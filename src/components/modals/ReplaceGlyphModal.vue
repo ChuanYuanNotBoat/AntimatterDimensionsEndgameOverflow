@@ -53,6 +53,6 @@ export default {
     <template #header>
       You are about to replace a Glyph
     </template>
-    Replacing a Glyph will {{ resetTerm }}.
+    {{ $t('ade.7f6d507649120499', { p0: $legacyText(_s(resetTerm)) }) }}
   </ModalWrapperChoice>
 </template>

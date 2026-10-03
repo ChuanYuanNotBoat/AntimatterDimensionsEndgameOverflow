@@ -41,14 +41,13 @@ export default {
 <template>
   <div class="c-modal-away-progress">
     <div class="c-modal-away-progress__header">
-      {{ titleText }}
+      {{ $legacyText(_s(titleText)) }}
     </div>
     <div>
-      {{ timeString }}
-      If you need a refresher, here is a quick summary of all the content you have unlocked so far from the beginning of
-      the game, separated into different stages of progression. These are only very brief descriptions; you can check
-      the related How To Play entries by clicking the contents title or <i class="fas fa-question-circle" /> icons
-      to view more detailed information.
+      <LocalizedText id="ade.680cfadec3753e85">
+        <template #p0>{{ $legacyText(_s(timeString)) }}</template>
+        <template #p1><i class="fas fa-question-circle" /></template>
+      </LocalizedText>
     </div>
     <div
       class="l-catchup-group-container"
@@ -62,13 +61,13 @@ export default {
       />
     </div>
     <span class="c-suggestion-text">
-      Based on your current progression, it will probably be useful to try to increase your {{ suggestedResource }}.
+      {{ $t('ade.8ed7ca2b31db61ca', { p0: $legacyText(_s(suggestedResource)) }) }}
     </span>
     <div class="l-confirm-padding">
       <PrimaryButton
         @click="emitClose"
       >
-        Confirm
+        {{ $t('ade.563fd5ab1f5b18a6') }}
       </PrimaryButton>
     </div>
   </div>

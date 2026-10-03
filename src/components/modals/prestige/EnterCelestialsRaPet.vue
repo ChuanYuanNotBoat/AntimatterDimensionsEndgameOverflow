@@ -48,7 +48,7 @@ export default {
     v-if="isUnlocked"
     :style="color"
   >
-    {{ name }} {{ gainText }}.
+    {{ $legacyText(_s(name)) }} {{ $legacyText(_s(gainText)) }}.
     <br>
   </span>
 </template>

@@ -78,15 +78,15 @@ export default {
 
 <template>
   <div class="reset-container dimboost">
-    <h4>{{ dimBoostName }} ({{ boostCountText }})</h4>
-    <span>Requires: {{ formatHybridLarge(requirement.amount, 3) }} {{ dimName }} {{ isFlipped ? "Matter" : "Antimatter" }} D</span>
-    <span v-if="hasSurge">{{ imaginaryText }}</span>
+    <h4>{{ $legacyText(_s(dimBoostName)) }} ({{ $legacyText(_s(boostCountText)) }})</h4>
+    <span>Requires: {{ $legacyText(_s(formatHybridLarge(requirement.amount, 3))) }} {{ $legacyText(_s(dimName)) }} {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} D</span>
+    <span v-if="hasSurge">{{ $legacyText(_s(imaginaryText)) }}</span>
     <button
       :class="classObject"
       @click.exact="dimensionBoost(true)"
       @click.shift.exact="dimensionBoost(false)"
     >
-      {{ unlockedByBoost }}
+      {{ $legacyText(_s(unlockedByBoost)) }}
       <div
         v-if="hasTutorial"
         class="fas fa-circle-exclamation l-notification-icon"

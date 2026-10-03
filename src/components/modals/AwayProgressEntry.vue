@@ -108,16 +108,18 @@ export default {
     @click="hideEntry"
   >
     <span v-if="isBlackHole">
-      Your
-      <b>{{ formattedName }}</b>
-      activated
-      {{ formatBlackHoleActivations }}
+      <LocalizedText id="ade.1fb6e6f828b5aaa0">
+        <template #p0><b>{{ $legacyText(_s(formattedName)) }}</b></template>
+        <template #p1>{{ $legacyText(_s(formatBlackHoleActivations)) }}</template>
+      </LocalizedText>
     </span>
     <span v-else>
-      <b>{{ formattedName }}</b>
-      <i v-if="isVeryLarge"> exponent</i>
-      increased from
-      {{ formatBefore }} to {{ formatAfter }}
+      <LocalizedText id="ade.5bf7bc200686f1cc">
+    <template #p0><b>{{ $legacyText(_s(formattedName)) }}</b></template>
+    <template #p1><i v-if="isVeryLarge"> {{ $t('ade.e792b38885fa7410') }}</i></template>
+    <template #p2>{{ $legacyText(_s(formatBefore)) }}</template>
+    <template #p3>{{ $legacyText(_s(formatAfter)) }}</template>
+  </LocalizedText>
     </span>
   </div>
 </template>

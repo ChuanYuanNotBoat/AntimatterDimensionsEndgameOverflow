@@ -283,19 +283,19 @@ function roundPreservingSum(data) {
       :style="rowStyle('ep')"
       class="l-glyph-levels-and-weights__factor"
     >
-      {{ factorString(factors.ep) }}
+      {{ $legacyText(_s(factorString(factors.ep))) }}
     </div>
     <div
       :style="rowStyle('ep')"
       class="l-glyph-levels-and-weights__factor-val"
     >
-      {{ formatFactor(factors.ep.value) }}
+      {{ $legacyText(_s(formatFactor(factors.ep.value))) }}
     </div>
     <div
       :style="rowStyle('replicanti')"
       class="l-glyph-levels-and-weights__factor"
     >
-      {{ factorString(factors.repl) }}
+      {{ $legacyText(_s(factorString(factors.repl))) }}
     </div>
     <div
       :style="rowStyle('replicanti')"
@@ -307,13 +307,13 @@ function roundPreservingSum(data) {
       :style="rowStyle('replicanti')"
       class="l-glyph-levels-and-weights__factor-val"
     >
-      {{ formatFactor(factors.repl.value) }}
+      {{ $legacyText(_s(formatFactor(factors.repl.value))) }}
     </div>
     <div
       :style="rowStyle('dt')"
       class="l-glyph-levels-and-weights__factor"
     >
-      {{ factorString(factors.dt) }}
+      {{ $legacyText(_s(factorString(factors.dt))) }}
     </div>
     <div
       :style="rowStyle('dt')"
@@ -325,14 +325,14 @@ function roundPreservingSum(data) {
       :style="rowStyle('dt')"
       class="l-glyph-levels-and-weights__factor-val"
     >
-      {{ formatFactor(factors.dt.value) }}
+      {{ $legacyText(_s(formatFactor(factors.dt.value))) }}
     </div>
     <template v-if="eternityVisible">
       <div
         :style="rowStyle('eternities')"
         class="l-glyph-levels-and-weights__factor"
       >
-        {{ factorString(factors.eter) }}
+        {{ $legacyText(_s(factorString(factors.eter))) }}
       </div>
       <div
         :style="rowStyle('eternities')"
@@ -344,7 +344,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('eternities')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatFactor(factors.eter.value) }}
+        {{ $legacyText(_s(formatFactor(factors.eter.value))) }}
       </div>
     </template>
     <template v-if="perkShopVisible">
@@ -352,7 +352,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('perk shop')"
         class="l-glyph-levels-and-weights__factor"
       >
-        Teresa's Perk shop
+        {{ $t('ade.aa34bc5e3ad8ab28') }}
       </div>
       <div
         :style="rowStyle('perk shop')"
@@ -364,7 +364,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('perk shop')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatPerkShop }}
+        {{ $legacyText(_s(formatPerkShop)) }}
       </div>
     </template>
     <template v-if="shardVisible">
@@ -372,7 +372,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('shards')"
         class="l-glyph-levels-and-weights__factor"
       >
-        {{ formatInt(100) }}×Shards{{ formatPow(2) }}
+        {{ $t('ade.a6b5ae6527b57266', { p0: $legacyText(_s(formatInt(100))), p1: $legacyText(_s(formatPow(2))) }) }}
       </div>
       <div
         :style="rowStyle('shards')"
@@ -384,7 +384,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('shards')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatFactor(factors.shardFactor) }}
+        {{ $legacyText(_s(formatFactor(factors.shardFactor))) }}
       </div>
     </template>
     <template v-if="singularityVisible">
@@ -392,7 +392,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('singularities')"
         class="l-glyph-levels-and-weights__factor"
       >
-        Singularities
+        {{ $t('ade.1bf100430dced553') }}
       </div>
       <div
         :style="rowStyle('singularities')"
@@ -404,7 +404,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('singularities')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatFactor(factors.singularityEffect) }}
+        {{ $legacyText(_s(formatFactor(factors.singularityEffect))) }}
       </div>
     </template>
     <template v-if="penaltyVisible">
@@ -412,7 +412,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('instability')"
         class="l-glyph-levels-and-weights__factor"
       >
-        Instability
+        {{ $t('ade.beb3c13305d4401a') }}
       </div>
       <div
         :style="rowStyle('instability')"
@@ -424,7 +424,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('instability')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatFactor(factors.scalePenalty) }}
+        {{ $legacyText(_s(formatFactor(factors.scalePenalty))) }}
       </div>
     </template>
     <template v-if="rowVisible">
@@ -432,7 +432,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('upgrade rows')"
         class="l-glyph-levels-and-weights__factor"
       >
-        Upgrade Rows
+        {{ $t('ade.15888ee71d047ef6') }}
       </div>
       <div
         :style="rowStyle('upgrade rows')"
@@ -444,7 +444,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('upgrade rows')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatInt(factors.rowFactor) }}
+        {{ $legacyText(_s(formatInt(factors.rowFactor))) }}
       </div>
     </template>
     <template v-if="achievementVisible">
@@ -452,7 +452,7 @@ function roundPreservingSum(data) {
         :style="rowStyle('achievements')"
         class="l-glyph-levels-and-weights__factor"
       >
-        Achievements
+        {{ $t('ade.7f5c854535b9b9a4') }}
       </div>
       <div
         :style="rowStyle('achievements')"
@@ -464,32 +464,32 @@ function roundPreservingSum(data) {
         :style="rowStyle('achievements')"
         class="l-glyph-levels-and-weights__factor-val"
       >
-        {{ formatInt(factors.achievementFactor) }}
+        {{ $legacyText(_s(formatInt(factors.achievementFactor))) }}
       </div>
     </template>
     <div
       :style="rowStyle('level')"
       class="l-glyph-levels-and-weights__factor"
     >
-      Final Level
+      {{ $t('ade.dd0e8454951ffa5c') }}
     </div>
     <div
       :style="rowStyle('level')"
       class="l-glyph-levels-and-weights__factor-val"
     >
-      {{ formatLevel(factors.actualLevel) }}
+      {{ $legacyText(_s(formatLevel(factors.actualLevel))) }}
     </div>
     <div
       :style="rowStyle('info')"
       class="l-glyph-levels-and-weights__factor l-glyph-level-and-weights-note"
     >
-      Note: All resources here are log10 of their actual values.
+      {{ $t('ade.afa61bf020cac5e8') }}
     </div>
     <div
       :style="rowStyle('info2')"
       class="l-glyph-levels-and-weights__factor l-glyph-level-and-weights-note"
     >
-      EP, Replicanti, and DT use their highest values this Reality.
+      {{ $t('ade.da696b533f7df0a3') }}
     </div>
     <template v-if="adjustVisible">
       <div
@@ -497,13 +497,13 @@ function roundPreservingSum(data) {
         class="l-glyph-levels-and-weights__adjust-outline"
       />
       <div class="l-glyph-levels-and-weights__adjust-label">
-        Adjust weights
+        {{ $t('ade.e2e0f6e21ef68dbf') }}
         <div class="l-glyph-levels-and-weights__reset-btn-outer">
           <div
             :class="resetWeightsButtonClass()"
             @click="resetWeights"
           >
-            Reset
+            {{ $t('ade.24745fdfb2106ae4') }}
           </div>
         </div>
       </div>
@@ -512,7 +512,7 @@ function roundPreservingSum(data) {
           v-if="showAutoAdjustWeights"
           v-model="isAutoAdjustWeightsOn"
           class="c-glyph-levels-and-weights__auto-btn"
-          label="Auto adjustment:"
+          :label="$t('ade.deabef7b40f1c4c5')"
         />
       </div>
       <div

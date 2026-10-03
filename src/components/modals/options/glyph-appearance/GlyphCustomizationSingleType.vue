@@ -38,10 +38,10 @@ export default {
       v-if="glyphId === -1"
       class="c-name"
     >
-      Appearance Options for {{ name }} Glyphs
+      Appearance Options for {{ $legacyText(_s(name)) }} Glyphs
     </span>
     <div v-if="type === 'companion'">
-      Companion Glyphs cannot have their symbol modified.
+      {{ $t('ade.f5fb9ea5d730b4ae') }}
     </div>
     <GlyphCustomizationSlidingWindow
       v-else

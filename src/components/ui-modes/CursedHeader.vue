@@ -56,9 +56,9 @@ export default {
 <template>
   <span class="c-cursed-header">
     <span>
-      You currently have {{ quantifyInt("Chaos Core", cores) }}.
-      You have a {{ formatPercents(findChance, 2, 2) }} chance of finding one every time you hunt.
-      You can currently hunt every {{ intervalText }}.
+      You currently have {{ $legacyText(_s(quantifyInt("Chaos Core", cores))) }}.
+      You have a {{ $legacyText(_s(formatPercents(findChance, 2, 2))) }} chance of finding one every time you hunt.
+      You can currently hunt every {{ $legacyText(_s(intervalText)) }}.
     </span>
     <br>
     <br>
@@ -68,7 +68,7 @@ export default {
         :class="classObj"
         @click="hunt"
       >
-        {{ huntText }}
+        {{ $legacyText(_s(huntText)) }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn o-cursed-btn"

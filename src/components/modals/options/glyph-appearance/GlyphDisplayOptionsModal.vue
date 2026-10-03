@@ -129,7 +129,7 @@ export default {
           class="o-primary-btn o-primary-btn--modal-option"
           @click="cycleBG()"
         >
-          Glyph BG color: {{ glyphBGStr }}
+          {{ $t('ade.7d2c691a2d4c1a89', { p0: $legacyText(_s(glyphBGStr)) }) }}
         </button>
         <ModalOptionsToggleButton
           v-model="showGlyphInfoByDefault"

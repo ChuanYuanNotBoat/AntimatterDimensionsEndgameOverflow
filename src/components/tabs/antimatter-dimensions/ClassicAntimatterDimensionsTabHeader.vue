@@ -55,23 +55,23 @@ export default {
   <div class="l-antimatter-dim-tab__header">
     <PrimaryButton
       v-show="isSacrificeUnlocked"
-      v-tooltip="sacrificeTooltip"
+      v-tooltip="$legacyTooltip(sacrificeTooltip)"
       :enabled="isSacrificeAffordable"
       class="o-primary-btn--sacrifice"
       @click="sacrifice"
     >
       <span v-if="isSacrificeAffordable">
-        {{ sacText }}
+        {{ $legacyText(_s(sacText)) }}
       </span>
       <span v-else>
-        Dimensional Sacrifice Disabled ({{ disabledCondition }})
+        {{ $t('ade.5209c28e0d12bc4a', { p0: $legacyText(_s(disabledCondition)) }) }}
       </span>
     </PrimaryButton>
     <PrimaryButton
       class="o-primary-btn--buy-max"
       @click="maxAll"
     >
-      Max all (M)
+      {{ $t('ade.62dd22ce6ff2fe15') }}
     </PrimaryButton>
   </div>
 </template>

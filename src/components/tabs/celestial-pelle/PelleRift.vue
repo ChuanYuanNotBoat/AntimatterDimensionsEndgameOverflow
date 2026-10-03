@@ -83,14 +83,14 @@ export default {
       <div class="c-pelle-rift-row">
         <div class="c-pelle-rift-column c-pelle-rift-status">
           <h2 class="c-pelle-rift-name-header">
-            {{ riftName() }}
+            {{ $legacyText(_s(riftName())) }}
           </h2>
           <div class="c-pelle-rift-rift-info-container">
             <div
               v-for="(effect, idx) in effects"
               :key="idx"
             >
-              {{ effect || "" }}
+              {{ $legacyText(_s(effect || "")) }}
             </div>
           </div>
         </div>
@@ -101,22 +101,22 @@ export default {
         <div class="c-pelle-rift-status">
           <div class="c-pelle-rift-fill-status">
             <h2 class="c-pelle-rift-name-header">
-              {{ riftName() }}
+              {{ $legacyText(_s(riftName())) }}
             </h2>
             <div class="c-pelle-rift-rift-info-container">
-              Drains {{ drainResource() }} to fill.
+              {{ $t('ade.438e049081eaea93', { p0: $legacyText(_s(drainResource())) }) }}
               <span
                 v-if="specialRift"
-                :ach-tooltip="infoTooltip"
+                :ach-tooltip="$legacyText(infoTooltip)"
               >
                 <i class="fas fa-question-circle" />
               </span>
               <br>
               <template v-if="!isMaxed">
-                Current Amount: {{ formatRift(resource) }}
+                {{ $t('ade.2b31c9b3927ce7f2', { p0: $legacyText(_s(formatRift(resource))) }) }}
               </template>
               <br>
-              Total Filled: {{ formatRift(rift.totalFill) }}
+              {{ $t('ade.55e3f69d7e0e815b', { p0: $legacyText(_s(formatRift(rift.totalFill))) }) }}
             </div>
           </div>
         </div>

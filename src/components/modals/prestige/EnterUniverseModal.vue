@@ -112,7 +112,7 @@ export default {
       {{ topLabel }}
     </template>
     <div>
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
       <br>
       <br>
       <div
@@ -120,15 +120,15 @@ export default {
         class="universe-description"
       >
         <br><br>
-        {{ description }}
+        {{ $legacyText(_s(description)) }}
       </div>
       <br><br>
       <div>
-        {{ reward }}
+        {{ $legacyText(_s(reward)) }}
       </div>
       <br>
       <div>
-        Reach {{ format(highestAntimatter, 2, 1) }} Antimatter to gain rewards from the {{ name }} Universe.
+        Reach {{ $legacyText(_s(format(highestAntimatter, 2, 1))) }} Antimatter to gain rewards from the {{ $legacyText(_s(name)) }} Universe.
       </div>
     </div>
     <template #confirm-text>

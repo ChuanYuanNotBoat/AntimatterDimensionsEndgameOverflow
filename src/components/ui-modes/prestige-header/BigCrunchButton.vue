@@ -113,34 +113,38 @@ export default {
   >
     <!-- Cannot Crunch -->
     <template v-if="!canCrunch">
-      Reach {{ format(infinityGoal, 2, 2) }}
+      Reach {{ $legacyText(_s(format(infinityGoal, 2, 2))) }}
       <br>
-      {{ isFlipped ? "matter" : "antimatter" }}
+      {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }}
     </template>
 
     <!-- Can Crunch in challenge -->
     <template v-else-if="inAntimatterChallenge">
-      Big Crunch to
-      <br>
-      complete the challenge
+      <LocalizedText id="ade.b4de8f3319900581">
+        <template #p0><br></template>
+      </LocalizedText>
     </template>
 
     <!-- Can Crunch -->
     <template v-else>
       <div v-if="!showIPRate" />
       <b>
-        Big Crunch for
-        <span :style="amountStyle">{{ format(gainedIP, 2) }}</span>
-        <span v-if="showIPRate"> IP</span>
-        <span v-else> Infinity {{ pluralize("Point", gainedIP) }}</span>
+        <LocalizedText id="ade.b286bfb59fd91edd">
+          <template #p0><span :style="amountStyle">{{ $legacyText(_s(format(gainedIP, 2))) }}</span></template>
+          <template #p1><span v-if="showIPRate"> {{ $t('ade.86533e9829fbcdf8') }}</span>
+<span v-else> {{ $t('ade.c8610389b1942566', { p0: $legacyText(_s(pluralize("Point",gainedIP))) }) }}</span></template>
+        </LocalizedText>
+
       </b>
       <template v-if="showIPRate">
-        <br>
-        Current: {{ format(currentIPRate, 2) }} IP/min
-        <br>
-        Peak: {{ format(peakIPRate, 2) }} IP/min
-        <br>
-        at {{ format(peakIPRateVal, 2) }} IP
+        <LocalizedText id="ade.ab7b0ae0503e704d">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(currentIPRate,2))) }}</template>
+    <template #p2><br></template>
+    <template #p3>{{ $legacyText(_s(format(peakIPRate,2))) }}</template>
+    <template #p4><br></template>
+    <template #p5>{{ $legacyText(_s(format(peakIPRateVal,2))) }}</template>
+  </LocalizedText>
       </template>
       <div v-else />
     </template>
@@ -153,7 +157,7 @@ export default {
     @click="switchToInfinity"
   >
     <b>
-      You have enough Infinity Points to buy a Tesseract
+      {{ $t('ade.7ba9bcf3f55fec8c') }}
     </b>
   </button>
 </template>

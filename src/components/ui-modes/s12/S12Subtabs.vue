@@ -72,14 +72,14 @@ export default {
           <span
             v-if="useCompact"
             class="c-s12-subtab-btn__symbol--small"
-            v-html="subtab.symbol"
+            v-html="$legacyHtml(subtab.symbol)"
           />
-          {{ subtab.name }}
+          {{ $legacyText(_s(subtab.name)) }}
         </span>
         <span
           v-if="!useCompact"
           class="c-s12-subtab-btn__symbol"
-          v-html="subtab.symbol"
+          v-html="$legacyHtml(subtab.symbol)"
         />
         <div
           v-if="subtab.hasNotification"

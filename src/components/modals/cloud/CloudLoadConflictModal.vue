@@ -89,7 +89,7 @@ export default {
       :show-name="hasDifferentName"
       save-type="Cloud Save"
     />
-    <span v-html="suggestionText" />
+    <span v-html="$legacyHtml(suggestionText)" />
     <template #cancel-text>
       Keep Local Save
     </template>

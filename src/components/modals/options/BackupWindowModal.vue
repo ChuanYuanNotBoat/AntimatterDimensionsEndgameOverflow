@@ -64,10 +64,7 @@ export default {
       Automatic Backup Saves
     </template>
     <div class="c-info c-modal--short">
-      The game makes automatic backups based on time you have spent online or offline.
-      Timers for online backups only run when the game is open, and offline backups only save to the slot
-      with the longest applicable timer.
-      Additionally, your current save is saved into the last slot any time a backup from here is loaded.
+      {{ $t('ade.f527ce034bbf6080') }}
       <div
         class="c-modal__confirmation-toggle"
         @click="toggleOffline"
@@ -79,7 +76,7 @@ export default {
           />
         </div>
         <span class="c-modal__confirmation-toggle__text">
-          Load with offline progress disabled
+          {{ $t('ade.6ba603c4b4d70b58') }}
         </span>
       </div>
       <div class="c-entry-container">
@@ -91,14 +88,14 @@ export default {
         />
       </div>
       These backups are still stored in the same place as your game save and can still be lost if you do anything
-      external to the game which would delete your save itself, such as {{ deleteText }}. You can import/export
+      external to the game which would delete your save itself, such as {{ $legacyText(_s(deleteText)) }}. You can import/export
       all backups at once as files, using these buttons:
       <div class="c-backup-file-ops">
         <PrimaryButton
           class="o-btn-file-ops"
           onclick="GameStorage.exportBackupsAsFile()"
         >
-          Export as file
+          {{ $t('ade.11d9166e8c37f92f') }}
         </PrimaryButton>
         <PrimaryButton class="o-btn-file-ops">
           <input
@@ -107,10 +104,10 @@ export default {
             accept=".txt"
             @change="importAsFile"
           >
-          <label for="file">Import from file</label>
+          <label for="file">{{ $t('ade.3883639a3ab4bdf1') }}</label>
         </PrimaryButton>
       </div>
-      Each of your three save slots has its own separate set of backups.
+      {{ $t('ade.f67c4d509a00865b') }}
     </div>
   </ModalWrapper>
 </template>

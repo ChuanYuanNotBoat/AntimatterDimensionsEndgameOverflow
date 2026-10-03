@@ -99,7 +99,7 @@ export default {
       :change-enabled="changeEnabled"
     />
     <div
-      v-tooltip="rowVisibleIndicatorTooltip"
+      v-tooltip="$legacyTooltip(rowVisibleIndicatorTooltip)"
       :class="rowVisibleIndicatorClass"
       @click="toggleVisibility"
     />

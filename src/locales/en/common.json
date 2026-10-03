@@ -1,9 +1,0 @@
-{
-  "common.on": "ON",
-  "common.off": "OFF",
-  "common.messageUnavailable": "Message unavailable.",
-  "gameSpeed.stopped": "Stopped (storing real time)",
-  "gameSpeed.fixed": "{speed} (fixed)",
-  "gameSpeed.normal": "The game is running at normal speed.",
-  "gameSpeed.altered": "Game speed is altered: {speed}"
-}

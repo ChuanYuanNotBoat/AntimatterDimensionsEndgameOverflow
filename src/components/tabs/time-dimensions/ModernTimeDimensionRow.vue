@@ -162,20 +162,20 @@ export default {
     />
     <div class="l-dim-row-multi-button-container c-modern-dim-tooltip-container">
       <div class="c-modern-dim-purchase-count-tooltip">
-        <span v-html="tooltipContents" />
+        <span v-html="$legacyHtml(tooltipContents)" />
       </div>
       <PrimaryButton
         :enabled="isAvailableForPurchase && !isCapped"
         :class="buttonClass()"
         @click="buyTimeDimension"
       >
-        {{ buttonContents }}
+        {{ $legacyText(_s(buttonContents)) }}
       </PrimaryButton>
       <PrimaryToggleButton
         v-if="areAutobuyersUnlocked"
         v-model="isAutobuyerOn"
         class="o-primary-btn--buy-td-auto"
-        label="Auto:"
+        :label="$t('ade.fc5aa8b492c774bf')"
       />
       <PrimaryButton
         v-else
@@ -183,7 +183,7 @@ export default {
         :class="maxButtonClass()"
         @click="buyMaxTimeDimension"
       >
-        Buy Max
+        {{ $t('ade.552c8c001016ab0a') }}
       </PrimaryButton>
     </div>
   </div>

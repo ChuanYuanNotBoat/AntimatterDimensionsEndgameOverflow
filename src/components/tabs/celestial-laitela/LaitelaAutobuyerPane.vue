@@ -82,28 +82,28 @@ export default {
       v-if="hasDimension"
       v-model="dimension"
       class="c-laitela-automation-toggle"
-      label="Auto-buy DMD:"
-      :on="autobuyStr"
+      :label="$t('ade.b411ffe61b6ff548')"
+      :on="$legacyText(autobuyStr)"
     />
     <PrimaryToggleButton
       v-if="hasAscension"
       v-model="ascension"
       class="c-laitela-automation-toggle"
-      label="Auto-Ascend:"
-      :on="autoAscendStr"
+      :label="$t('ade.36fe9d2b2a7448f4')"
+      :on="$legacyText(autoAscendStr)"
     />
     <PrimaryToggleButton
       v-if="hasSingularity"
       v-model="singularity"
       class="c-laitela-automation-toggle"
-      label="Auto-Singularity:"
-      :on="autoSingularityStr"
+      :label="$t('ade.ce94ee71a84460d3')"
+      :on="$legacyText(autoSingularityStr)"
     />
     <PrimaryToggleButton
       v-if="hasAnnihilated"
       v-model="annihilation"
       class="c-laitela-automation-toggle"
-      label="Auto-Annihilation:"
+      :label="$t('ade.7e50054f6627acc8')"
     />
   </div>
 </template>

@@ -108,7 +108,7 @@ export default {
       :key="celIndex + '-end-credit-symbol-disp'"
       class="c-credits-cel-symbol"
       :class="`c-${celIndex}-credits`"
-      v-html="celSymbol"
+      v-html="$legacyHtml(celSymbol)"
     />
     <span ref="creditsDisplay">
       <CreditsDisplay />

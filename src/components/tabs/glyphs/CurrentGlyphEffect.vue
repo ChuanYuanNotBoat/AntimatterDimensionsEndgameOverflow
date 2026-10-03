@@ -62,7 +62,7 @@ export default {
       :style="textColor"
       :class="valueClass"
     >
-      {{ formatValue }}
+      {{ $legacyText(_s(formatValue)) }}
     </span>
   </div>
 </template>

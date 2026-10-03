@@ -108,10 +108,9 @@ export default {
     <div
       class="l-dim-row__prestige-text c-dim-row__label c-dim-row__label--amount l-text-wrapper"
     >
-      {{ typeName }} ({{ sumText }}):
-      requires {{ formatHybridLarge(requirement.amount, 3) }} Celestial Matter
+      {{ $t('ade.02fa8aff5ae5bba0', { p0: $legacyText(_s(typeName)), p1: $legacyText(_s(sumText)), p2: $legacyText(_s(formatHybridLarge(requirement.amount,3))) }) }}
       <div class="l-scaling-text-wrapper">
-        {{ hasIncreasedScaling ? costScalingText : "" }}
+        {{ $legacyText(_s(hasIncreasedScaling ? costScalingText : "")) }}
       </div>
     </div>
     <PrimaryButton
@@ -120,7 +119,7 @@ export default {
       @click.exact="buyCelestialGalaxy(true)"
       @click.shift.exact="buyCelestialGalaxy(false)"
     >
-      {{ buttonText }}
+      {{ $legacyText(_s(buttonText)) }}
     </PrimaryButton>
   </div>
 </template>

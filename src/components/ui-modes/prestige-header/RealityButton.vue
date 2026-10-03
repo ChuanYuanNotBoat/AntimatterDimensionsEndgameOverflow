@@ -191,40 +191,44 @@ export default {
           <div>Escape the Cursed Reality...</div>
         </template>
         <template v-else-if="readyToWarp && !cursed && !destroyed">
-          <div>{{ warpMessage }}</div>
+          <div>{{ $legacyText(_s(warpMessage)) }}</div>
         </template>
         <template v-else-if="canReality">
           <div class="c-reality-button__header">
-            Make a new Reality
+            {{ $t('ade.ab42fab7e1576ced') }}
           </div>
-          <div>{{ formatMachinesGained }} {{ formatMachineStats }}</div>
-          <div>{{ formatGlyphLevel }}</div>
+          <div>{{ $legacyText(_s(formatMachinesGained)) }} {{ $legacyText(_s(formatMachineStats)) }}</div>
+          <div>{{ $legacyText(_s(formatGlyphLevel)) }}</div>
         </template>
         <template v-else-if="hasRealityStudy">
-          <div>Get {{ format("1e4000") }} Eternity Points to unlock a new Reality</div>
+          <div>{{ $t('ade.074c027c1570c3c3', { p0: $legacyText(_s(format("1e4000"))) }) }}</div>
         </template>
         <template v-else>
-          <div>Purchase the study in the Eternity tab to unlock a new Reality</div>
+          <div>{{ $t('ade.204b4b05cda8775b') }}</div>
         </template>
         <div
           v-if="canReality && (!readyToWarp || destroyed)"
           class="infotooltiptext"
         >
-          <div>Other resources gained:</div>
-          <div>{{ quantifyHybridLarge("Perk Point", ppGained) }}</div>
+          <div>{{ $t('ade.579ef7cc85a895b6') }}</div>
+          <div>{{ $legacyText(_s(quantifyHybridLarge("Perk Point", ppGained))) }}</div>
           <div v-if="shardsGained.neq(0)">
-            {{ shardsGainedText }} ({{ format(currentShardsRate, 2) }}/min)
-            <br>
-            Peak: {{ format(bestShardRate, 2) }}/min at {{ format(bestShardRateVal, 2) }} RS
+            <LocalizedText id="ade.59ec21c150e129fe">
+              <template #p0>{{ $legacyText(_s(shardsGainedText)) }}</template>
+              <template #p1>{{ $legacyText(_s(format(currentShardsRate,2))) }}</template>
+              <template #p2><br></template>
+              <template #p3>{{ $legacyText(_s(format(bestShardRate,2))) }}</template>
+              <template #p4>{{ $legacyText(_s(format(bestShardRateVal,2))) }}</template>
+            </LocalizedText>
           </div>
           <div
             v-for="(celestialInfo, i) in celestialRunText"
             :key="i"
           >
             <span v-if="celestialInfo[0]">
-              {{ celestialInfo[1] }}
+              {{ $legacyText(_s(celestialInfo[1])) }}
               <br>
-              {{ celestialInfo[2] }}
+              {{ $legacyText(_s(celestialInfo[2])) }}
             </span>
           </div>
         </div>

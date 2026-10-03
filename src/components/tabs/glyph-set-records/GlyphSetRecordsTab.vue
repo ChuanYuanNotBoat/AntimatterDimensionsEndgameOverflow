@@ -54,7 +54,7 @@ export default {
         v-if="set[0]"
         class="l-glyph-set-entry"
       >
-        {{ set[2] }}:
+        {{ $legacyText(_s(set[2])) }}:
         <GlyphSetPreview
           v-if="set[0]"
           :key="idx"
@@ -62,7 +62,7 @@ export default {
           :text="set[2]"
           :text-hidden="true"
         />
-        {{ set[3] }}
+        {{ $legacyText(_s(set[3])) }}
         <br>
       </div>
     </div>

@@ -76,7 +76,7 @@ export default {
           class="o-pelle-button"
           @click="showModal"
         >
-          Show effects in Doomed Reality
+          {{ $t('ade.ace3458969ece70f') }}
         </button>
       </div>
       <br>
@@ -89,22 +89,22 @@ export default {
       class="pelle-doom-button"
       @click="enterDoomModal"
     >
-      Doom<br>Your<br>Reality
+      {{ $t('ade.f8f9daafbe254630') }}<br>Your<br>Reality
       <div class="pelle-icon-container">
-        <span class="pelle-icon">{{ symbol }}</span>
+        <span class="pelle-icon">{{ $legacyText(_s(symbol)) }}</span>
       </div>
     </button>
     <div
       v-else
       class="pelle-unlock-requirements"
     >
-      You must have {{ formatInt(totalRows) }} rows of Achievements
+      You must have {{ $legacyText(_s(formatInt(totalRows))) }} rows of Achievements
       and all of your Glyph Alchemy Resources capped to unlock Pelle, Celestial of Antimatter.
       <br>
       <br>
-      {{ formatInt(completedRows) }} / {{ formatInt(totalRows) }} Achievement rows completed
+      {{ $t('ade.c40dd30d01e90640', { p0: $legacyText(_s(formatInt(completedRows))), p1: $legacyText(_s(formatInt(totalRows))) }) }}
       <br>
-      {{ formatInt(cappedResources) }} / {{ formatInt(totalAlchemyResources) }} capped Alchemy Resources
+      {{ $legacyText(_s(formatInt(cappedResources))) }} / {{ $legacyText(_s(formatInt(totalAlchemyResources))) }} capped Alchemy Resources
     </div>
   </div>
 </template>

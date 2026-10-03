@@ -41,6 +41,6 @@ export default {
     :class="buttonClass"
     @click="buttonClicked"
   >
-    {{ button.text }}
+    {{ $legacyText(_s(button.text)) }}
   </PrimaryButton>
 </template>

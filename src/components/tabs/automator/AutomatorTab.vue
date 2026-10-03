@@ -69,21 +69,21 @@ export default {
   >
     <div v-if="automatorUnlocked">
       <div>
-        {{ intervalText }}
+        {{ $legacyText(_s(intervalText)) }}
       </div>
       <span :class="{ 'c-overlimit': currentChars > maxScriptChars }">
-        This script: {{ formatInt(currentChars) }} / {{ formatInt(maxScriptChars) }}
+        {{ $t('ade.a5b1697d6bac8f14', { p0: $legacyText(_s(formatInt(currentChars))), p1: $legacyText(_s(formatInt(maxScriptChars))) }) }}
       </span>
       |
       <span :class="{ 'c-overlimit': totalChars > maxTotalChars }">
-        Across all scripts: {{ formatInt(totalChars) }} / {{ formatInt(maxTotalChars) }}
+        {{ $t('ade.da3deba0a7be62a5', { p0: $legacyText(_s(formatInt(totalChars))), p1: $legacyText(_s(formatInt(maxTotalChars))) }) }}
       </span>
       <br>
       <span
         v-if="!withinLimit"
         class="c-overlimit"
       >
-        (Your changes will not be saved due to being over a character limit!)
+        {{ $t('ade.3bccad54cea9b252') }}
       </span>
       <div class="c-automator-split-pane">
         <SplitPane

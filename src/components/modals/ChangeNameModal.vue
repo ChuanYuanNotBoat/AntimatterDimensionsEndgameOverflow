@@ -46,10 +46,10 @@ export default {
       @keyup.esc="emitClose"
     >
     <i>
-      This can no longer be changed once the timer starts, and there is a limit of {{ formatInt(40) }} characters.
+      This can no longer be changed once the timer starts, and there is a limit of {{ $legacyText(_s(formatInt(40))) }} characters.
     </i>
     <div>
-      Your new name will be {{ actualName }}
+      Your new name will be {{ $legacyText(_s(actualName)) }}
     </div>
     <template #confirm-text>
       Change Name

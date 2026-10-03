@@ -47,15 +47,16 @@ export default {
       You are about to reset your {{ resetTerm }}
     </template>
     <div class="c-modal-message__text">
-      This will reset you to the start of your {{ resetTerm }},
-      giving you no rewards from your progress in your current {{ resetTerm }}.
-      <br>
-      <br>
-      Are you sure you want to do this?
-      <br>
-      Currently, you are {{ endgameState }}. Based on the current state of your Endgame,
-      it is suggested that you {{ suggestion }}.
-      <br>
+      <LocalizedText id="ade.b6e25f9c7e8763d2">
+        <template #p0>{{ $legacyText(_s(resetTerm)) }}</template>
+        <template #p1>{{ $legacyText(_s(resetTerm)) }}</template>
+        <template #p2><br></template>
+        <template #p3><br></template>
+        <template #p4><br></template>
+        <template #p5>{{ $legacyText(_s(endgameState)) }}</template>
+        <template #p6>{{ $legacyText(_s(suggestion)) }}</template>
+        <template #p7><br></template>
+      </LocalizedText>
     </div>
     <template #confirm-text>
       Reset

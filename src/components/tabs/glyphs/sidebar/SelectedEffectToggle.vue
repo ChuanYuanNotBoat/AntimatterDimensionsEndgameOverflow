@@ -85,7 +85,7 @@ export default {
 
 <template>
   <div
-    v-tooltip="exclusionTooltip"
+    v-tooltip="$legacyTooltip(exclusionTooltip)"
     :class="classObject"
     @click="toggleSelection()"
   >
@@ -94,7 +94,7 @@ export default {
         v-if="isExcluded"
         class="fas fa-exclamation l-dock l-dock-left"
       />
-      {{ description }}
+      {{ $legacyText(_s(description)) }}
       <i
         v-if="isExcluded"
         class="fas fa-exclamation l-dock l-dock-right"

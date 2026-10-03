@@ -1,0 +1,712 @@
+[
+  {
+    "id": "terms.antimatter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatter",
+    "form": "alias1",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatterDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatterDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatterGalaxy",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatterGalaxy",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatterGalaxy",
+    "form": "pluralLowercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.antimatterUniverse",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialDilatedTime",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialEternityPoint",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialEternityPoint",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialInfinityPoint",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialInfinityPoint",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialInfinityPoint",
+    "form": "alias2",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialInfinityPoint",
+    "form": "alias3",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialMatter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialPoint",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialPoint",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialTachyonParticle",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialTachyonParticle",
+    "global": true,
+    "scopes": [],
+    "form": "plural"
+  },
+  {
+    "id": "terms.cosmicSector",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkEnergy",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkHadrons",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkMatter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkMatter",
+    "form": "lowercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkMatterDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkMatterDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dilatedTime",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal1",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal1",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal2",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal2",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal3",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal3",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal4",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal4",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal5",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal5",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal6",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal6",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal7",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal7",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal8",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal8",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal9",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dimension.ordinal9",
+    "form": "ordinal",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divineDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divineDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divineEnergy",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divineMatter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divineStar",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divineStar",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divinities",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.doomedParticle",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.doomedParticle",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dualMachine",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.dualMachine",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.endgameSkill",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.endgameSkill",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.eternityPoint",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.eternityPoint",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.etherealPower",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.exoticHadrons",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.galacticPower",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.hadronizes",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.hadrons",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.hawkingRadiation",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.imaginaryMachine",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.imaginaryMachine",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.imaginaryMachine",
+    "form": "pluralLowercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.infinityDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.infinityDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.infinityPoint",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.infinityPoint",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.infinityPower",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matter",
+    "form": "alias1",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matter",
+    "form": "uppercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matterDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matterDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matterDimension",
+    "form": "pluralLowercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.matterUniverse",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.molecularMass",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.nebula",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.nebula",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.nullMatter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.nullMatter",
+    "form": "uppercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.nullParticle",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.nullParticle",
+    "global": true,
+    "scopes": [],
+    "form": "plural"
+  },
+  {
+    "id": "terms.nullParticle",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.off",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.on",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.realityMachine",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.realityMachine",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.realityShard",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.realityShard",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.relicShards",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.remnant",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.remnant",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.remnant",
+    "form": "pluralLowercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.replicanti",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.replicanti",
+    "form": "lowercase",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.serpentinePower",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.singularities",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.spaceTheorem",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.spaceTheorem",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.starPower",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.stellarAugmenter",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.stellarAugmenter",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.tachyonGalaxy",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.tachyonGalaxy",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.tachyonParticle",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.tachyonParticle",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.tachyonParticle",
+    "form": "alias2",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.thermalRadiation",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.timeDimension",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.timeDimension",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.timeShard",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.timeShard",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.timeTheorem",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.timeTheorem",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkHadrons",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.divinities",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.exoticHadrons",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.hadronizes",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.hadrons",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.relicShards",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.singularities",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  }
+]

@@ -81,7 +81,7 @@ export default {
           class="o-primary-btn--option_font-large"
           onclick="GameOptions.toggleUI()"
         >
-          {{ UILabel }}
+          {{ $legacyText(_s(UILabel)) }}
         </OptionsButton>
         <UpdateRateSlider />
         <OptionsButton
@@ -95,7 +95,7 @@ export default {
         <ExpandingControlBox
           class="l-options-grid__button c-options-grid__notations"
           button-class="o-primary-btn o-primary-btn--option l-options-grid__notations-header"
-          :label="themeLabel"
+          :label="$legacyText(themeLabel)"
         >
           <template #dropdown>
             <SelectThemeDropdown />
@@ -104,7 +104,7 @@ export default {
         <ExpandingControlBox
           class="l-options-grid__button c-options-grid__notations l-high-z-index"
           button-class="o-primary-btn o-primary-btn--option l-options-grid__notations-header"
-          :label="notationLabel"
+          :label="$legacyText(notationLabel)"
         >
           <template #dropdown>
             <SelectNotationDropdown />
@@ -153,7 +153,7 @@ export default {
           v-if="$viewModel.newUI"
           class="l-options-grid__button c-options-grid__notations"
           button-class="o-primary-btn o-primary-btn--option l-options-grid__notations-header"
-          :label="sidebarLabel"
+          :label="$legacyText(sidebarLabel)"
         >
           <template #dropdown>
             <SelectSidebarDropdown />
@@ -164,7 +164,7 @@ export default {
         <ExpandingControlBox
           class="l-options-grid__button c-options-grid__notations l-low-z-index"
           button-class="o-primary-btn o-primary-btn--option l-options-grid__notations-header"
-          :label="postNotationLabel"
+          :label="$legacyText(postNotationLabel)"
         >
           <template #dropdown>
             <SelectLargeNotationDropdown />

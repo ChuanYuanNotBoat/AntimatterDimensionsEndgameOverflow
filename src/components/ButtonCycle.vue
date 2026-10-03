@@ -33,7 +33,7 @@ export default {
     v-bind="$attrs"
     @click="handleClick"
   >
-    {{ displayText }}
+    {{ $legacyText(_s(displayText)) }}
   </button>
 </template>
 

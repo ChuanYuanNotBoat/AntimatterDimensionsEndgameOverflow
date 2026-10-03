@@ -38,28 +38,25 @@ export default {
 <template>
   <div class="l-reality-upgrade-grid">
     <div class="c-cap-text">
-      Your Machine cap is <span class="c-reality-tab__reality-machines">{{ capStr }}</span>.
+      <LocalizedText id="ade.345f6b460a51288a">
+        <template #p0><span class="c-reality-tab__reality-machines">{{ $legacyText(_s(capStr)) }}</span></template>
+      </LocalizedText>
     </div>
     <div class="c-info-text">
-      You have reached the limits of Reality and cannot hold more than {{ format(capIM) }} Imaginary Machines.
-      <br>
-      Machines gained in excess of {{ format(baseIMCap) }} will raise the maximum amount of Dual Machines
-      you can have.
-      <br>
-      Dual Machines are gained passively over time up to the cap, but gain slows down exponentially
-      as you approach the cap.
-      <br>
-      Every {{ formatInt(scaleTime) }} seconds the difference in jM between your current amount and the cap
-      will be cut in half.
-      <br>
-      <br>
-      The first two rows of upgrades can be purchased endlessly and the rest of the upgrades are one-time upgrades
-      with requirements.
-      <br>
-      Upgrades here have the same gameplay and visual behavior as Imaginary Upgrades, but cost Dual Machines instead.
-      <span :ach-tooltip="lockTooltip">
+      <LocalizedText id="ade.a948b1d708de3d18">
+        <template #p0>{{ $legacyText(_s(format(capIM))) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $legacyText(_s(format(baseIMCap))) }}</template>
+        <template #p3><br></template>
+        <template #p4><br></template>
+        <template #p5>{{ $legacyText(_s(formatInt(scaleTime))) }}</template>
+        <template #p6><br></template>
+        <template #p7><br></template>
+        <template #p8><br></template>
+        <template #p9><span :ach-tooltip="lockTooltip">
         <i class="fas fa-question-circle" />
-      </span>
+      </span></template>
+      </LocalizedText>
     </div>
     <div
       v-for="row in showingRows"

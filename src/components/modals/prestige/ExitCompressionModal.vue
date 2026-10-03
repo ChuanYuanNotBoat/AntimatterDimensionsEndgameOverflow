@@ -44,10 +44,10 @@ export default {
     </template>
     <div class="c-modal-message__text">
       <span>
-        If you exit Compression now, you will {{ gainText }}.
+        If you exit Compression now, you will {{ $legacyText(_s(gainText)) }}.
       </span>
       <br>
-      Are you sure you want to proceed?
+      {{ $t('ade.a4d500e55df8919f') }}
     </div>
     <template #confirm-text>
       Exit

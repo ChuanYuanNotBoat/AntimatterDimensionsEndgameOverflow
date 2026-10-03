@@ -126,40 +126,45 @@ const CEP_BUTTON_DISPLAY_TYPE = {
   >
     <!-- Cannot Eternity -->
     <template v-if="type === -1">
-      Reach {{ format(celestialEternityGoal, 2, 2) }}
-      <br>
-      Celestial Infinity Points
+      <LocalizedText id="ade.0bc2a484a6ac38f8">
+        <template #p0>{{ $legacyText(_s(format(celestialEternityGoal,2,2))) }}</template>
+        <template #p1><br></template>
+      </LocalizedText>
     </template>
 
     <!-- First time -->
     <template v-else-if="type === 0">
-      Divine timelines await... I need to become Celestially Eternal
+      {{ $t('ade.d9ee073527f4a260') }}
     </template>
 
     <!-- Normal -->
     <template v-else-if="type === 1">
       <span v-if="showCEPRate">Cel Eternity for </span>
       <span v-else>Celestial Eternity for </span>
-      <span :style="amountStyle">{{ format(gainedCEP, 2) }}</span>
+      <span :style="amountStyle">{{ $legacyText(_s(format(gainedCEP, 2))) }}</span>
       <span v-if="showCEPRate"> CEP</span>
-      <span v-else> Celestial Eternity {{ pluralize("Point", gainedCEP) }}</span>
+      <span v-else> Celestial Eternity {{ $legacyText(_s(pluralize("Point", gainedCEP))) }}</span>
       <br>
       <template v-if="showCEPRate">
-        Current: {{ format(currentCEPRate, 2, 2) }} CEP/min
-        <br>
-        Peak: {{ format(peakCEPRate, 2, 2) }} CEP/min
-        <br>
-        at {{ format(peakCEPRateVal, 2, 2) }} CEP
+        <LocalizedText id="ade.6d0c48d52b142a2a">
+          <template #p0>{{ $legacyText(_s(format(currentCEPRate,2,2))) }}</template>
+          <template #p1><br></template>
+          <template #p2>{{ $legacyText(_s(format(peakCEPRate,2,2))) }}</template>
+          <template #p3><br></template>
+          <template #p4>{{ $legacyText(_s(format(peakCEPRateVal,2,2))) }}</template>
+        </LocalizedText>
       </template>
     </template>
 
     <!-- New content available -->
     <template v-else-if="type === 2">
       <template>
-        Celestial Eternity for <span :style="amountStyle">{{ format(gainedCEP, 2, 2) }}</span> CEP
+        <LocalizedText id="ade.e33371c681b5bbe3">
+          <template #p0><span :style="amountStyle">{{ $legacyText(_s(format(gainedCEP, 2, 2))) }}</span></template>
+        </LocalizedText>
       </template>
       <br>
-      Someone waits for you. Do not keep them waiting.
+      {{ $t('ade.024299a209ae782f') }}
     </template>
   </button>
 </template>

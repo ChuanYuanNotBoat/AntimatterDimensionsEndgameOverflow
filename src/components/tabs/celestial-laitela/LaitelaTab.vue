@@ -108,60 +108,65 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="showLaitelaHowTo()"
       >
-        Click for Lai'tela info
+        {{ $t('ade.f2ad224b37677875') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         @click="maxAll"
       >
-        Max all Dark Matter Dimensions
+        {{ $t('ade.b86dd72dced8fcd0') }}
       </PrimaryButton>
     </div>
     <div class="o-laitela-matter-amount">
-      You have
-      <span :style="styleObject">{{ format(darkMatter, 2) }}</span>
-      Dark Matter<span v-if="isDMCapped"> (capped)</span>.
-      <span v-if="!isDMCapped">(Average: {{ format(darkMatterGain, 2, 2) }}/s)</span>
+      <LocalizedText id="ade.649ae62a8c6be30b">
+        <template #p0><span :style="styleObject">{{ $legacyText(_s(format(darkMatter, 2))) }}</span></template>
+        <template #p1><span v-if="isDMCapped"> {{ $t('ade.4288b53b5d5ccbcb') }}</span></template>
+        <template #p2><span v-if="!isDMCapped">(Average: {{ $legacyText(_s(format(darkMatterGain, 2, 2))) }}/s)</span></template>
+      </LocalizedText>
     </div>
     <div class="o-laitela-matter-amount">
-      Your maximum Dark Matter ever is
-      <span :style="styleObject">{{ format(maxDarkMatter, 2) }}</span><span v-if="!isDoomed">,
-        giving {{ formatContinuumPercentage() }} more purchases from Continuum</span>.
+      <LocalizedText id="ade.fd16427d63da32a7">
+        <template #p0><span :style="styleObject">{{ $legacyText(_s(format(maxDarkMatter, 2))) }}</span></template>
+        <template #p1><span v-if="!isDoomed">,
+        giving {{ $legacyText(_s(formatContinuumPercentage())) }} more purchases from Continuum</span></template>
+      </LocalizedText>
     </div>
     <div class="o-laitela-matter-amount">
-      Dark Matter Dimensions are unaffected by storing real time.
+      {{ $t('ade.63e6b24790311cb8') }}
     </div>
     <div
       v-if="maxDarkMatter.gte(softcap1)"
       class="o-laitela-matter-amount"
     >
-      Dark Matter is softcapped past {{ format(softcap1, 2) }}.
+      {{ $t('ade.01e608cf6b45ca43', { p0: $legacyText(_s(format(softcap1,2))) }) }}
     </div>
     <div
       v-if="maxDarkMatter.gte(softcap2)"
       class="o-laitela-matter-amount"
     >
-      Dark Matter is further softcapped past {{ format(softcap2, 2) }}.
+      {{ $t('ade.93b72863bc381b0e', { p0: $legacyText(_s(format(softcap2,2))) }) }}
     </div>
     <div
       v-if="endgameUnlocked"
       class="o-laitela-matter-amount"
     >
-      Dark Matter is <span v-if="isUncapped">harshly softcapped</span><span v-if="!isUncapped">hardcapped</span> at
-      {{ format(darkMatterCap, 2) }}.
+      <LocalizedText id="ade.d3b53780be2b48b6">
+        <template #p0><span v-if="isUncapped">{{ $t('ade.69ae784e660bca40') }}</span></template>
+        <template #p1><span v-if="!isUncapped">{{ $t('ade.e68508bb1edc35a6') }}</span></template>
+        <template #p2>{{ $legacyText(_s(format(darkMatterCap,2))) }}</template>
+      </LocalizedText>
     </div>
     <div
       v-if="maxDarkMatter.gte(softcapOmega)"
       class="o-laitela-matter-amount"
     >
-      Dark Matter is further harshly softcapped past {{ format(softcapOmega, 2) }}.
+      Dark Matter is further harshly softcapped past {{ $legacyText(_s(format(softcapOmega, 2))) }}.
     </div>
     <h2
       v-if="!singularitiesUnlocked"
       class="c-laitela-singularity-container"
     >
-      Unlock Singularities in {{ singularityWaitTime }}.
-      ({{ format(darkEnergy, 2, 2) }}/{{ format(singularityCap, 2) }} Dark Energy)
+      {{ $t('ade.6149bbc2d9c76d23', { p0: $legacyText(_s(singularityWaitTime)), p1: $legacyText(_s(format(darkEnergy,2,2))), p2: $legacyText(_s(format(singularityCap,2))) }) }}
     </h2>
     <SingularityPane v-if="singularitiesUnlocked" />
     <HadronsPane v-if="hadronsUnlocked" />

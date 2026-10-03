@@ -110,7 +110,7 @@ export default {
         class="c-collapse-icon-clickable"
         @click="toggleCollapse"
       />
-      Galaxy Generator
+      {{ $t('ade.656a7712a75244af') }}
     </div>
     <div
       v-if="!isCollapsed"
@@ -118,30 +118,28 @@ export default {
     >
       <div v-if="isUnlocked">
         <div>
-          You have a total of
-          <span class="c-galaxies-amount">{{ galaxyText }}</span>
-          Galaxies.
-          <span class="c-galaxies-amount">+{{ format(galaxiesPerSecond, 2, 1) }}/s</span>
+          {{ $t('ade.82b3193ccafd785e') }}
+          <span class="c-galaxies-amount">{{ $legacyText(_s(galaxyText)) }}</span>
+          {{ $t('ade.2f6f7899981d6c24') }}
+          <span class="c-galaxies-amount">{{ $t('ade.7401cbf5f86d95e0', { p0: $legacyText(_s(format(galaxiesPerSecond,2,1))) }) }}</span>
           <div v-if="isInstabilityShown">
-            Your Galaxy Generator Instability Magnitude is
-            <span class="c-galaxies-amount">{{ format(galGenInstability, 2, 1) }}</span>,
-            which is dividing Galaxies above {{ format(instabilityStart, 2, 1) }} by
-            <span class="c-galaxies-amount">{{ format(generationReduction, 2, 1) }}</span>.
+            <LocalizedText id="ade.a1e854713b6c2387">
+              <template #p0><span class="c-galaxies-amount">{{ $legacyText(_s(format(galGenInstability, 2, 1))) }}</span></template>
+              <template #p1>{{ $legacyText(_s(format(instabilityStart,2,1))) }}</template>
+              <template #p2><span class="c-galaxies-amount">{{ $legacyText(_s(format(generationReduction, 2, 1))) }}</span></template>
+            </LocalizedText>
           </div>
           <br>
           <div v-if="isSecondInstabilityShown">
             <span class="c-danger-text">
-              Your Galaxy Generator has produced too many Galaxies, and is starting to break down.
-              This started at {{ format(harshInstabilityStart, 2, 1) }} Galaxies.
-              <br>
-              This effect is currently raising your Galaxy Generator Instability Magnitude by
-              <span class="c-galaxies-amount">{{ formatPow(harshGalGenInstability, 2, 3) }}</span>,
-              making it effectively equal to
-              <span class="c-galaxies-amount">{{ format(effectiveInstability, 2, 1) }}</span>.
-              <br>
-              Therefore, whereas your Galaxy production would normally be divided by the number above,
-              it is instead being divided by
-              <span class="c-galaxies-amount">{{ format(trueGenerationReduction, 2, 1) }}</span>.
+              <LocalizedText id="ade.e3a9f3d4a0353f83">
+                <template #p0>{{ $legacyText(_s(format(harshInstabilityStart,2,1))) }}</template>
+                <template #p1><br></template>
+                <template #p2><span class="c-galaxies-amount">{{ $legacyText(_s(formatPow(harshGalGenInstability, 2, 3))) }}</span></template>
+                <template #p3><span class="c-galaxies-amount">{{ $legacyText(_s(format(effectiveInstability, 2, 1))) }}</span></template>
+                <template #p4><br></template>
+                <template #p5><span class="c-galaxies-amount">{{ $legacyText(_s(format(trueGenerationReduction, 2, 1))) }}</span></template>
+              </LocalizedText>
             </span>
           </div>
         </div>
@@ -162,25 +160,25 @@ export default {
               v-if="isCapped && capRift"
               class="c-increase-cap-text"
             >
-              {{ sacrificeText }}. <br><br>
+              {{ $legacyText(_s(sacrificeText)) }}. <br><br>
               <span
                 v-if="!sacrificeActive"
                 class="c-big-text"
               >
-                Sacrifice your {{ capRiftName }}
+                {{ $t('ade.9d1234812c5b5c5e', { p0: $legacyText(_s(capRiftName)) }) }}
               </span>
               <span
                 v-else
                 class="c-big-text"
               >
-                Getting rid of all that {{ capRiftName }}...
+                {{ $t('ade.2764bf147d24a15c', { p0: $legacyText(_s(capRiftName)) }) }}
               </span>
             </div>
             <div
               v-else
               class="c-increase-cap-text c-medium-text"
             >
-              {{ format(generatedGalaxies, 2) }} / {{ format(cap, 2) }} Galaxies generated
+              {{ $t('ade.fe77d79876dfad00', { p0: $legacyText(_s(format(generatedGalaxies,2))), p1: $legacyText(_s(format(cap,2))) }) }}
             </div>
           </button>
         </div>
@@ -198,13 +196,13 @@ export default {
         class="c-generator-unlock-button"
         @click="unlock"
       >
-        Unlock the Galaxy Generator
+        {{ $t('ade.f9dd28987d65114e') }}
       </button>
       <button
         v-if="!isDilated && !isFinalized"
         class="c-generator-locked-button"
       >
-        You must be inside Dilation to unlock the Galaxy Generator
+        {{ $t('ade.ff37d29f9dac32ed') }}
       </button>
     </div>
   </div>

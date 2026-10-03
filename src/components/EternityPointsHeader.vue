@@ -16,9 +16,10 @@ export default {
 
 <template>
   <div class="c-eternity-tab__header">
-    You have
-    <span class="c-eternity-tab__eternity-points">{{ format(eternityPoints, 2) }}</span>
-    {{ pluralize("Eternity Point", eternityPoints) }}.
+    <LocalizedText id="ade.cd1ff500c8f2ac78">
+      <template #p0><span class="c-eternity-tab__eternity-points">{{ $legacyText(_s(format(eternityPoints, 2))) }}</span></template>
+      <template #p1>{{ $legacyText(_s(pluralize("Eternity Point",eternityPoints))) }}</template>
+    </LocalizedText>
   </div>
 </template>
 

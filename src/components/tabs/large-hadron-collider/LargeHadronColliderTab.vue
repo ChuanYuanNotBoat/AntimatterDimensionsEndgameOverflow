@@ -151,55 +151,55 @@ export default {
         v-if="hasAccelerator"
         class="c-large-hadron-collider-description"
       >
-        {{ hadronSpeedText }}
+        {{ $legacyText(_s(hadronSpeedText)) }}
         <br>
-        The Large Hadron Collider is currently consuming {{ formatInt(accelPower) }} GWh of power
+        {{ $t('ade.2add87087a21db3f', { p0: $legacyText(_s(formatInt(accelPower))) }) }}
         <div
           v-if="hasC"
           class="c-large-hadron-collider-text"
         >
           <br>
           <div v-if="milestonesReached >= 1">
-            C Milestone {{ formatInt(1) }}: Tesseract Equalizer.
+            C Milestone {{ $legacyText(_s(formatInt(1))) }}: Tesseract Equalizer.
             Effective Tesseracts are slowly shifting from (bought + free) into (bought * free).
-            This shift is {{ formatPercents(Math.clamp((c - 0.5) * 2, 0, 1), 3, 3) }} complete, making the current
-            number of Effective Tesseracts equal to {{ format(tessEqual, 2, 2) }}.
+            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.5) * 2, 0, 1), 3, 3))) }} complete, making the current
+            number of Effective Tesseracts equal to {{ $legacyText(_s(format(tessEqual, 2, 2))) }}.
           </div>
           <div v-if="milestonesReached >= 2">
             <br>
-            C Milestone {{ formatInt(2) }}: {{ isFlipped ? "Matter" : "Antimatter" }} Equalizer.
-            {{ isFlipped ? "Matter" : "Antimatter" }} production is slowly shifting from
-            ({{ isFlipped ? "MDMults" : "ADMults" }} * Tickspeed) into
-            ({{ isFlipped ? "MDMults" : "ADMults" }}^log10(max(Tickspeed, 1))).
-            This shift is {{ formatPercents(Math.clamp((c - 0.7) * 10/3, 0, 1), 3, 3) }} complete, making current
-            {{ isFlipped ? "Matter" : "Antimatter" }} production equal to {{ format(antiEqual, 2, 2) }}.
+            C Milestone {{ $legacyText(_s(formatInt(2))) }}: {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Equalizer.
+            {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} production is slowly shifting from
+            ({{ $legacyText(_s(isFlipped ? "MDMults" : "ADMults")) }} * Tickspeed) into
+            ({{ $legacyText(_s(isFlipped ? "MDMults" : "ADMults")) }}^log10(max(Tickspeed, 1))).
+            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.7) * 10/3, 0, 1), 3, 3))) }} complete, making current
+            {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} production equal to {{ $legacyText(_s(format(antiEqual, 2, 2))) }}.
           </div>
           <div v-if="milestonesReached >= 3">
             <br>
-            C Milestone {{ formatInt(3) }}: Tickspeed Equalizer.
+            C Milestone {{ $legacyText(_s(formatInt(3))) }}: Tickspeed Equalizer.
             Effective Tickspeed Upgrades are slowly shifting from (bought + free) into (bought * free).
-            This shift is {{ formatPercents(Math.clamp((c - 0.85) * 20/3, 0, 1), 3, 3) }} complete, making the current
-            number of Effective Tickspeed Upgrades equal to {{ format(tickEqual, 2, 2) }}.
+            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.85) * 20/3, 0, 1), 3, 3))) }} complete, making the current
+            number of Effective Tickspeed Upgrades equal to {{ $legacyText(_s(format(tickEqual, 2, 2))) }}.
           </div>
           <div v-if="milestonesReached >= 4">
             <br>
-            C Milestone {{ formatInt(4) }}: Black Hole and Potency Improvement.
+            C Milestone {{ $legacyText(_s(formatInt(4))) }}: Black Hole and Potency Improvement.
             Black Holes now also apply a power effect which is increasing from 1 to log10(log10(max(BHMult, 10))) + 1.
             Furthermore, the Divine Matter/Energy multiplier from the Potency Accelerator now also applies a power effect
             which is increasing from 1 to (max(log10(max(PotencyMult, 1)) - 18.5, 0) / 3) + 1.
-            These shifts are {{ formatPercents(Math.clamp((c - 0.95) * 20, 0, 1), 3, 3) }} complete, making the current
-            Black Hole {{ formatInt(1) }} boost equal to {{ formatPow(bh1Improve, 2, 3) }}, the current
-            Black Hole {{ formatInt(2) }} boost equal to {{ formatPow(bh2Improve, 2, 3) }}, and the current
-            Divine Matter/Energy boost from the Potency Accelerator equal to {{ formatPow(potencyImprove, 2, 3) }}.
+            These shifts are {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.95) * 20, 0, 1), 3, 3))) }} complete, making the current
+            Black Hole {{ $legacyText(_s(formatInt(1))) }} boost equal to {{ $legacyText(_s(formatPow(bh1Improve, 2, 3))) }}, the current
+            Black Hole {{ $legacyText(_s(formatInt(2))) }} boost equal to {{ $legacyText(_s(formatPow(bh2Improve, 2, 3))) }}, and the current
+            Divine Matter/Energy boost from the Potency Accelerator equal to {{ $legacyText(_s(formatPow(potencyImprove, 2, 3))) }}.
           </div>
           <div v-if="milestonesReached >= 5">
             <br>
-            C Milestone {{ formatInt(5) }}: Light unlock.
-            You have reached {{ formatInt(1) }}C and can now generate Light (coming soon).
+            C Milestone {{ $legacyText(_s(formatInt(5))) }}: Light unlock.
+            You have reached {{ $legacyText(_s(formatInt(1))) }}C and can now generate Light (coming soon).
           </div>
           <br>
           <div>
-            {{ nextDisplay }}
+            {{ $legacyText(_s(nextDisplay)) }}
           </div>
         </div>
       </div>
@@ -208,39 +208,39 @@ export default {
         v-if="!hasAccelerator"
         class="c-large-hadron-collider-description"
       >
-        Reach {{ format(Decimal.pow10(1e200), 2, 2) }} {{ isFlipped ? "Matter" : "Antimatter" }}
+        {{ $t('ade.3871fe20f4628bd8', { p0: $legacyText(_s(format(Decimal.pow10(1e200),2,2))), p1: $legacyText(_s(isFlipped?"Matter":"Antimatter")) }) }}
       </div>
       <div
         class="c-large-hadron-collider-entropy"
         v-if="canSeeEntropy1"
       >
-        Excess Entropy in the universe has caused your {{ isFlipped ? "Matter" : "Antimatter" }} to
-        decay past {{ format(amSoftcap, 2, 2) }}, and has restricted it from exceeding {{ format(amHardcap, 2, 2) }}.
+        Excess Entropy in the universe has caused your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} to
+        decay past {{ $legacyText(_s(format(amSoftcap, 2, 2))) }}, and has restricted it from exceeding {{ $legacyText(_s(format(amHardcap, 2, 2))) }}.
       </div>
       <div
         class="c-large-hadron-collider-entropy"
         v-if="canSeeEntropy2"
       >
-        The {{ isFlipped ? "Matter" : "Antimatter" }} decay is significantly stronger past {{ format(amSoftcap2, 2, 2) }}.
+        The {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} decay is significantly stronger past {{ $legacyText(_s(format(amSoftcap2, 2, 2))) }}.
       </div>
       <div
         class="c-large-hadron-collider-entropy"
         v-if="entropyCorrupted"
       >
-        {{ corruptionText() }}
+        {{ $legacyText(_s(corruptionText())) }}
       </div>
     </div>
     <br>
     <br>
     <div v-if="highestAntimatter.gt(10)">
       <span class="c-void-antimatter-amount">
-        [Your highest {{ isFlipped ? "Matter" : "Antimatter" }} inside The Void is {{ format(highestAntimatter, 2, 1) }}.]
+        [Your highest {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} inside The Void is {{ $legacyText(_s(format(highestAntimatter, 2, 1))) }}.]
       </span>
       <br>
-      <span class="c-null">[You have {{ formatNullAmount(nullMatter) }} Null Matter. +{{ formatNullAmount(nullPerSecond) }}/s]</span>
+      <span class="c-null">{{ $t('ade.53f8790e58571e38', { p0: $legacyText(_s(formatNullAmount(nullMatter))), p1: $legacyText(_s(formatNullAmount(nullPerSecond))) }) }}</span>
     </div>
     <div v-if="nullified">
-      <span class="c-null">[You have {{ format(nullParticles, 2, 2) }} Null Particles. +{{ format(nullParticlesPerSecond, 2, 2) }}/s]</span>
+      <span class="c-null">{{ $t('ade.421a201b24ec860c', { p0: $legacyText(_s(format(nullParticles,2,2))), p1: $legacyText(_s(format(nullParticlesPerSecond,2,2))) }) }}</span>
     </div>
     <div class="l-void-run">
       <div
@@ -251,7 +251,7 @@ export default {
           :button-symbol="voidText"
           :style="glitchAnim()"
         >
-          {{ voidText }}
+          {{ $legacyText(_s(voidText)) }}
         </div>
       </div>
     </div>
@@ -260,22 +260,23 @@ export default {
       class="o-primary-btn--subtab-option"
       @click="changeMode"
     >
-      {{ modeDisplay }}
+      {{ $legacyText(_s(modeDisplay)) }}
     </PrimaryButton>
     <div v-if="voidMode === 0">
-      Entering The Void will force an Endgame reset and disable all Reality and beyond mechanics.
+      {{ $t('ade.b90d7241977ab1f9') }}
       <br>
-      Your {{ isFlipped ? "Matter" : "Antimatter" }} will slowly decay and you will gain Null Matter from the decayed {{ isFlipped ? "Matter" : "Antimatter" }}.
+      Your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} will slowly decay and you will gain Null Matter from the decayed {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }}.
       <span v-if="nullified">
-        <br>
-        Since you Nullified the Multiverse, the ANR Perk and Passive EP Generation are reenabled inside The Void.
+        <LocalizedText id="ade.eca6cd5186a09521">
+    <template #p0><br></template>
+  </LocalizedText>
       </span>
     </div>
     <div v-if="voidMode === 1">
-      Entering The Void in Nullified Mode will force an Endgame reset and Dilate your {{ isFlipped ? "Matter" : "Antimatter" }} by {{ format(0.01, 2, 2) }}.
+      Entering The Void in Nullified Mode will force an Endgame reset and Dilate your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} by {{ $legacyText(_s(format(0.01, 2, 2))) }}.
       <br>
-      You will generate Null Particles based on your {{ isFlipped ? "Matter" : "Antimatter" }}, which empower
-      {{ isFlipped ? "Matter" : "Antimatter" }} Dimensions while inside The Void in normal mode (Currently: {{ formatPow(nullParticleEffect, 2, 3) }}).
+      You will generate Null Particles based on your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }}, which empower
+      {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimensions while inside The Void in normal mode (Currently: {{ $legacyText(_s(formatPow(nullParticleEffect, 2, 3))) }}).
     </div>
     <NullUpgradesTabComponent />
   </div>

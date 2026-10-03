@@ -48,19 +48,19 @@ export default {
     >
       <template v-if="isCapped">
         <br>
-        <span>(Capped at {{ quantify("Infinity Point", upgrade.costCap) }})</span>
+        <span>{{ $t('ade.05d0b9d7bd32d825', { p0: $legacyText(_s(quantify("Infinity Point",upgrade.costCap))) }) }}</span>
       </template>
     </InfinityUpgradeButton>
     <PrimaryButton
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
       @click="buyMaxIPMult()"
     >
-      Max Infinity Point mult
+      {{ $t('ade.f5e886a35a07af4e') }}
     </PrimaryButton>
     <PrimaryToggleButton
       v-if="isAutoUnlocked"
       v-model="isAutobuyerActive"
-      label="Autobuy IP mult"
+      :label="$t('ade.c51d1b6234407489')"
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
     />
   </div>

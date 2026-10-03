@@ -50,7 +50,7 @@ export default {
         class="o-primary-btn l-select-theme__item c-select-theme__item"
         @click="setType(type)"
       >
-        {{ getType(type) }}
+        {{ $legacyText(_s(getType(type))) }}
       </div>
     </div>
   </div>

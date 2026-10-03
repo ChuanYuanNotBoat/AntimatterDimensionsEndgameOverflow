@@ -98,7 +98,7 @@ export default {
         type="realityUpgrades"
         class="l-hint-text--reality-upgrade c-hint-text--reality-upgrade"
       >
-        {{ config.name }}
+        {{ $legacyText(_s(config.name)) }}
       </HintText>
       <span :class="{ 'o-pelle-disabled': isUseless }">
         <DescriptionDisplay :config="config" />
@@ -106,7 +106,7 @@ export default {
           <br>
           <DescriptionDisplay
             :config="requirementConfig"
-            label="Requirement:"
+            :label="$t('ade.3578b594e1f9e71d')"
             class="c-reality-upgrade-btn__requirement"
           />
         </template>
@@ -123,7 +123,7 @@ export default {
           />
         </template>
         <b v-if="automatorPoints && !isBought">
-          (+{{ formatInt(automatorPoints) }} AP)
+          {{ $t('ade.67325ff16a0c0277', { p0: $legacyText(_s(formatInt(automatorPoints))) }) }}
         </b>
       </span>
     </button>
@@ -143,7 +143,7 @@ export default {
     <PrimaryToggleButton
       v-if="isRebuyable && isAutoUnlocked"
       v-model="isAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.fc5aa8b492c774bf')"
       class="l--spoon-btn-group__little-spoon-reality-btn o-primary-btn--reality-upgrade-toggle"
     />
   </div>

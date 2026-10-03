@@ -81,7 +81,7 @@ export default {
     <DescriptionDisplay :config="mastery.config" />
     <template v-if="showRequirement">
       <br>
-      <span>{{ requirement }}</span>
+      <span>{{ $legacyText(_s(requirement)) }}</span>
     </template>
   </EndgameMasteryButton>
 </template>

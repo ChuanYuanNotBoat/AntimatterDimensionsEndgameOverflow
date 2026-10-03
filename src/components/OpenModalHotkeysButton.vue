@@ -14,6 +14,8 @@ export default {
     class="c-options-tab__hotkeys-link"
     @click="handleClick"
   >
-    Press <kbd>?</kbd> to open the hotkey list.
+    <LocalizedText id="ade.7538dd38119713c0">
+      <template #p0><kbd>?</kbd></template>
+    </LocalizedText>
   </p>
 </template>

@@ -141,19 +141,19 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="exportStudyTree"
       >
-        Export tree
+        {{ $t('ade.6e307f4cafb7c613') }}
       </PrimaryButton>
       <PrimaryButton
         :class="respecClassObject"
         @click="respec = !respec"
       >
-        Respec Time Studies on next Eternity
+        {{ $t('ade.435aab5f646824df') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         onclick="Modal.studyString.show({ id: -1 })"
       >
-        Import tree
+        {{ $t('ade.4b9ed8c9295111fc') }}
       </PrimaryButton>
     </div>
     <div

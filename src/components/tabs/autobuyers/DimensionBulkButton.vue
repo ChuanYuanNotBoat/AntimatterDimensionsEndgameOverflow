@@ -58,17 +58,17 @@ export default {
     :class="classObject"
     @click="upgradeBulk"
   >
-    <span>{{ bulkDisplay }}</span>
+    <span>{{ $legacyText(_s(bulkDisplay)) }}</span>
     <template v-if="!hasMaxedBulk">
       <br>
-      <span>Cost: {{ format(cost, 2, 0) }} IP</span>
+      <span>{{ $t('ade.2bab7c82638251f1', { p0: $legacyText(_s(format(cost,2,0))) }) }}</span>
     </template>
   </button>
   <button
     v-else-if="hasMaxedInterval && !bulkUnlimited"
     class="o-autobuyer-btn l-autobuyer-box__button o-autobuyer-btn--unavailable"
   >
-    Complete the challenge to upgrade bulk
+    {{ $t('ade.5ab5f1e51838e108') }}
   </button>
 </template>
 

@@ -58,27 +58,27 @@ export default {
   >
     <AutobuyerSingleToggleLabel :autobuyer="autobuyer" />
     <div>
-      {{ name }}
+      {{ $legacyText(_s(name)) }}
       <AutobuyerIntervalLabel :autobuyer="autobuyer" />
 
       <b
         v-if="isHiddenSacrifice"
         class="c-autobuyer-box__small-text"
       >
-        Automatic (Achievement 118)
+        {{ $t('ade.0fe6de339afc6d89') }}
       </b>
       <span
         v-else-if="autobuyer.hasInput"
         class="c-autobuyer-box__small-text"
       >
-        Multiplier:
+        {{ $t('ade.f28036895fdcd2c0') }}
         <button
           v-if="isAnnihilation"
           class="c-annihilation-autobuyer-mode-button"
           @click="modeToggle"
         >
           <label class="l-annihilation-autobuyer-mode-button">
-            <span>{{ annihilationMode === 0 ? "+" : "×" }}</span>
+            <span>{{ $legacyText(_s(annihilationMode === 0 ? "+" : "×")) }}</span>
           </label>
         </button>
         <AutobuyerInput

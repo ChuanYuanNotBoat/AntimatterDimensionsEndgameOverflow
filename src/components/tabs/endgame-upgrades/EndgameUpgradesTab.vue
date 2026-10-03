@@ -26,26 +26,24 @@ export default {
 <template>
   <div class="l-endgame-upgrade-grid">
     <div class="c-endgame-upgrade-infotext">
-      Mouseover <i class="fas fa-question-circle" /> icons for additional information.
+      {{ $t('ade.85a581122b858ea7') }} <i class="fas fa-question-circle" /> {{ $t('ade.e169190b3cdcce9a') }}
       <br>
-      The first row of upgrades can be purchased endlessly for increasing costs
-      <span :ach-tooltip="costScalingTooltip">
+      {{ $t('ade.efc176404e930881') }}
+      <span :ach-tooltip="$legacyText(costScalingTooltip)">
         <i class="fas fa-question-circle" />
       </span>
-      and the rest are single-purchase.
+      {{ $t('ade.8096a4c84e232aa2') }}
       <br>
-      Single-purchase upgrades also have requirements which, once completed, permanently unlock the ability
-      to purchase the upgrades at any point.
-      <span :ach-tooltip="possibleTooltip">
+      {{ $t('ade.6fc343de35b1b8fb') }}
+      <span :ach-tooltip="$legacyText(possibleTooltip)">
         <i class="fas fa-question-circle" />
       </span>
       <br>
-      Locked upgrades show their requirement and effect by default; unlocked ones show
-      their effect, current bonus, and cost. Hold shift to swap this behavior.
+      {{ $t('ade.38ca641dce4c5a63') }}
       <br>
-      You can shift-click upgrades with <i class="fas fa-lock-open" /> to make the game prevent you
+      {{ $t('ade.1376ed272e52269b') }} <i class="fas fa-lock-open" /> to make the game prevent you
       from doing anything this Endgame which would cause you to fail their unlock condition.
-      <span :ach-tooltip="lockTooltip">
+      <span :ach-tooltip="$legacyText(lockTooltip)">
         <i class="fas fa-question-circle" />
       </span>
       <br>

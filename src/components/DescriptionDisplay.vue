@@ -91,6 +91,6 @@ export default {
     v-if="isVisible"
     :class="classObject"
   >
-    {{ title }} {{ description }}
+    {{ $legacyText(_s(title)) }} {{ $legacyText(_s(description)) }}
   </span>
 </template>

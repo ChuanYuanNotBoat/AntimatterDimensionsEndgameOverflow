@@ -33,16 +33,10 @@ export default {
 
 <template>
   <div class="l-panel-padding">
-    This page lets you import and export scripts with additional data attached; the encoded text will also include data
-    for any Time Study presets or constants used within the script. This will allow you to more easily transfer working
-    scripts between different save files, but you may have to overwrite existing data in the process due to limited
-    space for study presets and constants. Data exported from this page is also imported in the same way that single
-    script data is imported.
+    {{ $t('ade.a1f37fcdb43c0198') }}
     <br>
     <br>
-    Note: Any mentions of constant names or full study-buying commands within comments will also be counted as being
-    "used" within a script. This is intentional, as the comment is assumed to be indicative of what the script itself
-    is attempting to do with presets or constants.
+    {{ $t('ade.66eedb7d56ed8944') }}
     <br>
     <br>
     <div

@@ -113,7 +113,7 @@ export default {
 <template>
   <div class="l-spoon-btn-group">
     <button
-      :ach-tooltip="timeEstimate"
+      :ach-tooltip="$legacyText(timeEstimate)"
       :class="classObject"
       @click="upgrade.purchase()"
       @mouseover="isHovering = true"
@@ -151,13 +151,13 @@ export default {
     <PrimaryToggleButton
       v-if="isRebuyable && isAutoUnlocked"
       v-model="isAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.fc5aa8b492c774bf')"
       class="l--spoon-btn-group__little-spoon o-primary-btn--dilation-upgrade-toggle"
     />
     <PrimaryToggleButton
       v-if="isRebuyable && isPelleAutoUnlocked"
       v-model="isPelleAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.fc5aa8b492c774bf')"
       class="l--spoon-btn-group__little-spoon o-primary-btn--dilation-upgrade-toggle"
     />
   </div>

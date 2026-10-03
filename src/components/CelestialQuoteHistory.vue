@@ -40,7 +40,7 @@ export default {
     }"
     @click="show"
   >
-    {{ possessiveForm }} Quotes
+    {{ $t('ade.2a22834d7d76f998', { p0: $legacyText(_s(possessiveForm)) }) }}
   </button>
 </template>
 

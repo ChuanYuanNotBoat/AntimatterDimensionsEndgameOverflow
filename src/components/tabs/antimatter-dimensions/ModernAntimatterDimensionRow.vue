@@ -164,7 +164,7 @@ export default {
       class="l-dim-row-multi-button-container c-modern-dim-tooltip-container"
     >
       <div class="c-modern-dim-purchase-count-tooltip">
-        {{ boughtTooltip }}
+        {{ $legacyText(_s(boughtTooltip)) }}
       </div>
       <button
         :class="buttonClass()"
@@ -172,10 +172,10 @@ export default {
       >
         <div :class="buttonTextClass()">
           <div>
-            {{ buttonPrefix }}
+            {{ $legacyText(_s(buttonPrefix)) }}
           </div>
           <div :class="{ 'l-dim-row-small-text': hasLongText }">
-            {{ buttonValue }}
+            {{ $legacyText(_s(buttonValue)) }}
           </div>
           <div
             v-if="hasTutorial"

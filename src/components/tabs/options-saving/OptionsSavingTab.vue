@@ -136,7 +136,7 @@ export default {
 <template>
   <div class="l-options-tab">
     <div>
-      You can export your save once per day to get free rewards!
+      {{ $t('ade.0cab3d03fd1966e0') }}
     </div>
     <div class="l-options-grid">
       <div class="l-options-grid__row">
@@ -145,21 +145,21 @@ export default {
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           @click="exportSave()"
         >
-          Export save
+          {{ $t('ade.6fc02affc0c7bad2') }}
         </OptionsButton>
         <OptionsButton
           class="o-primary-btn--option_font-x-large"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="Modal.import.show()"
         >
-          Import save
+          {{ $t('ade.33d1fe8846b1d047') }}
         </OptionsButton>
         <OptionsButton
           class="o-primary-btn--option_font-x-large"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="Modal.hardReset.show()"
         >
-          RESET THE GAME
+          {{ $t('ade.05a945514f603999') }}
         </OptionsButton>
       </div>
       <div class="l-options-grid__row">
@@ -168,14 +168,14 @@ export default {
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="GameStorage.save(false, true)"
         >
-          Save game
+          {{ $t('ade.0f76548709fc67b4') }}
         </OptionsButton>
         <OptionsButton
           class="o-primary-btn--option_font-x-large"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="Modal.loadGame.show()"
         >
-          Choose save
+          {{ $t('ade.75f014b024219610') }}
         </OptionsButton>
         <AutosaveIntervalSlider
           :min="10"
@@ -188,7 +188,7 @@ export default {
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="GameStorage.exportAsFile()"
         >
-          Export save as file
+          {{ $t('ade.bc16776424ed9d3e') }}
         </OptionsButton>
         <OptionsButton
           class="c-file-import-button"
@@ -200,13 +200,13 @@ export default {
             accept=".txt"
             @change="importAsFile"
           >
-          <label for="file">Import save from file</label>
+          <label for="file">{{ $t('ade.bc3a744207112ac3') }}</label>
         </OptionsButton>
         <PrimaryToggleButton
           v-model="showTimeSinceSave"
           class="o-primary-btn--option l-options-grid__button"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
-          label="Display time since save:"
+          :label="$t('ade.83eaaa55a64d7712')"
         />
       </div>
       <div class="l-options-grid__row">
@@ -214,7 +214,7 @@ export default {
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="Modal.backupWindows.show()"
         >
-          Open Automatic Save Backup Menu
+          {{ $t('ade.42b6f9af9c04d4c9') }}
         </OptionsButton>
         <SaveFileName />
       </div>
@@ -225,7 +225,7 @@ export default {
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="Modal.enterSpeedrun.show()"
         >
-          Start Speedrun
+          {{ $t('ade.1059c6810692d236') }}
         </OptionsButton>
         <OptionsButton
           v-if="inSpeedrun"
@@ -235,7 +235,7 @@ export default {
           }"
           @click="openSeedModal()"
         >
-          Change Glyph RNG Seed
+          {{ $t('ade.d5e4c605dd0840c8') }}
         </OptionsButton>
       </div>
       <OpenModalHotkeysButton />
@@ -245,7 +245,7 @@ export default {
       class="c-cloud-options-header"
     >
       <span v-if="hideGoogleName">Logged in to Google <i>(name hidden)</i></span>
-      <span v-else-if="loggedIn">Logged in as {{ userName }}</span>
+      <span v-else-if="loggedIn">Logged in as {{ $legacyText(_s(userName)) }}</span>
       <span v-else>Not logged in</span>
     </h2>
     <div v-if="loggedIn">
@@ -268,7 +268,7 @@ export default {
         </OptionsButton>
         <OptionsButton
           v-else
-          v-tooltip="'This will connect your Google Account to your Antimatter Dimensions savefiles'"
+          v-tooltip="$legacyTooltip('This will connect your Google Account to your Antimatter Dimensions savefiles')"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           onclick="GameOptions.login()"
         >
@@ -277,7 +277,7 @@ export default {
         <PrimaryToggleButton
           v-if="loggedIn"
           v-model="hideGoogleName"
-          v-tooltip="'This will hide your Google Account name from the UI for privacy. Saving/loading is unaffected.'"
+          v-tooltip="$legacyTooltip('This will hide your Google Account name from the UI for privacy. Saving/loading is unaffected.')"
           class="o-primary-btn--option l-options-grid__button"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           label="Hide Google Account name:"
@@ -291,13 +291,13 @@ export default {
           onclick="GameOptions.cloudSave()"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
         >
-          Cloud save
+          {{ $t('ade.ea0f64ad84554472') }}
         </OptionsButton>
         <OptionsButton
           onclick="GameOptions.cloudLoad()"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
         >
-          Cloud load
+          {{ $t('ade.ed7829963775c90f') }}
         </OptionsButton>
         <PrimaryToggleButton
           v-model="syncSaveIntervals"
@@ -318,14 +318,14 @@ export default {
         />
         <PrimaryToggleButton
           v-model="showCloudModal"
-          v-tooltip="modalTooltip"
+          v-tooltip="$legacyTooltip(modalTooltip)"
           class="o-primary-btn--option l-options-grid__button"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           label="Show modal if possible saving conflict:"
         />
         <PrimaryToggleButton
           v-model="forceCloudOverwrite"
-          v-tooltip="overwriteTooltip"
+          v-tooltip="$legacyTooltip(overwriteTooltip)"
           class="o-primary-btn--option l-options-grid__button"
           :class="{ 'o-pelle-disabled-pointer': creditsClosed }"
           label="Force cloud saving despite conflicts:"

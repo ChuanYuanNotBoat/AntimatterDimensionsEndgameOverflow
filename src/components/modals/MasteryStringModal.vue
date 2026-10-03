@@ -231,7 +231,7 @@ export default {
           <div
             v-if="invalidMessage"
             class="l-modal-import-tree__tree-info-line"
-            v-html="invalidMessage"
+            v-html="$legacyHtml(invalidMessage)"
           />
           <MasteryStringLine
             v-if="isImporting"
@@ -259,7 +259,7 @@ export default {
           />
         </template>
         <div v-if="!deleting && !inputIsValidTree && hasInput">
-          Not a valid tree
+          {{ $t('ade.ab069fcf60d95f9c') }}
         </div>
       </div>
       <div class="c-mastery-preview">
@@ -275,16 +275,16 @@ export default {
       <br>
       <PrimaryButton
         v-if="!deleting"
-        v-tooltip="'This will format the mastery preset text, for example, changing \'a,b,c|d\' to \'a, b, c | d\'.'"
+        v-tooltip="$legacyTooltip('This will format the mastery preset text, for example, changing \'a,b,c|d\' to \'a, b, c | d\'.')"
         @click="convertInputShorthands"
       >
-        Format Preset Text
+        {{ $t('ade.54964db04ca8a850') }}
       </PrimaryButton>
     </div>
     <span v-if="isImporting">
       <br>
       <div
-        v-tooltip="canEndgame ? '' : 'You are currently unable to endgame, so this will only do a normal load.'"
+        v-tooltip="$legacyTooltip(canEndgame ? '' : 'You are currently unable to endgame, so this will only do a normal load.')"
         class="c-modal__confirmation-toggle"
         @click="respecAndLoad = !respecAndLoad"
       >
@@ -300,13 +300,14 @@ export default {
           />
         </div>
         <span class="c-modal__confirmation-toggle__text">
-          Also respec tree and endgame
-          <span
+          <LocalizedText id="ade.5c76acf486d16aaf">
+            <template #p0><span
             v-if="!canEndgame"
             class="c-modal__confirmation-toggle__warning"
           >
             !
-          </span>
+          </span></template>
+          </LocalizedText>
         </span>
       </div>
     </span>

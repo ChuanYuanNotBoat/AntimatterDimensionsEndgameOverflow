@@ -135,9 +135,10 @@ export default {
 <template>
   <div class="l-dilation-tab">
     <span>
-      You have
-      <span class="c-dilation-tab__tachyons">{{ format(tachyons, 2, 1) }}</span>
-      {{ pluralize("Tachyon Particle", tachyons) }}.
+      <LocalizedText id="ade.cd1ff500c8f2ac78">
+        <template #p0><span class="c-dilation-tab__tachyons">{{ $legacyText(_s(format(tachyons, 2, 1))) }}</span></template>
+        <template #p1>{{ $legacyText(_s(pluralize("Tachyon Particle",tachyons))) }}</template>
+      </LocalizedText>
     </span>
     <div
       @mouseover="isHovering = true"
@@ -146,38 +147,39 @@ export default {
       <DilationButton />
     </div>
     <span>
-      You have
-      <span class="c-dilation-tab__dilated-time">{{ format(dilatedTime, 2, 1) }}</span>
-      Dilated Time.
-      <span class="c-dilation-tab__dilated-time-income">{{ dilatedTimeGainText }}/s</span>
+      <LocalizedText id="ade.d40c980418053fb3">
+        <template #p0><span class="c-dilation-tab__dilated-time">{{ $legacyText(_s(format(dilatedTime, 2, 1))) }}</span></template>
+        <template #p1><span class="c-dilation-tab__dilated-time-income">{{ $legacyText(_s(dilatedTimeGainText)) }}/s</span></template>
+      </LocalizedText>
     </span>
     <span>
-      Next
-      <span v-if="tachyonGalaxyGain > 1">{{ formatHybridLarge(tachyonGalaxyGain, 3) }}</span>
-      {{ pluralize("Tachyon Galaxy", tachyonGalaxyGain) }} at
-      <span
+      <LocalizedText id="ade.c31ab5e70299d725">
+        <template #p0><span v-if="tachyonGalaxyGain > 1">{{ $legacyText(_s(formatHybridLarge(tachyonGalaxyGain, 3))) }}</span></template>
+        <template #p1>{{ $legacyText(_s(pluralize("Tachyon Galaxy",tachyonGalaxyGain))) }}</template>
+        <template #p2><span
         class="c-dilation-tab__galaxy-threshold"
         :ach-tooltip="galaxyTimeEstimate"
-      >{{ format(galaxyThreshold, 2, 1) }}</span>
-      Dilated Time, gained total of
-      <span
+      >{{ $legacyText(_s(format(galaxyThreshold, 2, 1))) }}</span></template>
+        <template #p3><span
         class="c-dilation-tab__galaxies"
         :ach-tooltip="baseGalaxyText"
-      >{{ formatHybridLarge(totalGalaxies, 3) }}</span>
-      {{ pluralize("Tachyon Galaxy", totalGalaxies) }}
+      >{{ $legacyText(_s(formatHybridLarge(totalGalaxies, 3))) }}</span></template>
+        <template #p4>{{ $legacyText(_s(pluralize("Tachyon Galaxy",totalGalaxies))) }}</template>
+      </LocalizedText>
     </span>
     <span v-if="hasMaxText">
-      Your maximum Dilated Time reached this Reality is
-      <span
+      <LocalizedText id="ade.fd19db9f118816c6">
+        <template #p0><span
         v-tooltip="toMaxTooltip"
         class="max-accent"
-      >{{ format(maxDT, 2, 1) }}</span>.
+      >{{ $legacyText(_s(format(maxDT, 2, 1))) }}</span></template>
+      </LocalizedText>
     </span>
     <span v-if="isEndgameUnlocked">
-      Past {{ format(scaleStart, 2, 1) }} Dilated Time, all rebuyable Dilation Upgrades will scale faster.
+      {{ $t('ade.8266cecbd86c3c23', { p0: $legacyText(_s(format(scaleStart,2,1))) }) }}
     </span>
     <span v-if="viewSoftcap">
-      Dilated Time has been softcapped. This effect started at {{ format(softcapStart, 2, 1) }} Dilated Time.
+      {{ $t('ade.ccf597f85b049fc0', { p0: $legacyText(_s(format(softcapStart,2,1))) }) }}
     </span>
     <div class="l-dilation-upgrades-grid">
       <div

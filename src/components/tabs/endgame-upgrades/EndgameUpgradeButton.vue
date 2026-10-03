@@ -92,7 +92,7 @@ export default {
         type="endgameUpgrades"
         class="l-hint-text--endgame-upgrade c-hint-text--endgame-upgrade"
       >
-        {{ upgrade.name }}
+        {{ $legacyText(_s(upgrade.name)) }}
       </HintText>
       <span>
         <DescriptionDisplay :config="config" />
@@ -100,7 +100,7 @@ export default {
           <br>
           <DescriptionDisplay
             :config="requirementConfig"
-            label="Requirement:"
+            :label="$t('ade.3578b594e1f9e71d')"
             class="c-endgame-upgrade-btn__requirement"
           />
         </template>
@@ -134,7 +134,7 @@ export default {
     <PrimaryToggleButton
       v-if="isRebuyable && isAutoUnlocked"
       v-model="isAutobuyerOn"
-      label="Auto:"
+      :label="$t('ade.fc5aa8b492c774bf')"
       class="l--spoon-btn-group__little-spoon-endgame-btn o-primary-btn--endgame-upgrade-toggle"
     />
   </div>

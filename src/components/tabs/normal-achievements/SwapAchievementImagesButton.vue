@@ -37,5 +37,5 @@ export default {
   <span
     :style="imageSwapperStyleObject"
     @click="swapImages"
-  >{{ swapImagesButton }}</span>
+  >{{ $legacyText(_s(swapImagesButton)) }}</span>
 </template>

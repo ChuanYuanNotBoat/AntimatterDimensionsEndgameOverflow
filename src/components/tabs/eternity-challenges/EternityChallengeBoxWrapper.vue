@@ -96,7 +96,7 @@ export default {
       type="challenges"
       class="l-hint-text--challenge"
     >
-      {{ name }}
+      {{ $legacyText(_s(name)) }}
     </HintText>
     <slot name="top" />
     <div class="l-challenge-box__fill" />
@@ -106,7 +106,7 @@ export default {
         :class="buttonClassObject"
         @click="$emit('start')"
       >
-        {{ buttonText }}
+        {{ $legacyText(_s(buttonText)) }}
       </button>
     </div>
     <slot name="bottom" />

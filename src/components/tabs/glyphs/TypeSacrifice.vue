@@ -94,15 +94,15 @@ export default {
   >
     <div>
       <div class="l-sacrificed-glyphs__type-symbol c-sacrificed-glyphs__type-symbol">
-        {{ symbol }}
+        {{ $legacyText(_s(symbol)) }}
       </div>
       <div class="l-sacrificed-glyphs__type-amount c-sacrificed-glyphs__type-amount">
-        {{ formatAmount }}
+        {{ $legacyText(_s(formatAmount)) }}
         <span
           v-if="showNewSacrifice"
           class="c-sacrificed-glyphs__type-new-amount"
         >
-          + {{ formatNewAmount }} ➜ {{ formatTotalAmount }}
+          + {{ $legacyText(_s(formatNewAmount)) }} ➜ {{ $legacyText(_s(formatTotalAmount)) }}
         </span>
       </div>
     </div>
@@ -110,10 +110,10 @@ export default {
       v-if="showNewSacrifice"
       class="c-sacrificed-glyphs__type-new-amount"
     >
-      {{ newDescription }}
+      {{ $legacyText(_s(newDescription)) }}
     </span>
     <span v-else>
-      {{ description }}
+      {{ $legacyText(_s(description)) }}
     </span>
   </div>
 </template>

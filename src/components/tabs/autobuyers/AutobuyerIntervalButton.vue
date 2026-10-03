@@ -44,15 +44,17 @@ export default {
     :class="classObject"
     @click="upgradeInterval"
   >
-    {{ formatPercents(0.4) }} smaller interval
-    <br>
-    Cost: {{ format(cost, 2) }} IP
+    <LocalizedText id="ade.d2547e8e7a4b2258">
+      <template #p0>{{ $legacyText(_s(formatPercents(0.4))) }}</template>
+      <template #p1><br></template>
+      <template #p2>{{ $legacyText(_s(format(cost,2))) }}</template>
+    </LocalizedText>
   </button>
   <button
     v-else-if="!isMaxed"
     class="o-autobuyer-btn l-autobuyer-box__button o-autobuyer-btn--unavailable"
   >
-    Complete the challenge to upgrade interval
+    {{ $t('ade.832d9cb741d2c637') }}
   </button>
 </template>
 

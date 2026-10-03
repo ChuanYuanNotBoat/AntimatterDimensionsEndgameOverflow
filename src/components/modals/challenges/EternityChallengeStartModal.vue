@@ -67,16 +67,16 @@ export default {
       {{ entranceLabel }}
     </template>
     <div class="c-modal-message__text">
-      {{ message }}
+      {{ $legacyText(_s(message)) }}
       <br><br>
-      {{ condition }}
+      {{ $legacyText(_s(condition)) }}
     </div>
     <div
       v-if="!challengeIsCompleted"
       class="c-modal-message__text"
     >
       <br>
-      {{ reward }}
+      {{ $legacyText(_s(reward)) }}
     </div>
     <template #confirm-text>
       Begin

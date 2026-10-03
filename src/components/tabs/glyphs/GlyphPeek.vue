@@ -68,12 +68,12 @@ export default {
         :flip-tooltip="true"
         :sort="false"
       />
-      (Click to bring up details)
+      {{ $t('ade.50bae4e0eb90f898') }}
     </div>
     <div v-else>
-      Purchase the Reality study to see
-      <br>
-      this Reality's Glyph choices
+      <LocalizedText id="ade.a075581b244eac37">
+        <template #p0><br></template>
+      </LocalizedText>
     </div>
   </div>
 </template>

@@ -140,17 +140,17 @@ export default {
     <div class="l-endgame-milestone-grid">
       <div>
         <span class="c-ascension-description-text">
-          You have {{ format(divineEnergy, 2, 2) }} Divine Energy. +{{ format(divineEnergyPerSecond, 2, 2) }}/s
+          {{ $t('ade.40bb598902309937', { p0: $legacyText(_s(format(divineEnergy,2,2))), p1: $legacyText(_s(format(divineEnergyPerSecond,2,2))) }) }}
         </span>
       </div>
       <div>
         <span class="c-ascension-description-text">
-          The time to reach the next Ascension will lower based on your Divine Energy amount.
+          {{ $t('ade.38894bdae65263d7') }}
         </span>
       </div>
       <div>
         <span class="c-ascension-description-text">
-          Your current Ascension is {{ formatInt(ascension) }}.
+          {{ $t('ade.07d70d8fcfa55e69', { p0: $legacyText(_s(formatInt(ascension))) }) }}
         </span>
       </div>
       <div
@@ -166,9 +166,9 @@ export default {
         />
       </div>
       <div>
-        <span class="c-ascension-description-text">{{ nextAtDisplay }}</span>
+        <span class="c-ascension-description-text">{{ $legacyText(_s(nextAtDisplay)) }}</span>
         <br>
-        <span class="c-ascension-description-text">{{ nextHintDisplay }}</span>
+        <span class="c-ascension-description-text">{{ $legacyText(_s(nextHintDisplay)) }}</span>
       </div>
     </div>
     <br>
@@ -186,7 +186,7 @@ export default {
             :class="runButtonInnerClass"
             :button-symbol="symbol"
           >
-            {{ symbol }}
+            {{ $legacyText(_s(symbol)) }}
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@ export default {
       >
         -
       </PrimaryButton>
-      <span class="c-ascension-basic-text">{{ currentLevel }}</span>
+      <span class="c-ascension-basic-text">{{ $legacyText(_s(currentLevel)) }}</span>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         @click="increaseLevel"
@@ -212,16 +212,16 @@ export default {
     </div>
     <br>
     <div v-if="highestUnlockedLevel >= 1">
-      <span class="c-ascension-description-text">You have {{ infiniteEnergy }} Infinite Energy.</span>
+      <span class="c-ascension-description-text">{{ $t('ade.eead73d7c0996522', { p0: $legacyText(_s(infiniteEnergy)) }) }}</span>
     </div>
     <div v-if="highestUnlockedLevel >= 2">
-      <span class="c-ascension-description-text">You have {{ eternalEnergy }} Eternal Energy.</span>
+      <span class="c-ascension-description-text">{{ $t('ade.f2183ce5fdc27d94', { p0: $legacyText(_s(eternalEnergy)) }) }}</span>
     </div>
     <div v-if="highestUnlockedLevel >= 3">
-      <span class="c-ascension-description-text">You have {{ complexEnergy }} Complex Energy.</span>
+      <span class="c-ascension-description-text">{{ $t('ade.faac3f4fd3643fc9', { p0: $legacyText(_s(complexEnergy)) }) }}</span>
     </div>
     <div v-if="highestUnlockedLevel >= 4">
-      <span class="c-ascension-description-text">You have {{ temporalEnergy }} Temporal Energy.</span>
+      <span class="c-ascension-description-text">{{ $t('ade.372ef3a1ba9894d6', { p0: $legacyText(_s(temporalEnergy)) }) }}</span>
     </div>
   </div>
 </template>

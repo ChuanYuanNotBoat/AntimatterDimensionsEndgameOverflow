@@ -41,6 +41,6 @@ export default {
     v-bind="$attrs"
     @click="emitInput(!value)"
   >
-    {{ displayText }}
+    {{ $legacyText(_s(displayText)) }}
   </PrimaryButton>
 </template>

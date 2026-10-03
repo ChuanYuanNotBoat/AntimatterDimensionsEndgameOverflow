@@ -195,35 +195,39 @@ export default {
         class="c-reality-upgrade-btn"
         :class="unequipClass"
         :style="glyphRespecStyle"
-        :ach-tooltip="respecTooltip"
+        :ach-tooltip="$legacyText(respecTooltip)"
         @click="toggleRespec"
       >
-        {{ unequipText }}
+        {{ $legacyText(_s(unequipText)) }}
       </button>
       <button
         v-if="undoVisible"
         class="l-glyph-equip-button c-reality-upgrade-btn"
         :class="{'c-reality-upgrade-btn--unavailable': !undoAvailable}"
-        :ach-tooltip="undoTooltip"
+        :ach-tooltip="$legacyText(undoTooltip)"
         @click="undo"
       >
-        <span>Rewind to <b>undo</b> the last equipped Glyph</span>
+        <span><LocalizedText id="ade.23e160347d5451ac">
+    <template #p0><b>{{ $t('ade.b702695fa4e7b67c') }}</b></template>
+  </LocalizedText></span>
       </button>
       <button
         class="l-glyph-equip-button c-reality-upgrade-btn"
         @click="toggleRespecIntoProtected"
       >
-        Unequip Glyphs to:
-        <br>
-        <span v-if="respecIntoProtected">Protected slots</span>
-        <span v-else>Main inventory</span>
+        <LocalizedText id="ade.cc7d393d0b82f2df">
+          <template #p0><br></template>
+          <template #p1><span v-if="respecIntoProtected">{{ $t('ade.16100fd3075345f8') }}</span>
+<span v-else>{{ $t('ade.03ede465faf5ca3d') }}</span></template>
+        </LocalizedText>
+
       </button>
       <button
         class="l-glyph-equip-button-short c-reality-upgrade-btn"
         :class="{'tutorial--glow': cosmeticGlow}"
         @click="showOptionModal"
       >
-        Open Glyph Visual Options
+        {{ $t('ade.fb9cfa9857351595') }}
       </button>
     </div>
   </div>

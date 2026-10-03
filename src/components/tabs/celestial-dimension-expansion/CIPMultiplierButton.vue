@@ -57,23 +57,25 @@ export default {
       @click="purchaseUpgrade"
     >
       <div>
-        Multiply Celestial Infinity Points from all sources by {{ formatX(2) }}
-        <br>
-        Currently: {{ formatX(multiplier, 2, 0) }}
+        <LocalizedText id="ade.e790b74cab157acc">
+          <template #p0>{{ $legacyText(_s(formatX(2))) }}</template>
+          <template #p1><br></template>
+          <template #p2>{{ $legacyText(_s(formatX(multiplier,2,0))) }}</template>
+        </LocalizedText>
       </div>
       <br>
-      Cost: {{ quantify("Celestial Infinity Point", cost, 2, 0) }}
+      {{ $t('ade.9b699ddbf2778050', { p0: $legacyText(_s(quantify("Celestial Infinity Point",cost,2,0))) }) }}
     </button>
     <PrimaryButton
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
       @click="upgrade.buyMax(false)"
     >
-      Max Cel Infinity Point mult
+      {{ $t('ade.7e50baa199c6f890') }}
     </PrimaryButton>
     <PrimaryToggleButton
       v-if="isAutoUnlocked"
       v-model="isAutobuyerActive"
-      label="Autobuy CIP mult"
+      :label="$t('ade.655f6de81cd380fc')"
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
     />
   </div>

@@ -42,7 +42,7 @@ export default {
       Delete this script
     </template>
     <div class="c-modal-message__text">
-      Please confirm your desire to delete this Automator script.
+      {{ $t('ade.2ce1c2246c6f099c') }}
     </div>
     <template #confirm-text>
       Delete

@@ -37,7 +37,7 @@ export default {
       onclick="Modal.singularityMilestones.show()"
       :class="classObject"
     >
-      Show all milestones
+      {{ $t('ade.ae12d11d0171963e') }}
     </div>
     <SingularityMilestoneComponent
       v-for="milestone in milestones"

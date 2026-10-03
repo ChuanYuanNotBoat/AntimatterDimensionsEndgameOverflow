@@ -58,13 +58,13 @@ export default {
         v-if="showEP"
         class="c-eternity-points"
       >
-        You have
-        <span class="c-game-header__ep-amount">{{ format(eternityPoints, 2) }}</span>
-        {{ pluralize("Eternity Point", eternityPoints) }}.
-        <span v-if="showNextEP">(Next EP at {{ format(nextEP, 1) }} IP)</span>
+        {{ $t('ade.9f717812b3aa8e61') }}
+        <span class="c-game-header__ep-amount">{{ $legacyText(_s(format(eternityPoints, 2))) }}</span>
+        {{ $t('ade.2d6767bdc396d538', { p0: $legacyText(_s(pluralize("Eternity Point",eternityPoints))) }) }}
+        <span v-if="showNextEP">{{ $t('ade.5eda44793a27ec52', { p0: $legacyText(_s(format(nextEP,1))) }) }}</span>
         <span
           v-if="isPenteractUnlocked"
-          v-html="penteractText"
+          v-html="$legacyHtml(penteractText)"
         />
       </div>
       <UnlockInfinityDimButton />
@@ -75,9 +75,10 @@ export default {
       class="c-prestige-button-container"
     >
       <div class="c-eternity-points">
-        You have
-        <span class="c-game-header__cep-amount">{{ format(celEternityPoints, 2) }}</span>
-        {{ pluralize("Celestial Eternity Point", celEternityPoints) }}.
+        <LocalizedText id="ade.cd1ff500c8f2ac78">
+          <template #p0><span class="c-game-header__cep-amount">{{ $legacyText(_s(format(celEternityPoints, 2))) }}</span></template>
+          <template #p1>{{ $legacyText(_s(pluralize("Celestial Eternity Point",celEternityPoints))) }}</template>
+        </LocalizedText>
       </div>
       <CelestialEternityButton />
     </div>

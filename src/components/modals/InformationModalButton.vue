@@ -36,7 +36,7 @@ export default {
 
 <template>
   <span
-    :ach-tooltip="name"
+    :ach-tooltip="$legacyText(name)"
     class="c-socials--icon__wrapper"
   >
     <a

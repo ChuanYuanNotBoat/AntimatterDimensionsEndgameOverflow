@@ -194,7 +194,7 @@ export const BlockAutomator = {
           top: `${(i - 1) * 3.45}rem`
         }"
       >
-        {{ i }}
+        {{ $legacyText(_s(i)) }}
       </div>
     </div>
     <div

@@ -61,33 +61,33 @@ export default {
       <PrimaryToggleButton
         v-model="retryChallenge"
         class="o-primary-btn--subtab-option"
-        label="Automatically retry challenges:"
+        :label="$t('ade.f0c10f4f5bca68cb')"
       />
       <PrimaryToggleButton
         v-if="isShowAllVisible"
         v-model="showAllChallenges"
         class="o-primary-btn--subtab-option"
-        label="Show all known challenges:"
+        :label="$t('ade.2539b62930033aa9')"
       />
       <PrimaryToggleButton
         v-if="isAutoECVisible"
         v-model="autoEC"
         class="o-primary-btn--subtab-option"
-        label="Auto Eternity Challenges:"
+        :label="$t('ade.233bbe44e89e63e3')"
       />
       <PrimaryButton
         v-if="isInChallenge"
         class="o-primary-btn--subtab-option"
         @click="restartChallenge"
       >
-        Restart Challenge
+        {{ $t('ade.28a006158a609ed1') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="isInChallenge"
         class="o-primary-btn--subtab-option"
         @click="exitChallenge"
       >
-        Exit Challenge
+        {{ $t('ade.cc79743efc856b1b') }}
       </PrimaryButton>
     </div>
   </div>

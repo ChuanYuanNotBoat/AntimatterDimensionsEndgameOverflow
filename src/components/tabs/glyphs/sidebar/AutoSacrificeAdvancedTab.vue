@@ -82,12 +82,12 @@ export default {
     <div class="l-auto-sac-type-tab__row-wrapper">
       <div>
         <div
-          :ach-tooltip="questionmarkTooltip"
+          :ach-tooltip="$legacyText(questionmarkTooltip)"
           class="o-questionmark"
         >
           ?
         </div>
-        <b> Threshold score</b> (rarity % + effect scores)
+        <b> {{ $t('ade.b0a96500faf2ca3c') }}</b> {{ $t('ade.6197587494eb81e2') }}
       </div>
       <input
         ref="scoreThreshold"
@@ -109,7 +109,7 @@ export default {
         class="c-auto-sac-type-tab__effect-desc l-auto-sac-type-tab__effect-desc"
         :style="descStyle"
       >
-        {{ effect.genericDesc }}
+        {{ $legacyText(_s(effect.genericDesc)) }}
       </div>
       <input
         type="number"

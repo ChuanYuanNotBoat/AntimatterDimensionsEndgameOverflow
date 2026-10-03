@@ -33,7 +33,7 @@ export default {
         If you exit Hell you will not be able to gain any more Chaos Cores.
       </span>
       <br>
-      Are you sure you want to proceed?
+      {{ $t('ade.a4d500e55df8919f') }}
     </div>
     <template #confirm-text>
       Get me out

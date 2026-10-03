@@ -26,8 +26,7 @@ export default {
     </template>
     <div class="c-modal-options__button-container">
       <span v-if="noConfirmations">
-        You do not have anything that requires confirmation,
-        but if you did it would appear here.
+        {{ $t('ade.454bb01680e31b9a') }}
       </span>
       <ConfirmationOptionsEntry
         v-for="entryNumber in count"

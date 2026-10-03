@@ -240,27 +240,27 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="showAlchemyHowTo"
       >
-        Click for alchemy info
+        {{ $t('ade.3cec09ad23afa56f') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="!isDoomed"
         class="o-primary-btn--subtab-option"
         @click="toggleAllReactions"
       >
-        {{ allReactionsDisabled ? "Enable" : "Disable" }} all reactions
+        {{ $t('ade.d25b87ec91e1bf51', { p0: $legacyText(_s(allReactionsDisabled?"Enable":"Disable")) }) }}
       </PrimaryButton>
       <PrimaryButton
         v-if="realityCreationVisible"
         :class="realityGlyphCreationClass"
         @click="createRealityGlyph"
       >
-        View Reality Glyph creation
+        {{ $t('ade.16b2e27955e52d12') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         @click="resetAlchemy"
       >
-        Force-reset all Alchemy resources
+        {{ $t('ade.803845eef17ba439') }}
       </PrimaryButton>
     </div>
     <AlchemyResourceInfo
@@ -268,12 +268,11 @@ export default {
       :resource="infoResource"
     />
     <br>
-    Glyphs can now be refined using your Glyph filter in the Glyphs tab.
+    {{ $t('ade.5ed4a8866f12893e') }}
     <br>
-    When refining a Glyph, it will only give you resources up to a cap
-    of {{ formatX(capFactor) }} its highest refinement value.
+    {{ $t('ade.f5b5393d24406011', { p0: $legacyText(_s(formatX(capFactor))) }) }}
     <span v-if="reactionsAvailable">
-      Reactions trigger once every time you Reality, unaffected by amplification from stored real time.
+      {{ $t('ade.83d94dce54d35f1c') }}
     </span>
     <div
       class="l-alchemy-circle"
@@ -282,7 +281,7 @@ export default {
       <span
         v-if="shouldDisplayPelle"
         :class="PelleClass"
-        v-html="pelleSymbol"
+        v-html="$legacyHtml(pelleSymbol)"
       />
       <svg class="l-alchemy-orbit-canvas">
         <circle

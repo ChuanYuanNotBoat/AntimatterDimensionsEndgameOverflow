@@ -59,9 +59,9 @@ export default {
 <template>
   <span class="c-gamespeed">
     <span>
-      {{ baseText }}
+      {{ $legacyText(_s(baseText)) }}
     </span>
-    <span v-if="isPulsing">(<i class="fas fa-expand-arrows-alt u-fa-padding" /> {{ pulseSpeedText }})</span>
+    <span v-if="isPulsing">(<i class="fas fa-expand-arrows-alt u-fa-padding" /> {{ $legacyText(_s(pulseSpeedText)) }})</span>
   </span>
 </template>
 

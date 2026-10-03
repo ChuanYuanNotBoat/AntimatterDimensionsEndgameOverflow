@@ -80,22 +80,22 @@ export default {
     v-if="prevRunInfo"
     class="c-icon-container"
   >
-    <span>Run {{ index }}</span>
-    <span>{{ prevRunInfo.name }}</span>
+    <span>Run {{ $legacyText(_s(index)) }}</span>
+    <span>{{ $legacyText(_s(prevRunInfo.name)) }}</span>
     <span
       v-for="attr in iconAttrs"
       :key="attr.icon"
-      v-tooltip="attr.text"
+      v-tooltip="$legacyTooltip(attr.text)"
       :class="attr.icon"
     />
-    <span>Started: {{ startDate }}</span>
-    <span>Final Time: {{ finalTime }}</span>
+    <span>Started: {{ $legacyText(_s(startDate)) }}</span>
+    <span>Final Time: {{ $legacyText(_s(finalTime)) }}</span>
   </div>
   <div
     v-else
     class="c-no-record"
   >
-    No speedrun records found for run {{ index }}.
+    No speedrun records found for run {{ $legacyText(_s(index)) }}.
   </div>
 </template>
 

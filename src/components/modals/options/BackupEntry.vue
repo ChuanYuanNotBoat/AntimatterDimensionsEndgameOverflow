@@ -101,18 +101,18 @@ export default {
 
 <template>
   <div class="c-bordered-entry">
-    <h3>Slot #{{ slotData.id }}:</h3>
-    <span>{{ progressStr }}</span>
+    <h3>{{ $t('ade.222bb6ed2b748568', { p0: $legacyText(_s(slotData.id)) }) }}</h3>
+    <span>{{ $legacyText(_s(progressStr)) }}</span>
     <span>
-      {{ slotType }}
+      {{ $legacyText(_s(slotType)) }}
     </span>
-    <span class="c-fixed-height">{{ lastSaved }}</span>
+    <span class="c-fixed-height">{{ $legacyText(_s(lastSaved)) }}</span>
     <PrimaryButton
       class="o-primary-btn--width-medium"
       :class="{ 'o-primary-btn--disabled' : !save }"
       @click="load()"
     >
-      Load
+      {{ $t('ade.860e35d0e1f97b24') }}
     </PrimaryButton>
   </div>
 </template>

@@ -74,7 +74,7 @@ export default {
       class="l-tab-btn-inner"
       @click="tab.show(true)"
     >
-      {{ tabName }}
+      {{ $legacyText(_s(tabName)) }}
       <div
         v-if="hasNotification"
         class="fas fa-circle-exclamation l-notification-icon"
@@ -97,13 +97,13 @@ export default {
           "
           @click="subtab.show(true)"
         >
-          <span v-html="subtab.symbol" />
+          <span v-html="$legacyHtml(subtab.symbol)" />
           <div
             v-if="subtab.hasNotification"
             class="fas fa-circle-exclamation l-notification-icon"
           />
           <div class="o-subtab__tooltip">
-            {{ subtab.displayName }}
+            {{ $legacyText(_s(subtab.displayName)) }}
           </div>
         </div>
       </template>

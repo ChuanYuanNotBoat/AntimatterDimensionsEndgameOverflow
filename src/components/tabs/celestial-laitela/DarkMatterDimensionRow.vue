@@ -173,11 +173,10 @@ export default {
     class="c-dark-matter-dimension-container"
   >
     <div class="o-dark-matter-dimension-amount">
-      {{ name }}<span v-if="hasAscended"> {{ ascensionText }}</span>: {{ format(amount, 2) }}
+      {{ $legacyText(_s(name)) }}<span v-if="hasAscended"> {{ $legacyText(_s(ascensionText)) }}</span>: {{ $legacyText(_s(format(amount, 2))) }}
     </div>
     <div>
-      Average gain: {{ format(productionPerSecond, 2, 2) }}/s
-      (+{{ formatPercents(percentPerSecond, 2, 2) }}/s)
+      {{ $t('ade.006d41f4fe1cbc14', { p0: $legacyText(_s(format(productionPerSecond,2,2))), p1: $legacyText(_s(formatPercents(percentPerSecond,2,2))) }) }}
     </div>
     <div class="c-dark-matter-dimension-buttons">
       <button
@@ -188,33 +187,33 @@ export default {
       >
         <span
           v-if="isIntervalCapped"
-          :ach-tooltip="ascensionTooltip"
+          :ach-tooltip="$legacyText(ascensionTooltip)"
         >
           <i class="fas fa-question-circle" />
         </span>
-        <span :class="{ 'l-dmd-interval-small-text': hasLongIntText }" v-html="intervalText" />
+        <span :class="{ 'l-dmd-interval-small-text': hasLongIntText }" v-html="$legacyHtml(intervalText)" />
       </button>
       <button
         :class="darkMatterClassObject"
         @click="buyPowerDM"
       >
-        <span :class="{ 'l-dmd-dm-small-text': hasLongDMText }" v-html="darkMatterText" />
+        <span :class="{ 'l-dmd-dm-small-text': hasLongDMText }" v-html="$legacyHtml(darkMatterText)" />
       </button>
       <button
         :class="darkEnergyClassObject"
         @click="buyPowerDE"
       >
-        <span :class="{ 'l-dmd-de-small-text': hasLongDEText }" v-html="darkEnergyText" />
+        <span :class="{ 'l-dmd-de-small-text': hasLongDEText }" v-html="$legacyHtml(darkEnergyText)" />
       </button>
     </div>
     <div v-if="interval.gt(200)">
-      Tick: {{ formatInt(timer) }} ms ({{ formatPercents(timerPercent, 1) }})
+      {{ $t('ade.4d9b7edaf693ca93', { p0: $legacyText(_s(formatInt(timer))), p1: $legacyText(_s(formatPercents(timerPercent,1))) }) }}
     </div>
     <div v-else>
-      {{ format(interval.div(1000).recip(), 2, 2) }} ticks / sec
+      {{ $t('ade.873bbaf2b27a285b', { p0: $legacyText(_s(format(interval.div(1000).recip(),2,2))) }) }}
     </div>
     <div>
-      Dark Energy: {{ format(darkEnergyPerSecond, 2, 4) }}/s ({{ formatPercents(portionDE, 1) }} of total)
+      {{ $t('ade.fe183cbbdf912044', { p0: $legacyText(_s(format(darkEnergyPerSecond,2,4))), p1: $legacyText(_s(formatPercents(portionDE,1))) }) }}
     </div>
   </div>
 </template>

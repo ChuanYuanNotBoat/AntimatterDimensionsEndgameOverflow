@@ -24,7 +24,7 @@ export default {
   <span v-if="shouldDisplay">
     <div v-if="isModern">
       <h3 class="l-spacing">
-        My power is too much for the universe to be stable... I need to become Divine...
+        {{ $t('ade.494d0322f5c8f915') }}
       </h3>
       <button
         :class="{
@@ -32,7 +32,7 @@ export default {
         }"
         @click="handleClick"
       >
-        Become Divine
+        {{ $t('ade.dff42fbc36bbaba0') }}
       </button>
     </div>
     <div v-else>
@@ -44,10 +44,10 @@ export default {
         }"
         @click="handleClick"
       >
-        Become Divine
+        {{ $t('ade.dff42fbc36bbaba0') }}
       </button>
       <div class="o-emptiness">
-        My power is too much for the universe to be stable... I need to become Divine...
+        {{ $t('ade.494d0322f5c8f915') }}
       </div>
     </div>
   </span>

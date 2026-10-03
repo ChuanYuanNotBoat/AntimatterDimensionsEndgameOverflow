@@ -1,5 +1,5 @@
 {
-  "stage": "foundation; partial translation with English fallback",
+  "stage": "ADEChinese matching text synchronized; single-file language packs; shared complete resource terms; English fallback",
   "templatesWithoutStaticEnglish": [
     "src/components/GameSpeedDisplay.vue",
     "src/components/DescriptionDisplay.vue",
@@ -7,9 +7,8 @@
     "src/components/tabs/options-visual/SelectLanguageDropdown.vue"
   ],
   "remaining": [
-    "Progression, prestige, challenges, achievements, glyphs, and most ADE systems",
-    "Most multiplier labels and explanations",
-    "Automator documentation, input prompts, errors, and historical logs",
-    "Help pages, news, quotes, credits, boot pages, and text inside assets"
+    "Reference-only or changed-version definitions listed in adechinese-sync.json",
+    "New fork text without a corresponding reference translation",
+    "Boot pages, text inside images/assets, and intentionally preserved code/user-defined text"
   ]
 }

@@ -35,16 +35,16 @@ export default {
 <template>
   <div class="l-accelerator-panel-container">
     <div class="c-accelerator-panel-title">
-      Accelerators
+      {{ $t('ade.1fa51f0ed854b2fe') }}
     </div>
     <div
       class="l-accelerator-content-container"
     >
-      Accelerators can be activated by clicking on their bars.
-      <span>You cannot activate more than one Accelerator at once.</span>
-      When active, Accelerators fill at a rate of {{ formatPercents(decayRate, 3) }} per second.
+      {{ $t('ade.03811f3657150ddd') }}
+      <span>{{ $t('ade.0ede16ed47a5b194') }}</span>
+      {{ $t('ade.3cf4a7f72a4ddf26', { p0: $legacyText(_s(formatPercents(decayRate,3))) }) }}
       <br>
-      Accelerator effects apply even when not activated, and are based on the current fill percentage.
+      {{ $t('ade.a88399b6a68379cc') }}
       <div class="c-accelerator-bar-container">
         <Accelerator
           v-for="accelerator in accelerators"
@@ -55,7 +55,7 @@ export default {
     </div>
     <PowerCoreButton />
     <div class="c-accelerator-panel-description">
-      The next Accelerator will unlock at {{ format(nextAcceleratorReq, 2, 2) }} {{ nextAcceleratorCurrency }}
+      {{ $t('ade.bc8263139ec6e985', { p0: $legacyText(_s(format(nextAcceleratorReq,2,2))), p1: $legacyText(_s(nextAcceleratorCurrency)) }) }}
     </div>
   </div>
 </template>

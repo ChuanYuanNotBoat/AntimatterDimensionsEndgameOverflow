@@ -54,7 +54,7 @@ export default {
 
 <template>
   <div
-    v-tooltip="hidable ? isCurrentSubtab ? 'You cannot hide the tab you are on' : '' : 'Options tabs cannot be hidden'"
+    v-tooltip="$legacyTooltip(hidable ? isCurrentSubtab ? 'You cannot hide the tab you are on' : '' : 'Options tabs cannot be hidden')"
     :class="classObject"
     @click="toggleVisibility"
   >
@@ -62,10 +62,10 @@ export default {
       <div
         v-if="isModernUI"
         class="l-hide-modal-button__subtab-icon"
-        v-html="subtab.symbol"
+        v-html="$legacyHtml(subtab.symbol)"
       />
       <div class="l-hide-modal-button__subtab-name">
-        {{ subtab.displayName }}
+        {{ $legacyText(_s(subtab.displayName)) }}
       </div>
     </div>
   </div>

@@ -63,12 +63,12 @@ export default {
   <div class="o-glyph-inventory-management-group">
     <div class="l-glyph-sacrifice-options__header">
       <div
-        v-tooltip="questionMarkTooltip"
+        v-tooltip="$legacyTooltip(questionMarkTooltip)"
         class="o-questionmark"
       >
         ?
       </div>
-      Auto Glyph Arrangement:
+      {{ $t('ade.2e60c97475e86b9b') }}
     </div>
     <ButtonCycle
       v-model="autoSort"
@@ -79,19 +79,19 @@ export default {
     <ToggleButton
       v-model="autoCollapse"
       class="c-glyph-inventory-option"
-      label="Auto-collapse space:"
+      :label="$t('ade.58f7ae6d3c6e1fc6')"
     />
     <ToggleButton
       v-if="showAutoAutoClean"
       v-model="autoAutoClean"
       class="c-glyph-inventory-option"
-      label="Auto-purge on Realities:"
+      :label="$t('ade.37be5b6d630d92bf')"
     />
     <ToggleButton
       v-if="showAutoAutoClean"
       v-model="applyFilterToPurge"
       class="c-glyph-inventory-option"
-      label="Never Auto-purge Glyphs accepted by filter:"
+      :label="$t('ade.285200a655db3319')"
       tooltip-class="c-glyph-inventory-option__tooltip"
       :tooltip-content="keepTooltip"
     />

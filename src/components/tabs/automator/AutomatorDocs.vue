@@ -242,51 +242,51 @@ export default {
     <div class="c-automator__controls l-automator__controls">
       <div class="l-automator-button-row">
         <AutomatorButton
-          v-tooltip="'Automator Introduction'"
+          v-tooltip="$legacyTooltip('Automator Introduction')"
           class="fa-circle-info"
           :class="activePanelClass(panelEnum.INTRO_PAGE)"
           @click="infoPaneID = panelEnum.INTRO_PAGE"
         />
         <AutomatorButton
-          v-tooltip="'Scripting Information'"
+          v-tooltip="$legacyTooltip('Scripting Information')"
           class="fa-list"
           :class="activePanelClass(panelEnum.COMMANDS)"
           @click="infoPaneID = panelEnum.COMMANDS"
         />
         <AutomatorButton
-          v-tooltip="errorTooltip"
+          v-tooltip="$legacyTooltip(errorTooltip)"
           :style="errorStyle"
           class="fa-exclamation-triangle"
           :class="activePanelClass(panelEnum.ERRORS)"
           @click="infoPaneID = panelEnum.ERRORS"
         />
         <AutomatorButton
-          v-tooltip="'Extended Data Transfer'"
+          v-tooltip="$legacyTooltip('Extended Data Transfer')"
           class="fa-window-restore"
           :class="activePanelClass(panelEnum.DATA_TRANSFER)"
           @click="infoPaneID = panelEnum.DATA_TRANSFER"
         />
         <AutomatorButton
-          v-tooltip="'View recently executed commands'"
+          v-tooltip="$legacyTooltip('View recently executed commands')"
           class="fa-eye"
           :class="activePanelClass(panelEnum.EVENTS)"
           @click="infoPaneID = panelEnum.EVENTS"
         />
         <AutomatorButton
-          v-tooltip="'Modify defined constants'"
+          v-tooltip="$legacyTooltip('Modify defined constants')"
           class="fa-book"
           :class="activePanelClass(panelEnum.CONSTANTS)"
           @click="infoPaneID = panelEnum.CONSTANTS"
         />
         <AutomatorButton
-          v-tooltip="'Template Creator List'"
+          v-tooltip="$legacyTooltip('Template Creator List')"
           class="fa-file-code"
           :class="activePanelClass(panelEnum.TEMPLATES)"
           @click="infoPaneID = panelEnum.TEMPLATES"
         />
         <AutomatorButton
           v-if="isBlock"
-          v-tooltip="'Command menu for Block editor mode'"
+          v-tooltip="$legacyTooltip('Command menu for Block editor mode')"
           class="fa-cubes"
           :class="activePanelClass(panelEnum.BLOCKS)"
           @click="infoPaneID = panelEnum.BLOCKS"
@@ -296,10 +296,10 @@ export default {
           class="c-automator__status-text c-automator__status-text--small"
           :class="{ 'c-automator__status-text--error' : totalChars > maxTotalChars }"
         >
-          Across all scripts: {{ formatInt(totalChars) }}/{{ formatInt(maxTotalChars) }}
+          {{ $t('ade.df877d1bfbfc8756', { p0: $legacyText(_s(formatInt(totalChars))), p1: $legacyText(_s(formatInt(maxTotalChars))) }) }}
         </span>
         <AutomatorButton
-          v-tooltip="fullScreenTooltip"
+          v-tooltip="$legacyTooltip(fullScreenTooltip)"
           :class="fullScreenIconClass"
           class="l-automator__expand-corner"
           @click="fullScreen = !fullScreen"
@@ -307,12 +307,12 @@ export default {
       </div>
       <div class="l-automator-button-row">
         <AutomatorButton
-          v-tooltip="'Export single automator script'"
+          v-tooltip="$legacyTooltip('Export single automator script')"
           class="fa-file-export"
           @click="exportScript"
         />
         <AutomatorButton
-          v-tooltip="importTooltip"
+          v-tooltip="$legacyTooltip(importTooltip)"
           class="fa-file-import"
           :class="{ 'c-automator__status-text--error' : !canMakeNewScript }"
           @click="importScript"
@@ -333,7 +333,7 @@ export default {
               </template>
             </ExpandingControlBox>
             <AutomatorButton
-              v-tooltip="'Rename script'"
+              v-tooltip="$legacyTooltip('Rename script')"
               class="far fa-edit"
               @click="rename"
             />
@@ -341,7 +341,7 @@ export default {
           <input
             v-else
             ref="renameInput"
-            v-tooltip="nameTooltip"
+            v-tooltip="$legacyTooltip(nameTooltip)"
             class="l-automator__rename-input c-automator__rename-input"
             :class="{ 'c-long-name-box' : isNameTooLong }"
             @blur="nameEdited"
@@ -349,7 +349,7 @@ export default {
           >
         </div>
         <AutomatorButton
-          v-tooltip="'Delete this script'"
+          v-tooltip="$legacyTooltip('Delete this script')"
           class="fas fa-trash"
           @click="deleteScript"
         />

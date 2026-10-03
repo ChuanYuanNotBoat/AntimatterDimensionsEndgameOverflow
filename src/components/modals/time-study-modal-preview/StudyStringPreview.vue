@@ -147,7 +147,7 @@ export default {
       v-else
       class="c-unavailable-warning"
     >
-      Preview Unavailable
+      {{ $t('ade.584477abe2695fbc') }}
     </span>
   </div>
 </template>

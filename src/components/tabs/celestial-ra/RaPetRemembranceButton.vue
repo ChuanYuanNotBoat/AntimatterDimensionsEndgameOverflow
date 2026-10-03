@@ -50,10 +50,10 @@ export default {
     @click="toggleRemembrance"
   >
     <span v-if="hasRemembrance">
-      Remembrance given to {{ name }}
+      {{ $t('ade.afc0e53dda54b85c', { p0: $legacyText(_s(name)) }) }}
     </span>
     <span v-else>
-      Give Remembrance to {{ name }}
+      {{ $t('ade.d45a5c49184d8740', { p0: $legacyText(_s(name)) }) }}
     </span>
   </button>
 </template>

@@ -113,7 +113,7 @@ export default {
 <template>
   <div>
     <span v-if="text && !textHidden">
-      {{ text }}
+      {{ $legacyText(_s(text)) }}
       <br>
     </span>
     <span
@@ -151,7 +151,7 @@ export default {
         :glyph-set="glyphs"
         :force-color="forceNameColor"
       />
-      {{ noneText }}
+      {{ $legacyText(_s(noneText)) }}
     </span>
   </div>
 </template>

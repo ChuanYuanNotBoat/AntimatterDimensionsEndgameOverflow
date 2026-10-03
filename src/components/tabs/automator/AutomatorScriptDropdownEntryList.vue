@@ -107,13 +107,13 @@ export default {
       class="l-create-script c-automator-docs-script-select c-script-option-hover-effect"
       @click="createNewScript()"
     >
-      <i>Create a new script (You have {{ formatInt(scriptCount) }} / {{ formatInt(maxScriptCount) }})</i>
+      <i>{{ $t('ade.47f86653ad70c762', { p0: $legacyText(_s(formatInt(scriptCount))), p1: $legacyText(_s(formatInt(maxScriptCount))) }) }}</i>
     </div>
     <div
       v-else
       class="l-create-script c-automator-docs-script-select l-max-scripts"
     >
-      <i>You can only have {{ formatInt(maxScriptCount) }} scripts!</i>
+      <i>{{ $t('ade.8a43ac9671a1db3c', { p0: $legacyText(_s(formatInt(maxScriptCount))) }) }}</i>
     </div>
   </div>
 </template>

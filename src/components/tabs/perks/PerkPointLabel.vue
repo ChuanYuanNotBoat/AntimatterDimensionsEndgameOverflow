@@ -70,37 +70,37 @@ export default {
 
 <template>
   <div class="c-perk-tab__header">
-    You have <span class="c-perk-tab__perk-points">{{ format(pp, 2) }}</span> {{ pluralize("Perk Point", pp) }}.
+    {{ $t('ade.9f717812b3aa8e61') }} <span class="c-perk-tab__perk-points">{{ $legacyText(_s(format(pp, 2))) }}</span> {{ $t('ade.2d6767bdc396d538', { p0: $legacyText(_s(pluralize("Perk Point",pp))) }) }}
     <br>
-    Perk choices are permanent and cannot be respecced.
+    {{ $t('ade.757dd3554db470b3') }}
     <br>
-    Diamond-shaped perks also give Automator Points.
+    {{ $t('ade.105871f8f485a41e') }}
     <br>
     <div class="perk-settings">
       <PrimaryButton
         class="o-primary-btn c-button-perk-layout"
         @click="cycleLayout"
       >
-        Perk Layout: {{ layoutText }}
+        {{ $t('ade.949b99336197afff', { p0: $legacyText(_s(layoutText)) }) }}
       </PrimaryButton>
       <PrimaryButton
         :class="physicsClassObject()"
         @click="togglePhysics"
       >
-        Physics: {{ physicsText }}
+        {{ $t('ade.d91e0555a7325d97', { p0: $legacyText(_s(physicsText)) }) }}
       </PrimaryButton>
       <br>
       <PrimaryButton
         class="o-primary-btn"
         @click="centerTree"
       >
-        Center Tree on START
+        {{ $t('ade.27ca960b49b0e0f3') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn"
         @click="straightenEdges"
       >
-        Straighten Edges
+        {{ $t('ade.825c05d4cda63f44') }}
       </PrimaryButton>
     </div>
   </div>

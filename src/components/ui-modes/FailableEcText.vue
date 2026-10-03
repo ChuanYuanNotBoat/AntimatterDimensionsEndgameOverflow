@@ -56,7 +56,7 @@ export default {
 </script>
 
 <template>
-  <span> - <span :style="textStyle">{{ text }}</span></span>
+  <span> - <span :style="textStyle">{{ $legacyText(_s(text)) }}</span></span>
 </template>
 
 <style scoped>

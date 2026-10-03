@@ -131,104 +131,109 @@ export default {
         class="o-primary-btn--subtab-option"
         @click="maxAll"
       >
-        Max all
+        {{ $t('ade.5fd68fd3aca6ea9f') }}
       </PrimaryButton>
       <PrimaryButton
         class="o-primary-btn--subtab-option"
         @click="toggleCelestialMatterMultiplier"
       >
-        Toggle Celestial Matter
+        {{ $t('ade.1d488751b0b3fd49') }}
       </PrimaryButton>
       <PrimaryButton
         v-if="isAnyAutobuyerUnlocked"
         class="o-primary-btn--subtab-option"
         @click="toggleAllAutobuyers"
       >
-        Toggle all autobuyers
+        {{ $t('ade.df61aae1ac373e48') }}
       </PrimaryButton>
     </div>
     <div v-if="!canCrunch || isBroken">
       <div>
         <p>
           <span v-if="hasEternities">
-            You have <span class="c-celestial-eternity-text">{{ format(eternityPoints, 2) }}</span>
-            {{ pluralize("Celestial Eternity Point", eternityPoints) }}.
+            <LocalizedText id="ade.f60d34517f5e10f6">
+              <template #p0><span class="c-celestial-eternity-text">{{ $legacyText(_s(format(eternityPoints, 2))) }}</span></template>
+              <template #p1>{{ $legacyText(_s(pluralize("Celestial Eternity Point",eternityPoints))) }}</template>
+            </LocalizedText>
           </span>
           <br>
           <span v-if="hasInfinities">
-            You have <span class="c-celestial-infinity-text">{{ format(infinityPoints, 2) }}</span>
-            {{ pluralize("Celestial Infinity Point", infinityPoints) }}.
+            <LocalizedText id="ade.f60d34517f5e10f6">
+              <template #p0><span class="c-celestial-infinity-text">{{ $legacyText(_s(format(infinityPoints, 2))) }}</span></template>
+              <template #p1>{{ $legacyText(_s(pluralize("Celestial Infinity Point",infinityPoints))) }}</template>
+            </LocalizedText>
           </span>
           <br>
-          You have
-          <span :class="instabilityClassObject()">{{ format(celestialMatter, 2, 1) }}</span>
-          <span v-if="unstable"> Unstable</span><span v-if="isOverflowing"> Overflowing</span>
-          <span v-if="isCorrupted"> Corrupted</span> Celestial Matter,
+          {{ $t('ade.9f717812b3aa8e61') }}
+          <span :class="instabilityClassObject()">{{ $legacyText(_s(format(celestialMatter, 2, 1))) }}</span>
+          <span v-if="unstable"> {{ $t('ade.816bffc1f16b2797') }}</span><span v-if="isOverflowing"> {{ $t('ade.99a058861fb42e49') }}</span>
+          <span v-if="isCorrupted"> {{ $t('ade.771527899b30da13') }}</span> {{ $t('ade.1970f2378734f1ed') }}
           <br>
           <span>
-            increased by
-            <span :class="instabilityClassObject()">{{ formatPow(conversionExponent, 2, 3) }}</span>
+            {{ $t('ade.1ae19de65afe57e7') }}
+            <span :class="instabilityClassObject()">{{ $legacyText(_s(formatPow(conversionExponent, 2, 3))) }}</span>
           </span>
-          to a
+          {{ $t('ade.78738e88cda9fee1') }}
           <span :class="instabilityClassObject()">
-            {{ formatX(dimMultiplier, 2, 1) }}<span v-if="!isEffectActive"> (Disabled)</span>
+            {{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}<span v-if="!isEffectActive"> (Disabled)</span>
           </span>
-          multiplier to
-          <span>Game Speed.</span>
+          {{ $t('ade.18388a22507a9dbf') }}
+          <span>{{ $t('ade.0a01db022efb97a1') }}</span>
           <div v-if="everSeenSoftcaps">
             <div v-if="!collapsedInfo">
               <div v-if="unstable">
-                You <i>would</i> have <span :class="instabilityClassObject()">{{ format(unnerfedCelestialMatter, 2, 1) }}</span>
-                Celestial Matter, but you don't.
-                <br>
-                This is because at <span :class="instabilityClassObject()">{{ format(softcap, 2, 1) }}</span> Celestial Matter, your
-                Celestial Matter was softcapped.
-                <br>
-                Currently, Celestial Matter above this amount is being raised to the power of
-                <span :class="instabilityClassObject()">{{ format(1 / softcapPow, 2, 3) }}</span>.
-                <br>
-                The softcap to Celestial Matter is solely based on your Celestial Matter Softcap Magnitude, which is currently
-                <span :class="instabilityClassObject()">{{ format(softcapPow, 2, 3) }}</span>.
+                <LocalizedText id="ade.e0ea7be801bc08e9">
+                  <template #p0><i>{{ $t('ade.b313df7964697b61') }}</i></template>
+                  <template #p1><span :class="instabilityClassObject()">{{ $legacyText(_s(format(unnerfedCelestialMatter, 2, 1))) }}</span></template>
+                  <template #p2><br></template>
+                  <template #p3><span :class="instabilityClassObject()">{{ $legacyText(_s(format(softcap, 2, 1))) }}</span></template>
+                  <template #p4><br></template>
+                  <template #p5><span :class="instabilityClassObject()">{{ $legacyText(_s(format(1 / softcapPow, 2, 3))) }}</span></template>
+                  <template #p6><br></template>
+                  <template #p7><span :class="instabilityClassObject()">{{ $legacyText(_s(format(softcapPow, 2, 3))) }}</span></template>
+                </LocalizedText>
               </div>
               <div v-if="isOverflowing">
-                After <span :class="instabilityClassObject()">{{ format(overflow, 2, 1) }}</span> Celestial Matter, your
-                Celestial Matter was softcapped <i>again</i>.
-                <br>
-                Currently, Celestial Matter and the Celestial Matter Softcap start above this amount is being raised to the power of
-                <span :class="instabilityClassObject()">{{ format(1 / overflowMag, 2, 3) }}</span>.
-                <br>
-                The Celestial Matter Overflow is solely based on your Celestial Matter Overflow Magnitude, which is currently
-                <span :class="instabilityClassObject()">{{ format(overflowMag, 2, 3) }}</span>.
+                <LocalizedText id="ade.5690b4efb8bc4fd0">
+                  <template #p0><span :class="instabilityClassObject()">{{ $legacyText(_s(format(overflow, 2, 1))) }}</span></template>
+                  <template #p1><i>{{ $t('ade.52f9208b2747e72e') }}</i></template>
+                  <template #p2><br></template>
+                  <template #p3><span :class="instabilityClassObject()">{{ $legacyText(_s(format(1 / overflowMag, 2, 3))) }}</span></template>
+                  <template #p4><br></template>
+                  <template #p5><span :class="instabilityClassObject()">{{ $legacyText(_s(format(overflowMag, 2, 3))) }}</span></template>
+                </LocalizedText>
               </div>
               <div v-if="isCorrupted">
-                After <span :class="instabilityClassObject()">{{ format(massOverflow, 2, 1) }}</span> Celestial Matter, your
-                Celestial Matter was softcapped <i>once again</i>.
-                <br>
-                Currently, Celestial Matter above this amount is being raised to the power of
-                <span :class="instabilityClassObject()">{{ format(1 / massOverflowMag, 2, 3) }}</span>.
-                <br>
-                The Celestial Matter Corruption is solely based on your Celestial Matter Corruption Magnitude, which is currently
-                <span :class="instabilityClassObject()">{{ format(massOverflowMag, 2, 3) }}</span>.
+                <LocalizedText id="ade.5c468cbac694bd9f">
+                  <template #p0><span :class="instabilityClassObject()">{{ $legacyText(_s(format(massOverflow, 2, 1))) }}</span></template>
+                  <template #p1><i>{{ $t('ade.d7c2ed0c81a0c454') }}</i></template>
+                  <template #p2><br></template>
+                  <template #p3><span :class="instabilityClassObject()">{{ $legacyText(_s(format(1 / massOverflowMag, 2, 3))) }}</span></template>
+                  <template #p4><br></template>
+                  <template #p5><span :class="instabilityClassObject()">{{ $legacyText(_s(format(massOverflowMag, 2, 3))) }}</span></template>
+                </LocalizedText>
               </div>
             </div>
             <PrimaryButton
               class="o-primary-btn--subtab-option"
               @click="toggleSeenSoftcaps"
             >
-              {{ softcapCollapseDisplay }}
+              {{ $legacyText(_s(softcapCollapseDisplay)) }}
             </PrimaryButton>
           </div>
         </p>
       </div>
       <div v-if="hasRemnant">
-        Remnants of Alpha Decay are raising all Celestial Dimensions to the power of
-        <span class="c-celestial-dim-description__accent-unstable">{{ format(alphaDecayRemnant, 2, 3) }}</span>,
-        which increases to a cap of {{ formatInt(1) }} over {{ timeToCapText }} this Celestial Infinity.
+        <LocalizedText id="ade.a787f372eae57635">
+          <template #p0><span class="c-celestial-dim-description__accent-unstable">{{ $legacyText(_s(format(alphaDecayRemnant, 2, 3))) }}</span></template>
+          <template #p1>{{ $legacyText(_s(formatInt(1))) }}</template>
+          <template #p2>{{ $legacyText(_s(timeToCapText)) }}</template>
+        </LocalizedText>
       </div>
       <div>
-        All Celestial Dimensions can be purchased until {{ format(totalDimCap, 2, 2) }} Celestial Points.
+        {{ $t('ade.ffa4319dba6c562a', { p0: $legacyText(_s(format(totalDimCap,2,2))) }) }}
       </div>
-      <div>You are getting {{ format(matterPerSecond, 2, 0) }} {{ incomeType }} per second.</div>
+      <div>{{ $t('ade.d6f6a1aba24ec060', { p0: $legacyText(_s(format(matterPerSecond,2,0))), p1: $legacyText(_s(incomeType)) }) }}</div>
     </div>
     <div v-if="canCrunch && !isBroken">
       <br>
@@ -238,7 +243,7 @@ export default {
         }"
         @click="celestialCrunch"
       >
-        Celestial Crunch
+        {{ $t('ade.9fbc6371e62a7fef') }}
       </button>
       <br>
       <br>
@@ -259,7 +264,7 @@ export default {
       <CelestialGalaxyRow v-if="isExpanded"/>
     </div>
     <div v-if="showLockedDimCostNote">
-      Hold shift to see the Celestial Point cost for locked Celestial Dimensions.
+      {{ $t('ade.2563bc10ad33d8f9') }}
     </div>
   </div>
 </template>

@@ -30,7 +30,7 @@ export default {
 <template>
   <div class="l-effarig-tab__reward">
     <div class="c-effarig-tab__reward-label">
-      {{ unlock.config.label }}:
+      {{ $legacyText(_s(unlock.config.label)) }}:
     </div>
     <div
       v-if="isUnlocked"
@@ -42,10 +42,10 @@ export default {
         class="c-effarig-tab__reward-description"
       >
         <span class="c-effarig-tab__reward-symbol">
-          {{ symbol }}
+          {{ $legacyText(_s(symbol)) }}
         </span>
         <span :class="{ 'o-pelle-disabled': isDoomed }">
-          {{ description }}
+          {{ $legacyText(_s(description)) }}
         </span>
       </div>
     </div>

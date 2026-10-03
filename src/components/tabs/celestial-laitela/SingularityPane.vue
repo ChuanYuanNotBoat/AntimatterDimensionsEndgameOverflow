@@ -123,66 +123,67 @@ export default {
   <div class="c-laitela-singularity-container">
     <div>
       <h2>
-        You have {{ quantify("Singularity", singularities, 2) }}
+        {{ $t('ade.8a4c1cc246fcf97f', { p0: $legacyText(_s(quantify("Singularity",singularities,2))) }) }}
       </h2>
       <button
         :class="condenseClassObject()"
         @click="doSingularity"
       >
         <h2>
-          {{ singularityFormText }}
+          {{ $legacyText(_s(singularityFormText)) }}
         </h2>
         <br v-if="singularityWaitText !== ''">
         <h2>
-          {{ singularityWaitText }}
+          {{ $legacyText(_s(singularityWaitText)) }}
         </h2>
       </button>
     </div>
     <div v-if="singularities.neq(0)">
       <div class="o-laitela-matter-amount">
-        You have {{ format(darkEnergy, 2, 4) }} Dark Energy. (+{{ format(darkEnergyGainPerSecond, 2, 4) }}/s)
+        {{ $t('ade.6e45033fffb25fa2', { p0: $legacyText(_s(format(darkEnergy,2,4))), p1: $legacyText(_s(format(darkEnergyGainPerSecond,2,4))) }) }}
       </div>
       <div v-if="unlockedBulkSingularity">
         <button
           class="c-laitela-singularity__cap-control"
           :class="{ 'c-laitela-singularity__cap-control--available' : singularityCapIncreases.gt(0) }"
-          :ach-tooltip="decreaseTooltip"
+          :ach-tooltip="$legacyText(decreaseTooltip)"
           @click="decreaseCap"
         >
-          Decrease Singularity cap.
+          {{ $t('ade.1b34a8ba7b44941b') }}
         </button>
         <button
           class="c-laitela-singularity__cap-control"
           :class="{ 'c-laitela-singularity__cap-control--available' : true }"
-          :ach-tooltip="increaseTooltip"
+          :ach-tooltip="$legacyText(increaseTooltip)"
           @click="increaseCap"
         >
-          Increase Singularity cap.
+          {{ $t('ade.a32c69f759e87c22') }}
         </button>
         <br>
-        Each step increases the required Dark Energy by {{ formatX(10) }},
+        Each step increases the required Dark Energy by {{ $legacyText(_s(formatX(10))) }},
         <br>
-        but also increases gained Singularities by {{ formatX(perStepFactor) }}.
+        but also increases gained Singularities by {{ $legacyText(_s(formatX(perStepFactor))) }}.
       </div>
       <div v-else>
-        <br>
-        Reach {{ format(10) }} Singularities
-        <br>
-        to unlock Bulk Singularities.
-        <br>
+        <LocalizedText id="ade.50cc519c47259e81">
+    <template #p0><br></template>
+    <template #p1>{{ $legacyText(_s(format(10))) }}</template>
+    <template #p2><br></template>
+    <template #p3><br></template>
+  </LocalizedText>
       </div>
       <br>
-      Total time to <span v-if="hasAutoSingularity">(auto-)</span>condense:
-      {{ baseSingularityTime }}
+      Total time to <span v-if="hasAutoSingularity">{{ $t('ade.5438e492b69b7718') }}</span>condense:
+      {{ $legacyText(_s(baseSingularityTime)) }}
       <span v-if="hasAutoSingularity && autoSingularityFactor !== 1">
-        (+{{ additionalSingularityTime }})
+        (+{{ $legacyText(_s(additionalSingularityTime)) }})
       </span>
       <br>
-      <span v-if="hasAutoSingularity && autoSingularityFactor !== 1">Manual </span>
-      Singularity gain rate: {{ manualSingularityRate }}
+      <span v-if="hasAutoSingularity && autoSingularityFactor !== 1">{{ $t('ade.28bc2dfd0706a09a') }} </span>
+      Singularity gain rate: {{ $legacyText(_s(manualSingularityRate)) }}
       <br>
       <span v-if="hasAutoSingularity && autoSingularityFactor !== 1">
-        Automatic Singularity gain rate: {{ autoSingularityRate }}
+        {{ $t('ade.dfcf46ec8de48021', { p0: $legacyText(_s(autoSingularityRate)) }) }}
       </span>
     </div>
   </div>

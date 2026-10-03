@@ -91,16 +91,16 @@ export default {
         :class="{ 'l-dim-row-small-text': hasLongText }"
         @click="buySingleDivineDimension"
       >
-        {{ costDisplay }}
+        {{ $legacyText(_s(costDisplay)) }}
         <div class="c-dim-purchase-count-tooltip">
-          {{ purchaseTooltip }}
+          {{ $legacyText(_s(purchaseTooltip)) }}
         </div>
       </PrimaryButton>
       <PrimaryToggleButton
         v-if="isAutobuyerUnlocked"
         v-model="isAutobuyerOn"
         class="o-primary-btn--vd-auto"
-        label="Auto:"
+        :label="$t('ade.fc5aa8b492c774bf')"
       />
       <PrimaryButton
         v-else
@@ -108,7 +108,7 @@ export default {
         class="o-primary-btn--vd-auto"
         @click="buyMaxDivineDimension"
       >
-        Buy Max
+        {{ $t('ade.6c1858ad1ff1fc9e') }}
       </PrimaryButton>
     </div>
   </div>

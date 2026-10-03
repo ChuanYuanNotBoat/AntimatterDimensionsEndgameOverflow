@@ -22,10 +22,21 @@ export default {
       }
     },
     matchingTabs() {
-      return GameDatabase.h2p.search(this.searchValue).filter(searchObj => searchObj.tab.isUnlocked());
+      const query = this.searchValue.trim().toLowerCase();
+      const matches = GameDatabase.h2p.search(this.searchValue);
+      if (query) {
+        for (const tab of GameDatabase.h2p.tabs) {
+          const labels = [tab.name, tab.alias, ...tab.tags].map(label => this.$legacyText(label, "h2p").toLowerCase());
+          if (labels.some(label => label.includes(query)) && !matches.some(match => match.tab === tab)) {
+            matches.push({ tab, relevance: 0 });
+          }
+        }
+      }
+      return matches.filter(searchObj => searchObj.tab.isUnlocked()).sort((a, b) => a.relevance - b.relevance);
     },
     topThreshold() {
-      return Math.min(this.matchingTabs[Math.min(this.matchingTabs.length - 1, 4)].relevance + 0.01, 0.5);
+      const match = this.matchingTabs[Math.min(this.matchingTabs.length - 1, 4)];
+      return match ? Math.min(match.relevance + 0.01, 0.5) : 0.5;
     }
   },
   created() {
@@ -64,7 +75,7 @@ export default {
     <ModalCloseButton @click="emitClose" />
     <div class="l-h2p-header">
       <div class="c-h2p-title">
-        How To Play
+        {{ $t('ade.09c112359dc84a8f') }}
       </div>
     </div>
     <div class="l-h2p-container">
@@ -72,7 +83,7 @@ export default {
         <input
           ref="input"
           v-model="searchValue"
-          placeholder="Type to search..."
+          :placeholder="$t('ade.d9894f33c8f9ff9e')"
           class="c-h2p-search-bar"
           @keyup.esc="emitClose"
         >
@@ -88,18 +99,18 @@ export default {
             }"
             @click="setActiveTab(searchObj.tab)"
           >
-            {{ searchObj.tab.alias }}
+            {{ $legacyText(_s(searchObj.tab.alias), 'h2p') }}
           </div>
         </div>
       </div>
       <div class="l-h2p-info">
         <div class="c-h2p-body--title">
-          {{ activeTab.name }}
+          {{ $legacyText(_s(activeTab.name), 'h2p') }}
         </div>
         <div
           id="h2p-body"
           class="l-h2p-body c-h2p-body"
-          v-html="activeTab.info()"
+          v-html="$legacyHtml(activeTab.info(), 'h2p')"
         />
       </div>
     </div>

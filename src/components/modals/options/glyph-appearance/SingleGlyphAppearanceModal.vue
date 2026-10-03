@@ -72,7 +72,7 @@ export default {
       class="o-primary-btn--subtab-option"
       @click="setType(undefined)"
     >
-      Reset this Glyph's appearance
+      {{ $t('ade.810d23f56175c72e') }}
     </PrimaryButton>
     <GlyphCustomizationSingleType
       :key="defaultKeySwap"
@@ -80,20 +80,20 @@ export default {
       :glyph-id="glyphId"
     />
     <div v-if="cosmeticTypes && glyph.fixedCosmetic">
-      This Glyph's Cosmetic Type cannot be changed!
+      {{ $t('ade.fb188774d5733232') }}
     </div>
     <div
       v-else-if="cosmeticTypes"
       class="c-special-type"
     >
-      Apply Special Cosmetic Type:
+      {{ $t('ade.fdf32e306eb7373c') }}
       <PrimaryButton
         v-for="type in cosmeticTypes"
         :key="type"
         :class="cosmeticTypeClass(type)"
         @click="setType(type)"
       >
-        {{ type.capitalize() }}
+        {{ $legacyText(_s(type.capitalize())) }}
       </PrimaryButton>
     </div>
   </ModalWrapperOptions>

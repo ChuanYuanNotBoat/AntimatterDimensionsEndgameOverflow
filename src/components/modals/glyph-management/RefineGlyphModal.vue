@@ -72,18 +72,13 @@ export default {
       v-if="resourceUnlocked"
       class="c-modal-message__text"
     >
-      Refining a Glyph will remove the Glyph from your inventory, and in return,
-      you will increase your {{ resourceName }} Alchemy resource from
-      {{ format(resourceAmount, 2, 2) }} to {{ format(after, 2, 2) }}.
-      This Glyph can raise your {{ resourceName }} resource to at most {{ format(cap, 2, 2) }}.
+      {{ $t('ade.e1e90b1c8300257b', { p0: $legacyText(_s(resourceName)), p1: $legacyText(_s(format(resourceAmount,2,2))), p2: $legacyText(_s(format(after,2,2))), p3: $legacyText(_s(resourceName)), p4: $legacyText(_s(format(cap,2,2))) }) }}
     </div>
     <div
       v-else
       class="c-modal-message__text"
     >
-      You cannot gain any {{ resourceName }} alchemy resource because you have not
-      unlocked this Glyph's resource yet. You can still refine it anyway, but nothing
-      will happen. Consider sacrificing the Glyph instead.
+      {{ $t('ade.e68728b9a7b904d2', { p0: $legacyText(_s(resourceName)) }) }}
     </div>
   </ModalWrapperChoice>
 </template>

@@ -243,38 +243,38 @@ export default {
   <div>
     <div class="normal-text">
       <br>
-      <span>You have </span><span class="special-text">{{ timeDisplay }}</span><span> of Stored Time.</span>
+      <span>{{ $t('ade.a6ab2e76bf1ff050') }} </span><span class="special-text">{{ $legacyText(_s(timeDisplay)) }}</span><span> {{ $t('ade.e6125c5c49be896c') }}</span>
     </div>
     <div class="c-subtab-option-container">
       <PrimaryButton
         :class="classObj1"
         @click="spendOneMin"
       >
-        {{ oneMinuteDisp }}
+        {{ $legacyText(_s(oneMinuteDisp)) }}
       </PrimaryButton>
       <PrimaryButton
         :class="classObj2"
         @click="spendTenMins"
       >
-        {{ tenMinutesDisp }}
+        {{ $legacyText(_s(tenMinutesDisp)) }}
       </PrimaryButton>
       <PrimaryButton
         :class="classObj3"
         @click="spendOneHour"
       >
-        {{ oneHourDisp }}
+        {{ $legacyText(_s(oneHourDisp)) }}
       </PrimaryButton>
       <PrimaryButton
         :class="classObj4"
         @click="spendFiveHours"
       >
-        {{ fiveHoursDisp }}
+        {{ $legacyText(_s(fiveHoursDisp)) }}
       </PrimaryButton>
       <PrimaryButton
         :class="classObj5"
         @click="spendAll"
       >
-        {{ allDisp }}
+        {{ $legacyText(_s(allDisp)) }}
       </PrimaryButton>
     </div>
     <br>
@@ -284,7 +284,7 @@ export default {
         :class="classObj4"
         @click="unlockFlux"
       >
-        {{ fluxUnlockDisp }}
+        {{ $legacyText(_s(fluxUnlockDisp)) }}
       </PrimaryButton>
     </div>
     <div v-if="fluxUnlocked">
@@ -292,7 +292,7 @@ export default {
         :class="classObj4"
         @click="incrementMaxFlux"
       >
-        {{ fluxIncrementDisp }}
+        {{ $legacyText(_s(fluxIncrementDisp)) }}
       </PrimaryButton>
     </div>
     <br>
@@ -301,19 +301,19 @@ export default {
       v-if="fluxUnlocked"
       class="normal-text"
     >
-      <span>Your current Flux level is </span><span class="special-text">{{ fluxLevel }}</span><span>.</span>
+      <span>{{ $t('ade.2bfda5235c43d9d2') }} </span><span class="special-text">{{ $legacyText(_s(fluxLevel)) }}</span><span>.</span>
       <br>
-      <span>You have </span><span class="special-text">{{ fluxTimeDisplay }}</span><span> of Flux Time.</span>
+      <span>{{ $t('ade.9f717812b3aa8e61') }} </span><span class="special-text">{{ $legacyText(_s(fluxTimeDisplay)) }}</span><span> {{ $t('ade.bdb09b4c5828adff') }}</span>
       <br>
       <span v-if="fluxLevel === 1">
-        You cannot spend Flux Time at Flux level {{ formatInt(1) }}.
+        {{ $t('ade.a4a66e2192c8922a', { p0: $legacyText(_s(formatInt(1))) }) }}
       </span>
       <span v-if="fluxLevel !== 1">
-        Flux will consume
-        <span class="special-text">{{ format(fluxLevel - 1) }}</span>
-        {{ pluralize("second", fluxLevel - 1) }} of Flux Time per real second to provide a
-        <span class="special-text">{{ formatX(fluxLevel) }}</span>
-        multiplier to real time.
+        {{ $t('ade.e2d02c360d28eca3') }}
+        <span class="special-text">{{ $legacyText(_s(format(fluxLevel - 1))) }}</span>
+        {{ $legacyText(_s(pluralize("second", fluxLevel - 1))) }} of Flux Time per real second to provide a
+        <span class="special-text">{{ $legacyText(_s(formatX(fluxLevel))) }}</span>
+        {{ $t('ade.e010c0efd29a4e1d') }}
       </span>
       <br>
       <br>
@@ -322,53 +322,53 @@ export default {
           :class="classObj6"
           @click="minimizeFlux"
         >
-          Minimize Flux Level
+          {{ $t('ade.4846c41f89c403ac') }}
         </PrimaryButton>
         <PrimaryButton
           v-if="maxFlux > 200"
           :class="classObj10"
           @click="decreaseFlux100"
         >
-          Decrease Flux Level by {{ formatInt(100) }}
+          {{ $t('ade.293344d3e9923170', { p0: $legacyText(_s(formatInt(100))) }) }}
         </PrimaryButton>
         <PrimaryButton
           v-if="maxFlux > 20"
           :class="classObj8"
           @click="decreaseFlux10"
         >
-          Decrease Flux Level by {{ formatInt(10) }}
+          {{ $t('ade.293344d3e9923170', { p0: $legacyText(_s(formatInt(10))) }) }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj6"
           @click="decreaseFlux"
         >
-          Decrease Flux Level
+          {{ $t('ade.85ab5ba7b5c49e03') }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj7"
           @click="increaseFlux"
         >
-          Increase Flux Level
+          {{ $t('ade.456d5f34babf2b88') }}
         </PrimaryButton>
         <PrimaryButton
           v-if="maxFlux > 20"
           :class="classObj9"
           @click="increaseFlux10"
         >
-          Increase Flux Level by {{ formatInt(10) }}
+          {{ $t('ade.de7a40d5b6a31ebc', { p0: $legacyText(_s(formatInt(10))) }) }}
         </PrimaryButton>
         <PrimaryButton
           v-if="maxFlux > 200"
           :class="classObj11"
           @click="increaseFlux100"
         >
-          Increase Flux Level by {{ formatInt(100) }}
+          {{ $t('ade.de7a40d5b6a31ebc', { p0: $legacyText(_s(formatInt(100))) }) }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj7"
           @click="maximizeFlux"
         >
-          Maximize Flux Level
+          {{ $t('ade.d8c17cd5fbe03d1b') }}
         </PrimaryButton>
       </div>
       <br>
@@ -378,31 +378,31 @@ export default {
           :class="classObj1"
           @click="fluxOneMin"
         >
-          {{ oneMinuteFlux }}
+          {{ $legacyText(_s(oneMinuteFlux)) }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj2"
           @click="fluxTenMins"
         >
-          {{ tenMinutesFlux }}
+          {{ $legacyText(_s(tenMinutesFlux)) }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj3"
           @click="fluxOneHour"
         >
-          {{ oneHourFlux }}
+          {{ $legacyText(_s(oneHourFlux)) }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj4"
           @click="fluxFiveHours"
         >
-          {{ fiveHoursFlux }}
+          {{ $legacyText(_s(fiveHoursFlux)) }}
         </PrimaryButton>
         <PrimaryButton
           :class="classObj5"
           @click="fluxAll"
         >
-          {{ allFlux }}
+          {{ $legacyText(_s(allFlux)) }}
         </PrimaryButton>
       </div>
     </div>

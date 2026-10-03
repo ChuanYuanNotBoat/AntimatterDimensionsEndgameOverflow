@@ -56,10 +56,7 @@ export default {
 
 <template>
   <div>
-    These templates will let you do some more common things within the Automator. They may be slightly slower than
-    manually-written scripts, but don't require you to have any previous programming experience to use. Clicking any
-    of these buttons will open up a prompt with some input fields, which will generate a template you can place into
-    your Automator.
+    {{ $t('ade.27518f4ad9a1a833') }}
     <button
       v-for="template in templates"
       :key="template.id"
@@ -68,7 +65,7 @@ export default {
     >
       {{ $t("automator.templates.button", { name: $t(template.nameKey) }) }}
     </button>
-    Since you are currently in the {{ isBlock ? "Block" : "Text" }} editor, this panel will {{ pasteText }}.
+    {{ $t('ade.e2a278c8c09e29a9', { p0: $legacyText(_s(isBlock?"Block":"Text")), p1: $legacyText(_s(pasteText)) }) }}
     <br>
     <br>
     <draggable
@@ -86,7 +83,7 @@ export default {
         class="o-automator-command o-automator-block-list draggable-blocks"
         @dragstart="setIndex(i)"
       >
-        {{ template.name }}
+        {{ $legacyText(_s(template.name)) }}
       </div>
     </draggable>
   </div>

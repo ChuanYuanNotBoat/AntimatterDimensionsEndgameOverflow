@@ -58,7 +58,7 @@ export default {
     @click="resetReality"
   >
     <div class="l-reality-button__contents">
-      {{ resetText }}
+      {{ $legacyText(_s(resetText)) }}
     </div>
   </button>
 </template>

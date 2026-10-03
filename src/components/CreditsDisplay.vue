@@ -29,7 +29,7 @@ export default {
       v-if="!isModal"
       class="c-credits-header"
     >
-      Antimatter Dimensions
+      {{ $t('ade.70c55c01aef15bb1') }}
     </h1>
 
     <div
@@ -37,7 +37,7 @@ export default {
       :key="role"
     >
       <h2 class="c-credits-section">
-        {{ pluralize(roles[role], relevantPeople(role).length) }}
+        {{ $legacyText(_s(pluralize(roles[role], relevantPeople(role).length))) }}
       </h2>
       <div :class="{ 'l-credits--bulk': relevantPeople(role).length > 10}">
         <div
@@ -55,7 +55,7 @@ export default {
 
     <br><br><br><br><br><br><br><br><br>
     <h1 class="c-credits-header">
-      Thank you so much for playing!
+      {{ $t('ade.a801f5725791ab04') }}
     </h1>
   </div>
 </template>

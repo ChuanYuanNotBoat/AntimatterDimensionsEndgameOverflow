@@ -50,7 +50,7 @@ export default {
         v-for="(line, index) in text"
         :key="index"
       >
-        {{ line }} <br>
+        {{ $legacyText(_s(line)) }} <br>
       </span>
   </button>
 </template>

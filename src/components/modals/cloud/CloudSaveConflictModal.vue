@@ -105,19 +105,19 @@ export default {
       :show-name="hasDifferentName"
       save-type="Cloud Save"
     />
-    <span v-html="suggestionText" />
+    <span v-html="$legacyHtml(suggestionText)" />
     <br>
     <span>
       Not overwriting will turn off Cloud saving and you will need to manually turn it back on again
       if you want to use it.
-      <span :ach-tooltip="noOverwriteInfo">
+      <span :ach-tooltip="$legacyText(noOverwriteInfo)">
         <i class="fas fa-question-circle" />
       </span>
     </span>
     <span>
       Overwriting will force a save to the Cloud in this particular instance; in most
       cases this should prevent this modal from reappearing afterwards.
-      <span :ach-tooltip="overwriteInfo">
+      <span :ach-tooltip="$legacyText(overwriteInfo)">
         <i class="fas fa-question-circle" />
       </span>
     </span>

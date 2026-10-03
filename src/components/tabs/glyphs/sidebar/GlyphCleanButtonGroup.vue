@@ -87,42 +87,42 @@ export default {
     class="o-glyph-inventory-management-group"
   >
     <div class="l-glyph-sacrifice-options__header">
-      Remove weaker Glyphs:
+      {{ $t('ade.40da2a202fdd4d13') }}
     </div>
     <button
       class="c-glyph-inventory-option"
       @click="autoClean"
     >
-      Purge Glyphs
+      {{ $t('ade.162e06b4c8e9b1cf') }}
       <div class="c-glyph-inventory-option__tooltip">
-        {{ autoCleanTooltip }}
+        {{ $legacyText(_s(autoCleanTooltip)) }}
       </div>
     </button>
     <button
       class="c-glyph-inventory-option"
       @click="harshAutoClean"
     >
-      Harsh Purge Glyphs
+      {{ $t('ade.f905dfeb80cb1e23') }}
       <div class="c-glyph-inventory-option__tooltip">
-        {{ harshAutoCleanTooltip }}
+        {{ $legacyText(_s(harshAutoCleanTooltip)) }}
       </div>
     </button>
     <button
       class="c-glyph-inventory-option"
       @click="deleteAllUnprotected"
     >
-      {{ removeString }} all unprotected Glyphs
+      {{ $t('ade.74a29ec2c6d929bb', { p0: $legacyText(_s(removeString)) }) }}
     </button>
     <button
       v-if="hasFilter"
       class="c-glyph-inventory-option"
       @click="deleteAllRejected"
     >
-      {{ removeString }} all Glyphs rejected by filtering
+      {{ $t('ade.a095ab22898474bc', { p0: $legacyText(_s(removeString)) }) }}
       <div
         class="c-glyph-inventory-option__tooltip l-rejected-tooltip"
       >
-        {{ deleteRejectedTooltip }}
+        {{ $legacyText(_s(deleteRejectedTooltip)) }}
       </div>
     </button>
   </div>

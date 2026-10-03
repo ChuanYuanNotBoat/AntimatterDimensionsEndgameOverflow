@@ -106,27 +106,28 @@ export default {
 <template>
   <div class="c-current-glyph-effects l-current-glyph-effects">
     <div class="pelle-current-glyph-effects">
-      {{ pelleGlyphText }}
+      {{ $legacyText(_s(pelleGlyphText)) }}
     </div>
     <div class="slabdrill-current-glyph-effects">
-      {{ slabbyGlyphText }}
+      {{ $legacyText(_s(slabbyGlyphText)) }}
     </div>
     <div class="c-current-glyph-effects__header">
-      Currently active Glyph effects:
+      {{ $t('ade.aeb0a6c594592773') }}
     </div>
     <GlyphSetName :glyph-set="glyphSet" />
     <br v-if="isSoftcapActive || hasEffarig || hasReality">
-    <span v-html="uniqueGlyphText" />
+    <span v-html="$legacyHtml(uniqueGlyphText)" />
     <div
       v-if="isSoftcapActive"
       class="l-current-glyph-effects__capped-header"
     >
-      <span class="c-current-glyph-effects__effect--capped">Italic</span> effects have been slightly reduced
-      due to a softcap
+      <LocalizedText id="ade.8e7370be21c7f7f1">
+    <template #p0><span class="c-current-glyph-effects__effect--capped">{{ $t('ade.fbaab33521e10cdd') }}</span></template>
+  </LocalizedText>
     </div>
     <br>
     <div v-if="noEffects">
-      None (equip Glyphs to get their effects)
+      {{ $t('ade.8c4c047ff4060ffa') }}
     </div>
     <CurrentGlyphEffect
       v-for="effect in effects"
@@ -143,7 +144,7 @@ export default {
         :key="effect[0]"
       >
         <span :class="{'c-current-glyph-effects__effect--capped' : effect[1]}">
-          {{ effect[0] }}
+          {{ $legacyText(_s(effect[0])) }}
         </span>
       </div>
     </div>

@@ -47,18 +47,14 @@ export default {
       v-if="onInfoPage"
       class="c-modal-message__text"
     >
-      This will start a save with additional statistics tracking for when you reach certain points of
-      the game. These will be visible in the bottom-right of the screen and on a dedicated subtab of Statistics.
+      {{ $t('ade.a6b4eb3f6fe581bc') }}
       <br>
       <br>
-      Almost all animations and confirmations are disabled by default, but you can change any of these settings before
-      you reach their required progression. When you begin the run, the game remains paused until
-      your antimatter changes, allowing you to configure all your settings before starting. In order to avoid having
-      to wait for a long time before actually starting an optimized run, a few achievements are given for free.
+      {{ $t('ade.68e19f91910774e5') }}
       <br>
       <br>
       <i>
-        There is no additional content in Speedrun Mode.
+        {{ $t('ade.f62ae3f21e7854b2') }}
       </i>
       <br>
       <br>
@@ -66,16 +62,14 @@ export default {
         class="o-primary-btn--width-medium c-modal-hard-reset-btn c-modal__confirm-btn"
         @click="nextPage"
       >
-        Continue
+        {{ $t('ade.fd19155b7a737651') }}
       </PrimaryButton>
     </div>
     <div
       v-else
       class="c-modal-message__text"
     >
-      You can type in text below to name your speedrun save. This will have no effects on gameplay and only identifies
-      this particular save as yours. If no name is given, a random name will be generated instead. This name can be
-      changed by clicking your name in the speedrun info box, as long as the timer has not started yet.
+      {{ $t('ade.9ec203eb2c5ac5aa') }}
       <input
         ref="name"
         v-model="name"
@@ -85,19 +79,14 @@ export default {
       >
       <br>
       <br>
-      Speedrun saves can be imported and exported like regular saves. Importing a speedrun save will mark it as a
-      Segmented run, as importing and exporting allows for optimization of individual segments of the game.
-      Without importing, saves will remain as Single-segment runs.
+      {{ $t('ade.9dfc72b5aa5aa86a') }}
       <br>
       <br>
-      You can modify the Glyph RNG seed in the Options tab before starting your run, if desired.
+      {{ $t('ade.f1eaa7c1f4e736be') }}
       <br>
       <br>
       <div class="c-modal-hard-reset-danger">
-        Starting a speedrun will reset your save to the beginning of the game. Some things will remain, such as
-        full-game completion stats, visual settings, automator scripts, and Glyph cosmetics, but otherwise it
-        will be as if you had just finished the entire game and chose to restart at the credits screen. Type
-        in "Gotta Go Fast!" below to confirm and (re)start the run.
+        {{ $t('ade.4a1398330e9116b1') }}
       </div>
       <input
         ref="confirmPhrase"
