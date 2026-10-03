@@ -44,6 +44,11 @@ export default {
 
 <style scoped>
 .c-language-setting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   margin-bottom: 1rem;
 }
 
@@ -52,6 +57,7 @@ export default {
 }
 
 .c-language-setting__notice {
+  flex-basis: 100%;
   max-width: 60rem;
   margin: 0.5rem auto;
   font-size: 1.2rem;
