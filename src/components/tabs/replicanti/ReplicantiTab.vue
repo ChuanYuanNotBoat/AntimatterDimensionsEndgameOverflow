@@ -46,7 +46,6 @@ export default {
       powST: 0,
       hasRaisedCap: false,
       replicantiCap: new Decimal(),
-      capMultText: "",
       distantRG: 0,
       remoteRG: 0,
       contingentRG: 0,
@@ -101,59 +100,32 @@ export default {
       return new ReplicantiUpgradeButtonSetup(
         upgrade,
         value => {
-          let description = `Max Replicanti Galaxies: `;
           const extra = upgrade.extra;
-          if (extra.gt(0)) {
-            const total = value.add(extra);
-            description += `<br>${formatHybridLarge(value, 3)} + ${formatHybridLarge(extra, 3)} = ${formatHybridLarge(total, 3)}`;
-          } else {
-            description += formatHybridLarge(value, 3);
-          }
-          return description;
+          const description = this.$t("replicanti.maxGalaxies", { amount: formatHybridLarge(value, 3) });
+          return extra.gt(0)
+            ? `${description}<br>${formatHybridLarge(value, 3)} + ${formatHybridLarge(extra, 3)} = ${formatHybridLarge(value.add(extra), 3)}`
+            : description;
         },
         cost => `+${formatInt(1)} Costs: ${format(cost)} IP`
       );
     },
-    boostText() {
-      const boostList = [];
-      boostList.push(`a <span class="c-replicanti-description__accent">${formatX(this.mult, 2, 2)}</span>
-        multiplier${this.hasPow ? ` and a
-        <span class="c-replicanti-description__accent">${formatPow(this.pow, 2, 3)}</span> power` : ""}
-        on all Infinity Dimensions`);
-      if (this.hasTDMult) {
-        boostList.push(`a <span class="c-replicanti-description__accent">${formatX(this.multTD, 2, 2)}</span>
-          multiplier${this.hasTDPow ? ` and a
-          <span class="c-replicanti-description__accent">${formatPow(this.powTD, 2, 3)}</span> power` : ""}
-          on all Time Dimensions from a Dilation Upgrade`);
-      }
-      if (this.hasDTMult) {
-        const additionalEffect = GlyphAlteration.isAdded("replication") ? "and Replicanti speed " : "";
-        boostList.push(`a <span class="c-replicanti-description__accent">${formatX(this.multDT, 2, 2)}</span>
-          multiplier${this.hasDTPow ? ` and a
-          <span class="c-replicanti-description__accent">${formatPow(this.powDT, 2, 3)}</span> power` : ""}
-          to Dilated Time ${additionalEffect}from Glyphs`);
-      }
-      if (this.hasIPMult) {
-        boostList.push(`a <span class="c-replicanti-description__accent">${formatX(this.multIP)}</span>
-          multiplier${this.hasIPPow ? ` and a
-          <span class="c-replicanti-description__accent">${formatPow(this.powIP, 2, 3)}</span> power` : ""}
-          to Infinity Points from Glyph Alchemy`);
-      }
-      if (this.hasDEMult) {
-        boostList.push(`a <span class="c-replicanti-description__accent">${formatX(this.multDE, 2, 2)}</span>
-          multiplier${this.hasDEPow ? ` and a
-          <span class="c-replicanti-description__accent">${formatPow(this.powDE, 2, 3)}</span> power` : ""}
-          to Dark Energy from an Alpha Reward`);
-      }
-      if (this.hasSTMult) {
-        boostList.push(`a <span class="c-replicanti-description__accent">${formatX(this.multST, 2, 2)}</span>
-          multiplier${this.hasSTPow ? ` and a
-          <span class="c-replicanti-description__accent">${formatPow(this.powST, 2, 3)}</span> power` : ""}
-          to Space Theorems from a Compression Upgrade`);
-      }
-      if (boostList.length === 1) return `${boostList[0]}.`;
-      if (boostList.length === 2) return `${boostList[0]}<br> and ${boostList[1]}.`;
-      return `${boostList.slice(0, -1).join(",<br>")},<br> and ${boostList[boostList.length - 1]}.`;
+    capMultText() {
+      const mult = this.replicantiCap.div(DC.NUMMAX);
+      return TimeStudy(31).canBeApplied
+        ? this.$t("replicanti.capMultiplier", { base: formatX(mult.pow(1 / TimeStudy(31).effectValue), 2), after: formatX(mult, 2) })
+        : formatX(mult, 2);
+    },
+    boostRows() {
+      const rows = [{ type: "infinity", mult: this.mult, pow: this.pow, hasPow: this.hasPow }];
+      if (this.hasTDMult) rows.push({ type: "time", mult: this.multTD, pow: this.powTD, hasPow: this.hasTDPow });
+      if (this.hasDTMult) rows.push({
+        type: GlyphAlteration.isAdded("replication") ? "dilatedTimeSpeed" : "dilatedTime",
+        mult: this.multDT, pow: this.powDT, hasPow: this.hasDTPow
+      });
+      if (this.hasIPMult) rows.push({ type: "infinityPoints", mult: this.multIP, pow: this.powIP, hasPow: this.hasIPPow });
+      if (this.hasDEMult) rows.push({ type: "darkEnergy", mult: this.multDE, pow: this.powDE, hasPow: this.hasDEPow });
+      if (this.hasSTMult) rows.push({ type: "spaceTheorems", mult: this.multST, pow: this.powST, hasPow: this.hasSTPow });
+      return rows.map(row => ({ ...row, id: `replicanti.boost.${row.type}.${row.hasPow ? "power" : "multiplier"}` }));
     },
     hasMaxText: () => PlayerProgress.realityUnlocked() && !Pelle.isDoomed,
     toMaxTooltip() {
@@ -203,12 +175,6 @@ export default {
       this.isUncapped = PelleRifts.vacuum.milestones[1].canBeApplied;
       this.hasRaisedCap = (EffarigUnlock.infinity.isUnlocked && !this.isUncapped) || (Pelle.isDoomed && PelleCelestialUpgrade.replicantiCapIncrease.canBeApplied);
       this.replicantiCap.copyFrom(replicantiCap());
-      if (this.hasRaisedCap) {
-        const mult = this.replicantiCap.div(DC.NUMMAX);
-        this.capMultText = TimeStudy(31).canBeApplied
-          ? `Base: ${formatX(mult.pow(1 / TimeStudy(31).effectValue), 2)}; after TS31: ${formatX(mult, 2)}`
-          : formatX(mult, 2);
-      }
       this.distantRG = ReplicantiUpgrade.galaxies.distantRGStart;
       this.remoteRG = ReplicantiUpgrade.galaxies.remoteRGStart;
       this.contingentRG = ReplicantiUpgrade.galaxies.contingentRGStart;
@@ -269,7 +235,7 @@ export default {
           <template #p1>{{ $legacyText(_s(format(replicantiCap,2))) }}</template>
           <template #p2>{{ $legacyText(_s(capMultText)) }}</template>
           <template #p3><br></template>
-          <template #p4>{{ $legacyText(_s(quantifyHybridLarge("extra Replicanti Galaxy",effarigInfinityBonusRG))) }}</template>
+          <template #p4>{{ $t('replicanti.extraGalaxies', { amount: formatHybridLarge(effarigInfinityBonusRG, 3) }) }}</template>
           <template #p5>{{ $legacyText(_s(format(nextEffarigRGThreshold,2))) }}</template>
         </LocalizedText>
       </div>
@@ -278,7 +244,16 @@ export default {
         <span class="c-replicanti-description__accent">{{ $legacyText(_s(format(amount, 2, 0))) }}</span>
         {{ $t('ade.725ceb7988129483') }}
         <br>
-        <span v-html="$legacyHtml(boostText)" />
+        <span
+          v-for="(boost, index) in boostRows"
+          :key="boost.type"
+        >
+          <br v-if="index > 0">
+          <LocalizedText :id="boost.id">
+            <template #p0><span class="c-replicanti-description__accent">{{ boost.type === 'infinityPoints' ? formatX(boost.mult) : formatX(boost.mult, 2, 2) }}</span></template>
+            <template v-if="boost.hasPow" #p1><span class="c-replicanti-description__accent">{{ formatPow(boost.pow, 2, 3) }}</span></template>
+          </LocalizedText>
+        </span>
       </p>
       <div
         v-if="hasMaxText"

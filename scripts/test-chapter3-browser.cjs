@@ -22,7 +22,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       const target = await browser.newPage({ ...options, ignoreHTTPSErrors: Boolean(process.env.ADE_TEST_PROXY) });
       target.on("pageerror", e => errors.push(e.stack));
       target.on("console", m => {
-        if (/\[i18n\] (?:format|values|catalog):|\[Vue warn\].*(?:Error|Invalid)/.test(m.text())) errors.push(m.text());
+        if (/\[i18n\] (?:format|values|catalog):|\[Vue warn\].*(?:Error|Invalid)|(?:Type|Reference|Syntax)Error:/.test(m.text())) errors.push(m.text());
       });
       await target.route("**/*", route => {
         const u = new URL(route.request().url());
@@ -264,7 +264,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
     }, base);
     const reports = [];
 
-    for (const modern of [true, false]) for (const locale of ["zh-CN", "en", "zh-CN"]) {
+    if (!process.env.ADE_TEST_FIXTURES_ONLY) for (const modern of [true, false]) for (const locale of ["zh-CN", "en", "zh-CN"]) {
       await page.evaluate(async ({
         modern,
         locale
@@ -315,6 +315,13 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
         }, null, 2));
         assert.doesNotMatch(result.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b/u, `${modern}/${locale}/${tab}/${sub}`);
 
+        if (locale === "zh-CN" && tab === "automation" && sub === "autobuyers") {
+          assert.doesNotMatch(result.text, /Current Setting|Dynamic amount|Dimension Autobuyers can have|Activates every X seconds|Bulk Singularity Time|now automatically and continuously/u);
+          assert.ok(result.text.includes("当前设置"));
+        }
+        if (locale === "zh-CN" && tab === "infinity" && sub === "replicanti") {
+          assert.doesNotMatch(result.text, /on all Infinity Dimensions|from a Dilation Upgrade|to Dark Energy from|to Space Theorems from|Auto Galaxy|Max Replicanti Galaxies/u);
+        }
         if (locale === "zh-CN" && tab === "celestials" && sub === "effarig") {
           assert.ok(result.text.includes("所有维度的倍率"));
           assert.equal((result.text.match(/更多不同的符文效果/g) || []).length, 1);
@@ -345,6 +352,121 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       reports,
       errors
     }, null, 2));
+    // Reproduce the specific split-sentence bugs with production components and real DOM.
+    // Fixtures change display data only; glyph/save identities and mechanics remain the real game objects.
+    let screenshotChecks = 0;
+    for (const modern of [true, false]) for (const locale of ["en", "zh-CN", "en"]) {
+      await page.evaluate(async modern => {
+        player.options.newUI = modern;
+        ui.view.newUI = modern;
+        Tab.options.visual.show(true);
+        GameUI.update();
+        await Vue.nextTick();
+      }, modern);
+      await page.selectOption("#ade-language", locale);
+      const result = await page.evaluate(async () => {
+        const find = (name, root = ui) => root.$options.name === name ? root :
+          root.$children.map(child => find(name, child)).find(Boolean);
+        const definitions = {};
+        for (const [tab, sub, names] of [
+          ["automation", "autobuyers", ["MultipleAutobuyersBox", "RealityAutobuyerBox", "TickspeedAutobuyerBox", "CelestialTickspeedAutobuyerBox"]],
+          ["infinity", "replicanti", ["ReplicantiTab", "ReplicantiGalaxyButton"]],
+          ["reality", "glyphs", ["GlyphsTab"]],
+          ["celestials", "laitela", ["HadronsPane"]]
+        ]) {
+          Tab[tab][sub].show(true);
+          GameUI.update();
+          await Vue.nextTick();
+          for (const name of names) {
+            const view = find(name);
+            if (!view) throw Error(`Missing fixture component ${name}`);
+            definitions[name] = view.constructor.options;
+          }
+        }
+        for (const name of ["CurrentGlyphEffects", "SacrificedGlyphs", "GlyphSetName"]) {
+          definitions[name] = definitions.GlyphsTab.components[name] ||
+            (name === "GlyphSetName" ? definitions.GlyphsTab.components.CurrentGlyphEffects.components.GlyphSetName : undefined);
+        }
+        definitions.CelestialEternityButton = find("CelestialEternityButton").constructor.options;
+        definitions.CelestialCrunchButton = find("CelestialCrunchButton").constructor.options;
+        const captures = [];
+        async function capture(name, data, propsData = {}, label = name) {
+          const view = new (Vue.extend(definitions[name]))({ propsData });
+          view.$mount();
+          document.body.appendChild(view.$el);
+          await Vue.nextTick();
+          EventHub.ui.offAll(view);
+          Object.assign(view, data);
+          await Vue.nextTick();
+          captures.push({ label, state: { hasEffarig: view.hasEffarig, hasReality: view.hasReality }, text: view.$el.innerText.replace(/\s+/gu, " ").trim(),
+            highlights: [...view.$el.querySelectorAll(".c-replicanti-description__accent")].map(el => el.textContent) });
+          view.$destroy();
+          view.$el.remove();
+        }
+        for (const [type, flipped] of [[Autobuyer.antimatterDimension, false], [Autobuyer.antimatterDimension, true],
+          [Autobuyer.infinityDimension, false], [Autobuyer.timeDimension, false]]) {
+          await capture("MultipleAutobuyersBox", { continuumActive: true, infinityContinuumUnlocked: true,
+            timeContinuumUnlocked: true, isFlipped: flipped }, { type }, `continuum-${type.groupName}-${flipped}`);
+        }
+        for (let mode = 0; mode <= 5; mode++) await capture("RealityAutobuyerBox", {
+          mode, hasAlternateInputs: mode > AUTO_REALITY_MODE.BOTH, isOverCap: true
+        }, {}, `reality-mode-${mode}`);
+        for (const name of ["TickspeedAutobuyerBox", "CelestialTickspeedAutobuyerBox"]) await capture(name, {});
+        for (const pow of [false, true]) {
+          await capture("ReplicantiTab", { isUnlocked: true, hasTDMult: true, hasDTMult: true,
+            hasIPMult: true, hasDEMult: true, hasSTMult: true, hasPow: pow, hasTDPow: pow,
+            hasDTPow: pow, hasIPPow: pow, hasDEPow: pow, hasSTPow: pow,
+            mult: new Decimal(123), multTD: new Decimal(234), multDT: new Decimal(345),
+            multIP: new Decimal(456), multDE: new Decimal(567), multST: new Decimal(678),
+            pow: 1.5, powTD: 1.6, powDT: 1.7, powIP: 1.8, powDE: 1.9, powST: 2,
+            hasRaisedCap: true, replicantiCap: new Decimal("1e500"), effarigInfinityBonusRG: 12
+          }, {}, `replicanti-powers-${pow}`);
+        }
+        for (const active of [true, false]) for (const enabled of [true, false]) await capture("ReplicantiGalaxyButton",
+          { isAutoUnlocked: true, isAutoActive: active, isAutoEnabled: enabled }, {}, `replicanti-auto-${active}-${enabled}`);
+        await capture("SacrificedGlyphs", { hasAlteration: true, hideAlteration: false, maxSacrifice: new Decimal("1e100") });
+        for (const count of [0, 1, 2]) for (const both of [true, false]) await capture("CurrentGlyphEffects", {
+          hasEffarig: true, hasReality: both, maxSpecialGlyphs: count
+        }, {}, `glyph-limit-${count}-${both}`);
+        await capture("GlyphSetName", { slotCount: 5 }, { glyphSet: ["reality", "effarig", "time", "infinity", "infinity"]
+          .map((type, id) => ({ type, id, effects: type === "effarig" ? (1 << 20) | (1 << 21) : 0, level: new Decimal(100), strength: new Decimal(1) })) });
+        for (const rate of [true, false]) {
+          await capture("CelestialEternityButton", { isVisible: true, type: 1, showCEPRate: rate,
+            headerTextColored: false, gainedCEP: new Decimal(123) }, {}, `celestial-eternity-${rate}`);
+          await capture("CelestialCrunchButton", { isVisible: true, canCrunch: true, showCIPRate: rate,
+            headerTextColored: false, gainedCIP: new Decimal(456) }, {}, `celestial-crunch-${rate}`);
+        }
+        await capture("HadronsPane", { lightHadrons: 10, totalLightHadrons: 14, darkHadrons: 20, totalDarkHadrons: 25,
+          exoticHadrons: 30, totalExoticHadrons: 36, hasDark: true, hasExotic: true });
+        return captures;
+      });
+      if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ reports, errors, fixtures: result }, null, 2));
+      for (const row of result) {
+        assert.doesNotMatch(row.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b|\$\{/u, row.label);
+        if (row.label.startsWith("replicanti-powers")) assert.equal(row.highlights.length, row.label.endsWith("true") ? 13 : 7);
+        if (locale === "zh-CN") {
+          assert.doesNotMatch(row.text, /now automatically|Current Setting|Target |Dynamic amount|multiplier| power on|on all|from Glyphs|from an Alpha|extra Replicanti|Auto Galaxy|when their Glyph|All effects from|You cannot have|Celestial Eternity for|Celestial Crunch for|Celestial .*of Infinity/u, row.label);
+          if (row.label.startsWith("continuum")) {
+            assert.equal((row.text.match(/连续统将取代/g) || []).length, 1);
+            assert.doesNotMatch(row.text, /[A-Za-z]/u);
+          }
+          if (row.label === "SacrificedGlyphs") assert.equal((row.text.match(/某个效果将得到提升/g) || []).length, 1);
+          if (row.label === "GlyphSetName") assert.equal(row.text, "现实 元神 刹那 无限");
+          if (row.label === "HadronsPane") {
+            for (const quantity of ["10(+4) 个强子", "20(+5) 个暗强子", "30(+6) 个奇迹强子"]) assert.ok(row.text.includes(quantity));
+          }
+          if (row.label.startsWith("celestial-eternity")) assert.ok(row.text.includes("天界永恒点数"));
+          if (row.label.startsWith("celestial-crunch")) assert.ok(row.text.includes("天界无限点数"));
+          if (row.label.startsWith("glyph-limit")) assert.ok(row.text.includes("你不能"));
+        } else {
+          if (row.label === "GlyphSetName") assert.equal(row.text, "Real Meta Transient Infinity");
+          if (row.label.startsWith("continuum")) assert.equal((row.text.match(/now automatically/g) || []).length, 1);
+          if (row.label.startsWith("glyph-limit-1")) assert.match(row.text, /Glyph equipped/u);
+        }
+        reports.push({ modern, locale, fixture: row.label, text: row.text });
+        screenshotChecks++;
+      }
+    }
     const mobile = await preparePage({ viewport: { width: 390, height: 844 }, isMobile: true, deviceScaleFactor: 1 });
     await mobile.evaluate(s => {
       GameIntervals.stop();
@@ -370,7 +492,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
         await Vue.nextTick();
       }, modern);
       await mobile.selectOption("#ade-language", "zh-CN");
-      for (const [tab, sub] of [["dimensions", "antimatter"], ["celestials", "effarig"], ["endgame", "ascension"]]) {
+      for (const [tab, sub] of [["dimensions", "antimatter"], ["celestials", "effarig"], ["endgame", "ascension"], ["automation", "autobuyers"], ["infinity", "replicanti"], ["reality", "glyphs"]]) {
         const body = await mobile.evaluate(async keys => {
           Modal.hideAll();
           Quote.clearAll();
@@ -386,8 +508,9 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       }
     }
     await mobile.close();
+    if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ reports, errors }, null, 2));
     assert.deepEqual(errors, []);
-    console.log(`PASS: ${process.env.ADE_TEST_UI_ONLY ? "UI checks" : "real gameplay scenarios"} and ${reports.length} UI renders, both layouts, repeated locale changes, and 6 mobile renders.`);
+    console.log(`PASS: ${process.env.ADE_TEST_UI_ONLY ? "UI checks" : "real gameplay scenarios"} and ${reports.length} UI renders, both layouts, repeated locale changes, and 12 mobile renders; ${screenshotChecks} screenshot-specific DOM checks.`);
   } finally {
     await browser.close();
   }

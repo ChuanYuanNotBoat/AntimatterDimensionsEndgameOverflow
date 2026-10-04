@@ -69,7 +69,7 @@ export default {
         class="c-autobuyer-box__small-text"
       >
         <br>
-        Activates every X seconds:
+        {{ $t('autobuyers.activateEvery') }}
       </div>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -89,7 +89,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Limit Dimension Boosts to:
+        {{ $t('autobuyers.limitResource', { resource: $t('terms.dimensionBoost', {}, 'plural') }) }}
       </label>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -107,12 +107,10 @@ export default {
           class="o-clickable"
         >
         <span v-if="isBuyMaxUnlocked">
-          Only Dimboost to unlock new<br>
-          Dimensions until X Galaxies:
+          {{ $t('autobuyers.boostUnlockOnly') }}
         </span>
         <span v-else>
-          Galaxies required to always<br>
-          Dimboost, ignoring the limit:
+          {{ $t('autobuyers.boostIgnoreLimit') }}
         </span>
       </label>
       <AutobuyerInput

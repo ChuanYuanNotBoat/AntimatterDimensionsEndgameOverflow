@@ -37,7 +37,7 @@ export default {
     autobuyerTextDisplay() {
       const auto = this.isAutoActive;
       const disabled = !this.isAutoEnabled;
-      return `Auto Galaxy ${auto ? "ON" : "OFF"}${disabled ? " (disabled)" : ""}`;
+      return this.$t("replicanti.autoGalaxy", { state: this.$t(auto ? "terms.on" : "terms.off"), disabled });
     },
   },
   methods: {

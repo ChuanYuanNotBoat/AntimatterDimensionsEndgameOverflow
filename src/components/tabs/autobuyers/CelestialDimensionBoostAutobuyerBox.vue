@@ -59,7 +59,7 @@ export default {
         class="c-autobuyer-box__small-text"
       >
         <br>
-        Activates every X seconds:
+        {{ $t('autobuyers.activateEvery') }}
       </div>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -79,7 +79,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Limit Celestial Dimension Boosts to:
+        {{ $t('autobuyers.limitResource', { resource: $t('terms.celestialDimensionBoost', {}, 'plural') }) }}
       </label>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -97,12 +97,10 @@ export default {
           class="o-clickable"
         >
         <span v-if="isBuyMaxUnlocked">
-          Do not buy Celestial Dimboosts<br>
-          until X Celestial Galaxies:
+          {{ $t('autobuyers.celestialBoostWait') }}
         </span>
         <span v-else>
-          Celestial Galaxies required to always<br>
-          Celestial Dimboost, ignoring the limit:
+          {{ $t('autobuyers.celestialBoostIgnoreLimit') }}
         </span>
       </label>
       <AutobuyerInput

@@ -81,7 +81,7 @@ export default {
     isDoomed: () => Pelle.isDoomed,
     setName() {
       this.sortGlyphList();
-      if (this.sortedGlyphs.length === 0) return "Void";
+      if (this.sortedGlyphs.length === 0) return this.$legacyText("Void");
       if (this.sortedGlyphs.length === 1) return this.singletonName;
 
       // Figure out the noun part of the name first. If we have basic glyphs, this is generated through examining those
@@ -103,13 +103,13 @@ export default {
       const basicGlyphList = this.sortedGlyphs.filter(t => BASIC_GLYPH_TYPES.includes(t.type) && t.perc !== 0);
       switch (basicGlyphList.length) {
         case 1:
-          return GLYPH_NAMES[basicGlyphList[0].type].noun;
+          return this.getNoun(basicGlyphList[0]);
         case 2:
           // Call it a mixture if they're equal and apply adjectives of appropriate magnitude
           if (basicGlyphList[0].perc === basicGlyphList[1].perc) {
             return [this.getAdjective(basicGlyphList[0]),
               this.getAdjective(basicGlyphList[1]),
-              "Mixture"
+              this.$legacyText("Mixture")
             ].join(" ");
           }
           // Otherwise, give it a noun from the largest component
@@ -124,42 +124,42 @@ export default {
           }
           // This is relatively rare; we have 1/1/1, which means that we may also already have 3 other adjectives.
           // In this case we make an exception and shorten the name instead of providing another 4 words
-          if (basicGlyphList[0].perc === basicGlyphList[2].perc) return "Mixed Irregularity";
+          if (basicGlyphList[0].perc === basicGlyphList[2].perc) return this.$legacyText("Mixed Irregularity");
           // The only case left is 2/2/1, where we have plenty of room for words
           return [this.getAdjective(basicGlyphList[0]),
             this.getAdjective(basicGlyphList[1]),
             this.getAdjective(basicGlyphList[2]),
-            "Irregularity"
+            this.$legacyText("Irregularity")
           ].join(" ");
         case 4:
           // Don't bother filling the name with excessive adjectives if we have an equal proportion (1/1/1/1),
           // otherwise we take the largest component and ignore all the others (2/1/1/1)
-          if (basicGlyphList[0].perc === basicGlyphList[1].perc) return "Irregular Jumble";
-          return `${this.getAdjective(basicGlyphList[0])} Jumble`;
+          if (basicGlyphList[0].perc === basicGlyphList[1].perc) return this.$legacyText("Irregular Jumble");
+          return `${this.getAdjective(basicGlyphList[0])} ${this.$legacyText("Jumble")}`;
         case 5:
           // This is in reference to the achievement name, and can only occur with exactly one of every basic glyph.
           // Due to music glyphs doubling-up contributions, this may result in a "Melodic Royal Flush" or similar
-          return "Royal Flush";
+          return this.$legacyText("Royal Flush");
         default:
           throw new Error("Unexpected glyph set configuration in GlyphSetName");
       }
     },
     // Check for single-type sets and give them a special name based on how much of the full equipped slots they take up
     singletonName() {
-      if (this.sortedGlyphs[0].type === "effarig") return GLYPH_NAMES.effarig.noun[this.getEffarigProp()];
+      if (this.sortedGlyphs[0].type === "effarig") return this.$legacyText(GLYPH_NAMES.effarig.noun[this.getEffarigProp()]);
       const singleGlyphTypes = ["reality", "companion"];
       for (const key of singleGlyphTypes) {
-        if (this.sortedGlyphs[0].type === key) return GLYPH_NAMES[key].noun;
+        if (this.sortedGlyphs[0].type === key) return this.$legacyText(GLYPH_NAMES[key].noun);
       }
 
       // We want a bit of additional flavor for partially-filled sets
-      const word = GLYPH_NAMES[this.sortedGlyphs[0].type].noun;
+      const word = this.getNoun(this.sortedGlyphs[0]);
       const perc = this.sortedGlyphs[0].perc;
-      if (this.isDoomed) return `Doomed ${word}`;
-      if (perc === 100) return `Full ${word}`;
-      if (perc >= 75) return `Strengthened ${word}`;
-      if (perc >= 40) return `Partial ${word}`;
-      return `Weak ${word}`;
+      if (this.isDoomed) return this.$legacyText(`Doomed ${word}`);
+      if (perc === 100) return this.$legacyText(`Full ${word}`);
+      if (perc >= 75) return this.$legacyText(`Strengthened ${word}`);
+      if (perc >= 40) return this.$legacyText(`Partial ${word}`);
+      return this.$legacyText(`Weak ${word}`);
     },
     mainGlyphName() {
       // This returns the type of Glyph that we want for color determinations.
@@ -237,18 +237,18 @@ export default {
       this.sortedGlyphs.sort((a, b) => sortFn(b) - sortFn(a));
     },
     getAdjective(listEntry) {
-      if (listEntry.type === "effarig") return GLYPH_NAMES.effarig.adjective[this.getEffarigProp()];
+      if (listEntry.type === "effarig") return this.$legacyText(GLYPH_NAMES.effarig.adjective[this.getEffarigProp()]);
       const adjFn = val => {
         if (val >= 60) return "high";
         if (val >= 40) return "mid";
         return "low";
       };
       const adj = GLYPH_NAMES[listEntry.type].adjective;
-      return typeof adj === "string" ? adj : adj[adjFn(listEntry.perc)];
+      return this.$legacyText(typeof adj === "string" ? adj : adj[adjFn(listEntry.perc)]);
     },
     getNoun(listEntry) {
-      if (listEntry.type === "effarig") return GLYPH_NAMES.effarig.noun[this.getEffarigProp()];
-      return GLYPH_NAMES[listEntry.type].noun;
+      if (listEntry.type === "effarig") return this.$legacyText(GLYPH_NAMES.effarig.noun[this.getEffarigProp()]);
+      return this.$legacyText(GLYPH_NAMES[listEntry.type].noun);
     },
   }
 };

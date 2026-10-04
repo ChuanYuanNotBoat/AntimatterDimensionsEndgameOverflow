@@ -110,9 +110,9 @@ export default {
       >
         <template #header>
           <div class="o-primary-btn c-autobuyer-box__mode-select c-autobuyer-box__mode-select-header">
-            ▼ Current Setting: ▼
+            ▼ {{ $t('ade.18b12c94dee3f488') }} ▼
             <br>
-            {{ modeName(mode) }}
+            {{ $legacyText(modeName(mode)) }}
           </div>
         </template>
         <template #dropdown>
@@ -124,7 +124,7 @@ export default {
         </template>
       </ExpandingControlBox>
       <span v-else>
-        {{ modeProps(mode).title }}:
+        {{ $legacyText(modeProps(mode).title) }}:
       </span>
     </template>
     <template
@@ -149,7 +149,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Dynamic amount
+        {{ $t('autobuyers.dynamicAmount') }}
       </label>
     </template>
   </AutobuyerBox>

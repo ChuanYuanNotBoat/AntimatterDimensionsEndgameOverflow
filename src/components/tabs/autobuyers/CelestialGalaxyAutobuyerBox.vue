@@ -56,7 +56,7 @@ export default {
       #intervalSlot
     >
       <div class="c-autobuyer-box__small-text">
-        Activates every X seconds:
+        {{ $t('autobuyers.activateEvery') }}
       </div>
       <AutobuyerInput
         :autobuyer="autobuyer"
@@ -73,7 +73,7 @@ export default {
           type="checkbox"
           class="o-clickable"
         >
-        Limit Celestial Galaxies to:
+        {{ $t('autobuyers.limitResource', { resource: $t('terms.celestialGalaxy', {}, 'plural') }) }}
       </label>
       <AutobuyerInput
         :autobuyer="autobuyer"

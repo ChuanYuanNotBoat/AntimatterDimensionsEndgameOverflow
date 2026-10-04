@@ -708,5 +708,20 @@
     "form": "singular",
     "global": true,
     "scopes": []
+  },
+  {
+    "id": "terms.replicantiChance",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.replicantiInterval",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.replicantiGalaxyLimit",
+    "global": true,
+    "scopes": []
   }
 ]
