@@ -1,13 +1,15 @@
 // Optional browser regression runner. Use an existing Playwright installation;
 // no browser or test dependency is added to the game. Never writes the supplied save.
 const assert = require("node:assert/strict"),
-      fs = require("node:fs"), path = require("node:path");
+      fs = require("node:fs"), path = require("node:path"), crypto = require("node:crypto");
 
 const playwright = require(process.env.ADE_PLAYWRIGHT_MODULE ||
   (process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES ? `${process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES}/playwright` : "playwright"));
 if (!process.env.ADE_TEST_SAVE) throw new Error("Set ADE_TEST_SAVE to an exported save used only in the isolated test browser.");
 
-const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
+const targetUrl = new URL(process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1");
+if (process.env.ADE_TEST_AUDIT !== "0") targetUrl.searchParams.set("i18nAudit", "1");
+const url = targetUrl.href;
 (async () => {
   const browser = await playwright.chromium.launch({
     executablePath: process.env.ADE_CHROMIUM_PATH,
@@ -35,11 +37,12 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
           contentType: "font/woff2", body: fs.readFileSync(path.join(path.dirname(fontCssPath), "files",
             path.basename(new URL(route.request().url()).pathname)))
         }));
-        await target.goto(url);
+        await target.goto(url, { waitUntil: "domcontentloaded", timeout: 120000 });
         const css = fs.readFileSync(fontCssPath, "utf8").replaceAll("./files/", "/__ade_qa_fonts/");
         await target.addStyleTag({ content: `${css} *:not(i):not([class*=fa]) { font-family: Typewriter, 'Noto Sans SC Variable', monospace !important; }` });
-      } else await target.goto(url);
-      await target.waitForFunction(() => window.GameUI?.initialized);
+      } else await target.goto(url, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await target.waitForFunction(() => window.GameUI?.initialized, null, { timeout: 120000 });
+      if (process.env.ADE_TEST_AUDIT !== "0") assert.equal(await target.evaluate(() => typeof window.__i18nAudit?.scan), "function", "audit bridge missing from tested build");
       return target;
     }
     const page = await preparePage({ viewport: { width: 1450, height: 1100 } });
@@ -84,28 +87,65 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       return GameSaveSerializer.serialize(player);
     }, save);
 
-    async function scenario(name, fn) {
-      const result = await page.evaluate(({
-        s,
-        fn
-      }) => {
-        GameStorage.loadPlayerObject(GameSaveSerializer.deserialize(s));
-        Modal.hideAll();
-        Quote.clearAll();
-        Lazy.invalidateAll();
-
-        const check = (condition, message) => {
-          if (!condition) throw Error(message);
-        };
-
-        const finite = value => value instanceof Decimal ? [value.sign, value.layer, value.mag].every(Number.isFinite) : Number.isFinite(value);
-
-        return new Function("check", "finite", fn)(check, finite);
-      }, {
-        s: base,
-        fn: fn.toString().replace(/^.*?\{([\s\S]*)\}$/, "$1")
+    const scenarioReports = [];
+    const runtimeAudits = [];
+    const reports = [];
+    async function auditContext(domain, target = page) {
+      await target.evaluate(domain => {
+        window.__i18nAudit?.clear();
+        window.__i18nAudit?.setContext({ domain });
+      }, domain);
+    }
+    async function captureAudit(domain, details = {}, target = page) {
+      const audit = await target.evaluate(() => {
+        window.__i18nAudit?.scan();
+        return window.__i18nAudit?.snapshot();
       });
-      console.log(name, JSON.stringify(result));
+      if (!audit) return;
+      runtimeAudits.push({ domain, ...details, ...audit });
+      if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ scenarioReports, runtimeAudits, reports, errors }, null, 2));
+      for (const type of ["parameter-error", "text-ref-error", "catalog-error", "stale-locale-cache"]) {
+        assert.equal(audit.totals[type] ?? 0, 0, `${domain}: ${type} (including bounded-overflow records)`);
+      }
+      const failures = audit.entries.filter(entry => ["parameter-error", "text-ref-error", "catalog-error", "stale-locale-cache"].includes(entry.type) ||
+        (entry.type === "missing-key" && entry.candidate === "en"));
+      assert.deepEqual(failures, [], `${domain}: runtime audit errors`);
+    }
+    async function scenario(name, fn) {
+      const runs = [];
+      for (const locale of ["en", "zh-CN"]) {
+        await auditContext(name);
+        await page.evaluate(async () => { Tab.options.visual.show(true); GameUI.update(); await Vue.nextTick(); });
+        const beforeSwitch = await page.evaluate(() => GameSaveSerializer.serialize(player));
+        await page.selectOption("#ade-language", locale);
+        assert.equal(await page.evaluate(() => GameSaveSerializer.serialize(player)), beforeSwitch, `${name}: locale changes player`);
+        const result = await page.evaluate(({ s, fn }) => {
+          const originalNow = Date.now;
+          const originalRandom = Math.random;
+          let seed = 123456789;
+          // Test-only deterministic clock and random stream; restored even when assertions fail.
+          Date.now = () => 1791072000000;
+          Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
+          try {
+            GameStorage.loadPlayerObject(GameSaveSerializer.deserialize(s));
+            Modal.hideAll();
+            Quote.clearAll();
+            Lazy.invalidateAll();
+            const check = (condition, message) => { if (!condition) throw Error(message); };
+            const finite = value => value instanceof Decimal ? [value.sign, value.layer, value.mag].every(Number.isFinite) : Number.isFinite(value);
+            const result = new Function("check", "finite", fn)(check, finite);
+            return { result, state: GameSaveSerializer.serialize(player) };
+          } finally { Date.now = originalNow; Math.random = originalRandom; }
+        }, { s: base, fn: fn.toString().replace(/^.*?\{([\s\S]*)\}$/, "$1") });
+        await captureAudit(name, { locale });
+        runs.push(result);
+      }
+      assert.deepEqual(runs[1].result, runs[0].result, `${name}: locale changes operation result`);
+      // Compare the entire save, including Decimal fields, Sets, automation and reset records. No ignored fields.
+      assert.ok(runs[1].state === runs[0].state, `${name}: en/zh-CN serialized player differs`);
+      scenarioReports.push({ name, locales: ["en", "zh-CN"], identical: true,
+        stateHash: crypto.createHash("sha256").update(runs[0].state).digest("hex") });
+      console.log(name, "en/zh-CN identical", JSON.stringify(runs[0].result));
     }
 
     if (!process.env.ADE_TEST_UI_ONLY) {
@@ -254,7 +294,50 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
           roundtrip: true
         };
       });
+      await scenario("Dimension purchases, Replicanti and autobuyer toggles", () => {
+        player.auto.disableContinuum = true;
+        player.infinityPoints = new Decimal("1e1000");
+        for (const dimension of InfinityDimensions.all) {
+          dimension.amount = DC.D0;
+          dimension.baseAmount = DC.D0;
+          dimension.cost = new Decimal(1e8);
+          dimension.isUnlocked = true;
+          check(dimension.buySingle() === true, "single dimension purchase");
+          dimension.buyMax(false);
+          check(finite(dimension.amount) && dimension.amount.gt(10), "bulk dimension purchase");
+        }
+        for (const buyer of [Autobuyer.bigCrunch, Autobuyer.eternity, Autobuyer.reality]) {
+          const original = buyer.isActive;
+          buyer.toggle();
+          check(buyer.isActive !== original, "toggle");
+        }
+        player.replicanti.chance = new Decimal(0.01);
+        player.replicanti.chanceCost = new Decimal(1);
+        player.eterc8repl = 100;
+        const upgrade = ReplicantiUpgrade.chance;
+        const chance = upgrade.value;
+        upgrade.purchase();
+        check(upgrade.value.gt(chance), "replicanti chance purchase");
+        check(finite(player.replicanti.amount), "replicanti amount");
+        return { purchased: true };
+      });
+      await scenario("Automator canonical compilation and execution", () => {
+        const script = "auto infinity off\nauto eternity off\npause 0.1 seconds\nstop";
+        check(!hasCompilationErrors(script), "compile canonical commands");
+        const compiled = AutomatorScript.create("Locale fixture", script);
+        check(compiled.commands.length === 4, "command count");
+        const first = compiled.commands[0].run({});
+        const second = compiled.commands[1].run({});
+        check(!Autobuyer.bigCrunch.isActive && !Autobuyer.eternity.isActive, "execute canonical auto commands");
+        return { commands: compiled.commands.length, first, second };
+      });
     } // Reuse the original save for text checks; changing language must preserve canonical state.
+    if (process.env.ADE_TEST_GAMEPLAY_ONLY) {
+      if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ scenarioReports, runtimeAudits, errors }, null, 2));
+      assert.deepEqual(errors, []);
+      console.log(`PASS: ${scenarioReports.length} gameplay scenarios with identical complete saves in en/zh-CN.`);
+      return;
+    }
 
 
     await page.evaluate(s => {
@@ -262,8 +345,6 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       Modal.hideAll();
       Quote.clearAll();
     }, base);
-    const reports = [];
-
     if (!process.env.ADE_TEST_FIXTURES_ONLY) for (const modern of [true, false]) for (const locale of ["zh-CN", "en", "zh-CN"]) {
       await page.evaluate(async ({
         modern,
@@ -285,6 +366,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       const tabs = await page.evaluate(() => Object.values(Tab).filter(t => t?.subtabs).flatMap(t => t.subtabs.filter(s => s.isUnlocked).map(s => [t.key, s.key])));
 
       for (const [tab, sub] of tabs) {
+        await auditContext(`${tab}/${sub}`);
         const result = await page.evaluate(async ({
           tab,
           sub
@@ -345,6 +427,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
           sub,
           text: result.text
         });
+        await captureAudit(`${tab}/${sub}`, { modern, locale });
       }
     }
 
@@ -355,6 +438,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
     // Reproduce the specific split-sentence bugs with production components and real DOM.
     // Fixtures change display data only; glyph/save identities and mechanics remain the real game objects.
     let screenshotChecks = 0;
+    const localeFixtureOutputs = new Map();
     for (const modern of [true, false]) for (const locale of ["en", "zh-CN", "en"]) {
       await page.evaluate(async modern => {
         player.options.newUI = modern;
@@ -364,6 +448,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
         await Vue.nextTick();
       }, modern);
       await page.selectOption("#ade-language", locale);
+      await auditContext("display-fixtures");
       const result = await page.evaluate(async () => {
         const find = (name, root = ui) => root.$options.name === name ? root :
           root.$children.map(child => find(name, child)).find(Boolean);
@@ -398,6 +483,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
           EventHub.ui.offAll(view);
           Object.assign(view, data);
           await Vue.nextTick();
+          window.__i18nAudit?.inspect(view.$el.innerText, { component: name });
           captures.push({ label, state: { hasEffarig: view.hasEffarig, hasReality: view.hasReality }, text: view.$el.innerText.replace(/\s+/gu, " ").trim(),
             highlights: [...view.$el.querySelectorAll(".c-replicanti-description__accent")].map(el => el.textContent) });
           view.$destroy();
@@ -441,7 +527,17 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
         return captures;
       });
       if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ reports, errors, fixtures: result }, null, 2));
+      await captureAudit("display-fixtures", { modern, locale });
       for (const row of result) {
+        const cacheKey = `${modern}/${locale}/${row.label}`;
+        const earlier = localeFixtureOutputs.get(cacheKey);
+        if (earlier !== undefined && earlier !== row.text) {
+          await page.evaluate(({ locale, component }) => window.__i18nAudit?.record({ type: "stale-locale-cache", locale,
+            component, reason: "paused-fixture-roundtrip" }), { locale, component: row.label });
+          await captureAudit("display-fixtures", { modern, locale });
+          assert.fail(`Paused locale roundtrip differs: ${cacheKey}`);
+        }
+        localeFixtureOutputs.set(cacheKey, row.text);
         assert.doesNotMatch(row.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b|\$\{/u, row.label);
         if (row.label.startsWith("replicanti-powers")) assert.equal(row.highlights.length, row.label.endsWith("true") ? 13 : 7);
         if (locale === "zh-CN") {
@@ -493,6 +589,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       }, modern);
       await mobile.selectOption("#ade-language", "zh-CN");
       for (const [tab, sub] of [["dimensions", "antimatter"], ["celestials", "effarig"], ["endgame", "ascension"], ["automation", "autobuyers"], ["infinity", "replicanti"], ["reality", "glyphs"]]) {
+        await auditContext(`${tab}/${sub}`, mobile);
         const body = await mobile.evaluate(async keys => {
           Modal.hideAll();
           Quote.clearAll();
@@ -501,6 +598,7 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
           await Vue.nextTick();
           return document.body.innerText;
         }, [tab, sub]);
+        await captureAudit(`${tab}/${sub}`, { modern, locale: "zh-CN", mobile: true }, mobile);
         assert.doesNotMatch(body, /\{p\d+\}|\uE000|\bundefined\b|\bNaN\b|第第一/u);
         if (process.env.ADE_TEST_SCREENSHOT_DIR) {
           await mobile.screenshot({ path: `${process.env.ADE_TEST_SCREENSHOT_DIR}/${modern ? "modern" : "classic"}-${sub}.png`, fullPage: true });
@@ -508,9 +606,9 @@ const url = process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1";
       }
     }
     await mobile.close();
-    if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ reports, errors }, null, 2));
+    if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ scenarioReports, runtimeAudits, reports, errors }, null, 2));
     assert.deepEqual(errors, []);
-    console.log(`PASS: ${process.env.ADE_TEST_UI_ONLY ? "UI checks" : "real gameplay scenarios"} and ${reports.length} UI renders, both layouts, repeated locale changes, and 12 mobile renders; ${screenshotChecks} screenshot-specific DOM checks.`);
+    console.log(`PASS: ${process.env.ADE_TEST_UI_ONLY ? "UI checks" : `${scenarioReports.length} en/zh-CN identical gameplay scenarios`} and ${reports.length} UI renders, both layouts, repeated locale changes, and 12 mobile renders; ${screenshotChecks} screenshot-specific DOM checks.`);
   } finally {
     await browser.close();
   }

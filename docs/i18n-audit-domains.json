@@ -1,0 +1,70 @@
+{
+  "purpose": "ADE acceptance policy stays outside the generic i18n service. Unmatched findings remain shared/unclassified.",
+  "domains": [
+    {
+      "id": "automator",
+      "pattern": "automator|script-template"
+    },
+    {
+      "id": "automation",
+      "pattern": "autobuyer|hotkeys"
+    },
+    {
+      "id": "dimensions",
+      "pattern": "dimension|tickspeed"
+    },
+    {
+      "id": "infinity",
+      "pattern": "infinity|replicanti|break-infinity"
+    },
+    {
+      "id": "eternity",
+      "pattern": "eternity|time-stud|dilation"
+    },
+    {
+      "id": "reality-glyphs",
+      "pattern": "reality|glyph|perk"
+    },
+    {
+      "id": "celestials",
+      "pattern": "celestial|alchemy|pelle|slabdrill"
+    },
+    {
+      "id": "ade2-progression",
+      "pattern": "compression|overcharge|universe|ethereal|endgame|ascension|collider|hadrons|divinity|galactic"
+    },
+    {
+      "id": "options-save",
+      "pattern": "options|storage|migration|notation|theme|away-progress"
+    }
+  ],
+  "acceptance": {
+    "errors": [
+      "missing-base-key",
+      "catalog-error",
+      "parameter-error",
+      "localized-identity-dependency",
+      "text-ref-error",
+      "stale-locale-cache"
+    ],
+    "review": [
+      "english-fallback",
+      "mixed-language-output",
+      "identical-translation",
+      "string-dependency"
+    ],
+    "note": "Fallback/mixed-language candidates are review queues, not proof of a defect or a release-wide translation claim. Never translate user code, canonical identifiers, CSS keys or numeric notation."
+  },
+  "reviewedDependencies": [
+    {
+      "file": "src/i18n/vue-adapter.js",
+      "reason": "translated-comparison",
+      "disposition": "display-only",
+      "explanation": "Compare original and translated text only to select a scoped display rule; result never enters an identity, save or gameplay branch.",
+      "expressions": [
+        "result !== value",
+        "translated !== value"
+      ]
+    }
+  ]
+}

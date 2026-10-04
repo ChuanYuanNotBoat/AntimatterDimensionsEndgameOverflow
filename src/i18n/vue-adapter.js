@@ -1,3 +1,4 @@
+import { installBrowserAudit } from "./browser-audit";
 import { I18n } from "./index";
 import { DisplayI18n } from "./display";
 import { LocalizedText } from "./localized-text";
@@ -12,6 +13,7 @@ export function installI18n(Vue) {
     // Private browsing may deny access to localStorage itself.
   }
   I18n.initialize({ storage, document });
+  installBrowserAudit(window, I18n);
   Vue.mixin({
     computed: {
       $locale() {

@@ -4,6 +4,8 @@ export function createLegacyDisplay(i18n, rules) {
   const exact = new Map();
   const patterns = new Map();
   const cache = new Map();
+  let cacheRevision;
+  let cacheLocale;
   const normalize = value => value.replace(/\s+/gu, " ").trim();
   const escape = value => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
   const bucket = value => (value.match(/^[A-Za-z]+/u)?.[0] ?? value[0] ?? "").toLowerCase();
@@ -78,8 +80,20 @@ export function createLegacyDisplay(i18n, rules) {
     if (locale === "en" || typeof value !== "string" || value.length > 20000) return value;
     const text = normalize(value);
     if (!text || !/[A-Za-z]{2}/u.test(text)) return value;
-    const cacheKey = `${revision}\0${scope}\0${text}`;
-    let result = cache.get(cacheKey);
+    if (cacheRevision !== revision || cacheLocale !== locale) {
+      cache.clear();
+      cacheRevision = revision;
+      cacheLocale = locale;
+    }
+    const cacheKey = `${scope}\0${text}`;
+    let cached = cache.get(cacheKey);
+    if (cached && (cached.locale !== locale || cached.revision !== revision)) {
+      i18n.diagnose?.("stale-locale-cache", { component: scope, cachedLocale: cached.locale,
+        cachedRevision: cached.revision, reason: "legacy-display" });
+      cache.delete(cacheKey);
+      cached = undefined;
+    }
+    let result = cached?.result;
     if (result === undefined) {
       const normalized = text.toLowerCase();
       const staticRule = choose(exact.get(normalized) ?? [], scope) ??
@@ -145,7 +159,7 @@ export function createLegacyDisplay(i18n, rules) {
       result ??= text;
       // Dynamic numbers change every tick. Keep memory bounded across long sessions.
       if (cache.size >= 2048) cache.clear();
-      cache.set(cacheKey, result);
+      cache.set(cacheKey, { result, locale, revision });
     }
     if (result === text) return value;
     return value.match(/^\s*/u)[0] + result + value.match(/\s*$/u)[0];
