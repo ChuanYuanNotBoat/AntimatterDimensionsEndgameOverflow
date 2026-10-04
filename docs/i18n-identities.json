@@ -15,6 +15,8 @@
     { "id": "study-path-name", "status": "pending; preserve canonical name", "files": ["src/core/time-studies/time-studies.js"] },
     { "id": "prestige-layer-name", "status": "pending; preserve canonical name", "files": ["src/components/tabs/past-prestige-runs/PastPrestigeRunsContainer.vue"] },
     { "id": "away-progress-name", "status": "pending; preserve canonical name", "files": ["src/core/away-progress.js"] },
-    { "id": "quote-speaker-name", "status": "pending; preserve canonical name", "files": ["src/core/celestials/quotes.js"] }
+    { "id": "quote-speaker-name", "status": "pending; preserve canonical name", "files": ["src/core/celestials/quotes.js"] },
+    { "id": "automator-undo-redo-tab", "status": "decoupled", "identity": "subtab.key", "saveCompatibility": "script content, names, undo/redo history and command syntax unchanged", "files": ["src/core/automator/automator-backend.js"] },
+    { "id": "dimension-autobuyer-group", "status": "decoupled", "identity": "existing type accessor identity", "saveCompatibility": "autobuyer state and original groupName unchanged", "files": ["src/components/tabs/autobuyers/MultipleAutobuyersBox.vue"] }
   ]
 }

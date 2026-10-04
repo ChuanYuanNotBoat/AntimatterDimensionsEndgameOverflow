@@ -192,13 +192,14 @@ function renderComponent(file, state = {}, globals = {}, computed = {}) {
 }
 
 test('all continuum branches render exactly one complete sentence across locale switches', () => {
-  const groups = { antimatterDimension: { groupName: 'Antimatter Dimensions' },
-    infinityDimension: { groupName: 'Infinity Dimensions' }, timeDimension: { groupName: 'Time Dimensions' } };
+  const groups = { antimatterDimension: Object.assign(() => {}, { groupName: 'Antimatter Dimensions' }),
+    infinityDimension: Object.assign(() => {}, { groupName: 'Infinity Dimensions' }),
+    timeDimension: Object.assign(() => {}, { groupName: 'Time Dimensions' }) };
   for (const [group, flipped, resource] of [
     ['antimatterDimension', false, '反物质维度'], ['antimatterDimension', true, '正物质维度'],
     ['infinityDimension', false, '无限维度'], ['timeDimension', false, '时间维度']
   ]) {
-    const type = Object.assign(() => {}, groups[group]);
+    const type = groups[group];
     const { service, render, view } = renderComponent('src/components/tabs/autobuyers/MultipleAutobuyersBox.vue',
       { type, continuumActive: true, infinityContinuumUnlocked: true, timeContinuumUnlocked: true, isFlipped: flipped },
       { Autobuyer: groups });

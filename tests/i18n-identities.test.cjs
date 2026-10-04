@@ -150,3 +150,26 @@ test('tab display names localize while canonical names, keys, and IDs stay fixed
   assert.equal(tab.key, 'options');
   assert.equal(tab.id, 1);
 });
+
+
+test('Automator undo/redo use the stable subtab key, retaining scripts and editor behavior after title changes', () => {
+  const source = read('core/automator/automator-backend.js');
+  const section = source.slice(source.indexOf('export const AutomatorData ='), source.indexOf('export const LineEnum'));
+  const calls = [];
+  const context = vm.createContext({
+    player: { reality: { automator: { type: 0, state: { editorScript: 1 }, scripts: { 1: { content: 'new' } } } } },
+    Tabs: { current: { _currentSubtab: { key: 'automator', name: '自动机' } } },
+    AUTOMATOR_TYPE: { TEXT: 0 }, AutomatorBackend: { saveScript: (id, content) => calls.push([id, content]) },
+    AutomatorTextUI: { editor: { setValue: content => calls.push(['editor', content]) } },
+  });
+  vm.runInContext(`${strip(section)}\nthis.data = AutomatorData;`, context);
+  context.data.undoBuffer.push('old');
+  context.data.undoScriptEdit();
+  assert.equal(context.player.reality.automator.scripts[1].content, 'old');
+  context.data.redoScriptEdit();
+  assert.equal(context.player.reality.automator.scripts[1].content, 'new');
+  assert.deepEqual(calls, [[1, 'old'], ['editor', 'old'], [1, 'new'], ['editor', 'new']]);
+  context.Tabs.current._currentSubtab = { key: 'glyphs', name: 'Automator' };
+  context.data.undoScriptEdit();
+  assert.equal(context.player.reality.automator.scripts[1].content, 'new');
+});

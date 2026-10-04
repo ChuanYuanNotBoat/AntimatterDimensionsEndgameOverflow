@@ -108,6 +108,7 @@ test('Vue computed consumers refresh on locale and active catalog changes withou
 test('TextRef resolves old strings and dynamic values without freezing the language', () => {
   const { service, context } = setup();
   context.t = service.t;
+  context.I18n = service;
   vm.runInContext(`${strip(read('i18n/text-ref.js'))}\nthis.ref = textRef; this.resolve = resolveText;`, context);
   let value = 'ee100';
   const reference = context.ref('amount', () => ({ value }));
@@ -128,6 +129,7 @@ test('even a failing diagnostic callback cannot turn missing messages into excep
 test('cached DescriptionDisplay text refreshes while the simulation is paused', async () => {
   const { service, context } = setup();
   context.t = service.t;
+  context.I18n = service;
   context.wordShift = { wordCycle: () => 'scrambled' };
   vm.runInContext(`${strip(read('i18n/text-ref.js'))}\nthis.ref = textRef;`, context);
   const script = read('components/DescriptionDisplay.vue').split('<script>')[1].split('</script>')[0];

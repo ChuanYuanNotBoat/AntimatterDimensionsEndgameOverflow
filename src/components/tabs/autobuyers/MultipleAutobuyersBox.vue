@@ -50,13 +50,13 @@ export default {
       return `flex: 1 0 ${100 / this.entryCountPerRow - 1}%`;
     },
     isADBox() {
-      return this.name === Autobuyer.antimatterDimension.groupName;
+      return this.type === Autobuyer.antimatterDimension;
     },
     isIDBox() {
-      return this.name === Autobuyer.infinityDimension.groupName;
+      return this.type === Autobuyer.infinityDimension;
     },
     isTDBox() {
-      return this.name === Autobuyer.timeDimension.groupName;
+      return this.type === Autobuyer.timeDimension;
     },
     showAutobuyers() {
       // Only display the Antimatter Dimension Autobuyers if the bulk is the same and there are any of them unlocked

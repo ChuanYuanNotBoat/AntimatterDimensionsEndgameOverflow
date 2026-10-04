@@ -4,9 +4,10 @@ export const LANGUAGE_STORAGE_KEY = "ade.language";
 
 // A language file contains text, optional grammatical forms, and its own metadata.
 // References are explicit whole entries, not replacements of individual words.
-export function resolveCatalog(catalog, fallback = {}) {
+export function resolveCatalog(catalog, fallback = {}, onFallback) {
   const resolved = new Map();
   const visiting = new Set();
+  const dependencies = new Map();
   function forms(entry) {
     if (typeof entry === "string") return { text: entry };
     if (!entry || typeof entry !== "object" || Array.isArray(entry) || typeof entry.text !== "string" ||
@@ -21,36 +22,62 @@ export function resolveCatalog(catalog, fallback = {}) {
     if (visiting.has(token)) throw new Error(`Circular message reference: ${key}`);
     const source = useFallback ? fallback : catalog;
     if (!Object.hasOwn(source, key)) {
-      if (!useFallback && Object.hasOwn(fallback, key)) return expand(key, form, true);
+      if (!useFallback && Object.hasOwn(fallback, key)) {
+        const message = expand(key, form, true);
+        resolved.set(token, message);
+        dependencies.set(token, [{ reference: key, form }]);
+        return message;
+      }
       throw new Error(`Unknown message reference: ${key}`);
     }
     visiting.add(token);
     const entry = forms(source[key]);
     // Languages without separate plural/case forms translate the term once.
+    const inherited = [];
     const message = (entry[form] ?? entry.text).replace(/\[\[([\w.-]+)(?:\|([\w.-]+))?\]\]/gu,
-      (whole, reference, variant) => expand(reference, variant ?? "text", useFallback));
+      (whole, reference, variant) => {
+        const referenceForm = variant ?? "text";
+        const text = expand(reference, referenceForm, useFallback);
+        inherited.push(...dependencies.get(`${useFallback ? "fallback:" : ""}${reference}|${referenceForm}`) ?? []);
+        return text;
+      });
     visiting.delete(token);
     resolved.set(token, message);
+    dependencies.set(token, inherited);
     return message;
   }
   const messages = new Map();
   for (const [key, entry] of Object.entries(catalog)) {
     if (key === "$meta") continue;
     if (!key) throw new TypeError("Messages must have nonempty keys");
-    for (const form of Object.keys(forms(entry))) messages.set(`${key}|${form}`, expand(key, form));
+    for (const form of Object.keys(forms(entry))) {
+      const token = `${key}|${form}`;
+      messages.set(token, expand(key, form));
+      for (const dependency of dependencies.get(token) ?? []) onFallback?.({ key, form, reference: dependency.reference, referenceForm: dependency.form });
+    }
   }
   return messages;
 }
 
 // Keep this service independent of Vue, player, and the simulation clock.
 // eslint-disable-next-line no-console
-export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn = console.warn }) {
+export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn = console.warn, onDiagnostic }) {
   const state = { locale: defaultLocale, revision: 0 };
   const packs = new Map();
   const rawPacks = new Map();
+  const referenceFallbacks = new Map();
   const warnings = new Set();
   let storage;
   let documentRef;
+
+  // Only identifiers and error categories leave this boundary, never parameter values or output text.
+  function diagnose(type, details = {}) {
+    try {
+      onDiagnostic?.({ ...details, type, locale: state.locale, revision: state.revision });
+    } catch {
+      // Audit failures must not change formatting or simulation behavior.
+    }
+  }
 
   function report(token, error) {
     if (warnings.has(token)) return;
@@ -71,20 +98,31 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
       const candidates = new Map(rawPacks);
       candidates.set(canonical, catalog);
       const compiled = new Map();
+      const inherited = new Map();
       const affected = canonical === defaultLocale ? candidates : new Map([[canonical, catalog]]);
       for (const [id, candidate] of affected) {
         const messages = new Map();
-        for (const [key, message] of resolveCatalog(candidate, candidates.get(defaultLocale))) {
+        const fallbacks = new Map();
+        const recordFallback = event => {
+          const token = `${event.key}|${event.form}`;
+          const entries = fallbacks.get(token) ?? [];
+          if (!entries.some(entry => entry.reference === event.reference && entry.referenceForm === event.referenceForm)) entries.push(event);
+          fallbacks.set(token, entries);
+        };
+        for (const [key, message] of resolveCatalog(candidate, candidates.get(defaultLocale), recordFallback)) {
           messages.set(key, new IntlMessageFormat(message, id));
         }
         compiled.set(id, messages);
+        inherited.set(id, fallbacks);
       }
       // Rebuild references atomically, including terms inherited from English.
       rawPacks.set(canonical, catalog);
       for (const [id, messages] of compiled) packs.set(id, messages);
+      for (const [id, fallbacks] of inherited) referenceFallbacks.set(id, fallbacks);
       if (canonical === state.locale || canonical === defaultLocale) state.revision++;
       return true;
     } catch (error) {
+      diagnose("catalog-error", { candidate: locale, reason: error.name });
       report(`catalog:${locale}`, error);
       return false;
     }
@@ -110,23 +148,36 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
     const locale = state.locale;
     const revision = state.revision;
     try {
+      if (typeof key !== "string" || !key || typeof form !== "string" || !form) {
+        throw new TypeError("Expected a nonempty message key and form");
+      }
       validateValues(values);
     } catch (error) {
-      report(`values:${locale}:${key}`, error);
+      diagnose("parameter-error", { key: typeof key === "string" ? key : "", form, reason: "invalid-values" });
+      report(`values:${locale}:${typeof key === "string" ? key : "invalid-key"}`, error);
       return unavailable();
     }
     for (const candidate of new Set([locale, defaultLocale])) {
       const messages = packs.get(candidate);
-      const message = messages?.get(`${key}|${form}`) ?? messages?.get(`${key}|text`);
+      const selectedForm = messages?.has(`${key}|${form}`) ? form : "text";
+      const message = messages?.get(`${key}|${selectedForm}`);
       if (!message) {
+        diagnose("missing-key", { key, form, candidate });
         report(`missing:${candidate}:${key}`, revision);
         continue;
       }
       try {
         const result = message.format(values);
         if (typeof result !== "string") throw new TypeError("Plain messages must produce text");
+        if (candidate !== locale) diagnose("english-fallback", { key, form, candidate, reason: "message" });
+        if (candidate !== defaultLocale) {
+          for (const fallback of referenceFallbacks.get(candidate)?.get(`${key}|${selectedForm}`) ?? []) {
+            diagnose("english-fallback", { ...fallback, candidate: defaultLocale, reason: "reference" });
+          }
+        }
         return result;
       } catch (error) {
+        diagnose("parameter-error", { key, form, candidate, reason: "format", error: error.name });
         report(`format:${candidate}:${key}`, error);
       }
     }
@@ -189,5 +240,5 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
   for (const [locale, catalog] of Object.entries(catalogs)) {
     if (locale !== defaultLocale) registerLocale(locale, catalog);
   }
-  return { state, t, setLocale, registerLocale, initialize, messageSource };
+  return { state, t, setLocale, registerLocale, initialize, messageSource, diagnose };
 }
