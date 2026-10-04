@@ -8,16 +8,52 @@ const root = path.resolve(__dirname, '..');
 const policy = JSON.parse(fs.readFileSync(path.join(root, 'docs/i18n-audit-domains.json'), 'utf8'));
 const domainFor = value => policy.domains.find(domain => new RegExp(domain.pattern, 'iu').test(value))?.id ?? 'shared';
 const scopesByKey = new Map();
+for (const entry of JSON.parse(fs.readFileSync(path.join(root, 'docs/adechinese-sync.json'), 'utf8')).provenance) {
+  scopesByKey.set(entry.id, [...new Set(entry.references.map(reference => reference.file))]);
+}
+const updateFile = path.join(root, 'docs/adec-translation-update.json');
+const translationUpdate = fs.existsSync(updateFile) ? JSON.parse(fs.readFileSync(updateFile, 'utf8')) : null;
+for (const entry of translationUpdate?.entries ?? []) if (entry.key) {
+  scopesByKey.set(entry.key, [...new Set([...(scopesByKey.get(entry.key) ?? []), ...entry.references.map(reference => reference.file)])]);
+}
 for (const filename of ['adechinese-rules.json', 'display-terms.json']) {
   for (const rule of JSON.parse(fs.readFileSync(path.join(root, 'src/i18n', filename), 'utf8'))) {
     scopesByKey.set(rule.id, [...new Set([...(scopesByKey.get(rule.id) ?? []), ...rule.scopes])]);
   }
 }
+function enumerateKeys(node, scope, seen = new Set()) {
+  if (!node) return null;
+  if (node.type === 'StringLiteral') return [node.value];
+  if (node.type === 'ConditionalExpression') {
+    const left = enumerateKeys(node.consequent, scope, seen), right = enumerateKeys(node.alternate, scope, seen);
+    return left && right ? [...new Set([...left, ...right])] : null;
+  }
+  if (node.type === 'Identifier' && scope && !seen.has(node.name)) {
+    const binding = scope.getBinding(node.name);
+    if (binding?.constant && binding.path.node.type === 'VariableDeclarator') {
+      return enumerateKeys(binding.path.node.init, scope, new Set([...seen, node.name]));
+    }
+  }
+  return null;
+}
+function parameterNames(nodes) {
+  const names = new Set();
+  for (const node of nodes) {
+    if (![0, 7].includes(node.type) && node.value) names.add(node.value);
+    for (const option of Object.values(node.options ?? {})) for (const name of parameterNames(option.value)) names.add(name);
+    if (node.children) for (const name of parameterNames(node.children)) names.add(name);
+  }
+  return [...names].sort();
+}
 const findings = [];
 const keyReferences = [];
+const calls = [];
 const addFinding = finding => {
   const review = policy.reviewedDependencies.find(entry => entry.file === finding.file && entry.reason === finding.reason && entry.expressions.includes(finding.expression));
-  findings.push({ domain: domainFor(`${finding.file ?? ''} ${finding.key ?? ''} ${(scopesByKey.get(finding.key) ?? []).join(' ')}`), ...finding,
+  const isError = !review && policy.acceptance.errors.includes(finding.type);
+  findings.push({ domain: domainFor(`${finding.file ?? ''} ${finding.key ?? ''} ${(scopesByKey.get(finding.key) ?? []).join(' ')}`),
+    severity: isError ? 'error' : 'warning', priority: finding.type === 'localized-identity-dependency' ? 'P0' :
+      isError || ['mixed-language-output', 'adec-available-fallback'].includes(finding.type) ? 'P1' : 'P2', ...finding,
     ...(review ? { type: 'string-dependency', status: review.disposition } : {}) });
 };
 function localized(node, scope, seen = new Set()) {
@@ -51,6 +87,22 @@ async function audit() {
   findings.length = 0;
   keyReferences.length = 0;
   candidates.length = 0;
+  calls.length = 0;
+  const inspectCall = (node, scope, file, line, source) => {
+    if (!['t', '$t', 'textRef'].includes(node.callee.name ?? node.callee.property?.name)) return;
+    const keys = enumerateKeys(node.arguments[0], scope);
+    if (!keys) {
+      addFinding({ type: 'dynamic-translation-key', file, line, reason: 'not-statically-enumerable',
+        expression: source.slice(node.arguments[0]?.start ?? node.start, node.arguments[0]?.end ?? node.end).slice(0, 240) });
+      return;
+    }
+    for (const key of keys) keyReferences.push({ key, file, line });
+    const values = node.arguments[1];
+    const names = !values ? [] : values.type === 'ObjectExpression' && values.properties.every(value =>
+      value.type === 'ObjectProperty' && !value.computed) ? values.properties.map(value => value.key.name ?? value.key.value) : null;
+    const form = node.arguments[2]?.type === 'StringLiteral' ? node.arguments[2].value : 'text';
+    if (names) calls.push({ keys, names, form, file, line });
+  };
   for (const file of files(path.join(root, 'src')).filter(name => /\.(?:js|vue)$/u.test(name))) {
     const source = fs.readFileSync(file, 'utf8');
     const part = file.endsWith('.vue') ? compiler.parseComponent(source).script ?? { content: '', start: 0 } : { content: source, start: 0 };
@@ -88,11 +140,8 @@ async function audit() {
       ObjectProperty({ node }) {
         if (node.key.name === 'nameKey' && node.value.type === 'StringLiteral') keyReferences.push({ key: node.value.value, file: path.relative(root, file), line: node.loc.start.line + offset });
       },
-      CallExpression({ node }) {
-        const methodName = node.callee.name ?? node.callee.property?.name;
-        if (['t', '$t', 'textRef'].includes(methodName) && node.arguments[0]?.type === 'StringLiteral') {
-          keyReferences.push({ key: node.arguments[0].value, file: path.relative(root, file), line: node.loc.start.line + offset });
-        }
+      CallExpression({ node, scope }) {
+        inspectCall(node, scope, path.relative(root, file), node.loc.start.line + offset, part.content);
         if (node.callee.type !== 'MemberExpression') return;
         const method = node.callee.property.name;
         if (['toLowerCase', 'toUpperCase', 'replace', 'replaceAll'].includes(method) && usesName(node.callee.object)) {
@@ -108,10 +157,8 @@ async function audit() {
       const seen = new WeakSet();
       const inspectExpression = (expression, line) => {
         const tree = babel.parseSync(`(${expression});`, { configFile: false, babelrc: false, sourceType: 'module' });
-        babel.traverse(tree, { CallExpression({ node }) {
-          if (['t', '$t', 'textRef'].includes(node.callee.name ?? node.callee.property?.name) && node.arguments[0]?.type === 'StringLiteral') {
-            keyReferences.push({ key: node.arguments[0].value, file: path.relative(root, file), line });
-          }
+        babel.traverse(tree, { CallExpression({ node, scope }) {
+          inspectCall(node, scope, path.relative(root, file), line, `(${expression});`);
         } });
       };
       function visit(node) {
@@ -119,6 +166,12 @@ async function audit() {
         seen.add(node);
         const line = source.slice(0, (template.start ?? 0) + (node.start ?? 0)).split('\n').length;
         if (node.type === 2) inspectExpression(node.expression, line);
+        if ([2, 3].includes(node.type) && !node.isComment && /[A-Za-z]{3,}/u.test(node.text ?? '') &&
+            !['code', 'pre', 'textarea'].includes(node.parent?.tag)) {
+          const literal = (node.text ?? '').replace(/\{\{[\s\S]*?\}\}/gu, '').replace(/\s+/gu, ' ').trim();
+          if (/[A-Za-z]{3,}/u.test(literal)) addFinding({ type: 'hardcoded-ui-english', file: path.relative(root, file), line,
+            reason: 'visible-template-literal-candidate', text: literal.slice(0, 500) });
+        }
         for (const attribute of node.attrsList ?? []) {
           if (node.tag === 'LocalizedText' && attribute.name === 'id') keyReferences.push({ key: attribute.value, file: path.relative(root, file), line });
           if (/^(?::|v-bind:)/u.test(attribute.name) || ['v-if', 'v-else-if', 'v-show', 'v-text', 'v-html'].includes(attribute.name)) inspectExpression(attribute.value, line);
@@ -155,6 +208,30 @@ async function audit() {
   let base;
   try { base = context.resolve(catalogs.en); }
   catch (error) { addFinding({ type: 'catalog-error', locale: 'en', reason: error.message }); }
+  if (base) for (const call of calls) for (const key of call.keys) {
+    const text = base.get(`${key}|${call.form}`) ?? base.get(`${key}|text`);
+    if (text === undefined) continue;
+    const ast = new IntlMessageFormat(text, 'en').getAst();
+    const expected = parameterNames(ast), extra = call.names.filter(name => !expected.includes(name));
+    // Conditional branches may intentionally omit parameters from the unused branch.
+    const hasOptions = nodes => nodes.some(node => node.options || node.children && hasOptions(node.children));
+    const missing = hasOptions(ast) ? [] : expected.filter(name => !call.names.includes(name));
+    if (extra.length || missing.length) addFinding({ type: 'parameter-error', key, file: call.file, line: call.line,
+      reason: extra.length ? 'extra-static-parameters' : 'missing-static-parameters', expected, provided: call.names });
+  }
+  if (base && translationUpdate) {
+    const crypto = require('node:crypto');
+    for (const key of Object.keys(catalogs.en).filter(key => key !== '$meta' && !Object.hasOwn(catalogs['zh-CN'] ?? {}, key))) {
+      const text = base.get(`${key}|text`);
+      const ast = new IntlMessageFormat(text, 'en').getAst();
+      if (ast.some(node => ![0, 1].includes(node.type))) continue;
+      const source = ast.map(node => node.type === 0 ? node.value : `{${node.value}}`).join('');
+      const hash = crypto.createHash('sha256').update(source).digest('hex');
+      const matches = translationUpdate.entries.filter(entry => entry.sourceHash === hash);
+      if (matches.length) addFinding({ type: 'adec-available-fallback', key, locale: 'zh-CN',
+        reason: 'external-source-requires-context-review', sourceIds: matches.map(entry => entry.sourceId) });
+    }
+  }
   for (const [locale, catalog] of Object.entries(catalogs)) {
     if (locale !== 'en') for (const key of Object.keys(catalogs.en).filter(key => key !== '$meta' && !Object.hasOwn(catalog, key))) {
       addFinding({ type: 'english-fallback', locale, key, reason: 'missing-translation' });
@@ -162,10 +239,16 @@ async function audit() {
     let messages;
     try { messages = context.resolve(catalog, catalogs.en, event => addFinding({ type: 'english-fallback', locale, ...event, reason: 'reference' })); }
     catch (error) { addFinding({ type: 'catalog-error', locale, reason: error.message }); continue; }
+    const duplicates = new Map();
     for (const [token, text] of messages) {
       const [key, form] = token.split('|');
       try {
         const ast = new IntlMessageFormat(text, locale).getAst();
+        if (locale !== 'en' && !key.startsWith('terms.') && Object.hasOwn(catalog, key)) {
+          const identity = `${base?.get(token)}\0${text}`;
+          const group = duplicates.get(identity) ?? [];
+          group.push(key); duplicates.set(identity, group);
+        }
         if (base?.has(token) && signature(ast) !== signature(new IntlMessageFormat(base.get(token), 'en').getAst())) {
           addFinding({ type: 'parameter-error', locale, key, form, reason: 'signature-mismatch' });
         }
@@ -183,6 +266,8 @@ async function audit() {
         }
       } catch (error) { addFinding({ type: 'catalog-error', locale, key, form, reason: error.message }); }
     }
+    for (const keys of duplicates.values()) if (new Set(keys).size > 1) addFinding({ type: 'duplicate-translation', locale,
+      key: keys[0], keys: [...new Set(keys)], reason: 'same-base-and-translation-review-candidate' });
   }
   for (const reference of keyReferences) if (!Object.hasOwn(catalogs.en, reference.key)) addFinding({ type: 'missing-base-key', ...reference });
   const counts = {};
@@ -194,12 +279,14 @@ async function audit() {
     const counts = domains[finding.domain] ??= {};
     counts[finding.type] = (counts[finding.type] ?? 0) + 1;
   }
-  return { version: 1, note: 'Static findings and dependency candidates require review. Fallback and mixed output are not automatic defects.',
-    counts, findingCounts, domains, findings, candidates };
+  const references = Object.fromEntries([...new Set(keyReferences.map(reference => reference.key))].map(key =>
+    [key, keyReferences.filter(reference => reference.key === key)]));
+  return { version: 2, note: 'Static findings and dependency candidates require review. Fallback, duplicates and mixed output are not automatic defects.',
+    counts, findingCounts, domains, findings, candidates, references };
 }
 if (require.main === module) audit().then(report => {
   if (process.argv.includes('--json')) console.log(JSON.stringify(report, null, 2));
   else console.log(JSON.stringify({ ...report, findings: report.findings.slice(0, 20), candidates: report.candidates.slice(0, 12) }, null, 2));
   if (process.argv.includes('--strict') && report.findings.some(finding => policy.acceptance.errors.includes(finding.type))) process.exitCode = 1;
 }).catch(error => { console.error(error); process.exitCode = 1; });
-module.exports = { audit, localized, domainFor };
+module.exports = { audit, localized, domainFor, enumerateKeys, parameterNames };

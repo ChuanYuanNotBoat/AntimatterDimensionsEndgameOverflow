@@ -40,6 +40,7 @@ const url = targetUrl.href;
         await target.goto(url, { waitUntil: "domcontentloaded", timeout: 120000 });
         const css = fs.readFileSync(fontCssPath, "utf8").replaceAll("./files/", "/__ade_qa_fonts/");
         await target.addStyleTag({ content: `${css} *:not(i):not([class*=fa]) { font-family: Typewriter, 'Noto Sans SC Variable', monospace !important; }` });
+        await target.evaluate(() => document.fonts.ready);
       } else await target.goto(url, { waitUntil: "domcontentloaded", timeout: 120000 });
       await target.waitForFunction(() => window.GameUI?.initialized, null, { timeout: 120000 });
       if (process.env.ADE_TEST_AUDIT !== "0") assert.equal(await target.evaluate(() => typeof window.__i18nAudit?.scan), "function", "audit bridge missing from tested build");
@@ -118,7 +119,21 @@ const url = targetUrl.href;
         await page.evaluate(async () => { Tab.options.visual.show(true); GameUI.update(); await Vue.nextTick(); });
         const beforeSwitch = await page.evaluate(() => GameSaveSerializer.serialize(player));
         await page.selectOption("#ade-language", locale);
-        assert.equal(await page.evaluate(() => GameSaveSerializer.serialize(player)), beforeSwitch, `${name}: locale changes player`);
+        const afterSwitch = await page.evaluate(() => GameSaveSerializer.serialize(player));
+        if (afterSwitch !== beforeSwitch) {
+          const changedPaths = await page.evaluate(({ before, after }) => {
+            const paths = [];
+            const walk = (a, b, path) => {
+              if (JSON.stringify(a) === JSON.stringify(b)) return;
+              if (a && b && typeof a === "object" && typeof b === "object") {
+                for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) walk(a[key], b[key], `${path}.${key}`);
+              } else paths.push(path);
+            };
+            walk(GameSaveSerializer.deserialize(before), GameSaveSerializer.deserialize(after), "player");
+            return paths;
+          }, { before: beforeSwitch, after: afterSwitch });
+          throw new Error(`${name}: locale changes player at ${changedPaths.join(", ")}`);
+        }
         const result = await page.evaluate(({ s, fn }) => {
           const originalNow = Date.now;
           const originalRandom = Math.random;
@@ -457,15 +472,26 @@ const url = targetUrl.href;
           ["automation", "autobuyers", ["MultipleAutobuyersBox", "RealityAutobuyerBox", "TickspeedAutobuyerBox", "CelestialTickspeedAutobuyerBox"]],
           ["infinity", "replicanti", ["ReplicantiTab", "ReplicantiGalaxyButton"]],
           ["reality", "glyphs", ["GlyphsTab"]],
-          ["celestials", "laitela", ["HadronsPane"]]
+          ["celestials", "laitela", ["HadronsPane"]],
+          ["endgame", "compression", ["TimeCompressionTab", "CompressionButton"]],
+          ["universes", "transient", ["TransientUniverseTab"]],
+          ["celestials", "slabdrill", ["SlabdrillTab"]]
         ]) {
-          Tab[tab][sub].show(true);
-          GameUI.update();
-          await Vue.nextTick();
-          for (const name of names) {
-            const view = find(name);
-            if (!view) throw Error(`Missing fixture component ${name}`);
-            definitions[name] = view.constructor.options;
+          // The neutral gameplay fixture closes the Slabdrill run. Open its real tab
+          // temporarily for display fixtures, without replacing the production component.
+          const wasCursed = player.celestials.slabdrill.isCursed;
+          if (sub === "slabdrill") player.celestials.slabdrill.isCursed = true;
+          try {
+            Tab[tab][sub].show(true);
+            GameUI.update();
+            await Vue.nextTick();
+            for (const name of names) {
+              const view = find(name);
+              if (!view) throw Error(`Missing fixture component ${name}`);
+              definitions[name] = view.constructor.options;
+            }
+          } finally {
+            player.celestials.slabdrill.isCursed = wasCursed;
           }
         }
         for (const name of ["CurrentGlyphEffects", "SacrificedGlyphs", "GlyphSetName"]) {
@@ -485,6 +511,8 @@ const url = targetUrl.href;
           await Vue.nextTick();
           window.__i18nAudit?.inspect(view.$el.innerText, { component: name });
           captures.push({ label, state: { hasEffarig: view.hasEffarig, hasReality: view.hasReality }, text: view.$el.innerText.replace(/\s+/gu, " ").trim(),
+            paragraphs: name === "TimeCompressionTab" ? [...view.$el.querySelectorAll(".l-compression-tab > span")]
+              .map(el => el.innerText).join(" ") : undefined,
             highlights: [...view.$el.querySelectorAll(".c-replicanti-description__accent")].map(el => el.textContent) });
           view.$destroy();
           view.$el.remove();
@@ -524,10 +552,23 @@ const url = targetUrl.href;
         }
         await capture("HadronsPane", { lightHadrons: 10, totalLightHadrons: 14, darkHadrons: 20, totalDarkHadrons: 25,
           exoticHadrons: 30, totalExoticHadrons: 36, hasDark: true, hasExotic: true });
+        await capture("TimeCompressionTab", { hawkingRadiation: new Decimal(123), thermalRadiation: new Decimal(456),
+          thermalRadiationIncome: new Decimal(7), waveThreshold: new Decimal(789), baseWaves: new Decimal(3), totalWaves: new Decimal(4) });
+        for (const state of [{ isUnlocked: false }, { isUnlocked: true, isRunning: false },
+          { isUnlocked: true, isRunning: true, canInfinity: true, hasGain: true },
+          { isUnlocked: true, isRunning: true, canInfinity: true, hasGain: false },
+          { isUnlocked: true, isRunning: true, canInfinity: false }]) {
+          await capture("CompressionButton", { ...state, hawkingRadiationGain: new Decimal(123), requiredForGain: new Decimal(456),
+            infinityGoal: new Decimal(789) }, {}, `compression-${JSON.stringify(state)}`);
+        }
+        await capture("TransientUniverseTab", { ephemeralLight: new Decimal(123), highestAntimatter: new Decimal(456),
+          relativisticParticles: new Decimal(789), particlesPerSecond: new Decimal(12), particleBoost: new Decimal(0.25) });
+        for (const active of [false, true]) await capture("SlabdrillTab", { isCursed: true, isCoreActive: active,
+          power: new Decimal(123), powerPerSecond: new Decimal(456), powerCap: new Decimal(789) }, {}, `slab-core-${active}`);
         return captures;
       });
       if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ reports, errors, fixtures: result }, null, 2));
-      await captureAudit("display-fixtures", { modern, locale });
+      await captureAudit("display-fixtures", { modern, locale, fixtures: result });
       for (const row of result) {
         const cacheKey = `${modern}/${locale}/${row.label}`;
         const earlier = localeFixtureOutputs.get(cacheKey);
@@ -541,7 +582,9 @@ const url = targetUrl.href;
         assert.doesNotMatch(row.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b|\$\{/u, row.label);
         if (row.label.startsWith("replicanti-powers")) assert.equal(row.highlights.length, row.label.endsWith("true") ? 13 : 7);
         if (locale === "zh-CN") {
-          assert.doesNotMatch(row.text, /now automatically|Current Setting|Target |Dynamic amount|multiplier| power on|on all|from Glyphs|from an Alpha|extra Replicanti|Auto Galaxy|when their Glyph|All effects from|You cannot have|Celestial Eternity for|Celestial Crunch for|Celestial .*of Infinity/u, row.label);
+          // Compression's child upgrades still contain known English fallbacks. Keep their
+          // full output in the audit; these new assertions cover the reviewed paragraphs.
+          if (!row.label.startsWith("slab-core")) assert.doesNotMatch(row.paragraphs ?? row.text, /now automatically|Current Setting|Target |Dynamic amount|multiplier| power on|on all|from Glyphs|from an Alpha|extra Replicanti|Auto Galaxy|when their Glyph|All effects from|You cannot have|Celestial Eternity for|Celestial Crunch for|Celestial .*of Infinity/u, row.label);
           if (row.label.startsWith("continuum")) {
             assert.equal((row.text.match(/连续统将取代/g) || []).length, 1);
             assert.doesNotMatch(row.text, /[A-Za-z]/u);
@@ -554,6 +597,19 @@ const url = targetUrl.href;
           if (row.label.startsWith("celestial-eternity")) assert.ok(row.text.includes("天界永恒点数"));
           if (row.label.startsWith("celestial-crunch")) assert.ok(row.text.includes("天界无限点数"));
           if (row.label.startsWith("glyph-limit")) assert.ok(row.text.includes("你不能"));
+          if (row.label === "TimeCompressionTab" || row.label.startsWith("compression-")) {
+            assert.doesNotMatch(row.paragraphs ?? row.text, /You have|Thermal Radiation|Hawking Radiation|Disable Compression|Reach |Compress time|Next |Electromagnetic Waves act/u, row.label);
+            assert.doesNotMatch(row.text, /维度维度/u, row.label);
+          }
+          if (row.label === "TransientUniverseTab") {
+            assert.doesNotMatch(row.text, /Ephemeral Light|Relativistic Particles|Your highest|while inside|reset on exiting/u);
+            assert.match(row.text, /削弱 25/u);
+            assert.doesNotMatch(row.text, /削弱至/u);
+          }
+          if (row.label.startsWith("slab-core")) {
+            assert.match(row.text, row.label.endsWith("true") ? /离开诅咒核心/u : /进入诅咒核心/u);
+            assert.doesNotMatch(row.text, /You have|Enter the Cursed Core|Exit the Cursed Core|Serpentine Power|Power halves/u);
+          }
         } else {
           if (row.label === "GlyphSetName") assert.equal(row.text, "Real Meta Transient Infinity");
           if (row.label.startsWith("continuum")) assert.equal((row.text.match(/now automatically/g) || []).length, 1);

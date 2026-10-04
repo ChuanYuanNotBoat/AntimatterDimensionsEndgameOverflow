@@ -110,22 +110,22 @@ export default {
         class="o-slabdrill-button"
         @click="showModal"
       >
-        Show effects in Cursed Reality
+        {{ $t('ade.66d5a86ac9de41b8') }}
       </button>
     </div>
     <br>
-    <span class="l-cursed-header">You have {{ $legacyText(_s(quantifyInt("Chaos Core", cores))) }}.</span>
+    <span class="l-cursed-header">{{ $t('slabdrill.core.total', { amount: $legacyText(_s(quantifyInt("Chaos Core", cores))) }) }}</span>
     <br>
     <div v-if="isDestroyed">
-      <span class="l-slabdrill-header">Since Slabdrill has been defeated, the following Strikes have no effect except for the last.</span>
+      <span class="l-slabdrill-header">{{ $t('ade.73b6c1de5529f80d') }}</span>
       <br>
     </div>
-    <span class="l-slabdrill-header">You have {{ $legacyText(_s(format(power, 2, 3))) }} Serpentine Power. +{{ $legacyText(_s(format(powerPerSecond, 2, 3))) }}/s</span>
+    <span class="l-slabdrill-header">{{ $t('ade.3509ba80a682d20d', { p0: format(power, 2, 3), p1: format(powerPerSecond, 2, 3) }) }}</span>
     <span class="l-slabdrill-header">
-      Your Chaos Cores are currently giving Serpentine Power a cap of {{ $legacyText(_s(format(powerCap, 2, 2))) }}.
+      {{ $t('ade.e30282de8705bdf5', { p0: format(powerCap, 2, 2) }) }}
     </span>
     <span class="l-slabdrill-header">
-      The distance between your current Serpentine Power and the Serpentine Power cap decreases by half every {{ $legacyText(_s(halveText)) }}.
+      {{ $t('ade.9f3b0d7fef07b358', { p0: halveText }) }}
     </span>
     <br>
     <div
@@ -161,7 +161,7 @@ export default {
       :class="cursedCoreClassObject"
       @click="toggleCore"
     >
-      {{ $legacyText(_s(cursedCoreButtonText)) }}
+      {{ $t(isCoreActive ? 'slabdrill.core.exit' : 'slabdrill.core.enter') }}
     </button>
   </div>
 </template>

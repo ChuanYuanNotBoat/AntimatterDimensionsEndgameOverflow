@@ -352,3 +352,23 @@ test('Replicanti upgrade autobuyer names use whole shared terms while canonical 
     assert.equal(buyer.name, canonical);
   }
 });
+
+test('reviewed ADEC messages preserve whole resources and reduction parameter meaning across locale changes', () => {
+  const { service, display } = actual();
+  const canonical = { dimension: 'Antimatter Dimensions', quantity: '2 Chaos Cores' };
+  const before = JSON.stringify(canonical);
+  const compression = () => service.t('ade.c1af03b6aff05402', { p0: display.translate(canonical.dimension) });
+  const english = compression();
+  service.setLocale('zh-CN');
+  assert.equal((compression().match(/反物质维度/gu) ?? []).length, 1);
+  assert.doesNotMatch(compression(), /维度维度/u);
+  assert.equal(service.t('slabdrill.core.total', { amount: display.translate(canonical.quantity) }), '你拥有 2 混沌核心。');
+  assert.match(service.t('slabdrill.core.enter'), /进入/u);
+  assert.match(service.t('slabdrill.core.exit'), /离开/u);
+  const transient = service.t('ade.c404c705d0ccd67f', { p0: '10', p1: '+2/s', p2: '', p3: '25%', p4: '' });
+  assert.match(transient, /削弱\s+25%/u);
+  assert.doesNotMatch(transient, /削弱至|Relativistic|Ephemeral/u);
+  service.setLocale('en');
+  assert.equal(compression(), english);
+  assert.equal(JSON.stringify(canonical), before);
+});

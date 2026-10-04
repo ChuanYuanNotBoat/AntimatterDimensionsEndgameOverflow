@@ -24,7 +24,15 @@ export function installI18n(Vue) {
       }
     },
     methods: {
-      $t: I18n.t,
+      $t(key, values = {}, form = "text") {
+        const result = I18n.t(key, values, form);
+        try {
+          window.__i18nAudit?.translation?.(key, values, form, result, { component: this.$options.name });
+        } catch {
+          // A QA observer must not change the formatter's output or exception contract.
+        }
+        return result;
+      },
       $legacyText(value, scope = this.$options.name) {
         const result = DisplayI18n.translate(value, scope);
         if (result !== value || scope !== this.$options.name) return result;

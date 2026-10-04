@@ -94,9 +94,9 @@ export default {
 <template>
   <div class="l-compression-tab">
     <span>
-      You have
-      <span class="c-compression-tab__hawking-radiation">{{ $legacyText(_s(format(hawkingRadiation, 2, numSpaces(hawkingRadiation)))) }}</span>
-      {{ $legacyText(_s(pluralize("Hawking Radiation", hawkingRadiation))) }}.
+      <LocalizedText id="compression.hawkingTotal">
+        <template #p0><span class="c-compression-tab__hawking-radiation">{{ format(hawkingRadiation, 2, numSpaces(hawkingRadiation)) }}</span></template>
+      </LocalizedText>
     </span>
     <div
       @mouseover="isHovering = true"
@@ -105,29 +105,21 @@ export default {
       <CompressionButton />
     </div>
     <span>
-      You have
-      <span class="c-compression-tab__thermal-radiation">{{ $legacyText(_s(format(thermalRadiation, 2, numSpaces(thermalRadiation)))) }}</span>
-      Thermal Radiation.
-      <span class="c-compression-tab__thermal-radiation-income">{{ $legacyText(_s(thermalRadiationGainText)) }}/s</span>
+      <LocalizedText id="ade.0f16f7a7f0caa155">
+        <template #p0><span class="c-compression-tab__thermal-radiation">{{ format(thermalRadiation, 2, numSpaces(thermalRadiation)) }}</span></template>
+        <template #p1><span class="c-compression-tab__thermal-radiation-income">{{ thermalRadiationGainText }}/s</span></template>
+      </LocalizedText>
     </span>
     <span>
-      Next
-      <span v-if="electromagneticWaveGain > 1">{{ $legacyText(_s(formatHybridLarge(electromagneticWaveGain, 3))) }}</span>
-      {{ $legacyText(_s(pluralize("Electromagntic Wave", electromagneticWaveGain))) }} at
-      <span
-        class="c-compression-tab__wave-threshold"
-        :ach-tooltip="$legacyText(waveTimeEstimate)"
-      >{{ $legacyText(_s(format(waveThreshold, 2, numSpaces(waveThreshold)))) }}</span>
-      Thermal Radiation, gained total of
-      <span
-        class="c-compression-tab__waves"
-        :ach-tooltip="$legacyText(baseWaveText)"
-      >{{ $legacyText(_s(formatHybridLarge(totalWaves, 3))) }}</span>
-      {{ $legacyText(_s(pluralize("Electromagnetic Wave", totalWaves))) }}
+      <LocalizedText id="ade.def00038f606a770">
+        <template #p0><span v-if="electromagneticWaveGain > 1">{{ formatHybridLarge(electromagneticWaveGain, 3) }}</span></template>
+        <template #p1>{{ $t('terms.electromagneticWave', {}, electromagneticWaveGain > 1 ? 'plural' : 'sourceTypo') }}</template>
+        <template #p2><span class="c-compression-tab__wave-threshold" :ach-tooltip="$legacyText(waveTimeEstimate)">{{ format(waveThreshold, 2, numSpaces(waveThreshold)) }}</span></template>
+        <template #p3><span class="c-compression-tab__waves" :ach-tooltip="$legacyText(baseWaveText)">{{ formatHybridLarge(totalWaves, 3) }}</span></template>
+        <template #p4>{{ $t('terms.electromagneticWave', {}, totalWaves.eq(1) ? 'text' : 'plural') }}</template>
+      </LocalizedText>
     </span>
-    <span>
-      Electromagnetic Waves act as free Hadrons of all types.
-    </span>
+    <span>{{ $t('ade.7813309961de59af') }}</span>
     <div class="l-compression-upgrades-grid">
       <div
         v-for="(upgradeRow, row) in allRebuyables"

@@ -22,6 +22,10 @@ const root = path.resolve(__dirname, "..");
 const reference = process.argv[2];
 if (!reference) throw new Error("Usage: node scripts/sync-adechinese.cjs /path/to/ADEChinese");
 const referenceRoot = path.resolve(reference);
+const reportArgument = process.argv.indexOf("--report-only");
+if (reportArgument >= 0 && process.argv.includes("--migrate")) {
+  throw new Error("Report-only extraction cannot migrate templates");
+}
 const sourceArgument = process.argv.indexOf("--source");
 const sourceRoot = sourceArgument >= 0 ? path.resolve(process.argv[sourceArgument + 1]) : root;
 if (sourceRoot === root) throw new Error("Pass --source with an unlocalized English checkout; do not extract from translated templates");
@@ -202,7 +206,7 @@ function keyOf(node, index) {
   // Database array entries are identified by their canonical id/key, not their position.
   if (node.type === "ObjectExpression") {
     const identity = node.properties.find(value => value.type === "ObjectProperty" &&
-      ["id", "key"].includes(value.key.name) && ["StringLiteral", "NumericLiteral"].includes(value.value.type));
+      ["id", "key", "option"].includes(value.key.name) && ["StringLiteral", "NumericLiteral"].includes(value.value.type));
     if (identity) return `entry:${identity.value.value}`;
     const name = node.properties.find(value => value.type === "ObjectProperty" && value.key.name === "name" &&
       value.value.type === "StringLiteral" && /^[a-z][A-Za-z0-9]*$/u.test(value.value.value));
@@ -213,20 +217,25 @@ function keyOf(node, index) {
 
 function jsStrings(source) {
   const result = new Map();
-  function visit(node, trail, contextId) {
+  function visit(node, trail, contextId, arrayLengths = []) {
     if (!node || ["ImportDeclaration", "CommentBlock", "CommentLine"].includes(node.type)) return;
     if (node.type === "ObjectExpression") {
       const id = node.properties.find(value => value.type === "ObjectProperty" && value.key.name === "id" &&
         ["StringLiteral", "NumericLiteral"].includes(value.value.type));
       if (id) contextId = id.value.value;
     }
-    if (stringForm(node)) result.set(trail, { node, form: stringForm(node), contextId });
+    if (stringForm(node)) result.set(trail, { node, form: stringForm(node), contextId, arrayLengths });
     for (const property of babel.types.VISITOR_KEYS[node.type] ?? []) {
       if (property === "key" && !node.computed) continue;
       const child = node[property];
       if (Array.isArray(child)) {
-        child.forEach((value, index) => visit(value, `${trail}/${property}/${keyOf(value, index)}`, contextId));
-      } else visit(child, `${trail}/${property}`, contextId);
+        child.forEach((value, index) => {
+          // Positional prose arrays are unsafe after insertion/deletion; keyed database entries are stable.
+          const lengths = node.type === "ArrayExpression" && /^\d+$/u.test(keyOf(value, index))
+            ? [...arrayLengths, child.length] : arrayLengths;
+          visit(value, `${trail}/${property}/${keyOf(value, index)}`, contextId, lengths);
+        });
+      } else visit(child, `${trail}/${property}`, contextId, arrayLengths);
     }
   }
   visit(parse(source).program, "script");
@@ -243,6 +252,10 @@ function syncScripts(enSource, zhSource, file) {
     if (!source) {
       const candidates = [...en].filter(([key]) => stable(key) === stable(location)).map(([, entry]) => entry);
       if (candidates.length === 1) [source] = candidates;
+    }
+    if (source && JSON.stringify(source.arrayLengths) !== JSON.stringify(value.arrayLengths)) {
+      unmatched.push({ file, location, reason: "positional-array-layout-differs", text: normalize(value.form.parts.join("…")) });
+      continue;
     }
     const scope = source?.contextId === undefined ? undefined : `${path.basename(file, ".js")}:${source.contextId}`;
     if (source) addPair(source.form, value.form, file, location, "script-text", scope);
@@ -454,6 +467,15 @@ for (const absolute of walkFiles(path.join(referenceRoot, "src")).filter(file =>
 
 // Conflicting source strings stay scoped to their originating component. Unique translations can be
 // shared by generic display components (descriptions, costs, header currencies, tooltips, etc.).
+if (reportArgument >= 0) {
+  const destination = process.argv[reportArgument + 1];
+  if (!destination || destination.startsWith("--")) throw new Error("Pass an output file after --report-only");
+  fs.writeFileSync(path.resolve(destination), `${JSON.stringify({ repository: "mushduck/ADEChinese", revision,
+    sourceRevision: execFileSync("git", ["rev-parse", "HEAD"], { cwd: sourceRoot, encoding: "utf8" }).trim(),
+    pairs, unmatched }, null, 2)}\n`);
+  console.log(`Report only: ${pairs.length} occurrences; no catalogs, matching rules or templates written.`);
+  process.exit(0);
+}
 const byEnglish = new Map();
 for (const pair of pairs) {
   const values = byEnglish.get(pair.en) ?? new Map();

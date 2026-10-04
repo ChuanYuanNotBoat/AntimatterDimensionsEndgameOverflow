@@ -55176,9 +55176,7 @@
   {
     "id": "ade.b0e0d5a638f79611",
     "global": false,
-    "scopes": [
-      "HeaderChallengeDisplay"
-    ],
+    "scopes": [],
     "protectedParameters": []
   },
   {
@@ -68862,6 +68860,9267 @@
     "global": true,
     "scopes": [
       "TeresaTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.485fdcfc0fb34f72",
+    "global": true,
+    "scopes": [
+      "MasteryTreeInfo"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e74c93260f053cf6",
+    "global": true,
+    "scopes": [
+      "PreferredMasteryTreeModal",
+      "endgame-mastery"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ab8724c3f0786bfd",
+    "global": true,
+    "scopes": [
+      "PreferredMasteryTreeModal",
+      "endgame-mastery"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3cb02cba05c94a6f",
+    "global": true,
+    "scopes": [
+      "PreferredMasteryTreeModal",
+      "endgame-mastery"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e0cf64f906ced191",
+    "global": true,
+    "scopes": [
+      "EnterCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f6f4e210fc17f31d",
+    "global": true,
+    "scopes": [
+      "EnterCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a6365046904d7ade",
+    "global": true,
+    "scopes": [
+      "EnterCursedCoreModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7da17cfd926be3ef",
+    "global": true,
+    "scopes": [
+      "EnterCursedCoreModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0f99beda4b7e6d1f",
+    "global": true,
+    "scopes": [
+      "EnterUniverseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b67605785ba3b202",
+    "global": true,
+    "scopes": [
+      "EnterUniverseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f58d434f0dc3f276",
+    "global": true,
+    "scopes": [
+      "EnterUniverseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.62fd9d2a57549f85",
+    "global": true,
+    "scopes": [
+      "EnterUniverseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.aba891c885c85346",
+    "global": true,
+    "scopes": [
+      "ExitCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a3942f97bf6de781",
+    "global": true,
+    "scopes": [
+      "ExitCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1d0d4b9454d1be9a",
+    "global": true,
+    "scopes": [
+      "ExitTheCurseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.82a215e9c0023cca",
+    "global": true,
+    "scopes": [
+      "ExitTheCurseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7a3a9ff6b95373aa",
+    "global": true,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.443c9df4d959f623",
+    "global": true,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0ffb9adca98f7808",
+    "global": true,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.08ca6b94a635bb71",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e1389a781ef8c9e2",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f7042688856bf6dd",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3e7d4865dda48eef",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.47b2fd778542bfb0",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.31237d1ec57dc9b6",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.24a1649ab8a59e2f",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.59e63e944eec9cdd",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d6b83e075a059df7",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.22b2f70a39c19540",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.603ca6d850944450",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3ba6caef69ecd06b",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1936e66813ff2232",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.51094c9be791d51a",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.66d5a86ac9de41b8",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.73b6c1de5529f80d",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3509ba80a682d20d",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e30282de8705bdf5",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9f3b0d7fef07b358",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ae1b2e0a446c9589",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fbc6b580494a0e9b",
+    "global": true,
+    "scopes": [
+      "EquippedGlyphs"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.37b4917e198d1422",
+    "global": true,
+    "scopes": [
+      "EquippedGlyphs"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.06f46b1bcb222a0e",
+    "global": true,
+    "scopes": [
+      "ResetRealityButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.875d0be86967004f",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8b3aaf23808abd7d",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e13c4767773e49f7",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.010ae3ab7407629d",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.919836e0ad91f53c",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1a62f3af9472440a",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9b300f544ccfb4fb",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f02d6b886d225b39",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.de04861c6cf362b5",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.da34047c54c86b96",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c39d695a9be1b5a4",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.feaf67a27a369209",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0f16f7a7f0caa155",
+    "global": true,
+    "scopes": [
+      "TimeCompressionTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.def00038f606a770",
+    "global": true,
+    "scopes": [
+      "TimeCompressionTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.61b197c8d15478a2",
+    "global": true,
+    "scopes": [
+      "TimeCompressionTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7813309961de59af",
+    "global": true,
+    "scopes": [
+      "TimeCompressionTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2c1202b73accb285",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4ca9cc0976ad4288",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cd13b06603b1a7ae",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ba80c19cbaffa566",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fb9ee1643c8933b4",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c404c705d0ccd67f",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.58b9d76485e8a109",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79979ff2b4b4edc0",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.befd2106336bb96b",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7dc7cff19ad8ce63",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8d691260be72c324",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dcd169342b1aa6dc",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.38db1e8c7830ff38",
+    "global": true,
+    "scopes": [
+      "CursedHeader"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8dc84ac7e9e724c6",
+    "global": true,
+    "scopes": [
+      "CursedHeader"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c4dd3300b2365fb2",
+    "global": true,
+    "scopes": [
+      "HeaderChallengeDisplay",
+      "tabs",
+      "tabs:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.762d60855477d42a",
+    "global": true,
+    "scopes": [
+      "HeaderChallengeDisplay"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.63621dd2855a4c5a",
+    "global": true,
+    "scopes": [
+      "RealityButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d4f9309dc9a6e3bb",
+    "global": true,
+    "scopes": [
+      "RealityButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1bc83cca551f9ed9",
+    "global": true,
+    "scopes": [
+      "galaxy-generator-autobuyer"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1c4347201ea190c1",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eb809522c924e236",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5bc6b17bcec5241d",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f9879a8a6562d8a1",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.82def5e141276354",
+    "global": true,
+    "scopes": [
+      "slabdrill"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7165f53ab643300e",
+    "global": true,
+    "scopes": [
+      "slabdrill"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b990a2baf5034a0a",
+    "global": true,
+    "scopes": [
+      "slabdrill"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2fda54a6eb0fc51e",
+    "global": true,
+    "scopes": [
+      "slabdrill"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cbcdcf8c6aec04fa",
+    "global": true,
+    "scopes": [
+      "slabdrill"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d43b93bd438593ea",
+    "global": true,
+    "scopes": [
+      "slabdrill"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.55a4e9c1a0c9af3d",
+    "global": true,
+    "scopes": [
+      "dimboost"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e08ac539e61fdb9b",
+    "global": true,
+    "scopes": [
+      "endgame-mastery"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.90a406baef0040dc",
+    "global": true,
+    "scopes": [
+      "endgame-skills"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.101d1ae568920666",
+    "global": true,
+    "scopes": [
+      "normal-challenges"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.076ee4900e2d3d69",
+    "global": true,
+    "scopes": [
+      "reality"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a3496cc3aa339151",
+    "global": true,
+    "scopes": [
+      "reality"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.69d46aa7cd0b3211",
+    "global": true,
+    "scopes": [
+      "sacrifice"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d9339e51fca0e209",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.19d049034664f349",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1f4457f1af58b4ef",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a42fa6e49e962465",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ffd230b235af737c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e16d0115a3124e4d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.59693aeeb7c57bf1",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:14"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.33843691b2978bf2",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:14"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7fde552452084581",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.93da298ce9a525c1",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c82fc8a3c3cd9d73",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:16"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.20e2ad76bbf2fe5b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:16"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2e0ae3fbdc5d0bb7",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:16"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.14a02541bf7e8875",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:17"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2f89e466ad833c84",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:17"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f2ce5ec7fdabef5e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5f751fb2c0821642",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ae15099c38fe5c88",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b09805a2326061ee",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:21",
+      "normal-achievements:37",
+      "normal-achievements:54",
+      "normal-achievements:55",
+      "normal-achievements:78"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ed8378c49c38fca",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:23"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5d77d67f5ea88ed3",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:23"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.52e451eba98b937c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:24"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3704ee4e965dc548",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:26"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bb782ddf469e551d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:27"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.84041b43b1d10dcf",
+    "global": false,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:28",
+      "normal-achievements:31"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.779d0db2b856c7a5",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:31"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.541476ee02b2b3a4",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:34"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0f1081e7cf25d12e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:36"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4f9e1a6f216b46cf",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:38"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.84d1827c6a3dfa31",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:43"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.884936bb99fe49df",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:43"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dcad24c0db887b54",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:44"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dd1de72befe7e058",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:46"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4c656054d6b7dabf",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:52"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d6fab253a3f985b9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:56"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a95dbc8ff5cb4d2f",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:56"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7211255f833dc292",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:57"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.076a5ce26f733b31",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:58"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.34e16ff8eed53d94",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:61"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.efc3633782af0c44",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:64"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c5d4c6d0016037c9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:65"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3ed74207cff09e2d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:68"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.34743a0a3e192eeb",
+    "global": false,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:68"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8ff466c621b49249",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:71"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79c046a9d9f43838",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:72"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5f367abe160615f8",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:72"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a01323def684a5fc",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:73"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.801d584361c65692",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:73"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f1f8709cddc2bbaf",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:74"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3a336f98ebb25f3c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:76"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.25b601dc41dbe5e9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:178",
+      "normal-achievements:83"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9c4190fe59ad4ca3",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:83"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.aa2a01b4fedc080d",
+    "global": false,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:84"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d6f4be89160381fb",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:84"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e53598f56ef5aea6",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:91",
+      "normal-achievements:92"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.43966c8a6ff68240",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:101"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0481e9471d4ab9ab",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:111"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7de2b4094ce014ab",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:117"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.67b392c349d7ce9e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:118"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f79a85fafade39a1",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:122"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3a93484bbd50f5e5",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:125"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0e35fa82e9e08425",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:126"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.03a3476d202ff75a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:132"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.35e5b64f228bcdca",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:132"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.260d8f8c64e09f03",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:137"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0bbda0788f674ef4",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:141"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.87dcf46b6fbe1d7e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:151"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1121639d1b31cb8d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:153"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fbca122bc627bb53",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:161"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fa4da425797147e4",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:182"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b7103d66afcbb3cb",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:183"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3a10599b3801e4d2",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:218"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.42ee3c630e7889ab",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:224"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.accde8dc21519fbf",
+    "global": false,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:228"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.83d7489b0fd445c8",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:231"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0e10697a905a467b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:233"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ff7a51b2f3e46fb3",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:251"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a117e70c922a11ad",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:251"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bc159080ff621c35",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:252"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f943f6db270400d9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:252"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ccf0f8c3dcc18878",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:253"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.311c4f1f900ea29a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:253"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d67aa63a93238b96",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:254"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3411afe8e096e177",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:254"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d9543de27954574e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:255"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5c4e25ad7f910290",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:255"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.84df8b31220348cb",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:256"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5ec07b79ff81774a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:256"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f1fdbb06d917542e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:257"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fb6f959f16e631f9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:257"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.819d44ba072410f2",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:258"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.78a25a525430e577",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:258"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.67ea704d7a7f881b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:258"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d9188a08c822198e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:261"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1e3910abfd03351a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:261"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e868bffb463cf332",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:262"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e79419b8c43222ea",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:262"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6cd33694d6a1a663",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:263"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.acef51e6777e270f",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:263"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a8a95ff141e2fe6a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:264"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.076237daeaf65cc7",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:264"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.73d427bfd088594b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:265"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3363e5be0afa5b7a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:265"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9813a8ec3d9cab6c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:266"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e427c6bc1d741e28",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:267"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.def3df9abaea6be2",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:267"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.660fd2fb480a9f50",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:268"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.89e202cbeca6bfe8",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:268"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b4a8cce8462ac1ea",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:271"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8777b92bf5217f05",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:271"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a62e219a0be9ea8d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:272"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5ff16cbd0028c732",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:272"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2deac42410842dfd",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:273"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.83a9bca4d5033040",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:273"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5eb7b6dde5be489a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:273"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4d53bf0e5a377e06",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:274"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5442891701a10668",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:274"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3e95366f27828ada",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:275"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2efc53f3a1c43b16",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:275"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e3ce60a76d7aaf80",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:276"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7bcfd187fa8b93cf",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:276"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.277de6d3bcb13bcb",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:276"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a4d64a645b268735",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:277"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4fef204519a9c418",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:277"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.db60fc291bd2b465",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:278"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.841daf8b9828c49f",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:278"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.be348d775ebbc01a",
+    "global": true,
+    "scopes": [
+      "secret-achievements",
+      "secret-achievements:22"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7e3e02edc286c532",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6446e6c6f3652a5a",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bcbfffe12b2436ad",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.411381cfcb559d77",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ae41b75cdcf05d5",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.07daa6389d337fe5",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ef6cab31c22cb4c1",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.72d537a566985c9a",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9f96909896903080",
+    "global": true,
+    "scopes": [
+      "divinity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.36d3089ffecee76d",
+    "global": true,
+    "scopes": [
+      "divinity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f70fc70f4126f8de",
+    "global": true,
+    "scopes": [
+      "divinity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8e9b36feaf290c32",
+    "global": true,
+    "scopes": [
+      "divinity-upgrades",
+      "divinity-upgrades:divineL1U4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8413a985bed63d2d",
+    "global": true,
+    "scopes": [
+      "perk-shop",
+      "perk-shop:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.33389e6bd775c752",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1dbf3e23da94c3fd",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.984a3238a216e18e",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7ec63dc9c4735c85",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3047ba029761500f",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1116cd2b6e9b113d",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e88cb912cfb104f3",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3648e48ef5bdb935",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fc5726ff49bde497",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.43824e19a056f36e",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c311cd275e6203bd",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5808561931ca5a08",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e60ae3d22e0bb800",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.868962229c75207f",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a4b2df25d4556445",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.59598d565d506bac",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f5a610d8de2889ec",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2921ca3b65a4fb10",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a7ce7867d0d637a8",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.44f9206d7ab00c90",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5c77978308c34148",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.633a5737fbff8aa9",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.72e41f9bd4fdf9d7",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a8f2b110304ca7dc",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.41bd0d41c6cc2978",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.373072ff2d4e0dbe",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e4e4b2d9f114fcd1",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c1463186852d80e5",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7310cd7729c664ae",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.df83e6d33577daaa",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.10cac9ed16f01b6f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9f33ab7002aab126",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e4a21847bb85e4bf",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3116ac9325d0d0d9",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.658203b2899a0857",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f49af80c97bccb51",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8a4d3231819a10fd",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dda2e7d759f52600",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1e86e416150bce07",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7fb01675243ffc44",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.06ab295a3f1676e2",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2aee09eaaca82686",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d0ef4f5a3fafb450",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d08237957b04df1d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a92b5bd638b1c8bd",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cd5e670677d8a07a",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d0f7af8b29d37c00",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.98e8943200bb250e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.76ae5cb02ee37882",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.20c692bca8c14d06",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8e2c8a3425c7fb94",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e3da85806264ec67",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6bfb834be0a73d9e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b225f2c85b6050b5",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.38b3de9f1546bf23",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.50b13371d7c6c3d3",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.afb7dd136f11d91f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e80e3dc5fa496abd",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e652241a258ebc5c",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5b68d253c13a9079",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1fcee73e39e5c49f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.49b6045bace7ae8d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ed54ab03715119ea",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.81dc82b043e43df0",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.470df5c994ee0b09",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.61937a3e25c6d1a2",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4295021b7b1b9f16",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.723e30f15330b4ba",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d665adf32a9dd3d6",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e1d46678c1c1c8f1",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c1c1d8c7cd309191",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7edf14f0bfca60bc",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1dfae91e07005686",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7fc996fd7f7e29a9",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bfd3785627887d6f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2ec6a5da7c45630e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.edfd44a98575220d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0eb354ad3769cb97",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6fcb1962de8ef64c",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.52c4ad74e8b5b664",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.228fa7af3e62022d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8885d622079d5dd4",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d1a767c5c6e6041d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a522c753ac99f550",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f866f2b4aca4c49f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c948713eb7b360ba",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d4e0214951bf6ba9",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b55c7961c629d052",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2e7de50cba337e35",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.00e2f543f9e78145",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b43b2a3d76b27ab1",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8bfaa4c1444a3662",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2a233fabc00a2501",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f66e518274b495f1",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d84de1dc1f4d88cc",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ffc3ab62dde1ce8",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.26491d7d8254ebae",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6de73f220d690738",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5342d8f8a085f618",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.48051f6b5745be63",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c6f371ced6ae0f6f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.70f1c5dae46db26a",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ed0ecd27fc9c755f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4f2635ad9aed9230",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0c8266ea748d98a7",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.73afc1239c13108e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cf8b4f1d722c610e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.010256bd227f3add",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f81203b4aa4fd6de",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4e9ccebbc82f2b44",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ab4e7bdbab22a343",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.df128b73d1708f3e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.53a2b2651b29219a",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3e9070e953548e93",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.27f761fc944c29a0",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a76d63138a2fca16",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fdda288a48463abe",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2d557c5cde679d41",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.178a8f2e61e0ae0a",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9eaa8bb3fcca101e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6b8166cedad31b3c",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.074d74f456085792",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9d0938c36e06cadc",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.29b627622b303407",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.34091f39923d0a32",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.75d99c466e903c39",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f578ee21deea2689",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.efd3ec6621077093",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d635c77b0e832cf4",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a069e91897daf307",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0e5892078a695bbb",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f0a5fef2dd71ea83",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2896f803259f238f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.343be8913feb5a93",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.480dddc7e6cce050",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7426863ca4d2c6fe",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3375c8338f797b9b",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7cbd5ec81b965d96",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4bdc12417053eda5",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.382a75c579fea174",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b3fddb1f1f691fd3",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3fbd70b28bac22b9",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.42f968c8829ab549",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.80d295478b0f4789",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.abbd9e56191bbaf5",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.663629e9649ce26c",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2c8a1cbbeaac8718",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.99fbb03c20886be4",
+    "global": true,
+    "scopes": [
+      "ra",
+      "ra:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d4df4306e55171e0",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:ipSurge"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.22ce652103e57604",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:epSurge"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.da8e86de367937a0",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:synergy2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.354a4f6c783e3217",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:synergy5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.02a8091dc8abce9a",
+    "global": true,
+    "scopes": [
+      "singularity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.07ede996181cc16c",
+    "global": true,
+    "scopes": [
+      "singularity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.97bd2cc6cf9b0679",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1791f7b06a835cd6",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b86d0ec73209cc1e",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2149a06f4ebfe7c8",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.76e8345678f4e0c2",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ee387b208c94cdcd",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.015466305628e24a",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bc29b610e0c81c3b",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.30b1f93e90200b3d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d7edc15cf3612129",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c0bc5f7ca0118e9c",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.659fd4929debc536",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.07d8cbfc43ce004c",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8ad37649fc98763d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8585ee69528ed35a",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f8e759af961a6102",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bad1888d18ce0441",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fdecfbe504be0d1f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cca69dc9dc911814",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.15119859af4c3b4f",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.350f7da37f487c71",
+    "global": true,
+    "scopes": [
+      "v",
+      "v:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bf034f8584b040c0",
+    "global": true,
+    "scopes": [
+      "v",
+      "v:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.30ce150b0b6e404d",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fe2d399d572b873e",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7fc17fd1368e2ba7",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.22b0a2fee386c0e9",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4df54fc6bbc8d4cb",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.321187fb1653e223",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8e4133ed5c77613a",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3ec611d878ad97c7",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ab3d110068ad5282",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e98294c65fbea1f7",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:10",
+      "eternity-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.21834941ca27d51c",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0b5adbac1d9526c4",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7391099ee0140222",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5699f1ce8c5ebe36",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ec2a7ad8a9f2cf1",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a578f0cccee78802",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0aa3b35628948176",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b8aaa072de0a9541",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2edc50249c923400",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e5b6fd3e7f3a53bb",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c10994536577ff30",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f18c6a7f9cde7391",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.75384231b3d14cc4",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d394f976fd6efd52",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7cf6c9f753973f3e",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.736b35ad736339b4",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bcc36cf512a3dcc2",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.349119a14b25512f",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.56bd25092b60b378",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f63607c5f3f03479",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.613bbf2724f8a0c1",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1",
+      "normal-challenges:2",
+      "normal-challenges:3",
+      "normal-challenges:4",
+      "normal-challenges:5",
+      "normal-challenges:6",
+      "normal-challenges:7",
+      "normal-challenges:8",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e3503a143886ac89",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79364cffc527d674",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1d28763d293b0126",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.543509666e62f528",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8dda4fc648821077",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.89f218e09c3a1e55",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f5c34d67673d9c7f",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e292b10248e18aab",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79f69b1eb9871f88",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7f70c2fff728b717",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d482606b865d262c",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.496f9b338bd3f180",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.72a2ccd55eb40fb7",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.504befcf4add0560",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5f40d1f7ab95e82b",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.740a8c3c8d543e99",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79996a4b75ce1ef3",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9eb49a40f67f476e",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bfa3b950e25a5a7a",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5f60c601118206d8",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d42929c6c4b6966b",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.15d0ddb2920cc24a",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.582d67434db49a94",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.73a8c07e05328bbe",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ce0a4551af2a6203",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.873ed021d8569a6f",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.85cc975a47b630e1",
+    "global": false,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e56935c192acff3a",
+    "global": false,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.05b015bb6d9df6fa",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3cce96152d26001d",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.16783f376c14ff37",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6572a332d31a6d4a",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8e4801ce51bd5364",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9fc8b9f9fa4abe09",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4521f9e4eaa5a856",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.246a11d23733e01a",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.933217a001f1fbdb",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2a80fb9e07b982e0",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.480d9c62f9c563ef",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1980774b74bf26a4",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.086b872a6723e958",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.75615e83ce2a4cfa",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.afe69d747f0e4e5e",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c5e4480ddd0e7627",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c2a1d3e41892d7aa",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1d7ec697b38eebff",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.61b936bb0686a956",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.45b0ce963944b609",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.457ad276e0159b80",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c24ef7ab0da64a73",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.234581aca8063776",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e0a21838fe84e2b8",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a0981d5148677565",
+    "global": true,
+    "scopes": [
+      "confirmation-types"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.57cbbc8956ea947c",
+    "global": false,
+    "scopes": [
+      "confirmation-types"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.34f80dc19a883227",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.be1c379183bcda91",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1680fa43c928c52c",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2001f6de13fb7e53",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f306bb4774c48d92",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.30c3485973ce8d72",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f2b916c902f5bf53",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b56d30175abd3865",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1de33e6b1c25e88b",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5f41ff24e0ba632a",
+    "global": true,
+    "scopes": [
+      "ascensions",
+      "ascensions:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dfc99a15420c1821",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.40dc29adcc00e7e7",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dd10c2d1e5418b7b",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f87a4c8f9ab415b2",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ca4c3f1d5ac50ac7",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79fc023b855f4f68",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d6d5cafc7f124ba4",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a239e4fbffbc68ec",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.51fffdc183b67c89",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dbe794b56e2914e9",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.75d5b4e81562187f",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3a67929cd0226d82",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.65d4121614cf8745",
+    "global": true,
+    "scopes": [
+      "celestial-infinity-upgrades",
+      "celestial-infinity-upgrades:antimatterCelestialDimBuff"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dc8b745bb83c224a",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cd3e65c0fda4f802",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d4609f99b27876ac",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a08cc99fa0226277",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c1af03b6aff05402",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9c81521125e1e351",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c3f49224820e487f",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ad8a8da6f8166e81",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9912fb25ba5e008d",
+    "global": true,
+    "scopes": [
+      "compression-upgrades",
+      "compression-upgrades:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5b5d2a439c8691bd",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:101"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5e4ed2f0b6c2f8d9",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:222"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.62f2c79199c401bc",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:281"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d3129378d6de3ff6",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:282"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0f7933f7c3f49961",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:283"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1c10b2ff65929fdc",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:291"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.77609cce9fd3c275",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:292"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.23e2e734d227633d",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:293"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.51ef080add46dd20",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:301"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.93fa3b8a73dd1807",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:302"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ede6aaeb4c3066b",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:303"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d179e32e4ec09812",
+    "global": true,
+    "scopes": [
+      "endgame-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d1a7aa58084fef65",
+    "global": true,
+    "scopes": [
+      "endgame-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a7e94d35d0be31e8",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2a03b08329724531",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dbc36b00b7bd5ae3",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.58ae922dde263180",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f3d348d0c7d9801c",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:25"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.37fe8e335994f1db",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:effarigPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.41368863024a9a24",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:raPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c07824ebb7d22dc9",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:alphaPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fc7b8fb0b431c192",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:slabPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.97d9ce6e69ca4a27",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:slabPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0a16d1418dbe9f43",
+    "global": true,
+    "scopes": [
+      "galactic-power",
+      "galactic-power:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dfea89fbfa80a5c8",
+    "global": true,
+    "scopes": [
+      "null-upgrades",
+      "null-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2f9803e1bb8dae77",
+    "global": true,
+    "scopes": [
+      "permanent-endgame-masteries",
+      "permanent-endgame-masteries:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dca2d42d7935facc",
+    "global": true,
+    "scopes": [
+      "stars",
+      "stars:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8faa751f7360b0d2",
+    "global": true,
+    "scopes": [
+      "stars",
+      "stars:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8386016839e81220",
+    "global": true,
+    "scopes": [
+      "dilation-upgrades",
+      "dilation-upgrades:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0acd65577ca6755c",
+    "global": true,
+    "scopes": [
+      "eternity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.20dfb8db673f1013",
+    "global": true,
+    "scopes": [
+      "eternity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8d9475716c778f7c",
+    "global": true,
+    "scopes": [
+      "eternity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4061e2c3bc9fe98b",
+    "global": true,
+    "scopes": [
+      "ec-time-studies",
+      "ec-time-studies:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b49d4d4596f41156",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:42"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.35d1606ae2799ef7",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:71"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b8d8d357c615c733",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:71"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dc3378f5c7c2b1a2",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:91"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7b545922ae5e6368",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:101"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b8ecfdd9e97ec9ff",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:161"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0c43ee983ea7455b",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:193"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.12c187456502f071",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:214"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.36daa03f1c77553f",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:214"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a2f98bc561cd61a4",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:224"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ffeb7b1ae740a686",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:232"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ab3e35b5b468772",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:234"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b449fb40a4037cd4",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:234"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0c02268fb905e9cc",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:302"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.80ac22d6983c26aa",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:totalMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d3571e22cf88e9f0",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:totalMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1e81c41a50612c27",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:totalMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ac462bf5edb3fa45",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:currentMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0b1a3241a563c76f",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:currentMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f602451d1ceb1bcb",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:currentMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b20fbdf718c04fe3",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:postGalaxy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.122e105cd4ef8811",
+    "global": false,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:infinitiedMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f2693dcba25ad85e",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:infinitiedMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bf8ee10c63cd1b87",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:infinitiedMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.756888f6f7f2439e",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:achievementMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.48ea238ed22c4531",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:achievementMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.184b5e93ce3b458a",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:achievementMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b0edd01c7219af23",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:challengeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eac9ba5d85296753",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:challengeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.69ac7fa32513dd49",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:challengeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.de92c5f7496c4efa",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:autoBuyerUpgrade"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.902e8a57a3b6e35a",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e095959f5da00990",
+    "global": false,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:18Mult",
+      "infinity-upgrades:27Mult",
+      "infinity-upgrades:36Mult",
+      "infinity-upgrades:45Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2df8af352c61a7e2",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:18Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.398992948865fef0",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:18Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.66febe268a9b37e5",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:27Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f66abec205b5d318",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:27Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.019f7a0d843c54c8",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:36Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.819ea6a294a3bbba",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:36Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9ecff48d72b44dc1",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:45Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.55e8ef2fa53c0ef8",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:45Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9e0c2d725231886a",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:resetBoost"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a5394c6df5c6ab07",
+    "global": false,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:dimMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.776e8278ba11a295",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:dimMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2a0ce22be5743e8e",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.746745b7486da251",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a693bb324b18130b",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6ae0a7c1fd62b02e",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:unspentBonus"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.282945c09470994e",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:unspentBonus"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.82e3580ef2660fe4",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:unspentBonus"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0ecdd94429a24a72",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ce56e80bf0d2fa28",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6df1d26f4bee2e7c",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset2",
+      "infinity-upgrades:skipReset3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5d738bde5284e249",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8c2f6b79841500c3",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.09e5963bfd7eba43",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipResetGalaxy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a059a46be12adaf7",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipResetGalaxy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.107124e337f939ca",
+    "global": true,
+    "scopes": [
+      "duality-upgrades",
+      "duality-upgrades:21"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.15bf5f501b9dd530",
+    "global": true,
+    "scopes": [
+      "duality-upgrades",
+      "duality-upgrades:22"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dce61c90a568928c",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c6377dc807061bff",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.351b2301fb1ee884",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.02775602ddd01f7b",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b6fddcb56abfc86f",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4eeda07507778ec0",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eec30f21d57c12d4",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e9b9b3ee4d55d9fb",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.03e2c75c890c13fa",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ef4043a91a4af18f",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a69ed726396c06d2",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.17af3225a325bbcc",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3fb6b5836f9e279a",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powermult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.db8405a8a9c644c4",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powermult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.642563a61345acf7",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powermult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0478327670dd7c3a",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerbuy10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5ca6e14d24085381",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerbuy10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3274259107bd48e0",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:effarigantimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8a9c994fb74c0462",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:effarigantimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e46ed56a4325a7c0",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:effarigantimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.31f41042c15dd309",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ead63f92866ea907",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3eb36425604c4e89",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.823c1517291431cd",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:21"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.04c657c89fd645b4",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:22"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.37831a0ed8291fb6",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:24"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.adae7b07ceda01ec",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:27"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ce4be590b069f40f",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9b13b2033e2a099e",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:30"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.04893634a83e6901",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:51"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1da5c78052eeea0c",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:105"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.48f091dc11514935",
+    "global": true,
+    "scopes": [
+      "reality-upgrades",
+      "reality-upgrades:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0f354e574288f509",
+    "global": true,
+    "scopes": [
+      "reality-upgrades",
+      "reality-upgrades:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8ae2e673a0b1df3c",
+    "global": true,
+    "scopes": [
+      "reality-upgrades",
+      "reality-upgrades:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.018fc143798a0f5e",
+    "global": true,
+    "scopes": [
+      "reality-upgrades",
+      "reality-upgrades:21"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d75a99f831974d66",
+    "global": true,
+    "scopes": [
+      "tabs",
+      "tabs:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c7548623cfc26b7b",
+    "global": false,
+    "scopes": [
+      "tabs",
+      "tabs:14"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a10d5f6d3e8029db",
+    "global": true,
+    "scopes": [
+      "tabs",
+      "tabs:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0a21b525019a448e",
+    "global": true,
+    "scopes": [
+      "UndoGlyphModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2f55f6fb23a86767",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3fc9fc35d9487b34",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a5b5f42a9eaf4c2f",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6a57b3d596d5ec94",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.26645dffe1c09273",
+    "global": true,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5bcbcec81a5b4d81",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.65f6a76f012d77e0",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.37ee5dce62a8bd5a",
+    "global": true,
+    "scopes": [
+      "AutobuyerBox"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.26b3516edb28870d",
+    "global": true,
+    "scopes": [
+      "antimatter-dimension-autobuyer"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b95f2d111fa26483",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:141"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ee9fd6c320ddc468",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:161"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eed1bb71bc570b00",
+    "global": true,
+    "scopes": [
+      "UndoGlyphModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.276c5f2fc7c54cc9",
+    "global": true,
+    "scopes": [
+      "game"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bf7fad3802720f89",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b63276ca7bb270e7",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:18Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1bf832f5d3f85834",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:18Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b441f508fbde0088",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1f43f1bba9198acf",
+    "global": false,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:28",
+      "normal-achievements:31"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3d9fe95f84f3e5fe",
+    "global": false,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:68"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a714d1be3f52e92e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:71"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9a89daf9b95d00de",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3bbf390c2cb4cac9",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:27Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ec831b955981105a",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:27Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c6571a51da6180bd",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.96ec907c7cfd0672",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai136"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.776b10f1f514be99",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:36Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.58ce4620882e6c53",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:36Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8d4b602dc7243c30",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ee9836e0305fe3cf",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:45Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7e31b04e69a2846f",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:45Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2b43cb5ef1dd39b3",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8168cc0433266b61",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e0aa6cc8db0b6941",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.056d59184532b125",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.51ff34c444cb6246",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.13992d3ba7c6f764",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fbeb2ce502e8635b",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.90c0fd1d1d2fd21e",
+    "global": true,
+    "scopes": [
+      "ec-time-studies",
+      "ec-time-studies:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.13ecd6f2cc7fede9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:23"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3858d78c9f5930d5",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai37"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.10db607a45c8a8e7",
+    "global": true,
+    "scopes": [
+      "laitela",
+      "laitela:19"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.90c60ddf86a7a9dc",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e4f259dbdde1a6a6",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0267b8a586308ab8",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.43d65a06e3cccc44",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4833a5bc86f3c1ec",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8dd6e1fdeb783ff8",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:74"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b54855fa2d8d23a4",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:72"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.659cc6852e495c87",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4eaff269fdc36071",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:183"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ba17a684d8d3e6d9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:91",
+      "normal-achievements:92"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.deeb0dfc0bd9a66a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:65"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.43e2ff6a80c94c91",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:56"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bff617a48096f688",
+    "global": true,
+    "scopes": [
+      "BreakEternityTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5f314457eec1f4d9",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9ccbd3786ce268e2",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai78"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.17700a24c091fd30",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b36e44b85bc64780",
+    "global": true,
+    "scopes": [
+      "SpeedrunModeModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9f15022ce934ad49",
+    "global": true,
+    "scopes": [
+      "InfinityChallengesTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0b670d82cb4a1895",
+    "global": true,
+    "scopes": [
+      "AntimatterGalaxyModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.65403e96a6bfd9f0",
+    "global": true,
+    "scopes": [
+      "pelle",
+      "pelle:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0e498b57325d3524",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9e1cdd2de623ac0e",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6195c9ce84ebc1bc",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8ef73b4818a6aa84",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:24"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.af33c53296e91c38",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai129"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0ab9f825deafa9c8",
+    "global": true,
+    "scopes": [
+      "AutobuyersTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1599e6d5730a3c10",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.54148f1ed4c7bc4f",
+    "global": true,
+    "scopes": [
+      "dilation-upgrades",
+      "dilation-upgrades:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.590f161cb310c358",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:193"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.24cb22b87ea07902",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:91"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.074523b2d7f9cd24",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:101"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.14880f612c601545",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fd27bf673eece935",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a1c198e6cc101b08",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dc1d369aac875a39",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2015a8f497a1884f",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.979967f9be70f1db",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powermult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a4125ae1d4769c55",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2a50dd3181f31649",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9ecd18cee07c8a3d",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ad1242ea81c7630c",
+    "global": true,
+    "scopes": [
+      "v",
+      "v:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dcdba94b3f16f003",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai124"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a599d1970f31c0a6",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:dilationpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3d490adb2bd2e651",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:64"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bccd8a579c0c874e",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.90a4b1e980fed4f0",
+    "global": true,
+    "scopes": [
+      "strikes",
+      "strikes:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.511798eaacf44bc4",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1ab1e7e61d78392c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:84"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7a2cf502917488dd",
+    "global": true,
+    "scopes": [
+      "InformationModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ce279521f5811ce6",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:181"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d5c4e9a6bd29b08f",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:achievementMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.20125d08005e2b96",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:currentMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c63b054428bf08d8",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:73"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c65426cbcaea2338",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:challengeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.66c1025f32ccb2a7",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:infinitiedMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4e6836f4dc4a2589",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4ef5874119c2dd3d",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.35a87d4584ef3d6d",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:totalMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.69ab36c2d4c3ec7e",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:achievementMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2374a11248e85197",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:currentMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.21da34eb65ef1751",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:challengeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a1a544304af702f4",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:infinitiedMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.10b8d5753574e98a",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:totalMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6731119b22b53d6e",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.34732a887cd5e083",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7f7d10c20acd260b",
+    "global": true,
+    "scopes": [
+      "InformationModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5d7ea0d2fd5b810b",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerpow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b8b6a9f9720fcbe7",
+    "global": true,
+    "scopes": [
+      "InformationModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.43db90a46ffbb7be",
+    "global": true,
+    "scopes": [
+      "InformationModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e09b500e8bf0054f",
+    "global": true,
+    "scopes": [
+      "normal-time-study"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e6ca08aa378aa475",
+    "global": true,
+    "scopes": [
+      "HadronsPane"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e534c5a989b8a8cb",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e5e02b6d35d6f546",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e223b575bf9498b5",
+    "global": true,
+    "scopes": [
+      "galaxy-generator-autobuyer"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1528da5e6b344635",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bd8552df4b85d799",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownTab",
+      "MultiplierBreakdownTab.vue:0",
+      "antimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d794f108319b5038",
+    "global": false,
+    "scopes": [
+      "progress-checker"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8d51139be712f2b9",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:effarigantimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a703cdedadafaa0d",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:synergy5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d7697f8e19f0ed13",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:effarigantimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eb9ddb11137e3460",
+    "global": true,
+    "scopes": [
+      "ImportSaveModal",
+      "LoadGameEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.56616673854f4241",
+    "global": true,
+    "scopes": [
+      "NewGame"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e90211bbfbd72979",
+    "global": true,
+    "scopes": [
+      "catchup-resources",
+      "catchup-resources:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dcfd12f8ff77d3ad",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai56"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7610b1a98920ae04",
+    "global": true,
+    "scopes": [
+      "laitela",
+      "laitela:19"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5d8fa011fdc8fb9d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e7457543c0303ea6",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.90f186885b9a83a9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.00f2e6d4e8794113",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:14"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e28bff75f5ce50ec",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8a4c81394ddda15c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:16"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9228118dd73dc193",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:16"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c031d65a93f8d0d1",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:17"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a90a1709ab54ab54",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:28"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f9a49105bd674e43",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dd7c4cff9e916d3d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9c8680a349c0c94a",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2ddc141a0cd10626",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.56c07031d8c6b99b",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b1f2e8ca88922d5c",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7f309d0468a19b29",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:synergy2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2be88d87a4610ea2",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:56"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7850ba0cb62f3b2f",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:68"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b6b6fd06f48bf5c1",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:57"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3c7472090552ed79",
+    "global": true,
+    "scopes": [
+      "MultipleAutobuyersBox"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.78d3eeb48891ad60",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.555804ccdc8e154c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:231"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c7b54716b2b5d210",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:30"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7641ae24517e12a9",
+    "global": true,
+    "scopes": [
+      "catchup-resources",
+      "catchup-resources:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1d28ba63fa13e976",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.54be2fb38f05c1e7",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bc4a892e73f2f220",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:71"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1e99a49ce307cf45",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:234"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ae2a6af8ca84f0e0",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:214"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b500ebdc47290046",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:118"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.924c5c87f0bb2714",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bf0a490c4e850f49",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f2d47a3e68ef605b",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai130"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.aaff6e142f96b178",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:43"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.623021537000432f",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8bff7394782ecf46",
+    "global": true,
+    "scopes": [
+      "EnterOverchargeModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a981d74e31c802f3",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bc7233bee7589122",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.373eca1ffcd862c8",
+    "global": true,
+    "scopes": [
+      "dilation-time-studies",
+      "dilation-time-studies:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eea4b15bbf20565f",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:epSurge"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b66feb3acd529a3e",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:101"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.169cdd7771f42778",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:122"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.08a28bec0e50f40f",
+    "global": true,
+    "scopes": [
+      "catchup-resources",
+      "catchup-resources:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a2c987238a4ff26b",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.24771edb500d4fff",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.68f87d981cb7153f",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4369419c0ee289f8",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:76"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4dfb69037876786b",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2e318525aa664994",
+    "global": true,
+    "scopes": [
+      "pelle-upgrades",
+      "pelle-upgrades:antimatterDimensionMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.77b66cb977140614",
+    "global": true,
+    "scopes": [
+      "endgame-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f39c1c96d4813936",
+    "global": true,
+    "scopes": [
+      "endgame-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b4dea58d16a14872",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.75f223f3d142305b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:151"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f2b1812cc20b44db",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:137"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.83786a8b9404ba82",
+    "global": true,
+    "scopes": [
+      "v",
+      "v:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.354dca11e13d9ab0",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:161"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8ccade1bfbbe64cb",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:73"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.df97c23b8bc4112d",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:72"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6bbf50ebe18643c9",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:61"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b6700cfa53e5256c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:31"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6137bb14bb63867c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:24"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.166ef8682663a888",
+    "global": true,
+    "scopes": [
+      "pelle-upgrades",
+      "pelle-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5857b92e2fdda117",
+    "global": true,
+    "scopes": [
+      "pelle-upgrades",
+      "pelle-upgrades:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b3896816593f6bac",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:43"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f78e7fe086448c50",
+    "global": true,
+    "scopes": [
+      "antimatter"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3af02f208fabcf21",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5b5a34ef90e73ba8",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:25"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d5add2150ac1b581",
+    "global": true,
+    "scopes": [
+      "celestials"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.381042a77ab0b6a1",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:42"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.26f670989a0a24bf",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:44"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f319816dacee728b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:23"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b4eed1297159f734",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai150"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.293c962e486c6170",
+    "global": true,
+    "scopes": [
+      "elemental",
+      "elemental:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5ad043167da73be3",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b31088d57eb954d1",
+    "global": true,
+    "scopes": [
+      "NormalChallengesTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9397dbd8dbe10bd4",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6458b53cd8044388",
+    "global": true,
+    "scopes": [
+      "ra",
+      "ra:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0079af5511e7563f",
+    "global": true,
+    "scopes": [
+      "glyph-effects",
+      "glyph-effects:powerbuy10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3623c0b025ca19fc",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.15c0f98582f22c53",
+    "global": false,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:dimMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e0691dfdd06f0881",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:58"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.84da636e70c284bb",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:51"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.08d32604d439040a",
+    "global": true,
+    "scopes": [
+      "resurgence-upgrades",
+      "resurgence-upgrades:ipSurge"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8e5c16b4e1fd2d5f",
+    "global": true,
+    "scopes": [
+      "infinity-points"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.789e44cb394f2ce4",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:34"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a822770f216e8263",
+    "global": false,
+    "scopes": [
+      "dimboost"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.656a91fedb501823",
+    "global": false,
+    "scopes": [
+      "galaxy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.77fd0da732495b0c",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai164"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.949c17c06df3ef4f",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai140"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ae4d96398f84eb2a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:52"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b403e77e67c4deaf",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:unspentBonus"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.94c4e75d308bc706",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:unspentBonus"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.89ab898d78595d19",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cee19e2de25752f5",
+    "global": true,
+    "scopes": [
+      "null-upgrades",
+      "null-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e4c90c053098b777",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:18"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7d6b21fa2e3d6281",
+    "global": true,
+    "scopes": [
+      "celestial-infinity-upgrades",
+      "celestial-infinity-upgrades:antimatterCelestialDimBuff"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0071cc9817d5856e",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.216bfc85c2b9da25",
+    "global": true,
+    "scopes": [
+      "perk-shop",
+      "perk-shop:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7358eb53e88c69be",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a8fe393b29b70d75",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:16"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dfb2f22bd3c8ef17",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:17"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4bb1b00a2cba2151",
+    "global": true,
+    "scopes": [
+      "ExpansionPacksTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0d873ed443a81a75",
+    "global": true,
+    "scopes": [
+      "sacrifice"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e40ec50e6a68c67c",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai19"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7aa4bb513df8c026",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bd2ed9d0bd6ce613",
+    "global": true,
+    "scopes": [
+      "UndoGlyphModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.41b7be988b85beb1",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai64"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.096440e44e43f66d",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7d54af612818b99c",
+    "global": true,
+    "scopes": [
+      "divinity-upgrades",
+      "divinity-upgrades:divineL1U4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6278a01541ccc69f",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.345f86b1a5279f90",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6cd04db8f1cfd426",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.cdff1930736ef451",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:182"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.54b221602edcb007",
+    "global": true,
+    "scopes": [
+      "alchemy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1b9c6090c1622e90",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:105"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.525e28b7816c7c2d",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:raPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d1dea92e164eff42",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:222"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6ab8cc325b2abdd2",
+    "global": true,
+    "scopes": [
+      "stars",
+      "stars:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.63a65fa469095064",
+    "global": true,
+    "scopes": [
+      "endgame-masteries",
+      "endgame-masteries:101"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b9b2a6d9ca449343",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:233"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.78ac7a5c2bc84f45",
+    "global": true,
+    "scopes": [
+      "stars",
+      "stars:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3da864061d9211b2",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:22"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.21ab0769e51b302e",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:27"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a8b055b9b753665a",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:218"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.70cce8837ba9e8e7",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.251bfde7c797690c",
+    "global": true,
+    "scopes": [
+      "duality-upgrades",
+      "duality-upgrades:21"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ed71831876b103b8",
+    "global": true,
+    "scopes": [
+      "duality-upgrades",
+      "duality-upgrades:22"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bf31094b73ca59ae",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:224"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b8b8b4fc5fee7ce7",
+    "global": true,
+    "scopes": [
+      "ExpansionPacksTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7289439a547443cc",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:21"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.277182c3654ee5cd",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.017357faf9dd49fa",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:84"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6f9b13265e9998c3",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:228"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bbb9d86c4fff547c",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:125"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.540fbb80a0a89382",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:46"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.98f15198449a5558",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:153"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ba0c75918c9b8b23",
+    "global": true,
+    "scopes": [
+      "endgame-upgrades",
+      "endgame-upgrades:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6d73e7f4558c36d0",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.536f60eb50a7d284",
+    "global": true,
+    "scopes": [
+      "ascensions",
+      "ascensions:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ca606540080e3067",
+    "global": true,
+    "scopes": [
+      "ascensions",
+      "ascensions:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.480d0d4ac2a66edf",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.da9e644333f312b8",
+    "global": true,
+    "scopes": [
+      "eternity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.89497b8010cda2e9",
+    "global": true,
+    "scopes": [
+      "AutobuyerBox"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c69dfe90bad3504b",
+    "global": true,
+    "scopes": [
+      "ModernDimensionBoostRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.48012754ea5affe3",
+    "global": true,
+    "scopes": [
+      "storage"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6dc36aee53a78068",
+    "global": true,
+    "scopes": [
+      "reality"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3652f7a42c18310d",
+    "global": true,
+    "scopes": [
+      "singularity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.62ff294d4ba3a6d5",
+    "global": true,
+    "scopes": [
+      "singularity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.96d56f4b62b0b540",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0e39ea7f95f69ae2",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai103"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e4519fb3e5582a0c",
+    "global": true,
+    "scopes": [
+      "break-eternity-upgrades",
+      "break-eternity-upgrades:0"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b2738fdf4c7d5b42",
+    "global": true,
+    "scopes": [
+      "perks",
+      "perks:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.964c0c646cfa7d11",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.12e48290538c8cd0",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0badfbe1f113cb40",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipReset3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.9f21c23de04e7781",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:skipResetGalaxy"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d5b5a1e7058da2a5",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:21",
+      "normal-achievements:37",
+      "normal-achievements:54",
+      "normal-achievements:55",
+      "normal-achievements:78"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b8f65d6b93b2beb0",
+    "global": true,
+    "scopes": [
+      "eternity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.82f26f6d75594645",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.acb58e6c0a40e050",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b06c4ff638a106e0",
+    "global": true,
+    "scopes": [
+      "divinity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.54db0c5afbc1f847",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3a2eee707a89dc1b",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:13"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.94e03390cd6a74bd",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:14"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7c24307ac6c27d82",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:15"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.98e442ab5f457f05",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7501fd49e57170c6",
+    "global": true,
+    "scopes": [
+      "HeaderChallengeDisplay"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fd790cf600a52cb3",
+    "global": true,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.411f77cacd1d6507",
+    "global": true,
+    "scopes": [
+      "navigation"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.59e81e4f2edc3dcc",
+    "global": true,
+    "scopes": [
+      "ExpansionPacksTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.be31ff14a9161d5a",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:dimMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1e8e4914f5f9ca0b",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1b0f026b15a0dac2",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:117"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.60ed211c2b1b2968",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.71fcb0f8db1353fd",
+    "global": true,
+    "scopes": [
+      "divinity-milestones"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e18423980995e2bd",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai107"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6849c5e8c0e465f2",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0e58d05f69033d5d",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.99c158f2746b1488",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.13ede4b86bc4438c",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1e5372827e2d24f6",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai54"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2df8aff0abc18ca0",
+    "global": true,
+    "scopes": [
+      "rifts",
+      "rifts:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ab0c8e16dbe794a5",
+    "global": true,
+    "scopes": [
+      "TeresaTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.e374eaf620ad68d7",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d378280c7900bb5a",
+    "global": true,
+    "scopes": [
+      "catchup-resources",
+      "catchup-resources:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.43a3b16bdf05549d",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.00caa4431be424e1",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a5201db3ce0ee71b",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4629a4c34995185e",
+    "global": true,
+    "scopes": [
+      "ClassicDivineDimensionTab",
+      "ModernDivineDimensionTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5d7c2642ca48b98c",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai25"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.236a503a2211cc4e",
+    "global": true,
+    "scopes": [
+      "matter-scale"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1333208bd87a1c87",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.a257c4c89dfe3a7c",
+    "global": true,
+    "scopes": [
+      "imaginary-upgrades",
+      "imaginary-upgrades:25"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.67b889626b6040c8",
+    "global": true,
+    "scopes": [
+      "expansion-packs",
+      "expansion-packs:alphaPack"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.73f7fa6ad767070d",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dcb59b0648df2de9",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6a9c1331a385ffb1",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.10e0f89c0457c6d9",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.47b5a2e2ac357a01",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c213e4a837ec6b83",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dec26a983a206c60",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:7"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3563e7acb38c4e66",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.19d87504d870a6f2",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1770f4c860c30533",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai36"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.00e580753e37aaf5",
+    "global": true,
+    "scopes": [
+      "AutomatorDocsIntroPage"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.56067a399b98c984",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai113"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7ccfb3db97c851ed",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6b98ea6d197672af",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3efe884f42f0676e",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c62e56afbb8115ee",
+    "global": true,
+    "scopes": [
+      "accelerators",
+      "accelerators:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.aae61df4a8c3a4b8",
+    "global": true,
+    "scopes": [
+      "news",
+      "news:ai65"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f32ecbb83a88fbd9",
+    "global": true,
+    "scopes": [
+      "EndgameTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.61d3cf8e33b3e2a4",
+    "global": true,
+    "scopes": [
+      "EndgameTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.aaccfe9343aa26f6",
+    "global": true,
+    "scopes": [
+      "reality"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b9a8e857465cd6d1",
+    "global": true,
+    "scopes": [
+      "ClassicDivineDimensionTab",
+      "ModernDivineDimensionTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.ba30cec0b4dea49f",
+    "global": true,
+    "scopes": [
+      "alpha",
+      "alpha:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1f0c8dfb646451a4",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.df5e1570d38b9e49",
+    "global": true,
+    "scopes": [
+      "normal-challenges"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b94b3d4efd1afe38",
+    "global": true,
+    "scopes": [
+      "laitela",
+      "laitela:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d6b5d87f2abf7a00",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6512064c04e0dca7",
+    "global": true,
+    "scopes": [
+      "normal-achievements",
+      "normal-achievements:111"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0b6435cf76c71038",
+    "global": true,
+    "scopes": [
+      "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c462b16626aab1a6",
+    "global": true,
+    "scopes": [
+      "h2p"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dd22590678e4d6c0",
+    "global": true,
+    "scopes": [
+      "EnterCelestialsModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c513b372497e68f1",
+    "global": true,
+    "scopes": [
+      "TeresaTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.fa392f12bceb8a02",
+    "global": true,
+    "scopes": [
+      "EnterCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c3950cb50a5c572d",
+    "global": true,
+    "scopes": [
+      "EnterCursedCoreModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1f98dda1ff9ea51d",
+    "global": true,
+    "scopes": [
+      "EnterUniverseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c5b5c89491395fe5",
+    "global": true,
+    "scopes": [
+      "EnterUniverseModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.d325d8ae9a3d8ced",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4baf1aa56007b261",
+    "global": true,
+    "scopes": [
+      "SlabdrillTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0559ed456d6180a2",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8059986d0e768974",
+    "global": true,
+    "scopes": [
+      "CompressionButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.5017a12b5bd83932",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.b090aa55027e8423",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.4b3950bba644504a",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3f9ab5a56fa44adf",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.827ab5973d8eb03b",
+    "global": true,
+    "scopes": [
+      "TransientUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.eb3e77e2292d781d",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.3f75b53786d232ee",
+    "global": true,
+    "scopes": [
+      "slabdrill",
+      "slabdrill:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0d6a645bfd0bfdf0",
+    "global": true,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:3"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.616d909cf408baab",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:10",
+      "eternity-challenges:11"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0c00ee0871759769",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6f1eba5a8508c87f",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.1387d01f476f0e3c",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:5"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.7b0800528570fb51",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.8e6baa2f7dcbc867",
+    "global": true,
+    "scopes": [
+      "infinity-challenges",
+      "infinity-challenges:8"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2056f255548b7e11",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:1",
+      "normal-challenges:2",
+      "normal-challenges:3",
+      "normal-challenges:4",
+      "normal-challenges:5",
+      "normal-challenges:6",
+      "normal-challenges:7",
+      "normal-challenges:8",
+      "normal-challenges:9"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.230d59af0d0c7858",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:4"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6023a7fe6ec33cd9",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:6"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.bd0b069077f89f71",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:10"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.0092454822a9b445",
+    "global": true,
+    "scopes": [
+      "normal-challenges",
+      "normal-challenges:12"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.6b1d12809d2deb1f",
+    "global": true,
+    "scopes": [
+      "normal-time-studies",
+      "normal-time-studies:214"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.dd9a25bda1305530",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:totalMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.04cdff8a01489241",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:currentMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.23583366fa5882dc",
+    "global": false,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:infinitiedMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f3baddc1bb4ac089",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:achievementMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.2ecb8ca5a3aaf5ea",
+    "global": true,
+    "scopes": [
+      "break-infinity-upgrades",
+      "break-infinity-upgrades:challengeMult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.c0706d0109165bef",
+    "global": false,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:18Mult",
+      "infinity-upgrades:27Mult",
+      "infinity-upgrades:36Mult",
+      "infinity-upgrades:45Mult"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.f7f7d3e498791ae5",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:timeMult2"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "ade.79ccadb126621cb2",
+    "global": true,
+    "scopes": [
+      "infinity-upgrades",
+      "infinity-upgrades:unspentBonus"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "header.state.timeDilation",
+    "global": false,
+    "scopes": [
+      "HeaderChallengeDisplay"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "header.state.eternityChallenge",
+    "global": false,
+    "scopes": [
+      "HeaderChallengeDisplay"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "header.state.infinityChallenge",
+    "global": false,
+    "scopes": [
+      "HeaderChallengeDisplay"
     ],
     "protectedParameters": []
   }

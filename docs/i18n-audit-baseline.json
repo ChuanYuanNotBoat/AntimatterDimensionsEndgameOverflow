@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "date": "2026-10-04",
+  "sourceCommit": "e8386b01d877128b7e14ba53a4b419b366c5545e",
+  "adecCommit": "2deeebcae272eaf674528d6d13a21bd50ff2a1a9",
+  "static": {
+    "findingCounts": {
+      "hardcoded-ui-english": 294,
+      "dynamic-translation-key": 18,
+      "string-dependency": 2,
+      "english-fallback": 8,
+      "mixed-language-output": 290,
+      "identical-translation": 6,
+      "duplicate-translation": 96
+    },
+    "domains": {
+      "news-quotes-ending": {
+        "hardcoded-ui-english": 2,
+        "mixed-language-output": 17,
+        "duplicate-translation": 1
+      },
+      "ade2-progression": {
+        "hardcoded-ui-english": 29,
+        "english-fallback": 2,
+        "identical-translation": 2,
+        "mixed-language-output": 14,
+        "duplicate-translation": 18
+      },
+      "automator": {
+        "dynamic-translation-key": 2,
+        "hardcoded-ui-english": 22,
+        "mixed-language-output": 2,
+        "duplicate-translation": 3
+      },
+      "shared": {
+        "hardcoded-ui-english": 85,
+        "dynamic-translation-key": 8,
+        "string-dependency": 2,
+        "english-fallback": 3,
+        "mixed-language-output": 32,
+        "identical-translation": 1,
+        "duplicate-translation": 15
+      },
+      "options-save": {
+        "hardcoded-ui-english": 10,
+        "dynamic-translation-key": 2,
+        "identical-translation": 2,
+        "mixed-language-output": 14,
+        "duplicate-translation": 3
+      },
+      "automation": {
+        "hardcoded-ui-english": 9,
+        "mixed-language-output": 7,
+        "duplicate-translation": 2
+      },
+      "glyphs": {
+        "hardcoded-ui-english": 3,
+        "mixed-language-output": 134,
+        "duplicate-translation": 3
+      },
+      "reality": {
+        "hardcoded-ui-english": 9,
+        "mixed-language-output": 18,
+        "duplicate-translation": 6
+      },
+      "dimensions": {
+        "dynamic-translation-key": 6,
+        "hardcoded-ui-english": 8,
+        "mixed-language-output": 4,
+        "duplicate-translation": 4
+      },
+      "eternity": {
+        "hardcoded-ui-english": 9,
+        "mixed-language-output": 4,
+        "duplicate-translation": 9
+      },
+      "celestials": {
+        "hardcoded-ui-english": 16,
+        "english-fallback": 2,
+        "identical-translation": 1,
+        "mixed-language-output": 4,
+        "duplicate-translation": 10
+      },
+      "pelle": {
+        "hardcoded-ui-english": 5,
+        "mixed-language-output": 30,
+        "duplicate-translation": 2
+      },
+      "infinity": {
+        "hardcoded-ui-english": 6,
+        "english-fallback": 1,
+        "mixed-language-output": 6,
+        "duplicate-translation": 10
+      },
+      "breakdown-statistics": {
+        "hardcoded-ui-english": 81,
+        "duplicate-translation": 9
+      },
+      "h2p": {
+        "mixed-language-output": 4,
+        "duplicate-translation": 1
+      }
+    },
+    "errors": 0,
+    "reviewedDisplayDependencies": 2
+  },
+  "runtime": {
+    "scenarios": 10,
+    "uiRenders": 654,
+    "mobileRenders": 12,
+    "targetedDomChecks": 240,
+    "auditBatches": 452,
+    "errors": {
+      "parameter-error": 0,
+      "text-ref-error": 0,
+      "catalog-error": 0,
+      "stale-locale-cache": 0,
+      "missing-base-key": 0
+    },
+    "browserErrors": 0,
+    "candidateOccurrences": {
+      "missing-key": 230,
+      "english-fallback": 2144,
+      "mixed-language-output": 3073
+    },
+    "distinctLocatedCandidates": {
+      "missing-key": 10,
+      "english-fallback": 508,
+      "mixed-language-output": 699
+    },
+    "droppedOccurrences": 0,
+    "observedMissingChineseKeys": [
+      "navigation.universes.tangible"
+    ],
+    "extraFontQaRenders": 240,
+    "extraFontQaMobileRenders": 12
+  },
+  "tests": {
+    "i18n": 60,
+    "chapter3AndEthereal": 39
+  },
+  "notes": [
+    "Candidate counts are not confirmed defect counts.",
+    "Runtime occurrences include repeated layouts, locale roundtrips and observer scans.",
+    "Distinct candidates deduplicate type/locale/domain/reason/key/reference/component/DOM location/fingerprint.",
+    "Full QA output/private save is not included.",
+    "DOM and catalog fallback queues are separate; eight absent Chinese catalog keys remain.",
+    "Mobile screenshot glyph inspection uses an externally supplied QA font because the container has no CJK font."
+  ]
+}
