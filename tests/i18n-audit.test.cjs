@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { test, before } = require('node:test');
 const babel = require('@babel/core');
-const { localized } = require('../scripts/i18n-audit.cjs');
+const { localized, enumerateKeys, parameterNames } = require('../scripts/i18n-audit.cjs');
 const read = file => fs.readFileSync(path.join(__dirname, '../src/i18n', file), 'utf8');
 const strip = text => text.replace(/^import .*;\s*$/gm, '').replace(/^export /gm, '');
 let IntlMessageFormat;
@@ -115,6 +115,9 @@ test('stale cache stamps record errors; unchanged text alone never means stale',
 test('DOM heuristics separate mixed-language candidates, unkeyed fallback and unresolved slots', () => {
   const { context, audit } = setup();
   context.I18nAudit = audit;
+  context.policy = { domains: [] };
+  context.displayRules = [];
+  context.termRules = [];
   vm.runInContext(`${strip(read('browser-audit.js'))}\nthis.inspect = inspectOutput;`, context);
   for (const text of ['数量：1e100 IP', '主题：Normal', 'Infinity', '天界 Celestial Points', 'Pause autobuyers', '数量：\uE000p0\uE001']) {
     context.inspect(text, { locale: 'zh-CN', domain: 'fixture' }, audit.record);
@@ -124,6 +127,67 @@ test('DOM heuristics separate mixed-language candidates, unkeyed fallback and un
   assert.equal(report.totals['english-fallback'], 1);
   assert.equal(report.totals['parameter-error'], 1);
   assert.ok(report.entries.every(entry => entry.fingerprint && !entry.text));
+});
+test('static audit enumerates immutable key choices and leaves state-derived keys explicit', () => {
+  const values = [];
+  const ast = babel.parseSync(`const fixed = flag ? 'one' : 'two'; t(fixed); t(model.nameKey);`, { configFile: false, babelrc: false });
+  babel.traverse(ast, { CallExpression({ node, scope }) { values.push(enumerateKeys(node.arguments[0], scope)); } });
+  assert.deepEqual(values, [['one', 'two'], null]);
+  const message = new IntlMessageFormat("Literal '{hidden}' {choice, select, a {{amount}} other {{count, number}}}", 'en');
+  assert.deepEqual(parameterNames(message.getAst()), ['amount', 'choice', 'count']);
+});
+test('opt-in browser reports retain bounded final output and extra parameters without changing the formatter', () => {
+  const selector = "'{literal}' {choice, select, a {{amount}} other {{count, number}}}";
+  const { service, audit, context } = setup({ en: { text: 'Value: {value}', selector, resource: 'Celestial Infinity Points' },
+    'zh-CN': { text: '数量：{value}', selector } });
+  Object.assign(context, { I18nAudit: audit, URLSearchParams, policy: { domains: [] }, displayRules: [], termRules: [{ id: 'resource' }] });
+  vm.runInContext(`${strip(read('browser-audit.js'))}\nthis.install = installBrowserAudit;`, context);
+  const windowRef = { location: { search: '?i18nAudit=1' }, document: { documentElement: {} },
+    MutationObserver: class { observe() {} }, setTimeout };
+  context.install(windowRef, service);
+  service.setLocale('zh-CN');
+  const output = service.t('text', { value: '123', unused: 'never-record-this-value' });
+  windowRef.__i18nAudit.translation('text', { value: '123', unused: 'never-record-this-value' }, 'text', output, { component: 'Fixture' });
+  const report = windowRef.__i18nAudit.snapshot();
+  assert.equal(output, '数量：123');
+  assert.equal(report.entries[0].reason, 'extra-parameters');
+  assert.equal(report.entries[0].severity, 'error');
+  assert.equal(report.outputs[0].text, output);
+  assert.doesNotMatch(JSON.stringify(report), /never-record-this-value/);
+  assert.doesNotMatch(JSON.stringify(audit.snapshot()), /数量/);
+  windowRef.__i18nAudit.clear();
+  assert.equal(windowRef.__i18nAudit.snapshot().outputs.length, 0);
+  const selectorValues = { choice: 'a', amount: '2' };
+  const selected = service.t('selector', selectorValues);
+  windowRef.__i18nAudit.translation('selector', selectorValues, 'text', selected);
+  assert.equal(windowRef.__i18nAudit.snapshot().totals['parameter-error'] ?? 0, 0);
+  windowRef.__i18nAudit.translation('selector', { ...selectorValues, literal: 'not-an-argument' }, 'text', selected);
+  assert.equal(windowRef.__i18nAudit.snapshot().totals['parameter-error'] ?? 0, 0,
+    'complex ICU schemas remain in the static audit; the bridge must not guess');
+  windowRef.__i18nAudit.inspect('数量：Celestial Infinity Points');
+  windowRef.__i18nAudit.inspect('数量：Celestial Infinity');
+  const embedded = windowRef.__i18nAudit.snapshot().entries.filter(entry => entry.reason === 'embedded-english-resource');
+  assert.equal(embedded.length, 1);
+  assert.equal(embedded[0].reference, 'resource');
+  const normal = { location: { search: '' } };
+  context.install(normal, service);
+  assert.equal(normal.__i18nAudit, undefined);
+});
+test('Vue translation observation isolates a broken QA sink and preserves real formatter failures', () => {
+  const { service, context } = setup();
+  context.window = { __i18nAudit: { translation() { throw Error('observer'); } } };
+  context.document = {};
+  context.installBrowserAudit = () => {};
+  context.LocalizedText = {};
+  context.DisplayI18n = {};
+  vm.runInContext(`${strip(fs.readFileSync(path.join(__dirname, '../src/i18n/vue-adapter.js'), 'utf8'))}\nthis.install = installI18n;`, context);
+  let mixin;
+  context.install({ component() {}, observable() {}, mixin(value) { mixin = value; } });
+  service.setLocale('zh-CN');
+  assert.equal(mixin.methods.$t.call({ $options: { name: 'Fixture' } }, 'text', { value: '123' }), '数量：123');
+  const original = new Error('formatter');
+  service.t = () => { throw original; };
+  assert.throws(() => mixin.methods.$t.call({ $options: {} }, 'text'), error => error === original);
 });
 test('static identity audit follows locally assigned translated values but preserves canonical names/tokens', () => {
   const detected = [];

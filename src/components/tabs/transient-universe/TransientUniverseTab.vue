@@ -51,31 +51,28 @@ export default {
     <div>
       <br>
       <div class="c-ephemeral-text">
-        You have <span class="c-universes-text--header">{{ $legacyText(_s(format(ephemeralLight, 2, 2))) }}</span> Ephemeral Light.
-        <br>
-        Ephemeral Light is currently providing a
-        <span class="c-universes-text--header">{{ $legacyText(_s(formatPow(formula1, 2, 3))) }}</span>
-        to Galaxy Generator production, and a
-        <span class="c-universes-text--header">{{ $legacyText(_s(formatPow(formula2, 2, 3))) }}</span>
-        to Tachyon Particles, Dilated Time, and Game Speed while outside Doom.
+        <LocalizedText id="ade.ba80c19cbaffa566">
+          <template #p0><span class="c-universes-text--header">{{ format(ephemeralLight, 2, 2) }}</span></template>
+          <template #p1><br></template>
+          <template #p2><span class="c-universes-text--header">{{ formatPow(formula1, 2, 3) }}</span></template>
+          <template #p3><span class="c-universes-text--header">{{ formatPow(formula2, 2, 3) }}</span></template>
+        </LocalizedText>
       </div>
       <br>
       <div class="c-transient-universe-text">
-        Your highest Antimatter reached in the Transient Universe is
-        <span class="c-universes-text--header">{{ $legacyText(_s(format(highestAntimatter, 2, 1))) }}</span>.
+        <LocalizedText id="ade.fb9ee1643c8933b4">
+          <template #p0><span class="c-universes-text--header">{{ format(highestAntimatter, 2, 1) }}</span></template>
+        </LocalizedText>
       </div>
       <br>
       <div class="c-transient-universe-text">
-        You have
-        <span class="c-universes-text--header">{{ $legacyText(_s(format(relativisticParticles, 2, 2))) }}</span>
-        Relativistic Particles.
-        <span class="c-universes-text--header">+{{ $legacyText(_s(format(particlesPerSecond, 2, 2))) }}/s</span>
-        <br>
-        Relativistic Particles are currently weaking the negative Dilation effects of Antimatter and Infinity Dimensions by
-        <span class="c-universes-text--header">{{ $legacyText(_s(formatDecimalPercents(particleBoost, 2, 2))) }}</span>
-        while inside the Transient Universe.
-        <br>
-        Relativistic Particles reset on exiting the Transient Universe.
+        <LocalizedText id="ade.c404c705d0ccd67f">
+          <template #p0><span class="c-universes-text--header">{{ format(relativisticParticles, 2, 2) }}</span></template>
+          <template #p1><span class="c-universes-text--header">+{{ format(particlesPerSecond, 2, 2) }}/s</span></template>
+          <template #p2><br></template>
+          <template #p3><span class="c-universes-text--header">{{ formatDecimalPercents(particleBoost, 2, 2) }}</span></template>
+          <template #p4><br></template>
+        </LocalizedText>
       </div>
     </div>
     <br>

@@ -6,12 +6,28 @@
       "pattern": "automator|script-template"
     },
     {
-      "id": "automation",
-      "pattern": "autobuyer|hotkeys"
+      "id": "h2p",
+      "pattern": "h2p|how-to-play|help-tab"
     },
     {
-      "id": "dimensions",
-      "pattern": "dimension|tickspeed"
+      "id": "news-quotes-ending",
+      "pattern": "(?:/quotes/|secret-formula/news|ending|credits|changelog|news-ticker)"
+    },
+    {
+      "id": "breakdown-statistics",
+      "pattern": "multiplier.*(?:breakdown|tab)|statistics|last-ten|past-runs|multiplier-tab"
+    },
+    {
+      "id": "pelle",
+      "pattern": "pelle|doomed|doom|rift|galaxy-generator"
+    },
+    {
+      "id": "glyphs",
+      "pattern": "glyph|alchemy"
+    },
+    {
+      "id": "automation",
+      "pattern": "autobuyer|hotkeys"
     },
     {
       "id": "infinity",
@@ -22,16 +38,20 @@
       "pattern": "eternity|time-stud|dilation"
     },
     {
-      "id": "reality-glyphs",
-      "pattern": "reality|glyph|perk"
+      "id": "dimensions",
+      "pattern": "dimension|tickspeed"
     },
     {
-      "id": "celestials",
-      "pattern": "celestial|alchemy|pelle|slabdrill"
+      "id": "reality",
+      "pattern": "reality|perk"
     },
     {
       "id": "ade2-progression",
       "pattern": "compression|overcharge|universe|ethereal|endgame|ascension|collider|hadrons|divinity|galactic"
+    },
+    {
+      "id": "celestials",
+      "pattern": "celestial|slabdrill|teresa|effarig|enslaved|laitela|\\bra\\b|alpha"
     },
     {
       "id": "options-save",
@@ -51,7 +71,11 @@
       "english-fallback",
       "mixed-language-output",
       "identical-translation",
-      "string-dependency"
+      "string-dependency",
+      "dynamic-translation-key",
+      "hardcoded-ui-english",
+      "duplicate-translation",
+      "adec-available-fallback"
     ],
     "note": "Fallback/mixed-language candidates are review queues, not proof of a defect or a release-wide translation claim. Never translate user code, canonical identifiers, CSS keys or numeric notation."
   },

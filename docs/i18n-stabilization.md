@@ -19,7 +19,7 @@ The AST scan follows direct localized expressions and local variable initializer
 
 ## Runtime recording
 
-The generic service accepts a failure-isolated diagnostic callback. The bounded collector retains up to 500 distinct entries, occurrence counts, totals, overflow count, locale and catalog revision. It stores identifiers and categories, not values, rendered text, exception messages, save data or Automator script content. Reports are in memory only; no network telemetry or dependencies were added.
+The generic service accepts a failure-isolated diagnostic callback. The bounded collector retains up to 500 distinct entries, occurrence counts, totals, overflow count, locale and catalog revision. The generic collector stores identifiers and categories, not values, rendered text, exception messages, save data or Automator script content. The optional browser QA adapter separately retains up to 500 final-output records (1,000 characters each) with key/component/DOM path; this requires `?i18nAudit=1` and remains local. Normal production logging is quiet. Reports are in memory only; no network telemetry or dependencies were added.
 
 | Category | Meaning |
 | --- | --- |
@@ -31,7 +31,7 @@ The generic service accepts a failure-isolated diagnostic callback. The bounded 
 | `stale-locale-cache` | Cached locale/revision disagrees with the active stamp, or a paused locale roundtrip changes the same fixture's output. Unchanged text alone does not prove staleness. |
 | `catalog-error` | Malformed replacement pack was rejected atomically. |
 
-Open a QA page with `?i18nAudit=1` (or append `&i18nAudit=1`). This exposes `window.__i18nAudit` with `snapshot()`, `clear()`, `setContext({domain})`, `scan()` and `inspect(text, context)`. A throttled MutationObserver scans visible text automatically. Core errors/fallbacks are collected even without DOM scanning. DOM scanning skips code, editable input, CodeMirror and the news ticker; short units, notation and reviewed names are excluded from prose heuristics. Remaining candidates may still include intentional abbreviations, a whole English resource fallback or player text. The audit never rewrites output.
+Open a QA page with `?i18nAudit=1` (or append `&i18nAudit=1`). This exposes `window.__i18nAudit` with `snapshot()`, `clear()`, `setContext({domain})`, `scan()` and `inspect(text, context)`. A throttled MutationObserver scans visible text automatically. Snapshots include severity/priority, domain counts and opt-in `outputs` for locating candidates. `$t` additionally observes plain-message extra parameters; complex ICU schemas remain static checks. Complete English resources embedded in Chinese are recorded as mixed-output candidates. Core errors/fallbacks are collected even without DOM scanning. DOM scanning skips code, editable input, CodeMirror and the news ticker; short units, notation and reviewed names are excluded from prose heuristics. Remaining candidates may still include intentional abbreviations, a whole English resource fallback or player text. The audit never rewrites output.
 
 Display matching clears its bounded cache on locale/catalog revision changes and checks cache stamps before reuse. Catalog reference fallback dependencies propagate through nested messages, including cached expansion, and are reported only for the grammatical form actually rendered.
 
@@ -70,3 +70,7 @@ Only two existing identity couplings are changed in this phase: Automator undo/r
 ## Boundary for future AD:I18N
 
 `service.js` and `audit.js` have no ADE imports, player state or simulation dependencies. Catalog loading, ADEChinese display matching, DOM heuristics, domain policy and browser gameplay fixtures remain outside that generic boundary. Preserving this boundary requires no additional extraction layers now.
+
+## Translation update baseline
+
+The 2026-10-04 ADEC translation-only update and expanded audit/real browser coverage are recorded in [adec-stabilization-baseline.md](adec-stabilization-baseline.md). This supersedes earlier coverage counts without changing core APIs or the one-file language format.

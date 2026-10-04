@@ -12,7 +12,7 @@
     "i18n:audit:strict": "node scripts/i18n-audit.cjs --strict",
     "test:chapter3": "node --test tests/chapter3-progression-hardening.test.cjs tests/ethereal-sector-number-boundary.test.cjs",
     "test:browser": "node scripts/test-chapter3-browser.cjs",
-    "test:i18n": "node --test tests/i18n-service.test.cjs tests/i18n-audit.test.cjs tests/i18n-identities.test.cjs tests/i18n-display.test.cjs tests/pelle-domain-stall.test.cjs"
+    "test:i18n": "node --test tests/i18n-service.test.cjs tests/i18n-audit.test.cjs tests/adec-translation-sync.test.cjs tests/i18n-identities.test.cjs tests/i18n-display.test.cjs tests/pelle-domain-stall.test.cjs"
   },
   "dependencies": {
     "@antimatter-dimensions/notations": "^3.1.0",

@@ -116,9 +116,9 @@
   },
   {
     "id": "terms.celestialTachyonParticle",
+    "form": "plural",
     "global": true,
-    "scopes": [],
-    "form": "plural"
+    "scopes": []
   },
   {
     "id": "terms.cosmicSector",
@@ -132,6 +132,12 @@
   },
   {
     "id": "terms.darkHadrons",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.darkHadrons",
+    "form": "singular",
     "global": true,
     "scopes": []
   },
@@ -299,6 +305,12 @@
     "scopes": []
   },
   {
+    "id": "terms.divinities",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
     "id": "terms.doomedParticle",
     "global": true,
     "scopes": []
@@ -353,6 +365,12 @@
     "scopes": []
   },
   {
+    "id": "terms.exoticHadrons",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
     "id": "terms.galacticPower",
     "global": true,
     "scopes": []
@@ -363,7 +381,19 @@
     "scopes": []
   },
   {
+    "id": "terms.hadronizes",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
     "id": "terms.hadrons",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.hadrons",
+    "form": "singular",
     "global": true,
     "scopes": []
   },
@@ -489,13 +519,13 @@
   },
   {
     "id": "terms.nullParticle",
+    "form": "plural",
     "global": true,
-    "scopes": [],
-    "form": "plural"
+    "scopes": []
   },
   {
     "id": "terms.nullParticle",
-    "form": "plural",
+    "form": "pluralUppercase",
     "global": true,
     "scopes": []
   },
@@ -537,6 +567,12 @@
     "scopes": []
   },
   {
+    "id": "terms.relicShards",
+    "form": "singular",
+    "global": true,
+    "scopes": []
+  },
+  {
     "id": "terms.remnant",
     "global": true,
     "scopes": []
@@ -571,6 +607,12 @@
   },
   {
     "id": "terms.singularities",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.singularities",
+    "form": "singular",
     "global": true,
     "scopes": []
   },
@@ -668,44 +710,78 @@
     "scopes": []
   },
   {
-    "id": "terms.darkHadrons",
-    "form": "singular",
+    "id": "terms.matterGalaxy",
     "global": true,
     "scopes": []
   },
   {
-    "id": "terms.divinities",
-    "form": "singular",
+    "id": "terms.matterGalaxy",
+    "form": "plural",
     "global": true,
     "scopes": []
   },
   {
-    "id": "terms.exoticHadrons",
-    "form": "singular",
+    "id": "terms.glyphLevel",
     "global": true,
     "scopes": []
   },
   {
-    "id": "terms.hadronizes",
-    "form": "singular",
+    "id": "terms.celestialGalaxy",
     "global": true,
     "scopes": []
   },
   {
-    "id": "terms.hadrons",
-    "form": "singular",
+    "id": "terms.celestialGalaxy",
+    "form": "plural",
     "global": true,
     "scopes": []
   },
   {
-    "id": "terms.relicShards",
-    "form": "singular",
+    "id": "terms.dimensionBoost",
     "global": true,
     "scopes": []
   },
   {
-    "id": "terms.singularities",
-    "form": "singular",
+    "id": "terms.dimensionBoost",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialDimensionBoost",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.celestialDimensionBoost",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.tickspeed",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.replicantiGalaxy",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.replicantiGalaxy",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.lightHadron",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.lightHadron",
+    "form": "plural",
     "global": true,
     "scopes": []
   },
@@ -721,6 +797,50 @@
   },
   {
     "id": "terms.replicantiGalaxyLimit",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.chaosCore",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.chaosCore",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.ephemeralLight",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.relativisticParticle",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.relativisticParticle",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.electromagneticWave",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.electromagneticWave",
+    "form": "plural",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.electromagneticWave",
+    "form": "sourceTypo",
     "global": true,
     "scopes": []
   }
