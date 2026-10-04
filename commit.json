@@ -1,1 +1,1 @@
-{"sha":"6e77d76106ab241d5d27145b224c8f8fd4bc05e4","message":"Fix split localized sentences and missing rendered text","author":"Chuanyuan"}
+{"sha":"e8386b01d877128b7e14ba53a4b419b366c5545e","message":"Merge pull request #6 from ChuanYuanNotBoat/fix/i18n-stabilization-audit\n\nStabilize i18n with runtime audits and English/Chinese gameplay parity","author":"Chuanyuan"}
