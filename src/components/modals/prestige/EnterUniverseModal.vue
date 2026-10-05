@@ -109,10 +109,10 @@ export default {
 <template>
   <ModalWrapperChoice @confirm="handleYesClick">
     <template #header>
-      {{ topLabel }}
+      {{ $legacyText(topLabel) }}
     </template>
     <div>
-      {{ $legacyText(_s(message)) }}
+      {{ $t('universes.entry.reset', { universe: $legacyText(topLabel) }) }}
       <br>
       <br>
       <div
@@ -120,7 +120,7 @@ export default {
         class="universe-description"
       >
         <br><br>
-        {{ $legacyText(_s(description)) }}
+        {{ number === 1 ? $t('universes.entry.transientDescription', { speed: format(0.001, 3, 3), penalty: format(0.1, 1, 1), tetration: format(0.9, 1, 1), dilation: format(0.1, 1, 1) }) : $legacyText(description) }}
       </div>
       <br><br>
       <div>
@@ -128,11 +128,11 @@ export default {
       </div>
       <br>
       <div>
-        Reach {{ $legacyText(_s(format(highestAntimatter, 2, 1))) }} Antimatter to gain rewards from the {{ $legacyText(_s(name)) }} Universe.
+        {{ $t('universes.entry.rewardThreshold', { amount: format(highestAntimatter, 2, 1), resource: $t(number === 2 ? 'terms.matter' : 'terms.antimatter'), universe: $legacyText(topLabel) }) }}
       </div>
     </div>
     <template #confirm-text>
-      Begin
+      {{ $t('universes.entry.button') }}
     </template>
   </ModalWrapperChoice>
 </template>

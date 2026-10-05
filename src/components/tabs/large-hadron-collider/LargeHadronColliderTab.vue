@@ -159,44 +159,11 @@ export default {
           class="c-large-hadron-collider-text"
         >
           <br>
-          <div v-if="milestonesReached >= 1">
-            C Milestone {{ $legacyText(_s(formatInt(1))) }}: Tesseract Equalizer.
-            Effective Tesseracts are slowly shifting from (bought + free) into (bought * free).
-            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.5) * 2, 0, 1), 3, 3))) }} complete, making the current
-            number of Effective Tesseracts equal to {{ $legacyText(_s(format(tessEqual, 2, 2))) }}.
-          </div>
-          <div v-if="milestonesReached >= 2">
-            <br>
-            C Milestone {{ $legacyText(_s(formatInt(2))) }}: {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Equalizer.
-            {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} production is slowly shifting from
-            ({{ $legacyText(_s(isFlipped ? "MDMults" : "ADMults")) }} * Tickspeed) into
-            ({{ $legacyText(_s(isFlipped ? "MDMults" : "ADMults")) }}^log10(max(Tickspeed, 1))).
-            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.7) * 10/3, 0, 1), 3, 3))) }} complete, making current
-            {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} production equal to {{ $legacyText(_s(format(antiEqual, 2, 2))) }}.
-          </div>
-          <div v-if="milestonesReached >= 3">
-            <br>
-            C Milestone {{ $legacyText(_s(formatInt(3))) }}: Tickspeed Equalizer.
-            Effective Tickspeed Upgrades are slowly shifting from (bought + free) into (bought * free).
-            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.85) * 20/3, 0, 1), 3, 3))) }} complete, making the current
-            number of Effective Tickspeed Upgrades equal to {{ $legacyText(_s(format(tickEqual, 2, 2))) }}.
-          </div>
-          <div v-if="milestonesReached >= 4">
-            <br>
-            C Milestone {{ $legacyText(_s(formatInt(4))) }}: Black Hole and Potency Improvement.
-            Black Holes now also apply a power effect which is increasing from 1 to log10(log10(max(BHMult, 10))) + 1.
-            Furthermore, the Divine Matter/Energy multiplier from the Potency Accelerator now also applies a power effect
-            which is increasing from 1 to (max(log10(max(PotencyMult, 1)) - 18.5, 0) / 3) + 1.
-            These shifts are {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.95) * 20, 0, 1), 3, 3))) }} complete, making the current
-            Black Hole {{ $legacyText(_s(formatInt(1))) }} boost equal to {{ $legacyText(_s(formatPow(bh1Improve, 2, 3))) }}, the current
-            Black Hole {{ $legacyText(_s(formatInt(2))) }} boost equal to {{ $legacyText(_s(formatPow(bh2Improve, 2, 3))) }}, and the current
-            Divine Matter/Energy boost from the Potency Accelerator equal to {{ $legacyText(_s(formatPow(potencyImprove, 2, 3))) }}.
-          </div>
-          <div v-if="milestonesReached >= 5">
-            <br>
-            C Milestone {{ $legacyText(_s(formatInt(5))) }}: Light unlock.
-            You have reached {{ $legacyText(_s(formatInt(1))) }}C and can now generate Light (coming soon).
-          </div>
+          <div v-if="milestonesReached >= 1">{{ $t('endgame.collider.milestone1', { p0: $legacyText(_s(formatInt(1))), p1: $legacyText(_s(formatPercents(Math.clamp((c - 0.5) * 2, 0, 1), 3, 3))), p2: $legacyText(_s(format(tessEqual, 2, 2))) }) }}</div>
+          <div v-if="milestonesReached >= 2">{{ $t('endgame.collider.milestone2', { p0: $legacyText(_s(formatInt(2))), p1: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p2: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p3: $legacyText(_s(isFlipped ? "MDMults" : "ADMults")), p4: $legacyText(_s(isFlipped ? "MDMults" : "ADMults")), p5: $legacyText(_s(formatPercents(Math.clamp((c - 0.7) * 10/3, 0, 1), 3, 3))), p6: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p7: $legacyText(_s(format(antiEqual, 2, 2))) }) }}</div>
+          <div v-if="milestonesReached >= 3">{{ $t('endgame.collider.milestone3', { p0: $legacyText(_s(formatInt(3))), p1: $legacyText(_s(formatPercents(Math.clamp((c - 0.85) * 20/3, 0, 1), 3, 3))), p2: $legacyText(_s(format(tickEqual, 2, 2))) }) }}</div>
+          <div v-if="milestonesReached >= 4">{{ $t('endgame.collider.milestone4', { p0: $legacyText(_s(formatInt(4))), p1: $legacyText(_s(formatPercents(Math.clamp((c - 0.95) * 20, 0, 1), 3, 3))), p2: $legacyText(_s(formatInt(1))), p3: $legacyText(_s(formatPow(bh1Improve, 2, 3))), p4: $legacyText(_s(formatInt(2))), p5: $legacyText(_s(formatPow(bh2Improve, 2, 3))), p6: $legacyText(_s(formatPow(potencyImprove, 2, 3))) }) }}</div>
+          <div v-if="milestonesReached >= 5">{{ $t('endgame.collider.milestone5', { p0: $legacyText(_s(formatInt(5))), p1: $legacyText(_s(formatInt(1))) }) }}</div>
           <br>
           <div>
             {{ $legacyText(_s(nextDisplay)) }}
@@ -214,14 +181,13 @@ export default {
         class="c-large-hadron-collider-entropy"
         v-if="canSeeEntropy1"
       >
-        Excess Entropy in the universe has caused your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} to
-        decay past {{ $legacyText(_s(format(amSoftcap, 2, 2))) }}, and has restricted it from exceeding {{ $legacyText(_s(format(amHardcap, 2, 2))) }}.
+        {{ $t('endgame.collider.entropy', { p0: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p1: $legacyText(_s(format(amSoftcap, 2, 2))), p2: $legacyText(_s(format(amHardcap, 2, 2))) }) }}
       </div>
       <div
         class="c-large-hadron-collider-entropy"
         v-if="canSeeEntropy2"
       >
-        The {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} decay is significantly stronger past {{ $legacyText(_s(format(amSoftcap2, 2, 2))) }}.
+        {{ $t('endgame.collider.strongerDecay', { p0: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p1: $legacyText(_s(format(amSoftcap2, 2, 2))) }) }}
       </div>
       <div
         class="c-large-hadron-collider-entropy"
@@ -234,7 +200,7 @@ export default {
     <br>
     <div v-if="highestAntimatter.gt(10)">
       <span class="c-void-antimatter-amount">
-        [Your highest {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} inside The Void is {{ $legacyText(_s(format(highestAntimatter, 2, 1))) }}.]
+        {{ $t('endgame.void.highest', { p0: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p1: $legacyText(_s(format(highestAntimatter, 2, 1))) }) }}
       </span>
       <br>
       <span class="c-null">{{ $t('ade.53f8790e58571e38', { p0: $legacyText(_s(formatNullAmount(nullMatter))), p1: $legacyText(_s(formatNullAmount(nullPerSecond))) }) }}</span>
@@ -265,7 +231,7 @@ export default {
     <div v-if="voidMode === 0">
       {{ $t('ade.b90d7241977ab1f9') }}
       <br>
-      Your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} will slowly decay and you will gain Null Matter from the decayed {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }}.
+      {{ $t('endgame.void.decay', { p0: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p1: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }) }}
       <span v-if="nullified">
         <LocalizedText id="ade.eca6cd5186a09521">
     <template #p0><br></template>
@@ -273,10 +239,9 @@ export default {
       </span>
     </div>
     <div v-if="voidMode === 1">
-      Entering The Void in Nullified Mode will force an Endgame reset and Dilate your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} by {{ $legacyText(_s(format(0.01, 2, 2))) }}.
+      {{ $t('endgame.void.nullifiedEntry', { p0: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p1: $legacyText(_s(format(0.01, 2, 2))) }) }}
       <br>
-      You will generate Null Particles based on your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }}, which empower
-      {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimensions while inside The Void in normal mode (Currently: {{ $legacyText(_s(formatPow(nullParticleEffect, 2, 3))) }}).
+      {{ $t('endgame.void.nullParticles', { p0: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p1: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")), p2: $legacyText(_s(formatPow(nullParticleEffect, 2, 3))) }) }}
     </div>
     <NullUpgradesTabComponent />
   </div>

@@ -191,7 +191,7 @@ export default {
   >
     {{ $legacyText(_s(name)) }}
     <br>
-    Requirement: {{ $legacyText(_s(format(antimatterCost))) }} Total {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} {{ $legacyText(_s(showEternity)) }}
+    {{ $t('autobuyers.totalRequirement', { amount: format(antimatterCost), resource: $t(isFlipped ? 'terms.matter' : 'terms.antimatter'), scope: $legacyText(showEternity) }) }}
   </div>
 </template>
 

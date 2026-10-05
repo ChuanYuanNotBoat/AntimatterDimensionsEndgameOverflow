@@ -39,7 +39,7 @@ export default {
     @confirm="handleYesClick"
   >
     <template #header>
-      You are Breaking Infinity
+      {{ $t('infinity.break.header') }}
     </template>
     <div class="c-modal-message__text">
       <span
@@ -50,7 +50,7 @@ export default {
       </span>
     </div>
     <template #confirm-text>
-      Break
+      {{ $t('infinity.break.button') }}
     </template>
   </ModalWrapperChoice>
 </template>

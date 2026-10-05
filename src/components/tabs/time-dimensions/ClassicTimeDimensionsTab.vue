@@ -103,7 +103,7 @@ export default {
         {{ $t('ade.0e6c57db71518a7b') }}
       </div>
       <div v-if="hasCap">
-        Any 8th Time Dimensions purchased above {{ $legacyText(_s(format(1e8))) }} will not further increase the multiplier.
+        {{ $t('dimensions.time.purchaseCap', { amount: format(1e8) }) }}
       </div>
     </div>
   </div>

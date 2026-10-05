@@ -86,7 +86,7 @@ export default {
       {{ $legacyText(_s(reward)) }}
     </div>
     <template #confirm-text>
-      Begin
+      {{ $t('infinity.challenge.begin') }}
     </template>
   </ModalWrapperChoice>
 </template>

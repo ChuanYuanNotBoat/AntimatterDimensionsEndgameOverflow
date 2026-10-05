@@ -149,10 +149,10 @@ export default {
     </div>
     <br>
     <span
-      v-if="isCursed"
+      v-if="isCursed && nextLayer"
       class="l-slabdrill-header"
     >
-      The next Strike will be encountered when you {{ $legacyText(_s(nextLayer)) }}.
+      {{ $t('slabdrill.nextStrike', { condition: $legacyText(nextLayer) }) }}
     </span>
     <br>
     <br>

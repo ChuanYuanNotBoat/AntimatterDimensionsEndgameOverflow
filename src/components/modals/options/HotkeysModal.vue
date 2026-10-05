@@ -83,7 +83,7 @@ export default {
 <template>
   <ModalWrapper>
     <template #header>
-      Hotkey List
+      {{ $t('hotkeys.title') }}
     </template>
     <span class="c-modal-hotkeys l-modal-hotkeys">
       <div class="l-modal-hotkeys__column">
@@ -150,8 +150,10 @@ export default {
           <span class="c-modal-hotkeys-row__name l-modal-hotkeys-row__name">{{ $t('ade.b93a55cf35d9c3f0') }}</span>
         </div>
         <span class="c-modal-hotkeys__shift-description">
-          {{ $t('ade.712883a300884b5c') }} <kbd>SHIFT</kbd> will not buy a single Dimension. It may instead, depending on your device,
-          cause the page to scroll or change game tabs. <kbd>ALT</kbd> will still work as expected.
+          <LocalizedText id="hotkeys.numpad">
+            <template #p0><kbd>SHIFT</kbd></template>
+            <template #p1><kbd>ALT</kbd></template>
+          </LocalizedText>
         </span>
         <template v-if="isElectron">
           <br>

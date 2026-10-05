@@ -843,5 +843,10 @@
     "form": "sourceTypo",
     "global": true,
     "scopes": []
+  },
+  {
+    "id": "terms.tangibleUniverse",
+    "global": true,
+    "scopes": []
   }
 ]

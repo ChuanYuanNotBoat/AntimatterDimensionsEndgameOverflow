@@ -100,21 +100,18 @@ export default {
     </div>
     <div>
       <p>
-        <LocalizedText id="ade.f1f98b07bee9d666">
-          <template #p0><span class="c-infinity-dim-description__accent">{{ $legacyText(_s(format(infinityPower, 2, 1))) }}</span></template>
+        <LocalizedText id="dimensions.infinity.power">
+          <template #p0><span class="c-infinity-dim-description__accent">{{ format(infinityPower, 2, 1) }}</span></template>
           <template #p1><br></template>
-          <template #p2><span v-if="!isEC9Running">
-          {{ $t('ade.3b32181c27401525') }}
-          <span class="c-infinity-dim-description__accent">{{ $legacyText(_s(formatPow(conversionRate, 2, 3))) }}</span>
-        </span>
-<span v-else>
-          {{ $t('ade.c49489009c660834') }}
-        </span></template>
-          <template #p3><span class="c-infinity-dim-description__accent">{{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}</span></template>
-          <template #p4><span v-if="!isEC9Running">{{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimensions.</span>
-<span v-else>Time Dimensions due to Eternity Challenge 9.</span></template>
+          <template #p2>
+            <LocalizedText v-if="!isEC9Running" id="dimensions.infinity.conversion">
+              <template #p0><span class="c-infinity-dim-description__accent">{{ formatPow(conversionRate, 2, 3) }}</span></template>
+            </LocalizedText>
+            <span v-else>{{ $t('ade.c49489009c660834') }}</span>
+          </template>
+          <template #p3><span class="c-infinity-dim-description__accent">{{ formatX(dimMultiplier, 2, 1) }}</span></template>
+          <template #p4>{{ isEC9Running ? $t('dimensions.infinity.ec9Target') : $t(isFlipped ? 'terms.matterDimension' : 'terms.antimatterDimension', {}, 'plural') }}</template>
         </LocalizedText>
-
       </p>
     </div>
     <div
