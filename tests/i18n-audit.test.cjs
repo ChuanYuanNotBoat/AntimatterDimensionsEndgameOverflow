@@ -200,3 +200,10 @@ test('static identity audit follows locally assigned translated values but prese
 test('generic core has no ADE domain imports or gameplay globals', () => {
   for (const file of ['service.js', 'audit.js']) assert.doesNotMatch(read(file), /(?:from\s+["'].*(?:core|ade|display)|\b(?:player|GameUI|AutomatorBackend)\.)/u);
 });
+
+test('static audit traverses real named slots instead of dropping modal and challenge text', async () => {
+  const report = await require('../scripts/i18n-audit.cjs').audit();
+  assert.ok(report.references['hotkeys.title']);
+  assert.ok(report.references['terms.matter'].some(ref => ref.file.includes('ClassicDivineDimensionTab')));
+  assert.ok(report.findings.some(finding => finding.file?.includes('EnterCompressionModal') && finding.text === 'Enter'));
+});

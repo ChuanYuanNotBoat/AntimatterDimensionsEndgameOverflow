@@ -10,6 +10,7 @@ if (!process.env.ADE_TEST_SAVE) throw new Error("Set ADE_TEST_SAVE to an exporte
 const targetUrl = new URL(process.env.ADE_TEST_URL || "http://127.0.0.1:40765/?inspectSave=1");
 if (process.env.ADE_TEST_AUDIT !== "0") targetUrl.searchParams.set("i18nAudit", "1");
 const url = targetUrl.href;
+const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
 (async () => {
   const browser = await playwright.chromium.launch({
     executablePath: process.env.ADE_CHROMIUM_PATH,
@@ -48,7 +49,7 @@ const url = targetUrl.href;
     }
     const page = await preparePage({ viewport: { width: 1450, height: 1100 } });
     const save = fs.readFileSync(process.env.ADE_TEST_SAVE, "utf8").trim();
-    const base = await page.evaluate(s => {
+    const base = await page.evaluate(async s => {
       GameIntervals.stop();
 
       GameIntervals.start = () => {};
@@ -85,6 +86,20 @@ const url = targetUrl.href;
       player.options.confirmations.overcharge = false;
       player.options.confirmations.universes = false;
       Lazy.invalidateAll();
+      GameUI.update();
+      await Vue.nextTick();
+      const pauseTickers = view => {
+        if (view.$options.name === "NewsTicker") view.clearTimeouts();
+        for (const child of view.$children) pauseTickers(child);
+      };
+      pauseTickers(ui);
+      GameUI.update();
+      await Vue.nextTick();
+      const stopNews = view => {
+        if (view.$options.name === "NewsTicker") view.clearTimeouts();
+        view.$children.forEach(stopNews);
+      };
+      stopNews(ui);
       return GameSaveSerializer.serialize(player);
     }, save);
 
@@ -336,6 +351,45 @@ const url = targetUrl.href;
         check(finite(player.replicanti.amount), "replicanti amount");
         return { purchased: true };
       });
+      if (batchAB) {
+        await scenario("Dimension autobuyer identities and modes", () => {
+          const groups = [Autobuyer.antimatterDimension, Autobuyer.infinityDimension, Autobuyer.timeDimension];
+          const names = groups.map(group => group.groupName);
+          for (const group of groups) group.isActive = !group.isActive;
+          const modes = [];
+          for (let tier = 1; tier <= 8; tier++) {
+            const buyer = Autobuyer.antimatterDimension(tier);
+            buyer.toggleMode(); buyer.toggle();
+            check(buyer.tier === tier, "canonical dimension tier");
+            modes.push(buyer.mode);
+          }
+          check(Autobuyer.bigCrunch.name === "Infinity", "canonical Infinity name");
+          check(Autobuyer.eternity.name === "Eternity", "canonical Eternity name");
+          return { names, modes };
+        });
+        await scenario("Tangible Universe reset, production and rewards", () => {
+          player.celestials.pelle.divinities = new Decimal(40);
+          check(enterUniverse(2), "enter Tangible");
+          check(player.universes.current === 2, "canonical universe id");
+          gameLoop(1000, { realDiff: 1000 });
+          check(finite(player.universes.molecularMass), "molecular mass production");
+          player.universes.highestTangibleMatter = new Decimal("ee100");
+          check(exitUniverse(2), "exit Tangible");
+          check(player.universes.current === 0, "exit universe id");
+          return { reward: player.universes.stellarAugmenters.toString() };
+        });
+        await scenario("Slabdrill stage and unlock identities", () => {
+          player.celestials.slabdrill.isCursed = true;
+          player.celestials.slabdrill.stage = 0;
+          const ids = SlabdrillUnlocks.all.map(unlock => unlock.id);
+          for (let stage = 0; stage < Slabdrill.layerReqs.length; stage++) {
+            check(Slabdrill.currentStage === stage, "canonical stage");
+            check(typeof Slabdrill.nextLayer === "string", "canonical condition");
+            Slabdrill.advanceLayer();
+          }
+          return { ids, stage: Slabdrill.currentStage };
+        });
+      }
       await scenario("Automator canonical compilation and execution", () => {
         const script = "auto infinity off\nauto eternity off\npause 0.1 seconds\nstop";
         check(!hasCompilationErrors(script), "compile canonical commands");
@@ -381,6 +435,9 @@ const url = targetUrl.href;
       const tabs = await page.evaluate(() => Object.values(Tab).filter(t => t?.subtabs).flatMap(t => t.subtabs.filter(s => s.isUnlocked).map(s => [t.key, s.key])));
 
       for (const [tab, sub] of tabs) {
+        if (batchAB && !(["dimensions", "infinity", "endgame", "universes"].includes(tab) ||
+          tab === "automation" && sub === "autobuyers" || tab === "challenges" && sub === "infinity" ||
+          tab === "celestials" && sub === "slabdrill")) continue;
         await auditContext(`${tab}/${sub}`);
         const result = await page.evaluate(async ({
           tab,
@@ -412,6 +469,11 @@ const url = targetUrl.href;
         }, null, 2));
         assert.doesNotMatch(result.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b/u, `${modern}/${locale}/${tab}/${sub}`);
 
+        if (batchAB && locale === "zh-CN") {
+          if (tab === "infinity") assert.doesNotMatch(result.text, /of your best IP\/min|Galaxies are stronger based on Teresa/u, `${tab}/${sub}`);
+          if (tab === "dimensions") assert.doesNotMatch(result.text, /购买 [^\n]*times|维度献祭已禁用 [^\n]*multiplier|买到 [^\n]*Cost/u, `${tab}/${sub}`);
+          if (tab === "endgame") assert.doesNotMatch(result.text, /Generate .*Perk Point per minute|[0-9] Endgames|Endgames every|Condense Ethereal Power for .*Gray Stars|Total Hadrons|\(Capped:/u, `${tab}/${sub}`);
+        }
         if (locale === "zh-CN" && tab === "automation" && sub === "autobuyers") {
           assert.doesNotMatch(result.text, /Current Setting|Dynamic amount|Dimension Autobuyers can have|Activates every X seconds|Bulk Singularity Time|now automatically and continuously/u);
           assert.ok(result.text.includes("当前设置"));
@@ -464,7 +526,9 @@ const url = targetUrl.href;
       }, modern);
       await page.selectOption("#ade-language", locale);
       await auditContext("display-fixtures");
-      const result = await page.evaluate(async () => {
+      const result = await page.evaluate(async ({ batchAB }) => {
+        const layout = player.options.newUI ? "Modern" : "Classic";
+        const timeTab = player.options.newUI ? "NewTimeDimensionsTab" : "ClassicTimeDimensionsTab";
         const find = (name, root = ui) => root.$options.name === name ? root :
           root.$children.map(child => find(name, child)).find(Boolean);
         const definitions = {};
@@ -475,7 +539,20 @@ const url = targetUrl.href;
           ["celestials", "laitela", ["HadronsPane"]],
           ["endgame", "compression", ["TimeCompressionTab", "CompressionButton"]],
           ["universes", "transient", ["TransientUniverseTab"]],
-          ["celestials", "slabdrill", ["SlabdrillTab"]]
+          ["celestials", "slabdrill", ["SlabdrillTab"]],
+          ...(batchAB ? [
+            ["dimensions", "infinity", [`${layout}InfinityDimensionsTab`, `${layout}InfinityDimensionRow`]],
+            ["dimensions", "divine", [`${layout}DivineDimensionTab`]],
+            ["dimensions", "time", [timeTab]],
+            ["dimensions", "antimatter", ["TickspeedRow", `${layout}DimensionBoostRow`, `${layout}AntimatterDimensionRow`]],
+            ["infinity", "upgrades", ["InfinityUpgradesTab"]],
+            ["challenges", "infinity", ["InfinityChallengesTab"]],
+            ["endgame", "upgrades", ["EndgameUpgradesTab"]],
+            ["endgame", "expansion-packs", ["ExpansionPacksContainer"]],
+            ["universes", "tangible", ["TangibleUniverseTab"]],
+            ["endgame", "collider", ["LargeHadronColliderTab"]],
+            ["universes", "tangible", ["TangibleUniverseTab"]]
+          ] : [])
         ]) {
           // The neutral gameplay fixture closes the Slabdrill run. Open its real tab
           // temporarily for display fixtures, without replacing the production component.
@@ -500,22 +577,40 @@ const url = targetUrl.href;
         }
         definitions.CelestialEternityButton = find("CelestialEternityButton").constructor.options;
         definitions.CelestialCrunchButton = find("CelestialCrunchButton").constructor.options;
+        if (batchAB) {
+          definitions.EnterUniverseModal = Modal.enterUniverse._component;
+          definitions.ExitCompressionModal = Modal.exitCompression._component;
+          definitions.HotkeysModal = Modal.hotkeys._component;
+          definitions.SlabdrillStrike = definitions.SlabdrillTab.components.SlabdrillStrike;
+        }
         const captures = [];
         async function capture(name, data, propsData = {}, label = name) {
-          const view = new (Vue.extend(definitions[name]))({ propsData });
-          view.$mount();
-          document.body.appendChild(view.$el);
-          await Vue.nextTick();
+          if (batchAB && ["RealityAutobuyerBox", "SacrificedGlyphs", "CurrentGlyphEffects", "GlyphSetName"].includes(name)) return;
+          let view;
+          const modal = name === "EnterUniverseModal" ? Modal.enterUniverse :
+            name === "ExitCompressionModal" ? Modal.exitCompression : name === "HotkeysModal" ? Modal.hotkeys : null;
+          const wasCompression = player.compression.active;
+          if (modal) {
+            Modal.hideAll();
+            if (name === "ExitCompressionModal") player.compression.active = true;
+            modal.show(propsData); GameUI.update(); await Vue.nextTick(); view = find(name);
+            if (!view) throw Error(`Missing actual modal ${name}`);
+          } else {
+            view = new (Vue.extend(definitions[name]))({ propsData });
+            view.$mount(); document.body.appendChild(view.$el); await Vue.nextTick();
+          }
           EventHub.ui.offAll(view);
           Object.assign(view, data);
           await Vue.nextTick();
+          if (typeof view.$el.innerText !== "string") throw Error(`Missing DOM for ${label} (${name})`);
           window.__i18nAudit?.inspect(view.$el.innerText, { component: name });
           captures.push({ label, state: { hasEffarig: view.hasEffarig, hasReality: view.hasReality }, text: view.$el.innerText.replace(/\s+/gu, " ").trim(),
+            attributes: [...view.$el.querySelectorAll("[title], [data-original-title]")].map(el => el.getAttribute("title") || el.getAttribute("data-original-title")),
             paragraphs: name === "TimeCompressionTab" ? [...view.$el.querySelectorAll(".l-compression-tab > span")]
               .map(el => el.innerText).join(" ") : undefined,
             highlights: [...view.$el.querySelectorAll(".c-replicanti-description__accent")].map(el => el.textContent) });
-          view.$destroy();
-          view.$el.remove();
+          if (modal) { Modal.hideAll(); player.compression.active = wasCompression; }
+          else { view.$destroy(); view.$el.remove(); }
         }
         for (const [type, flipped] of [[Autobuyer.antimatterDimension, false], [Autobuyer.antimatterDimension, true],
           [Autobuyer.infinityDimension, false], [Autobuyer.timeDimension, false]]) {
@@ -565,8 +660,39 @@ const url = targetUrl.href;
           relativisticParticles: new Decimal(789), particlesPerSecond: new Decimal(12), particleBoost: new Decimal(0.25) });
         for (const active of [false, true]) await capture("SlabdrillTab", { isCursed: true, isCoreActive: active,
           power: new Decimal(123), powerPerSecond: new Decimal(456), powerCap: new Decimal(789) }, {}, `slab-core-${active}`);
+        if (batchAB) {
+          for (const ec9 of [false, true]) for (const flipped of [false, true]) {
+            await capture(`${layout}InfinityDimensionsTab`, { infinityPower: new Decimal(123), dimMultiplier: new Decimal(456),
+              conversionRate: 7, isEC9Running: ec9, isFlipped: flipped }, {}, `domain-infinity-${ec9}-${flipped}`);
+          }
+          for (const flipped of [false, true]) await capture(`${layout}DivineDimensionTab`, { divineMatter: new Decimal(123),
+            conversionFormula1: new Decimal(2), conversionFormula2: new Decimal(3), conversionFormula3: 0.25,
+            isFlipped: flipped }, {}, `domain-divine-${flipped}`);
+          await capture(timeTab, { hasCap: true }, {}, "domain-time-cap");
+          await capture("TickspeedRow", { isTransient: true, isVisible: true, isContinuumActive: false, isEC9: false }, {}, "domain-transient-tickspeed");
+          await capture("InfinityChallengesTab", { isFlipped: false }, {}, "domain-infinity-goals");
+          await capture("InfinityUpgradesTab", { chargeUnlocked: true, chargesUsed: 1, totalCharges: 3,
+            eternityUnlocked: true, bottomRowUnlocked: true, isSoftcapApplicable: true, isUncapped: false,
+            ipMultSoftCap: new Decimal(123), ipMultHardCap: new Decimal(456) }, {}, "domain-infinity-upgrades");
+          await capture("EndgameUpgradesTab", {}, {}, "domain-endgame-locks");
+          for (const mode of [0, 1]) for (const flipped of [false, true]) await capture("LargeHadronColliderTab", {
+            hasAccelerator: true, hasC: true, c: 1, milestonesReached: 5, canSeeEntropy1: true, canSeeEntropy2: true,
+            highestAntimatter: new Decimal(123), nullified: true, voidMode: mode, isFlipped: flipped
+          }, {}, `domain-collider-${mode}-${flipped}`);
+          for (const [number, name] of [[1, "Transient"], [2, "Tangible"]]) await capture("EnterUniverseModal", {}, { number, name }, `domain-universe-${number}`);
+          for (const gain of [0, 123]) await capture("ExitCompressionModal", { hawkingRadiationGain: new Decimal(gain) }, {}, `domain-compression-exit-${gain}`);
+          await capture("HotkeysModal", {}, {}, "domain-hotkeys");
+          for (const [running, gain] of [[false, 0], [true, 0], [true, 123]]) await capture("TangibleUniverseTab", {
+            isRunning: running, pendingAugmenters: new Decimal(gain), highestMatter: new Decimal(456),
+            molecularMass: new Decimal(123), massPerSecond: new Decimal(7), massBoost: new Decimal(2),
+            stellarAugmenters: new Decimal(89), formula: new Decimal(0.25)
+          }, {}, `domain-tangible-${running}-${gain}`);
+          for (const pack of ExpansionPack.all) await capture("ExpansionPacksContainer", { isUnlocked: true }, { pack }, `domain-expansion-${pack.id}`);
+          for (const unlock of SlabdrillUnlocks.all) await capture("SlabdrillStrike", {}, { getUnlock: () => unlock }, `domain-strike-${unlock.id}`);
+          for (let tier = 1; tier <= 9; tier++) await capture(`${layout}DimensionBoostRow`, { requirement: { tier, amount: new Decimal(123) } }, {}, `domain-boost-${tier}`);
+        }
         return captures;
-      });
+      }, { batchAB });
       if (process.env.ADE_TEST_REPORT) fs.writeFileSync(process.env.ADE_TEST_REPORT, JSON.stringify({ reports, errors, fixtures: result }, null, 2));
       await captureAudit("display-fixtures", { modern, locale, fixtures: result });
       for (const row of result) {
@@ -584,7 +710,23 @@ const url = targetUrl.href;
         if (locale === "zh-CN") {
           // Compression's child upgrades still contain known English fallbacks. Keep their
           // full output in the audit; these new assertions cover the reviewed paragraphs.
-          if (!row.label.startsWith("slab-core")) assert.doesNotMatch(row.paragraphs ?? row.text, /now automatically|Current Setting|Target |Dynamic amount|multiplier| power on|on all|from Glyphs|from an Alpha|extra Replicanti|Auto Galaxy|when their Glyph|All effects from|You cannot have|Celestial Eternity for|Celestial Crunch for|Celestial .*of Infinity/u, row.label);
+          if (!row.label.startsWith("domain-") && !row.label.startsWith("slab-core")) assert.doesNotMatch(row.paragraphs ?? row.text, /now automatically|Current Setting|Target |Dynamic amount|multiplier| power on|on all|from Glyphs|from an Alpha|extra Replicanti|Auto Galaxy|when their Glyph|All effects from|You cannot have|Celestial Eternity for|Celestial Crunch for|Celestial .*of Infinity/u, row.label);
+          if (row.label.startsWith("domain-")) {
+            assert.doesNotMatch(row.text, /维度维度|第第一|\{p\d+\}|\[\[terms/u, row.label);
+            if (row.label.startsWith("domain-infinity-")) assert.doesNotMatch(row.text, /Dimensions\.|Compression Upgrade/u, row.label);
+            if (row.label.startsWith("domain-divine")) assert.doesNotMatch(row.text, /Exponent while|reduction to Hadron/u, row.label);
+            if (row.label.startsWith("domain-expansion")) { assert.match(row.text, /[\u3400-\u9fff]/u); assert.doesNotMatch(row.text, /Unlock |Keep |Start |Automatically|Black Hole|Endgame|Canister|Reality Machine|Celestial Galaxies/u, row.label); if (row.label === "domain-expansion-vPack") { assert.match(row.text, /解锁薇的现实/u); assert.doesNotMatch(row.text, /自动完成薇的现实/u); } }
+            if (row.label.startsWith("domain-tangible")) { assert.doesNotMatch(row.text, /Tangible|Molecular Mass|Stellar Augmenters|You have|Gray Star/u); assert.match(row.text, /超质量体.*星流增幅体|星流增幅体.*超质量体/u); }
+            if (row.label === "domain-time-cap") assert.doesNotMatch(row.text, /Any 8th Time/u);
+            if (row.label === "domain-transient-tickspeed") assert.match(row.text, /流幻宇宙/u);
+            if (row.label === "domain-hotkeys") { assert.equal((row.text.match(/因技术限制/g) || []).length, 1); assert.doesNotMatch(row.text, /will not buy a single|may instead|will still work/u); }
+            if (row.label === "domain-endgame-locks") { assert.match(row.text, /权限会永久保留/u); assert.doesNotMatch(row.text, /to make the game prevent/u); }
+            if (row.label.startsWith("domain-strike")) assert.doesNotMatch(row.text, /Serpentine Power|multiplier|raised to|recreate|Infinity。|Eternity。|Reality。|None|。。/u, row.label);
+            if (row.label.startsWith("domain-collider")) { assert.match(row.text, /里程碑.*均衡器/u); assert.doesNotMatch(row.text, /Equalizer|This shift|Your highest|Entering The Void|will generate Null Particles/u, row.label); }
+            if (row.label.startsWith("domain-compression-exit")) { assert.match(row.text, /退出压缩/u); assert.doesNotMatch(row.text, /If you exit|not gain|Hawking Radiation|激能确认|Exit/u); assert.match(row.text, row.label.endsWith("-0") ? /不会获得任何奖励/u : /霍金辐射/u); }
+            if (row.label === "domain-universe-1") assert.doesNotMatch(row.text, /Inside the Transient|Begin|刹那宇宙/u);
+            if (row.label === "domain-universe-2") { assert.doesNotMatch(row.text, /Tangible宇宙|Reach .*Antimatter/u); assert.match(row.text, /物质以获得/u); }
+          }
           if (row.label.startsWith("continuum")) {
             assert.equal((row.text.match(/连续统将取代/g) || []).length, 1);
             assert.doesNotMatch(row.text, /[A-Za-z]/u);
@@ -598,6 +740,7 @@ const url = targetUrl.href;
           if (row.label.startsWith("celestial-crunch")) assert.ok(row.text.includes("天界无限点数"));
           if (row.label.startsWith("glyph-limit")) assert.ok(row.text.includes("你不能"));
           if (row.label === "TimeCompressionTab" || row.label.startsWith("compression-")) {
+            assert.doesNotMatch(row.text, /Next:|Triple the amount|Gain a multiplier to .*Dimensions|Dimensions based on/u, row.label);
             assert.doesNotMatch(row.paragraphs ?? row.text, /You have|Thermal Radiation|Hawking Radiation|Disable Compression|Reach |Compress time|Next |Electromagnetic Waves act/u, row.label);
             assert.doesNotMatch(row.text, /维度维度/u, row.label);
           }
@@ -644,7 +787,7 @@ const url = targetUrl.href;
         await Vue.nextTick();
       }, modern);
       await mobile.selectOption("#ade-language", "zh-CN");
-      for (const [tab, sub] of [["dimensions", "antimatter"], ["celestials", "effarig"], ["endgame", "ascension"], ["automation", "autobuyers"], ["infinity", "replicanti"], ["reality", "glyphs"]]) {
+      for (const [tab, sub] of (batchAB ? [["dimensions", "infinity"], ["dimensions", "divine"], ["endgame", "upgrades"], ["endgame", "collider"], ["automation", "autobuyers"], ["universes", "transient"]] : [["dimensions", "antimatter"], ["celestials", "effarig"], ["endgame", "ascension"], ["automation", "autobuyers"], ["infinity", "replicanti"], ["reality", "glyphs"]])) {
         await auditContext(`${tab}/${sub}`, mobile);
         const body = await mobile.evaluate(async keys => {
           Modal.hideAll();
@@ -656,6 +799,13 @@ const url = targetUrl.href;
         }, [tab, sub]);
         await captureAudit(`${tab}/${sub}`, { modern, locale: "zh-CN", mobile: true }, mobile);
         assert.doesNotMatch(body, /\{p\d+\}|\uE000|\bundefined\b|\bNaN\b|第第一/u);
+        if (tab === "dimensions") {
+          const overflow = await mobile.evaluate(() => [...document.querySelectorAll(".l-dimension-single-row")].filter(row => row.getBoundingClientRect().height > 0).flatMap(row => {
+            const bounds = row.getBoundingClientRect();
+            return [...row.querySelectorAll(".c-dim-row__large, .c-dim-row__small")].filter(text => text.getBoundingClientRect().bottom > bounds.bottom + 1).map(text => text.textContent.trim());
+          }));
+          assert.deepEqual(overflow, [], `mobile dimension row overflow: ${modern}/${sub}`);
+        }
         if (process.env.ADE_TEST_SCREENSHOT_DIR) {
           await mobile.screenshot({ path: `${process.env.ADE_TEST_SCREENSHOT_DIR}/${modern ? "modern" : "classic"}-${sub}.png`, fullPage: true });
         }

@@ -49,29 +49,32 @@ export default {
     <div>
       <br>
       <div class="c-stellar-text">
-        You have <span class="c-universes-text--header">{{ $legacyText(_s(format(stellarAugmenters, 2, 2))) }}</span> Stellar Augmenters.
+        <LocalizedText id="universes.tangible.augmenters">
+          <template #p0><span class="c-universes-text--header">{{ format(stellarAugmenters, 2, 2) }}</span></template>
+        </LocalizedText>
         <br>
-        Stellar Augmenters are currently providing a
-        <span class="c-universes-text--header">+{{ $legacyText(_s(formatDecimalPercents(formula, 2, 2))) }}</span>
-        to Gray Star Effectiveness.
+        <LocalizedText id="universes.tangible.augmenterEffect">
+          <template #p0><span class="c-universes-text--header">+{{ formatDecimalPercents(formula, 2, 2) }}</span></template>
+        </LocalizedText>
       </div>
       <br>
       <div class="c-tangible-universe-text">
-        Your highest Matter reached in the Tangible Universe is
-        <span class="c-universes-text--header">{{ $legacyText(_s(format(highestMatter, 2, 1))) }}</span>.
+        <LocalizedText id="universes.tangible.highest">
+          <template #p0><span class="c-universes-text--header">{{ format(highestMatter, 2, 1) }}</span></template>
+        </LocalizedText>
       </div>
       <br>
       <div class="c-tangible-universe-text">
-        You have
-        <span class="c-universes-text--header">{{ $legacyText(_s(format(molecularMass, 2, 2))) }}</span>
-        Molecular Mass.
-        <span class="c-universes-text--header">+{{ $legacyText(_s(format(massPerSecond, 2, 2))) }}/s</span>
+        <LocalizedText id="universes.tangible.mass">
+          <template #p0><span class="c-universes-text--header">{{ format(molecularMass, 2, 2) }}</span></template>
+          <template #p1><span class="c-universes-text--header">+{{ format(massPerSecond, 2, 2) }}/s</span></template>
+        </LocalizedText>
         <br>
-        Molecular Mass is currently adding to the final tetration of Matter generation by
-        <span class="c-universes-text--header">+{{ $legacyText(_s(format(massBoost, 2, 4))) }}</span>
-        while inside the Tangible Universe.
+        <LocalizedText id="universes.tangible.massBoost">
+          <template #p0><span class="c-universes-text--header">+{{ format(massBoost, 2, 4) }}</span></template>
+        </LocalizedText>
         <br>
-        Molecular Mass resets on exiting the Tangible Universe.
+        {{ $t('universes.tangible.massReset') }}
       </div>
     </div>
     <br>

@@ -25,7 +25,7 @@ export default {
         <span class="l-slabdrill-header__large">𓆗</span>
       </span>
       <span class="o-slabdrill-milestone__text">
-        <span class="l-slabdrill-header">{{ $t('ade.7a3a9ff6b95373aa', { p0: $legacyText(_s(unlock.requirement)), p1: $legacyText(unlock.name) }) }}</span>
+        <span class="l-slabdrill-header">{{ $t('ade.7a3a9ff6b95373aa', { p0: $legacyText(_s(unlock.requirement)), p1: $t(`slabdrill.strike.name.${unlock.id}`) }) }}</span>
         <br>
         <br>
         <span class="l-slabdrill-header">{{ $t('ade.443c9df4d959f623', { p0: $legacyText(unlock.nerfDescription()) }) }}</span>

@@ -113,9 +113,11 @@ export default {
   >
     <!-- Cannot Crunch -->
     <template v-if="!canCrunch">
-      Reach {{ $legacyText(_s(format(infinityGoal, 2, 2))) }}
-      <br>
-      {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }}
+      <LocalizedText id="infinity.crunch.requirement">
+        <template #p0>{{ format(infinityGoal, 2, 2) }}</template>
+        <template #p1><br></template>
+        <template #p2>{{ $t(isFlipped ? 'terms.matter' : 'terms.antimatter') }}</template>
+      </LocalizedText>
     </template>
 
     <!-- Can Crunch in challenge -->

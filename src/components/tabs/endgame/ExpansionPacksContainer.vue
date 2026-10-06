@@ -21,10 +21,10 @@ export default {
   },
   computed: {
     descriptionLines() {
-      return this.pack.config.description.split("\n").map(x => x.trim());
+      return this.$legacyText(this.pack.config.description).split("\n").map(x => x.trim());
     },
     isLarge() {
-      return this.descriptionLines.length >= 10;
+      return this.pack.config.description.split("\n").length >= 10;
     },
     classObject() {
       return {

@@ -49,7 +49,7 @@ export default {
         class="fas fa-check"
       />
       <div class="c-modal__confirmation-toggle__tooltip">
-        {{ $legacyText(_s(tooltipText)) }}
+        {{ option === 'compression' ? $t(setting ? 'compression.confirmation.disable' : 'compression.confirmation.reenable') : $legacyText(tooltipText) }}
       </div>
     </div>
     <span class="c-modal__confirmation-toggle__text">

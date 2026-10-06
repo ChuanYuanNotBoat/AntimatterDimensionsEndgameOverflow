@@ -187,10 +187,11 @@ export default {
       />
     </div>
     <div v-if="eternityUnlocked && bottomRowUnlocked && isSoftcapApplicable">
-      The Infinity Point multiplier becomes more expensive
-      <br>
-      above {{ $legacyText(_s(formatPostBreak(ipMultSoftCap, 2, 1))) }} Infinity
-      Points<span v-if="!isUncapped">{{ $t('ade.a18e181fd8031a41', { p0: $legacyText(_s(formatPostBreak(ipMultHardCap,2,1))) }) }}</span>.
+      <LocalizedText id="infinity.upgrades.ipCostScale">
+        <template #p0><br></template>
+        <template #p1>{{ formatPostBreak(ipMultSoftCap, 2, 1) }}</template>
+        <template #p2><span v-if="!isUncapped">{{ $t('ade.a18e181fd8031a41', { p0: formatPostBreak(ipMultHardCap, 2, 1) }) }}</span></template>
+      </LocalizedText>
     </div>
   </div>
 </template>

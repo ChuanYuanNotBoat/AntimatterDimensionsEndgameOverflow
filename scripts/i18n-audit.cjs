@@ -177,6 +177,7 @@ async function audit() {
           if (/^(?::|v-bind:)/u.test(attribute.name) || ['v-if', 'v-else-if', 'v-show', 'v-text', 'v-html'].includes(attribute.name)) inspectExpression(attribute.value, line);
         }
         for (const child of node.children ?? []) visit(child);
+        for (const slot of Object.values(node.scopedSlots ?? {})) visit(slot);
         for (const branch of node.ifConditions ?? []) visit(branch.block);
       }
       if (template) visit(compiler.compile(template.content, { outputSourceRange: true }).ast);

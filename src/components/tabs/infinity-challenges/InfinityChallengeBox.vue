@@ -62,10 +62,10 @@ export default {
     </template>
     <template #bottom>
       <div class="l-challenge-box__bottom--infinity">
-        <span>Goal: {{ format(config.goal()) }} {{ isFlipped ? "matter" : "antimatter" }}</span>
+        <span>{{ $t('infinity.challenge.goal', { amount: format(config.goal()), resource: $t(isFlipped ? 'terms.matter' : 'terms.antimatter') }) }}</span>
         <DescriptionDisplay
           :config="config.reward"
-          title="Reward:"
+          :title="$t('infinity.challenge.reward')"
         />
         <EffectDisplay
           :config="config.reward"

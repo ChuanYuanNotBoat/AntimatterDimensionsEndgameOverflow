@@ -102,14 +102,14 @@ export default {
 <style scoped>
 .l-dimension-text-container {
   display: flex;
-  height: 3.5rem;
+  min-height: 3.5rem;
   align-content: center;
   grid-column: 1 / 5;
 }
 
 .l-cursed-dimension-text-container {
   display: flex;
-  height: 3.5rem;
+  min-height: 3.5rem;
   width: 100%;
 }
 

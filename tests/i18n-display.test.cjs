@@ -184,7 +184,7 @@ function renderComponent(file, state = {}, globals = {}, computed = {}) {
     computed: { ...options.computed, ...computed },
     methods: { ...options.methods, ...Object.fromEntries(Object.entries(globals).filter(([,value]) => typeof value === "function")),
       $t: runtime.service.t, $recompute() {},
-      $legacyText: value => runtime.display.translate(value, options.name) }
+      $legacyText: (value, scope = options.name) => runtime.display.translate(value, scope) }
   });
   Object.assign(view, state);
   const text = node => node.text ?? (node.children ?? []).map(text).join('');
@@ -371,4 +371,110 @@ test('reviewed ADEC messages preserve whole resources and reduction parameter me
   service.setLocale('en');
   assert.equal(compression(), english);
   assert.equal(JSON.stringify(canonical), before);
+});
+
+test('Batch A/B scoped messages retain parameter order and roundtrip without competing scope rules', () => {
+  const { service, display } = actual();
+  const rules = JSON.parse(read('src/i18n/adechinese-rules.json')).filter(rule =>
+    /^(dimensions\.(?:tooltip|buy|boost|galaxy|purchaseTimes|sacrifice)|slabdrill\.(?:effects|condition|strike)\.|compression\.exit\.|endgame\.collider\.|universes\.tangible\.|dimensions\.universalLimit|infinity\.passive\.|compression\.upgrades\.|endgame\.galacticEffect\.|endgame\.expansion\.|endgame\.masteries\.|endgame\.stars\.|endgame\.milestones\.)/u.test(rule.id));
+  assert.ok(rules.length > 50);
+  for (const rule of rules) {
+    const template = service.messageSource(rule.id, 'en', rule.form);
+    const values = Object.fromEntries([...template.matchAll(/\{(p\d+)\}/gu)].map((m, i) => [m[1], `×${i + 2}.50`]));
+    const canonical = template.replace(/\{(p\d+)\}/gu, (_, name) => values[name]);
+    for (const scope of rule.scopes) {
+      service.setLocale('zh-CN');
+      assert.equal(display.translate(canonical, scope), service.t(rule.id, values, rule.form), `${rule.id}/${scope}`);
+      service.setLocale('en');
+      assert.equal(display.translate(canonical, scope), canonical, `${rule.id}/${scope}`);
+    }
+  }
+});
+
+test('charged-upgrade hints and locked dimension prices preserve their actual meanings', () => {
+  const { service } = actual(); service.setLocale('zh-CN');
+  for (const key of ['ade.09d3c343a8f2191c','ade.0bc8be150b7e51fc']) {
+    assert.match(service.t(key), /已充能/u); assert.doesNotMatch(service.t(key), /未充能/u);
+  }
+  for (const [key, resource] of [['ade.0e6c57db71518a7b','永恒点数'],['ade.bf16249a88df4a3b','永恒点数'],
+    ['ade.2563bc10ad33d8f9','天界点数'],['ade.1be3f49bbe5e362c','无限点数']]) {
+    assert.ok(service.t(key).includes(resource), key);
+  }
+});
+
+test('both Infinity layouts render whole dimension targets in EC9 and flipped states', () => {
+  const Decimal = require('break_eternity.js');
+  for (const layout of ['Modern','Classic']) for (const isEC9Running of [false,true]) for (const isFlipped of [false,true]) {
+    const { service, view, render } = renderComponent(`src/components/tabs/infinity-dimensions/${layout}InfinityDimensionsTab.vue`,
+      { infinityPower: new Decimal(123), dimMultiplier: new Decimal(456), conversionRate: 7, isEC9Running, isFlipped,
+        showLockedDimCostNote: false }, { format: String, formatX: x => `×${x}`, formatPow: x => `^${x}` });
+    const english = render(); assert.match(english, isEC9Running ? /Time Dimensions due to Eternity Challenge 9/u : /(?:Anti)?[Mm]atter Dimensions/u);
+    service.setLocale('zh-CN');
+    assert.ok(render().includes(isEC9Running ? '时间维度' : isFlipped ? '正物质维度' : '反物质维度'));
+    assert.doesNotMatch(render(), /Dimensions\.|Compression Upgrade|维度维度/u);
+    service.setLocale('en'); assert.equal(render(), english); view.$destroy();
+  }
+});
+
+test('Endgame unlock explanations and Void ANR retain prerequisites', () => {
+  const { service } = actual(); service.setLocale('zh-CN');
+  assert.match(service.t('ade.6fc343de35b1b8fb'), /权限会永久保留/u);
+  assert.match(service.t('ade.38ca641dce4c5a63'), /未解锁.*已解锁.*Shift/u);
+  assert.match(service.t('ade.633ed9379a3147be'), /抹除多元宇宙后.*ANR/u);
+  assert.doesNotMatch(service.t('ade.633ed9379a3147be'), /1%/u);
+});
+
+test('Tangible Universe resolves as a whole term without translating unknown compound suffixes', () => {
+  const { service, display } = actual(); service.setLocale('zh-CN');
+  assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), '真际宇宙');
+  assert.equal(display.translate('Unreleased Tangible Universe','EnterUniverseModal'), 'Unreleased Tangible Universe');
+  assert.equal(service.t('navigation.universes.transient'), '流幻宇宙');
+  service.setLocale('en'); assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), 'Tangible Universe');
+  assert.equal(display.translate('Unreleased Tangible Universe','EnterUniverseModal'), 'Unreleased Tangible Universe');
+});
+
+test('Slabdrill uses finite display IDs and Compression confirmation uses its own context', () => {
+  const { service, display } = actual(); service.setLocale('zh-CN');
+  for (let id = 0; id <= 10; id++) assert.match(service.t(`slabdrill.strike.name.${id}`), /[\u3400-\u9fff]/u);
+  for (const word of ['Infinite','Forever','Eternal']) assert.doesNotMatch(display.translate(`You are here ${word}`, 'SlabdrillStrike'), /You are here/u);
+  assert.equal(display.translate('None','SlabdrillStrike'), '无');
+  for (const key of ['compression.confirmation.disable','compression.confirmation.reenable']) {
+    assert.match(service.t(key), /压缩确认/u); assert.doesNotMatch(service.t(key), /激能确认/u);
+  }
+});
+
+
+test('Galactic Power percentage display callbacks accept real Decimals below the multiplier threshold', () => {
+  const Decimal = require('break_eternity.js');
+  const context = vm.createContext({ Decimal, DC: { NUMMAX: new Decimal(Number.MAX_VALUE) }, format: value => value.toString(), formatX: value => `×${value}`, window: {} });
+  const percentage = read('src/core/format.js').match(/window\.formatDecimalPercents = function formatDecimalPercents[\s\S]*?\n\};/u)[0];
+  vm.runInContext(percentage + '\nthis.formatDecimalPercents = window.formatDecimalPercents;', context);
+  vm.runInContext(read('src/core/secret-formula/endgame/galactic-power.js').replace(/^import .*;$/gm, '')
+    .replace('export const galacticPowerRewards', 'this.rewards'), context);
+  for (const id of ['galaxyStrength','galaxyEmpowerment1','celestialGalaxyEmpowerment','galaxyEmpowerment2']) {
+    assert.equal(context.rewards[id].formatEffect(new Decimal(1.25)),
+      id === 'galaxyStrength' ? 'Galaxies are 25% stronger' : id === 'celestialGalaxyEmpowerment' ?
+        'Celestial Galaxies are 25% stronger' : 'The above Galactic Powers are 25% stronger');
+    assert.match(context.rewards[id].formatEffect(new Decimal(12)), /×12 stronger/u);
+  }
+});
+
+test('expansion descriptions resolve complete paragraphs before splitting without changing CSS IDs', () => {
+  const context = vm.createContext({ Decimal: require('break_eternity.js') });
+  vm.runInContext(read('src/core/secret-formula/endgame/expansion-packs.js')
+    .replace('export const expansionPacks', 'this.packs'), context);
+  const config = context.packs.teresaPack;
+  const before = config.description;
+  const { service, view, render } = renderComponent('src/components/tabs/endgame/ExpansionPacksContainer.vue',
+    { pack: { config }, isBought: true, isUnlocked: true });
+  const english = render();
+  const classes = JSON.stringify(view.classObject);
+  const large = view.isLarge;
+  service.setLocale('zh-CN');
+  assert.match(render(), /现实机器/u);
+  assert.doesNotMatch(render(), /Uncap|Canister|Endgame|Unlock|Automatically|Reality Machine/u);
+  assert.equal(JSON.stringify(view.classObject), classes);
+  assert.equal(view.isLarge, large);
+  assert.equal(config.description, before);
+  service.setLocale('en'); assert.equal(render(), english); view.$destroy();
 });
