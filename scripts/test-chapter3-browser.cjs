@@ -470,6 +470,7 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
         assert.doesNotMatch(result.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b/u, `${modern}/${locale}/${tab}/${sub}`);
 
         if (batchAB && locale === "zh-CN") {
+          if (tab === "infinity") assert.doesNotMatch(result.text, /of your best IP\/min|Galaxies are stronger based on Teresa/u, `${tab}/${sub}`);
           if (tab === "dimensions") assert.doesNotMatch(result.text, /购买 [^\n]*times|维度献祭已禁用 [^\n]*multiplier|买到 [^\n]*Cost/u, `${tab}/${sub}`);
           if (tab === "endgame") assert.doesNotMatch(result.text, /Generate .*Perk Point per minute|[0-9] Endgames|Endgames every|Condense Ethereal Power for .*Gray Stars|Total Hadrons|\(Capped:/u, `${tab}/${sub}`);
         }
@@ -798,6 +799,13 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
         }, [tab, sub]);
         await captureAudit(`${tab}/${sub}`, { modern, locale: "zh-CN", mobile: true }, mobile);
         assert.doesNotMatch(body, /\{p\d+\}|\uE000|\bundefined\b|\bNaN\b|第第一/u);
+        if (tab === "dimensions") {
+          const overflow = await mobile.evaluate(() => [...document.querySelectorAll(".l-dimension-single-row")].filter(row => row.getBoundingClientRect().height > 0).flatMap(row => {
+            const bounds = row.getBoundingClientRect();
+            return [...row.querySelectorAll(".c-dim-row__large, .c-dim-row__small")].filter(text => text.getBoundingClientRect().bottom > bounds.bottom + 1).map(text => text.textContent.trim());
+          }));
+          assert.deepEqual(overflow, [], `mobile dimension row overflow: ${modern}/${sub}`);
+        }
         if (process.env.ADE_TEST_SCREENSHOT_DIR) {
           await mobile.screenshot({ path: `${process.env.ADE_TEST_SCREENSHOT_DIR}/${modern ? "modern" : "classic"}-${sub}.png`, fullPage: true });
         }

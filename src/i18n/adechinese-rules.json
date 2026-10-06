@@ -78831,7 +78831,7 @@
     "id": "infinity.passive.bestRuns",
     "global": false,
     "scopes": [
-      "PassiveIPGenerationUpgradeButton"
+      "InfinityUpgradeButton"
     ],
     "protectedParameters": []
   },

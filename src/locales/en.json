@@ -9488,7 +9488,7 @@
   "dimensions.purchaseTimes": "Purchased {p0} times",
   "dimensions.sacrifice.disabledMult": "{p0} multiplier",
   "dimensions.buy.untilCost": "Until {p0}, Cost {p1}",
-  "infinity.passive.bestRuns": "Generate {p0} of your best IP/min from your last {p1} Infinities.",
+  "infinity.passive.bestRuns": "Generate {p0} of your best IP/min from your last {p1} Infinities",
   "endgame.galaxyQuantity": "{p0} Galaxies",
   "endgame.galacticEffect.empowerment": "The above Galactic Powers are {p0} stronger",
   "endgame.galacticEffect.celestial": "Celestial Galaxies are {p0} stronger",
