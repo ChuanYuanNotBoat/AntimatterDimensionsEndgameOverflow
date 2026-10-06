@@ -848,5 +848,38 @@
     "id": "terms.tangibleUniverse",
     "global": true,
     "scopes": []
+  },
+  {
+    "id": "terms.grayStar",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.grayStar",
+    "global": true,
+    "scopes": [],
+    "form": "plural"
+  },
+  {
+    "id": "terms.endgame",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.endgame",
+    "global": true,
+    "scopes": [],
+    "form": "plural"
+  },
+  {
+    "id": "terms.perkPoints",
+    "global": true,
+    "scopes": []
+  },
+  {
+    "id": "terms.perkPoints",
+    "global": true,
+    "scopes": [],
+    "form": "singular"
   }
 ]

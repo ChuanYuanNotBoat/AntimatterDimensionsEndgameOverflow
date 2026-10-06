@@ -52,7 +52,7 @@ export default {
         </LocalizedText>
       </div>
       <br>
-      {{ $t('ade.1a6c627524258847', { p0: $legacyText(_s(quantify("Total Hadron",cost,2,0))) }) }}
+      {{ $t('endgame.collider.coreRequirement', { amount: format(cost, 2, 0) }) }}
     </button>
     <PrimaryButton
       class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"

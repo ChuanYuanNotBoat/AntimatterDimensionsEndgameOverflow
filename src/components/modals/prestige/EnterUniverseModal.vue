@@ -120,11 +120,11 @@ export default {
         class="universe-description"
       >
         <br><br>
-        {{ number === 1 ? $t('universes.entry.transientDescription', { speed: format(0.001, 3, 3), penalty: format(0.1, 1, 1), tetration: format(0.9, 1, 1), dilation: format(0.1, 1, 1) }) : $legacyText(description) }}
+        {{ number === 1 ? $t('universes.entry.transientDescription', { speed: format(0.001, 3, 3), penalty: format(0.1, 1, 1), tetration: format(0.9, 1, 1), dilation: format(0.1, 1, 1) }) : number === 2 ? $t('universes.entry.tangibleDescription', { speed: format(0.001, 3, 3), height: formatInt(1) }) : $legacyText(description) }}
       </div>
       <br><br>
       <div>
-        {{ $legacyText(_s(reward)) }}
+        {{ number === 2 ? $t('universes.entry.tangibleReward') : $legacyText(reward) }}
       </div>
       <br>
       <div>

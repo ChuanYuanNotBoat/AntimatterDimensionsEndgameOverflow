@@ -184,7 +184,7 @@ function renderComponent(file, state = {}, globals = {}, computed = {}) {
     computed: { ...options.computed, ...computed },
     methods: { ...options.methods, ...Object.fromEntries(Object.entries(globals).filter(([,value]) => typeof value === "function")),
       $t: runtime.service.t, $recompute() {},
-      $legacyText: value => runtime.display.translate(value, options.name) }
+      $legacyText: (value, scope = options.name) => runtime.display.translate(value, scope) }
   });
   Object.assign(view, state);
   const text = node => node.text ?? (node.children ?? []).map(text).join('');
@@ -376,16 +376,18 @@ test('reviewed ADEC messages preserve whole resources and reduction parameter me
 test('Batch A/B scoped messages retain parameter order and roundtrip without competing scope rules', () => {
   const { service, display } = actual();
   const rules = JSON.parse(read('src/i18n/adechinese-rules.json')).filter(rule =>
-    /^(dimensions\.(?:tooltip|buy|boost)\.|slabdrill\.(?:effects|condition|strike)\.|compression\.exit\.|endgame\.collider\.)/u.test(rule.id));
+    /^(dimensions\.(?:tooltip|buy|boost|galaxy|purchaseTimes|sacrifice)|slabdrill\.(?:effects|condition|strike)\.|compression\.exit\.|endgame\.collider\.|universes\.tangible\.|dimensions\.universalLimit|infinity\.passive\.|compression\.upgrades\.|endgame\.galacticEffect\.|endgame\.expansion\.|endgame\.masteries\.|endgame\.stars\.|endgame\.milestones\.)/u.test(rule.id));
   assert.ok(rules.length > 50);
   for (const rule of rules) {
     const template = service.messageSource(rule.id, 'en', rule.form);
     const values = Object.fromEntries([...template.matchAll(/\{(p\d+)\}/gu)].map((m, i) => [m[1], `×${i + 2}.50`]));
     const canonical = template.replace(/\{(p\d+)\}/gu, (_, name) => values[name]);
-    service.setLocale('zh-CN');
-    assert.equal(display.translate(canonical, rule.scopes[0]), service.t(rule.id, values, rule.form), rule.id);
-    service.setLocale('en');
-    assert.equal(display.translate(canonical, rule.scopes[0]), canonical, rule.id);
+    for (const scope of rule.scopes) {
+      service.setLocale('zh-CN');
+      assert.equal(display.translate(canonical, scope), service.t(rule.id, values, rule.form), `${rule.id}/${scope}`);
+      service.setLocale('en');
+      assert.equal(display.translate(canonical, scope), canonical, `${rule.id}/${scope}`);
+    }
   }
 });
 
@@ -422,11 +424,13 @@ test('Endgame unlock explanations and Void ANR retain prerequisites', () => {
   assert.doesNotMatch(service.t('ade.633ed9379a3147be'), /1%/u);
 });
 
-test('unknown Tangible Universe stays a whole fallback and does not partially translate its suffix', () => {
+test('Tangible Universe resolves as a whole term without translating unknown compound suffixes', () => {
   const { service, display } = actual(); service.setLocale('zh-CN');
-  assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), 'Tangible Universe');
+  assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), '真际宇宙');
+  assert.equal(display.translate('Unreleased Tangible Universe','EnterUniverseModal'), 'Unreleased Tangible Universe');
   assert.equal(service.t('navigation.universes.transient'), '流幻宇宙');
   service.setLocale('en'); assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), 'Tangible Universe');
+  assert.equal(display.translate('Unreleased Tangible Universe','EnterUniverseModal'), 'Unreleased Tangible Universe');
 });
 
 test('Slabdrill uses finite display IDs and Compression confirmation uses its own context', () => {
@@ -437,4 +441,40 @@ test('Slabdrill uses finite display IDs and Compression confirmation uses its ow
   for (const key of ['compression.confirmation.disable','compression.confirmation.reenable']) {
     assert.match(service.t(key), /压缩确认/u); assert.doesNotMatch(service.t(key), /激能确认/u);
   }
+});
+
+
+test('Galactic Power percentage display callbacks accept real Decimals below the multiplier threshold', () => {
+  const Decimal = require('break_eternity.js');
+  const context = vm.createContext({ Decimal, DC: { NUMMAX: new Decimal(Number.MAX_VALUE) }, format: value => value.toString(), formatX: value => `×${value}`, window: {} });
+  const percentage = read('src/core/format.js').match(/window\.formatDecimalPercents = function formatDecimalPercents[\s\S]*?\n\};/u)[0];
+  vm.runInContext(percentage + '\nthis.formatDecimalPercents = window.formatDecimalPercents;', context);
+  vm.runInContext(read('src/core/secret-formula/endgame/galactic-power.js').replace(/^import .*;$/gm, '')
+    .replace('export const galacticPowerRewards', 'this.rewards'), context);
+  for (const id of ['galaxyStrength','galaxyEmpowerment1','celestialGalaxyEmpowerment','galaxyEmpowerment2']) {
+    assert.equal(context.rewards[id].formatEffect(new Decimal(1.25)),
+      id === 'galaxyStrength' ? 'Galaxies are 25% stronger' : id === 'celestialGalaxyEmpowerment' ?
+        'Celestial Galaxies are 25% stronger' : 'The above Galactic Powers are 25% stronger');
+    assert.match(context.rewards[id].formatEffect(new Decimal(12)), /×12 stronger/u);
+  }
+});
+
+test('expansion descriptions resolve complete paragraphs before splitting without changing CSS IDs', () => {
+  const context = vm.createContext({ Decimal: require('break_eternity.js') });
+  vm.runInContext(read('src/core/secret-formula/endgame/expansion-packs.js')
+    .replace('export const expansionPacks', 'this.packs'), context);
+  const config = context.packs.teresaPack;
+  const before = config.description;
+  const { service, view, render } = renderComponent('src/components/tabs/endgame/ExpansionPacksContainer.vue',
+    { pack: { config }, isBought: true, isUnlocked: true });
+  const english = render();
+  const classes = JSON.stringify(view.classObject);
+  const large = view.isLarge;
+  service.setLocale('zh-CN');
+  assert.match(render(), /现实机器/u);
+  assert.doesNotMatch(render(), /Uncap|Canister|Endgame|Unlock|Automatically|Reality Machine/u);
+  assert.equal(JSON.stringify(view.classObject), classes);
+  assert.equal(view.isLarge, large);
+  assert.equal(config.description, before);
+  service.setLocale('en'); assert.equal(render(), english); view.$destroy();
 });

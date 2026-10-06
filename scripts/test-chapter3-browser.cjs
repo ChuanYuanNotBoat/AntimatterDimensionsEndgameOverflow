@@ -93,6 +93,13 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
         for (const child of view.$children) pauseTickers(child);
       };
       pauseTickers(ui);
+      GameUI.update();
+      await Vue.nextTick();
+      const stopNews = view => {
+        if (view.$options.name === "NewsTicker") view.clearTimeouts();
+        view.$children.forEach(stopNews);
+      };
+      stopNews(ui);
       return GameSaveSerializer.serialize(player);
     }, save);
 
@@ -462,6 +469,10 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
         }, null, 2));
         assert.doesNotMatch(result.text, /\{p\d+\}|\[\[terms\.|\uE000|\uE001|\bundefined\b|\bNaN\b/u, `${modern}/${locale}/${tab}/${sub}`);
 
+        if (batchAB && locale === "zh-CN") {
+          if (tab === "dimensions") assert.doesNotMatch(result.text, /购买 [^\n]*times|维度献祭已禁用 [^\n]*multiplier|买到 [^\n]*Cost/u, `${tab}/${sub}`);
+          if (tab === "endgame") assert.doesNotMatch(result.text, /Generate .*Perk Point per minute|[0-9] Endgames|Endgames every|Condense Ethereal Power for .*Gray Stars|Total Hadrons|\(Capped:/u, `${tab}/${sub}`);
+        }
         if (locale === "zh-CN" && tab === "automation" && sub === "autobuyers") {
           assert.doesNotMatch(result.text, /Current Setting|Dynamic amount|Dimension Autobuyers can have|Activates every X seconds|Bulk Singularity Time|now automatically and continuously/u);
           assert.ok(result.text.includes("当前设置"));
@@ -536,6 +547,8 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
             ["infinity", "upgrades", ["InfinityUpgradesTab"]],
             ["challenges", "infinity", ["InfinityChallengesTab"]],
             ["endgame", "upgrades", ["EndgameUpgradesTab"]],
+            ["endgame", "expansion-packs", ["ExpansionPacksContainer"]],
+            ["universes", "tangible", ["TangibleUniverseTab"]],
             ["endgame", "collider", ["LargeHadronColliderTab"]],
             ["universes", "tangible", ["TangibleUniverseTab"]]
           ] : [])
@@ -652,7 +665,7 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
               conversionRate: 7, isEC9Running: ec9, isFlipped: flipped }, {}, `domain-infinity-${ec9}-${flipped}`);
           }
           for (const flipped of [false, true]) await capture(`${layout}DivineDimensionTab`, { divineMatter: new Decimal(123),
-            conversionFormula1: new Decimal(2), conversionFormula2: new Decimal(3), conversionFormula3: new Decimal(0.25),
+            conversionFormula1: new Decimal(2), conversionFormula2: new Decimal(3), conversionFormula3: 0.25,
             isFlipped: flipped }, {}, `domain-divine-${flipped}`);
           await capture(timeTab, { hasCap: true }, {}, "domain-time-cap");
           await capture("TickspeedRow", { isTransient: true, isVisible: true, isContinuumActive: false, isEC9: false }, {}, "domain-transient-tickspeed");
@@ -668,6 +681,12 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
           for (const [number, name] of [[1, "Transient"], [2, "Tangible"]]) await capture("EnterUniverseModal", {}, { number, name }, `domain-universe-${number}`);
           for (const gain of [0, 123]) await capture("ExitCompressionModal", { hawkingRadiationGain: new Decimal(gain) }, {}, `domain-compression-exit-${gain}`);
           await capture("HotkeysModal", {}, {}, "domain-hotkeys");
+          for (const [running, gain] of [[false, 0], [true, 0], [true, 123]]) await capture("TangibleUniverseTab", {
+            isRunning: running, pendingAugmenters: new Decimal(gain), highestMatter: new Decimal(456),
+            molecularMass: new Decimal(123), massPerSecond: new Decimal(7), massBoost: new Decimal(2),
+            stellarAugmenters: new Decimal(89), formula: new Decimal(0.25)
+          }, {}, `domain-tangible-${running}-${gain}`);
+          for (const pack of ExpansionPack.all) await capture("ExpansionPacksContainer", { isUnlocked: true }, { pack }, `domain-expansion-${pack.id}`);
           for (const unlock of SlabdrillUnlocks.all) await capture("SlabdrillStrike", {}, { getUnlock: () => unlock }, `domain-strike-${unlock.id}`);
           for (let tier = 1; tier <= 9; tier++) await capture(`${layout}DimensionBoostRow`, { requirement: { tier, amount: new Decimal(123) } }, {}, `domain-boost-${tier}`);
         }
@@ -695,6 +714,8 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
             assert.doesNotMatch(row.text, /维度维度|第第一|\{p\d+\}|\[\[terms/u, row.label);
             if (row.label.startsWith("domain-infinity-")) assert.doesNotMatch(row.text, /Dimensions\.|Compression Upgrade/u, row.label);
             if (row.label.startsWith("domain-divine")) assert.doesNotMatch(row.text, /Exponent while|reduction to Hadron/u, row.label);
+            if (row.label.startsWith("domain-expansion")) { assert.match(row.text, /[\u3400-\u9fff]/u); assert.doesNotMatch(row.text, /Unlock |Keep |Start |Automatically|Black Hole|Endgame|Canister|Reality Machine|Celestial Galaxies/u, row.label); if (row.label === "domain-expansion-vPack") { assert.match(row.text, /解锁薇的现实/u); assert.doesNotMatch(row.text, /自动完成薇的现实/u); } }
+            if (row.label.startsWith("domain-tangible")) { assert.doesNotMatch(row.text, /Tangible|Molecular Mass|Stellar Augmenters|You have|Gray Star/u); assert.match(row.text, /超质量体.*星流增幅体|星流增幅体.*超质量体/u); }
             if (row.label === "domain-time-cap") assert.doesNotMatch(row.text, /Any 8th Time/u);
             if (row.label === "domain-transient-tickspeed") assert.match(row.text, /流幻宇宙/u);
             if (row.label === "domain-hotkeys") { assert.equal((row.text.match(/因技术限制/g) || []).length, 1); assert.doesNotMatch(row.text, /will not buy a single|may instead|will still work/u); }
@@ -718,6 +739,7 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
           if (row.label.startsWith("celestial-crunch")) assert.ok(row.text.includes("天界无限点数"));
           if (row.label.startsWith("glyph-limit")) assert.ok(row.text.includes("你不能"));
           if (row.label === "TimeCompressionTab" || row.label.startsWith("compression-")) {
+            assert.doesNotMatch(row.text, /Next:|Triple the amount|Gain a multiplier to .*Dimensions|Dimensions based on/u, row.label);
             assert.doesNotMatch(row.paragraphs ?? row.text, /You have|Thermal Radiation|Hawking Radiation|Disable Compression|Reach |Compress time|Next |Electromagnetic Waves act/u, row.label);
             assert.doesNotMatch(row.text, /维度维度/u, row.label);
           }

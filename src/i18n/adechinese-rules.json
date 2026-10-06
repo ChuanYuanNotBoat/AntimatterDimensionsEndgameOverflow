@@ -6271,7 +6271,8 @@
     "global": false,
     "scopes": [
       "break-infinity-upgrades",
-      "break-infinity-upgrades:postGalaxy"
+      "break-infinity-upgrades:postGalaxy",
+      "InfinityUpgradeButton"
     ],
     "protectedParameters": []
   },
@@ -9004,7 +9005,8 @@
       "ResetRealityModal",
       "StatisticsTab",
       "confirmation-types",
-      "hotkeys"
+      "hotkeys",
+      "HotkeysModal"
     ],
     "protectedParameters": []
   },
@@ -23812,7 +23814,8 @@
       "endgame-masteries",
       "endgame-masteries:52",
       "galactic-power",
-      "galactic-power:1"
+      "galactic-power:1",
+      "GalacticPowerRow"
     ],
     "protectedParameters": []
   },
@@ -30352,7 +30355,8 @@
     "global": true,
     "scopes": [
       "galactic-power",
-      "galactic-power:1"
+      "galactic-power:1",
+      "GalacticPowerRow"
     ],
     "protectedParameters": []
   },
@@ -46985,7 +46989,8 @@
     "global": false,
     "scopes": [
       "confirmation-types",
-      "hotkeys"
+      "hotkeys",
+      "HotkeysModal"
     ],
     "protectedParameters": []
   },
@@ -78686,6 +78691,244 @@
     "global": false,
     "scopes": [
       "LargeHadronColliderTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "universes.tangible.entry",
+    "global": false,
+    "scopes": [
+      "TangibleUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "universes.tangible.exitGoal",
+    "global": false,
+    "scopes": [
+      "TangibleUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "universes.tangible.exitGain",
+    "global": false,
+    "scopes": [
+      "TangibleUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.universalLimit",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ClassicAntimatterDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.buy.multAndSacrificeMult",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.buy.powerAndSacrificeMult",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.antimatter.dimensions",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterGalaxyRow",
+      "ClassicAntimatterGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.antimatter.boosts",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterGalaxyRow",
+      "ClassicAntimatterGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.antimatter.both",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterGalaxyRow",
+      "ClassicAntimatterGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.celestial.dimensions",
+    "global": false,
+    "scopes": [
+      "ModernCelestialGalaxyRow",
+      "ClassicCelestialGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.celestial.boosts",
+    "global": false,
+    "scopes": [
+      "ModernCelestialGalaxyRow",
+      "ClassicCelestialGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.celestial.both",
+    "global": false,
+    "scopes": [
+      "ModernCelestialGalaxyRow",
+      "ClassicCelestialGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.purchaseTimes",
+    "global": false,
+    "scopes": [
+      "ModernDivineDimensionRow",
+      "ClassicDivineDimensionRow",
+      "ModernCelestialDimensionRow",
+      "ClassicCelestialDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.sacrifice.disabledMult",
+    "global": false,
+    "scopes": [
+      "ClassicAntimatterDimensionsTabHeader",
+      "ModernAntimatterDimensionsTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.buy.untilCost",
+    "global": false,
+    "scopes": [
+      "ClassicAntimatterDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "infinity.passive.bestRuns",
+    "global": false,
+    "scopes": [
+      "PassiveIPGenerationUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.galaxyQuantity",
+    "global": false,
+    "scopes": [
+      "BreakEternityUpgradeButton",
+      "GalacticPowerRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.galacticEffect.empowerment",
+    "global": false,
+    "scopes": [
+      "GalacticPowerRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.galacticEffect.celestial",
+    "global": false,
+    "scopes": [
+      "GalacticPowerRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.upgrades.hrGain",
+    "global": false,
+    "scopes": [
+      "CompressionUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.upgrades.postNerf.antimatter",
+    "global": false,
+    "scopes": [
+      "CompressionUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.upgrades.postNerf.matter",
+    "global": false,
+    "scopes": [
+      "CompressionUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.masteries.perkGeneration",
+    "global": false,
+    "scopes": [
+      "NormalEndgameMastery"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.stars.grayReset",
+    "global": false,
+    "scopes": [
+      "StarContainer"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.milestones.capped",
+    "global": false,
+    "scopes": [
+      "EndgameMilestoneButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.milestones.current",
+    "global": false,
+    "scopes": [
+      "EndgameMilestoneButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.expansion.laitela.antimatter",
+    "global": false,
+    "scopes": [
+      "ExpansionPacksContainer"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.expansion.laitela.matter",
+    "global": false,
+    "scopes": [
+      "ExpansionPacksContainer"
     ],
     "protectedParameters": []
   }
