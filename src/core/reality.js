@@ -326,9 +326,7 @@ function giveRealityRewards(realityProps) {
     realityProps.gainedGlyphLevel.actualLevel, realityAndPPMultiplier, multiplier,
     MachineHandler.projectedIMCap);
   Currency.realities.value = boundedPositiveSum(Currency.realities.value, realityAndPPMultiplier);
-  // Perk Points are legacy Number-backed state. Preserve all Decimal-backed Reality rewards and saturate only this field.
-  const ppGain = Decimal.min(realityAndPPMultiplier, Number.MAX_VALUE).toNumber();
-  Currency.perkPoints.value = Math.min(Number.MAX_VALUE, Currency.perkPoints.value + ppGain);
+  Currency.perkPoints.value = boundedPositiveSum(Currency.perkPoints.value, realityAndPPMultiplier);
   if (TeresaUnlocks.effarig.canBeApplied) {
     const shardGain = boundedPositiveProduct(realityProps.gainedShards, multiplier);
     Currency.relicShards.value = boundedPositiveSum(Currency.relicShards.value, shardGain);

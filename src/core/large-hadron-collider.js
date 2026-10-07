@@ -395,7 +395,7 @@ export function enterNullifiedVoid() {
 }
 
 export function exitNullifiedVoid() {
-  if (!player.endgame.largeHadronCollider.void.nullifiedVoidRunning || GameEnd.creditsEverClosed) return false;
+  if (!LHC.nullifiedVoidRunning || GameEnd.creditsEverClosed) return false;
   Endgame.resetNoReward();
   player.endgame.largeHadronCollider.void.isRunning = false;
   return true;
