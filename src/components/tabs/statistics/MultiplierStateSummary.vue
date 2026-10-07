@@ -17,7 +17,7 @@ export default {
 
 <template>
   <div v-if="notes.length" class="c-multiplier-state-summary">
-    <b>Current state rules</b>
+    <b>{{ $t('analysis.state.title') }}</b>
     <p v-for="note in notes" :key="note">{{ $legacyText(_s(note)) }}</p>
   </div>
 </template>

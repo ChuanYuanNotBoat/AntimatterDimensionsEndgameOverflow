@@ -1,5 +1,6 @@
 <script>
 import PrimaryButton from "@/components/PrimaryButton";
+import { MULTIPLIER_TAB_GROUPS } from "@/components/tabs/statistics/multiplier-tab-navigation";
 
 export default {
   name: "CursedHeader",
@@ -24,8 +25,9 @@ export default {
       };
     },
     huntText() {
-      if (this.canHunt) return "Hunt for Chaos Cores";
-      return `Wait ${TimeSpan.fromMilliseconds(new Decimal(this.findInterval).sub(this.now - this.lastFound)).toStringShort()}`;
+      if (this.canHunt) return this.$t("slabdrill.core.hunt");
+      const time = TimeSpan.fromMilliseconds(new Decimal(this.findInterval).sub(this.now - this.lastFound)).toStringShort();
+      return this.$t("slabdrill.core.wait", { time: this.$legacyText(time) });
     },
     intervalText() {
       return `${TimeSpan.fromMilliseconds(new Decimal(this.findInterval)).toStringShort()}`;
@@ -44,8 +46,14 @@ export default {
       Slabdrill.hunt();
     },
     changeTabs() {
-      if (ui.view.subtab === "antimatter") Tab.celestials.slabdrill.show(true);
+      if (ui.view.tab === "dimensions" && ui.view.subtab === "antimatter") this.openADAnalysis();
+      else if (ui.view.tab === "statistics" && ui.view.subtab === "multipliers") Tab.celestials.slabdrill.show(true);
       else Tab.dimensions.antimatter.show(true);
+    },
+    openADAnalysis() {
+      const option = MULTIPLIER_TAB_GROUPS.flatMap(group => group.options).find(entry => entry.key === "AD");
+      player.options.multiplierTab.currTab = option.id;
+      Tab.statistics.multipliers.show(true);
     }
   }
 };
@@ -54,9 +62,10 @@ export default {
 <template>
   <span class="c-cursed-header">
     <span>
-      You currently have {{ $legacyText(_s(quantifyInt("Chaos Core", cores))) }}.
-      You have a {{ $legacyText(_s(formatPercents(findChance, 2, 2))) }} chance of finding one every time you hunt.
-      You can currently hunt every {{ $legacyText(_s(intervalText)) }}.
+      {{ $t('slabdrill.core.huntStatus', {
+        amount: $legacyText(quantifyInt("Chaos Core", cores)),
+        chance: formatPercents(findChance, 2, 2), interval: $legacyText(intervalText)
+      }) }}
     </span>
     <br>
     <br>
@@ -72,7 +81,7 @@ export default {
         class="o-primary-btn o-cursed-btn"
         @click="changeTabs"
       >
-        Change Tabs
+        {{ $t('slabdrill.core.changeTabs') }}
       </PrimaryButton>
     </span>
   </span>

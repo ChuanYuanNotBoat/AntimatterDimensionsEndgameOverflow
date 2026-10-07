@@ -32,12 +32,17 @@ export const infinityUpgrades = {
     id: "18Mult",
     cost: () => Math.pow(1, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
     checkRequirement: () => InfinityUpgrade.totalTimeMult.isBought,
-    description: () => Slabdrill.isCursed ? "Your Antimatter Dimension gains a multiplier based on Infinities" :
-      `1st and 8th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a multiplier based on Infinities`,
+    description: textRef("infinityUpgrades.dimensions.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "normal", first: formatInt(1), second: formatInt(8),
+      matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => dimInfinityMult(),
     formatEffect: value => formatX(value, 1, 1),
     charged: {
-      description: () => `1st and 8th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a power effect based on Infinities and Teresa level`,
+      description: textRef("infinityUpgrades.dimensions.charged", () => ({
+        first: formatInt(1), second: formatInt(8),
+        matter: player.universes.current === 2 ? "matter" : "antimatter"
+      })),
       effect: () => chargedDimInfinityMult(),
       formatEffect: value => formatPow(value, 4, 4)
     }
@@ -46,12 +51,17 @@ export const infinityUpgrades = {
     id: "27Mult",
     cost: () => Math.pow(1, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
     checkRequirement: () => InfinityUpgrade.buy10Mult.isBought,
-    description: () => Slabdrill.isCursed ? "Your Antimatter Dimension gains a multiplier based on Infinities" :
-      `2nd and 7th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a multiplier based on Infinities`,
+    description: textRef("infinityUpgrades.dimensions.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "normal", first: formatInt(2), second: formatInt(7),
+      matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => dimInfinityMult(),
     formatEffect: value => formatX(value, 1, 1),
     charged: {
-      description: () => `2nd and 7th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a power effect based on Infinities and Teresa level`,
+      description: textRef("infinityUpgrades.dimensions.charged", () => ({
+        first: formatInt(2), second: formatInt(7),
+        matter: player.universes.current === 2 ? "matter" : "antimatter"
+      })),
       effect: () => chargedDimInfinityMult(),
       formatEffect: value => formatPow(value, 4, 4)
     }
@@ -60,12 +70,17 @@ export const infinityUpgrades = {
     id: "36Mult",
     cost: () => Math.pow(1, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
     checkRequirement: () => InfinityUpgrade.dim18mult.isBought,
-    description: () => Slabdrill.isCursed ? "Your Antimatter Dimension gains a multiplier based on Infinities" :
-      `3rd and 6th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a multiplier based on Infinities`,
+    description: textRef("infinityUpgrades.dimensions.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "normal", first: formatInt(3), second: formatInt(6),
+      matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => dimInfinityMult(),
     formatEffect: value => formatX(value, 1, 1),
     charged: {
-      description: () => `3rd and 6th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a power effect based on Infinities and Teresa level`,
+      description: textRef("infinityUpgrades.dimensions.charged", () => ({
+        first: formatInt(3), second: formatInt(6),
+        matter: player.universes.current === 2 ? "matter" : "antimatter"
+      })),
       effect: () => chargedDimInfinityMult(),
       formatEffect: value => formatPow(value, 4, 4)
     }
@@ -74,12 +89,17 @@ export const infinityUpgrades = {
     id: "45Mult",
     cost: () => Math.pow(1, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
     checkRequirement: () => InfinityUpgrade.dim27mult.isBought,
-    description: () => Slabdrill.isCursed ? "Your Antimatter Dimension gains a multiplier based on Infinities" :
-      `4th and 5th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a multiplier based on Infinities`,
+    description: textRef("infinityUpgrades.dimensions.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "normal", first: formatInt(4), second: formatInt(5),
+      matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => dimInfinityMult(),
     formatEffect: value => formatX(value, 1, 1),
     charged: {
-      description: () => `4th and 5th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a power effect based on Infinities and Teresa level`,
+      description: textRef("infinityUpgrades.dimensions.charged", () => ({
+        first: formatInt(4), second: formatInt(5),
+        matter: player.universes.current === 2 ? "matter" : "antimatter"
+      })),
       effect: () => chargedDimInfinityMult(),
       formatEffect: value => formatPow(value, 4, 4)
     }
@@ -100,12 +120,15 @@ export const infinityUpgrades = {
   buy10Mult: {
     id: "dimMult",
     cost: () => Math.pow(1, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
-    description: () => `Increase the multiplier for buying ${formatInt(10)} ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions`,
+    description: textRef("infinityUpgrades.buyTen.description", () => ({
+      count: formatInt(10), matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => 1.1,
     formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.2, 0, 1)}`,
     charged: {
-      description: () => `The multiplier for buying ${formatInt(10)} ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gains ` +
-        "a power effect based on Teresa level",
+      description: textRef("infinityUpgrades.buyTen.charged", () => ({
+        count: formatInt(10), matter: player.universes.current === 2 ? "matter" : "antimatter"
+      })),
       effect: () => 1 + (Ra.pets.teresa.level * Ra.unlocks.chargeBoost.effectOrDefault(1) * (player.disablePostReality ? 1 : AlphaUnlocks.autoCrunchChallenge.effects.buff.effectOrDefault(1))) / 200,
       formatEffect: value => formatPow(value, 3, 3)
     }
@@ -223,10 +246,10 @@ export const infinityUpgrades = {
     id: "skipResetGalaxy",
     cost: () => Math.pow(300, Alpha.isRunning ? AlphaUnlocks.infinity.effects.nerf.effectOrDefault(1) : 1),
     checkRequirement: () => InfinityUpgrade.skipReset3.isBought,
-    description: () =>
-      Slabdrill.isCursed ? `Start every reset with ${formatInt(4)} Dimension Boosts and ${player.universes.current === 2 ? "a Matter" : "an Antimatter"} Galaxy` :
-      `Start every reset with ${formatInt(4)} Dimension Boosts, automatically unlocking the 8th ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimension;
-      and ${player.universes.current === 2 ? "a Matter" : "an Antimatter"} Galaxy`,
+    description: textRef("infinityUpgrades.skipGalaxy.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "normal", count: formatInt(4),
+      matter: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
   },
   ipOffline: {
     id: "ipOffline",

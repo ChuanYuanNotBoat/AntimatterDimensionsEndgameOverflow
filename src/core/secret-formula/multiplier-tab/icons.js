@@ -213,6 +213,11 @@ export const MultiplierTabIcons = {
     symbol: "<b>♅</b>",
     color: "var(--color-pelle--base)",
   },
+  SLABDRILL: {
+    symbol: "<b>⁹δ</b>",
+    color: "var(--color-slabdrill--base)",
+    textColor: "#ffffff",
+  },
   IAP: {
     symbol: `<i class="fas fa-coins" />`,
     color: "var(--color-accent)",

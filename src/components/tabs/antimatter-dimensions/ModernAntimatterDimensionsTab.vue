@@ -35,21 +35,32 @@ export default {
       multiplierText: "",
       isFullyAutomated: false,
       inCursedCore: false,
-      isFlipped: false
+      isFlipped: false,
+      isCursed: false
     };
   },
   computed: {
+    sacrificeTargetDimension() {
+      const tier = this.isCursed ? 1 : 8;
+      return this.$t("ui.dimensionName", {
+        ordinal: this.$t(`terms.dimension.ordinal${tier}`, {}, "ordinal"),
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension")
+      });
+    },
     sacrificeTooltip() {
       if (this.isFullyAutomated) {
-        return "Sacrifice autobuyer is enabled and Achievement 118 is unlocked, so Sacrifice is now fully automated";
+        return this.$t("dimensions.sacrifice.automated");
       }
-      if (Ascensions.sacA.isUnlocked) return `Boosts 8th ${this.isFlipped ? "Matter" : "Antimatter"} Dimension by
-        +${formatPow(this.sacrificePower, 2, 3)}`;
-      return `Boosts 8th ${this.isFlipped ? "Matter" : "Antimatter"} Dimension by ${formatX(this.sacrificeBoost, 2, 2)}`;
+      const power = Ascensions.sacA.isUnlocked;
+      return this.$t(power ? "dimensions.sacrifice.powerTooltip" : "dimensions.sacrifice.tooltip", {
+        dimension: this.sacrificeTargetDimension,
+        value: power ? formatPow(this.sacrificePower, 2, 3) : formatX(this.sacrificeBoost, 2, 2)
+      });
     },
     sacText() {
-      if (Ascensions.sacA.isUnlocked) return `Dimensional Sacrifice (${formatPow(this.sacrificePower, 2, 3)})`;
-      return `Dimensional Sacrifice (${formatX(this.sacrificeBoost, 2, 2)})`;
+      return this.$t("dimensions.sacrifice.action", {
+        value: Ascensions.sacA.isUnlocked ? formatPow(this.sacrificePower, 2, 3) : formatX(this.sacrificeBoost, 2, 2)
+      });
     }
   },
   methods: {
@@ -88,6 +99,9 @@ export default {
       return this.buyUntil10 ? "Until 10" : "Buy 1";
     },
     update() {
+      this.inCursedCore = Slabdrill.coreActive;
+      this.isCursed = Slabdrill.isCursed;
+      this.isFlipped = player.universes.current === 2;
       this.hasDimensionBoosts = player.dimensionBoosts.gt(0);
       this.buyUntil10 = player.buyUntil10;
       this.hasContinuum = Laitela.continuumUnlocked;
@@ -119,8 +133,6 @@ export default {
           : ` | Dimensional Sacrifice multiplier: ${formatX(this.currentSacrifice, 2, 2)}`)
         : "";
       this.multiplierText += sacText;
-      this.inCursedCore = player.celestials.slabdrill.core.isActive;
-      this.isFlipped = player.universes.current === 2;
     }
   }
 };

@@ -31,6 +31,31 @@ function actual() {
   return setup(catalogs, [...terms, ...JSON.parse(read("src/i18n/adechinese-rules.json"))]);
 }
 
+test("reported Hell, analysis and Infinity upgrade messages translate complete sentences and restore English", () => {
+  const { service, display } = actual();
+  service.setLocale("zh-CN");
+  assert.equal(service.t("slabdrill.core.changeTabs"), "切换页面");
+  assert.equal(service.t("analysis.view.exponent"), "指数");
+  assert.equal(display.translate("Slabdrill core multiplier override", "MultiplierBreakdownEntry"), "地狱维度倍率覆盖");
+  assert.match(service.t("slabdrill.core.huntStatus", { amount: "7 混沌核心", chance: "0.01%", interval: "1 秒" }), /7 混沌核心.*0\.01%.*1 秒/u);
+  for (const matter of ["antimatter", "matter"]) {
+    for (const state of ["normal", "cursed"]) {
+      const parameters = { state, matter, first: "1", second: "8" };
+      assert.match(service.t("infinityUpgrades.dimensions.description", parameters), /获得基于无限次数的倍率加成/u);
+      assert.doesNotMatch(service.t("infinityUpgrades.skipGalaxy.description", { state, matter, count: "4" }), /Start|Dimension|Antimatter/u);
+    }
+    assert.match(service.t("infinityUpgrades.buyTen.description", { matter, count: "10" }), /每购买 10 个/u);
+  }
+  assert.match(service.t("infinityUpgrades.ipMult.softcap", { amount: "1e3000000" }), /1e3000000 无限点数/u);
+  assert.match(service.t("infinityUpgrades.ipMult.hardcap", { amount: "1e6000000" }), /无法继续购买/u);
+  service.setLocale("en");
+  assert.equal(service.t("analysis.view.exponent"), "Exponents");
+  assert.equal(service.t("slabdrill.core.changeTabs"), "Change Tabs");
+  assert.match(service.t("infinityUpgrades.dimensions.description", {
+    state: "normal", matter: "matter", first: "1", second: "8"
+  }), /Matter Dimensions/u);
+});
+
 test("ADEChinese covers header currencies, automation, dimensions, and descriptions without mutating canonical inputs", () => {
   const { service, display } = actual();
   const autobuyer = { name: "Infinity", mode: 0 };

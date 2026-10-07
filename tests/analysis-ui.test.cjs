@@ -24,7 +24,7 @@ function loadVueScript(filename, globals) {
   return context.module.exports;
 }
 
-function setup(selected = 2) {
+function setup(selected = 2, inCursedCore = false) {
   const maxTier = { AD: 8, ID: 8, TD: 8 };
   const player = { options: { multiplierTab: { currTab: selected, replacePowers: false, showAltGroup: true } } };
   const multiplierTabValues = {};
@@ -40,6 +40,8 @@ function setup(selected = 2) {
   }
   const globals = {
     player,
+    Slabdrill: { coreActive: inCursedCore },
+    MultiplierTabIcons: { SLABDRILL: { symbol: '<b>⁹δ</b>' } },
     PlayerProgress: { endgameUnlocked: () => false },
     GameDatabase: { multiplierTabValues },
     createEntryInfo: key => ({ key, isOrdered: /^(IP|EP|AD|ID|TD)_total/.test(key) }),
@@ -188,8 +190,27 @@ test('classic source presentation and independent effect views keep the saved re
 
 test('AD explains traced multiplier scope; AM retains honest approximate-production caveat', () => {
   const source = fs.readFileSync(path.join(statistics, 'MultiplierBreakdownTab.vue'), 'utf8');
-  assert.match(source, /AD analyzes individual dimension multipliers/);
-  assert.match(source, /Antimatter production attribution remains approximate/);
+  const english = JSON.parse(fs.readFileSync(path.join(root, 'src/locales/en.json'), 'utf8'));
+  assert.match(source, /\$t\('analysis.ad.coverage'\)/);
+  assert.match(source, /\$t\('analysis.am.coverage'\)/);
+  assert.match(english['analysis.ad.coverage'], /AD analyzes individual dimension multipliers/);
+  assert.match(english['analysis.am.coverage'], /Antimatter production attribution remains approximate/);
   assert.match(source, /currentKey === 'AD'/);
   assert.match(source, /currentKey === 'AM'/);
+});
+
+test('Hell analysis selects AD even when another resource was saved and rejects other resources', () => {
+  const { instance, player } = setup(3, true);
+  assert.equal(instance.inCursedCore, true);
+  assert.equal(instance.currentKey, 'AD');
+  assert.equal(instance.resource.key, 'AD_total');
+  assert.equal(player.options.multiplierTab.currTab, 2);
+  const ip = instance.availableGroups.find(group => group.key === 'prestige').options.find(option => option.key === 'IP');
+  instance.selectTab(ip);
+  assert.equal(instance.currentKey, 'AD');
+  instance.selectValueMode('exponent');
+  assert.equal(instance.valueMode, 'exponent');
+  const source = fs.readFileSync(path.join(statistics, 'MultiplierBreakdownTab.vue'), 'utf8');
+  assert.match(source, /v-if="!inCursedCore && availableGroups.length"/);
+  assert.match(source, /v-if="!inCursedCore && availableOptions.length > 1"/);
 });

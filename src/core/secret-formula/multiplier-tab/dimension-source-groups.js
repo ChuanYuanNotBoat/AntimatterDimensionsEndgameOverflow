@@ -45,6 +45,7 @@ function categoryFor(key) {
 }
 
 function extraIcon(key, resource) {
+  if (/^slab/iu.test(key)) return MultiplierTabIcons.SLABDRILL;
   if (/Infinity/u.test(key)) return MultiplierTabIcons.INFINITY_POWER;
   if (/^(effarig|glyph)/u.test(key)) return MultiplierTabIcons.GENERIC_GLYPH;
   if (/^v/u.test(key)) return MultiplierTabIcons.GENERIC_V;

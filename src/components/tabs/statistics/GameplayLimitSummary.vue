@@ -45,16 +45,13 @@ export default {
     </div>
     <button type="button" class="c-gameplay-limits-title" :aria-expanded="expanded" @click="toggle">
       <i :class="expanded ? 'far fa-minus-square' : 'far fa-plus-square'" />
-      Gameplay production / overflow limits
-      <span v-if="snapshot.groups.length">{{ $legacyText(_s(snapshot.groups.length)) }} active operation(s)</span>
-      <span v-else>None currently reducing output</span>
+      {{ $t("analysis.limits.title") }}
+      <span v-if="snapshot.groups.length">{{ $t("analysis.limits.active", { count: formatInt(snapshot.groups.length) }) }}</span>
+      <span v-else>{{ $t('analysis.limits.none') }}</span>
     </button>
     <div v-if="expanded" class="c-gameplay-limits-body">
-      <p>{{ $legacyText(_s(snapshot.endpoint)) }}. The vertical bar separates retained output from losses in OoM.
-        Each reduction is measured immediately before and after the game's own
-        cap operation. These losses are NOT independently additive resource production gains.</p>
-      <div v-if="!snapshot.groups.length">No binding gameplay cap or compression was detected in currently
-        producing tiers.</div>
+      <p>{{ $t("analysis.limits.explanation", { endpoint: $legacyText(snapshot.endpoint) }) }}</p>
+      <div v-if="!snapshot.groups.length">{{ $t('analysis.limits.noBinding') }}</div>
       <div v-for="group in snapshot.groups" :key="group.key" class="c-gameplay-limit-row">
         <button type="button" class="c-gameplay-limit-row-title" :aria-expanded="!!details[group.key]"
           @click="toggleDetail(group.key)">

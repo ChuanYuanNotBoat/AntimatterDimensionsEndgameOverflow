@@ -42,24 +42,26 @@ export default {
       return Math.ceil(this.unlocks.length / 3);
     },
     nextLayer() {
-      return Slabdrill.nextLayer;
+      const keys = [
+        "dimboost", "galaxy", "infinity", "breakInfinity", "ic4", "replicanti",
+        "eternity", "ts181", "ec10", "dilation", "reality"
+      ];
+      const key = keys[this.stage];
+      return this.$t(key ? `slabdrill.strike.next.${key}` : "slabdrill.strike.complete");
     },
     halveText() {
       return TimeSpan.fromSeconds(new Decimal(666)).toStringShort();
     },
     serpentinePowerRewardText() {
       let text = [];
-      const effects = ["Antimatter Dimension multiplier", "Dimension Boost strength multiplier", "Galaxy strength multiplier",
-        "Antimatter Dimension power", "Infinity Point multiplier", "Infinity Dimension multiplier", "Replicanti Speed multiplier",
-        "Time Dimension multiplier", "Eternity Point multiplier", "Infinity multiplier", "Dilated Time multiplier",
-        "Chaos Core find chance multiplier"];
-      text.push("Serpentine Power currently provides the following effects:");
-      for (let t = 0; t < Slabdrill.currentStage + 1; t++) {
-        text.push(
-          `${effects[t]}: ${t === 3
-            ? formatPow(this.powers[t], 2, 3)
-            : formatX(this.powers[t], 2, 2)}`
-        );
+      const effects = [
+        "adMultiplier", "dimensionBoost", "galaxy", "adPower", "ip", "id",
+        "replicanti", "td", "ep", "infinities", "dt", "cores"
+      ];
+      text.push(this.$t("slabdrill.effects.header"));
+      for (let index = 0; index < Math.min(Slabdrill.currentStage + 1, effects.length); index++) {
+        const value = index === 3 ? formatPow(this.powers[index], 2, 3) : formatX(this.powers[index], 2, 2);
+        text.push(this.$t(`slabdrill.effects.${effects[index]}`, { value }));
       }
       return text;
     }
@@ -152,7 +154,7 @@ export default {
       v-if="isCursed"
       class="l-slabdrill-header"
     >
-      The next Strike will be encountered when you {{ $legacyText(_s(nextLayer)) }}.
+      {{ nextLayer }}
     </span>
     <br>
     <br>

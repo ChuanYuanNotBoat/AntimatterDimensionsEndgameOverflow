@@ -171,30 +171,12 @@ export default {
     },
     // Explanatory footnote for ordered panels, data-driven instead of a template branch chain.
     orderedNoteText() {
-      const addUpTo = `are not additive shares of the final value`;
-      if (this.valueMode !== "all") {
-        return `This view selects ${this.valueMode === "exponent" ? "power" : "multiplication"} sources.
-          Direct measures them at their current inputs; Final removes each selected source from the full formula.
-          Products include only this view's operations. The left bar shows Direct gain and loss;
-          Final impacts ${addUpTo}.`;
-      }
-      if (this.resource.key === "tickspeed_galaxies") {
-        return `Each source removes only its effective galaxy count, keeping other sources and upgrades fixed.
-          Small sources remain listed when their impact rounds to zero. Impacts are not additive;
-          Galactic Ascension can multiply galaxy sources.`;
-      }
-      if (this.isDimensionOverall && this.selected === 0) {
-        return `Original source categories combine producing tiers; expand a category for its sources.
-          Direct measures each operation at its current inputs; Final removes the category from the full formula.
-          The left bar separates surviving gain from nerfs. Final impacts ${addUpTo}.`;
-      }
-      if (this.isDimensionOverall) {
-        return `Grouped by dimension, as in the original breakdown: expand AD1–AD8 (or the corresponding ID/TD tiers)
-          here without opening a different tab. The overall value describes combined multipliers, not AM/sec.`;
-      }
-      return `The left bar and Direct percentages separate surviving OoM gain from losses to nerfs.
-        Final includes later formula steps and compares each impact with the largest effect;
-        these ${addUpTo}.`;
+      if (this.valueMode !== "all") return this.$t("analysis.note.selected", {
+        kind: this.$t(this.valueMode === "exponent" ? "analysis.source.power" : "analysis.source.multiplication")
+      });
+      if (this.resource.key === "tickspeed_galaxies") return this.$t("analysis.note.galaxies");
+      if (this.isDimensionOverall && this.selected === 0) return this.$t("analysis.note.categories");
+      return this.$t(this.isDimensionOverall ? "analysis.note.tiers" : "analysis.note.formula");
     },
   },
   watch: {
@@ -724,10 +706,13 @@ export default {
       }
       const mode = this.impactMode ? "final" : "direct";
       const pathShare = this.resource.key === "tickspeed_total" && entry.key === "tickspeed_galaxies"
-        ? ` | ${formatPercents(this.orderedPathPercentList[index] ?? 0, 1)} of Direct path`
+        ? this.$t("analysis.row.path", { share: formatPercents(this.orderedPathPercentList[index] ?? 0, 1) })
         : "";
-      const value = entry.data.invalidValue ? "(Diagnostic value unavailable)" : this.transformValueString(entry);
-      return `${padPercents(impactString)} rel. (${mode})${pathShare}: ${entry.name} ${value}`;
+      const value = entry.data.invalidValue ? this.$t("analysis.row.unavailable") : this.transformValueString(entry);
+      return this.$t("analysis.row.relative", {
+        impact: padPercents(impactString), mode: this.$t(`analysis.impact.${mode}`), path: pathShare,
+        name: this.$legacyText(entry.name), value: this.$legacyText(value)
+      });
     },
     transformValueString(entry) {
       const data = entry.data;
@@ -941,15 +926,13 @@ export default {
           <span
             v-if="usesOrdered"
             class="c-impact-display-label"
-          >
-            Impact
-          </span>
+          >{{ $t('analysis.detail.impact') }}</span>
           <PrimaryToggleButton
             v-if="usesOrdered && canShowFinalImpact"
             v-model="orderedFinalImpact"
             v-tooltip="$legacyTooltip('Final includes amplification or reduction from later formula steps; Direct only measures this step itself')"
-            off="Direct"
-            on="Final"
+            :off="$t('analysis.impact.direct')"
+            :on="$t('analysis.impact.final')"
             class="o-primary-btn c-impact-display-btn"
           />
           <PrimaryToggleButton
@@ -971,23 +954,23 @@ export default {
       <div v-if="valueMode !== 'all' && !isEmpty" class="c-selected-effect">
         <template v-if="usesOrdered">
           <div v-if="selectedRawEffectAvailable">
-            Product of source {{ $legacyText(_s(valueMode === 'exponent' ? 'exponents (per tier)' : 'multipliers')) }}:
+            {{ $t(valueMode === 'exponent' ? 'analysis.product.exponents' : 'analysis.product.multipliers') }}:
             {{ $legacyText(_s(valueMode === 'exponent' ? formatPow(selectedRawEffect, 2, 3) : formatX(selectedRawEffect, 2, 2))) }}
           </div>
-          Product of selected direct step ratios: {{ $legacyText(_s(formatX(selectedEffect, 2, 2))) }}
+          {{ $t('analysis.product.directRatios') }}: {{ $legacyText(_s(formatX(selectedEffect, 2, 2))) }}
         </template>
         <template v-else-if="valueMode === 'exponent'">
-          Product of source exponents: {{ $legacyText(_s(formatPow(selectedEffect, 2, 3))) }}
+          {{ $t('analysis.product.exponents') }}: {{ $legacyText(_s(formatPow(selectedEffect, 2, 3))) }}
         </template>
         <template v-else>
-          Product of source multipliers: {{ $legacyText(_s(formatX(selectedEffect, 2, 2))) }}
+          {{ $t('analysis.product.multipliers') }}: {{ $legacyText(_s(formatX(selectedEffect, 2, 2))) }}
         </template>
       </div>
       <div
         v-if="isEmpty"
         class="c-no-effect"
       >
-        No Active {{ $legacyText(_s(valueMode === 'all' ? 'Effects' : (valueMode === 'exponent' ? 'Exponents' : 'Multipliers'))) }}
+        {{ $t('analysis.noActive', { kind: $t('analysis.effect.' + valueMode) }) }}
         <br>
         <br>
         <template v-if="valueMode === 'all'">{{ $legacyText(_s(disabledText)) }}</template>
@@ -1052,35 +1035,35 @@ export default {
               v-if="starResourceForEntry(entry.key) && starAudits[entry.key]"
               class="c-transform-detail-grid"
             >
-              <span>Star / amount</span>
+              <span>{{ $t('analysis.detail.starAmount') }}</span>
               <b>{{ $legacyText(_s(starAudits[entry.key].color)) }} / {{ $legacyText(_s(format(starAudits[entry.key].count, 2, 2))) }}</b>
-              <span>Gray Star bonus</span>
+              <span>{{ $t('analysis.detail.grayBonus') }}</span>
               <b>+{{ $legacyText(_s(format(starAudits[entry.key].grayBoost, 2, 2))) }}%</b>
-              <span>Effective exponent</span>
+              <span>{{ $t('analysis.detail.effectiveExponent') }}</span>
               <b>{{ $legacyText(_s(formatPow(starAudits[entry.key].exponent, 2, 5))) }}</b>
-              <span>Gameplay operation</span>
+              <span>{{ $t('analysis.detail.operation') }}</span>
               <b>10^(sign(L) × |L|^p), L = log10(multiplier)</b>
-              <span>Scope</span>
+              <span>{{ $t('analysis.detail.scope') }}</span>
               <b>{{ $legacyText(_s(starAudits[entry.key].scope)) }}; {{ $legacyText(_s(starAudits[entry.key].tierCount)) }} active</b>
-              <span>Direct Star step (gameplay)</span>
+              <span>{{ $t('analysis.detail.directStar') }}</span>
               <b>{{ $legacyText(_s(format(starAudits[entry.key].directStarOoM, 2, 2))) }} OoM (sum of selected multiplier logs)</b>
-              <span>After downstream caps / overflows</span>
+              <span>{{ $t('analysis.detail.downstream') }}</span>
               <b>{{ $legacyText(_s(format(starAudits[entry.key].multiplierOoM, 2, 2))) }} OoM (multiplier product, NOT currency gain)</b>
-              <span>Propagation chain</span>
+              <span>{{ $t('analysis.detail.propagation') }}</span>
               <b>{{ $legacyText(_s(starAudits[entry.key].propagation)) }}</b>
-              <span>Production endpoint</span>
+              <span>{{ $t('analysis.detail.endpoint') }}</span>
               <b>{{ $legacyText(_s(starAudits[entry.key].endpointLabel)) }}</b>
-              <span>With Star (current)</span>
+              <span>{{ $t('analysis.detail.currentStar') }}</span>
               <b>{{ $legacyText(_s(format(starAudits[entry.key].currentProduction, 2, 2))) }}</b>
-              <span>Without this Star</span>
+              <span>{{ $t('analysis.detail.withoutStar') }}</span>
               <b>{{ $legacyText(_s(format(starAudits[entry.key].withoutProduction, 2, 2))) }}</b>
-              <span>Instantaneous production difference</span>
+              <span>{{ $t('analysis.detail.productionDifference') }}</span>
               <b v-if="starAudits[entry.key].productionOoM !== null">
                 {{ $legacyText(_s(format(starAudits[entry.key].productionOoM, 2, 2))) }} OoM
               </b>
-              <b v-else>Not expressible as an OoM ratio (zero production)</b>
-              <span v-if="starAudits[entry.key].mismatch">Gameplay trace check</span>
-              <b v-if="starAudits[entry.key].mismatch">Mismatch: inspect game state / cached multiplier</b>
+              <b v-else>{{ $t('analysis.detail.zeroProduction') }}</b>
+              <span v-if="starAudits[entry.key].mismatch">{{ $t('analysis.detail.traceCheck') }}</span>
+              <b v-if="starAudits[entry.key].mismatch">{{ $t('analysis.detail.traceMismatch') }}</b>
               <p class="c-star-audit-note">
                 Calculated from gameplay's multiplier and production functions by replacing only this Star's exponent
                 with 1. Other stars, caps, and challenges are unchanged. This is an instantaneous comparison at fixed
@@ -1088,48 +1071,48 @@ export default {
               </p>
             </div>
             <div v-else class="c-transform-detail-grid">
-              <span>Effect type</span>
+              <span>{{ $t('analysis.detail.type') }}</span>
               <b>{{ $legacyText(_s(transformTypeString(entry))) }}</b>
               <template v-if="entry.data.transformAggregate">
-                <span>Scope</span>
+                <span>{{ $t('analysis.detail.scope') }}</span>
                 <b>{{ $legacyText(_s(entry.data.transformAggregateScope || 'Producing dimension tiers')) }}</b>
                 <template v-if="entry.data.transformHasValue">
-                  <span>Source value</span>
+                  <span>{{ $t('analysis.detail.sourceValue') }}</span>
                   <b>{{ $legacyText(_s(transformValueString(entry))) }}</b>
                 </template>
-                <span>Combined Direct impact</span>
+                <span>{{ $t('analysis.detail.combinedDirect') }}</span>
                 <b>{{ $legacyText(_s(transformImpactString(entry, false))) }}</b>
                 <template v-if="entry.data.transformHasFinalWithout">
-                  <span>Combined Final impact</span>
+                  <span>{{ $t('analysis.detail.combinedFinal') }}</span>
                   <b>{{ $legacyText(_s(transformImpactString(entry, true))) }}</b>
                 </template>
               </template>
               <template v-else>
-                <span>Direct effect</span>
+                <span>{{ $t('analysis.detail.directEffect') }}</span>
                 <b>{{ $legacyText(_s(transformValueString(entry) || '—')) }}</b>
-                <span>Before this step</span>
+                <span>{{ $t('analysis.detail.before') }}</span>
                 <b>{{ $legacyText(_s(format(entry.data.transformBefore, 2, 2))) }}</b>
-                <span>After this step</span>
+                <span>{{ $t('analysis.detail.after') }}</span>
                 <b>{{ $legacyText(_s(format(entry.data.transformAfter, 2, 2))) }}</b>
-                <span>Direct impact</span>
+                <span>{{ $t('analysis.detail.directImpact') }}</span>
                 <b>{{ $legacyText(_s(transformImpactString(entry, false))) }}</b>
                 <template v-if="['hardcap', 'softcap'].includes(entry.data.transformType)">
-                  <span>Limit status</span>
+                  <span>{{ $t('analysis.detail.limitStatus') }}</span>
                   <b v-if="entry.data.transformAfter.lt(entry.data.transformBefore)">
                     Suppression at this operation: {{ $legacyText(_s(transformImpactString(entry, false))) }}
                   </b>
-                  <b v-else>Not currently reducing this value</b>
+                  <b v-else>{{ $t('analysis.detail.noReduction') }}</b>
                   <template v-if="entry.data.transformDisplay">
-                    <span>Limit / threshold</span>
+                    <span>{{ $t('analysis.detail.limitThreshold') }}</span>
                     <b>{{ $legacyText(_s(entry.data.transformDisplay)) }}</b>
                   </template>
                 </template>
                 <template v-if="entry.data.transformHasFinalWithout">
-                  <span>Final with effect</span>
+                  <span>{{ $t('analysis.detail.finalWith') }}</span>
                   <b>{{ $legacyText(_s(format(entry.data.transformFinalWith, 2, 2))) }}</b>
-                  <span>Final without effect</span>
+                  <span>{{ $t('analysis.detail.finalWithout') }}</span>
                   <b>{{ $legacyText(_s(format(entry.data.transformFinalWithout, 2, 2))) }}</b>
-                  <span>Final impact</span>
+                  <span>{{ $t('analysis.detail.finalImpact') }}</span>
                   <b>{{ $legacyText(_s(transformImpactString(entry, true))) }}</b>
                 </template>
               </template>

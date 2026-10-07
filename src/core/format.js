@@ -74,7 +74,11 @@ window.formatPostBreak = function formatPostBreak(value, places, placesUnder1000
 };
 
 window.formatX = function formatX(value, places, placesUnder1000) {
-  return `×${format(value, places, placesUnder1000)}`;
+  const formatted = format(value, places, placesUnder1000);
+  if (Decimal.gt(value, 0) && /^0(?:[.,]0+)?$/u.test(formatted)) {
+    return `×1/(${format(new Decimal(value).recip(), places, placesUnder1000)})`;
+  }
+  return `×${formatted}`;
 };
 
 window.formatPow = function formatPow(value, places, placesUnder1000) {

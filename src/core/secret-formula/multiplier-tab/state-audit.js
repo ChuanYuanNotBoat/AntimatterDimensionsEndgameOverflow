@@ -10,18 +10,18 @@ export function multiplierStateNotes(resource) {
     notes.push(t("analysis.state.timeDisabled"));
   }
   if (["AD", "ID", "TD", "gamespeed"].includes(resource) && universe === 2) {
-    notes.push("Tangible Universe disables Singularity Milestone effects.");
+    notes.push(t("analysis.state.tangibleSingularities"));
   }
   if (["AM", "AD", "tickspeed", "gamespeed"].includes(resource) && Slabdrill.coreActive) {
-    notes.push("Slabdrill core replaces AD multipliers and bypasses Tickspeed, AD production powers and caps.");
+    notes.push(t("analysis.state.slabCore"));
   }
   if (["AD", "ID", "TD"].includes(resource) && player.compression.active) {
-    notes.push("Compression transforms dimension multipliers before their later rewards and overflow limits.");
+    notes.push(t("analysis.state.compression"));
   }
   if (resource === "AD" && Slabdrill.isCursed) {
     const unlocked = Math.max(Math.min(Math.floor((player.celestials.slabdrill.goodbyeTick - 30000) / 1000), 10), 2) - 1;
     notes.push(t("analysis.state.slabdrillDimensions", { tier: formatInt(unlocked) }));
-    notes.push("Slabdrill moves Sacrifice and unascended TS214 to AD1, and applies the IC8 reward as a power.");
+    notes.push(t("analysis.state.slabSacrifice"));
   }
   if (resource === "ID" && SlabdrillUnlocks.timeStudy181.isUnlocked) {
     notes.push(`Slabdrill sets the base ID1-7 purchase cap to ${formatInt(InfinityDimensions.HARDCAP_PURCHASES)}; ` +

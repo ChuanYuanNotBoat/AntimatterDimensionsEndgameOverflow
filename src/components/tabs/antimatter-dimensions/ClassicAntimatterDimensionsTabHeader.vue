@@ -15,21 +15,35 @@ export default {
       sacrificeBoost: new Decimal(0),
       nextPower: new Decimal(0),
       disabledCondition: "",
-      isFlipped: false
+      isFlipped: false,
+      isCursed: false
     };
   },
   computed: {
+    sacrificeTargetDimension() {
+      const tier = this.isCursed ? 1 : 8;
+      return this.$t("ui.dimensionName", {
+        ordinal: this.$t(`terms.dimension.ordinal${tier}`, {}, "ordinal"),
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension")
+      });
+    },
     sacText() {
-      if (Ascensions.sacA.isUnlocked) return `Dimensional Sacrifice (+${formatPow(this.sacrificeBoost, 2, 3)})`;
-      return `Dimensional Sacrifice (${formatX(this.sacrificeBoost, 2, 2)})`;
+      return this.$t("dimensions.sacrifice.action", {
+        value: Ascensions.sacA.isUnlocked ? formatPow(this.nextPower, 2, 3) : formatX(this.sacrificeBoost, 2, 2)
+      });
     },
     sacrificeTooltip() {
-      return `Boosts 8th ${this.isFlipped ? "Matter" : "Antimatter"} Dimension by +${formatPow(this.nextPower, 2, 3)}`;
-      return `Boosts 8th ${this.isFlipped ? "Matter" : "Antimatter"} Dimension by ${formatX(this.sacrificeBoost, 2, 2)}`;
+      const power = Ascensions.sacA.isUnlocked;
+      return this.$t(power ? "dimensions.sacrifice.powerTooltip" : "dimensions.sacrifice.tooltip", {
+        dimension: this.sacrificeTargetDimension,
+        value: power ? formatPow(this.nextPower, 2, 3) : formatX(this.sacrificeBoost, 2, 2)
+      });
     },
   },
   methods: {
     update() {
+      this.isCursed = Slabdrill.isCursed;
+      this.isFlipped = player.universes.current === 2;
       const isSacrificeUnlocked = Sacrifice.isVisible;
       this.isSacrificeUnlocked = isSacrificeUnlocked;
       if (!isSacrificeUnlocked) return;
@@ -39,7 +53,6 @@ export default {
       this.sacrificeBoost.copyFrom(Sacrifice.nextBoost);
       this.nextPower.copyFrom(Sacrifice.nextPower);
       this.disabledCondition = Sacrifice.disabledCondition;
-      this.isFlipped = player.universes.current === 2;
     },
     sacrifice() {
       sacrificeBtnClick();

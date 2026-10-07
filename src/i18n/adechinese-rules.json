@@ -78123,5 +78123,874 @@
       "HeaderChallengeDisplay"
     ],
     "protectedParameters": []
+  },
+  {
+    "id": "analysis.mode.classic",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.mode.production",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.mode.breakdown",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.mode.combined",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.mode.ordered",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.aggregate",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.multiplier",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.power",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.formula",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.softcap",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.hardcap",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.override",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.floor",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.scope",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.producing",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.perTier",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.purchases",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.achievements",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabPenalty",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabMultiplier",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabCore",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabLock",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabChallenges",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabIC8",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabNC10",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabNC12",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabEC3",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabEC10",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabPower",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.achievement",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.study",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.total.ad",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.total.adTier",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.endpoint.ad",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.endpoint.id",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.endpoint.td",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.endpoint.zero",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.endpoint.includesZero",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.transform.slabCore",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.core",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.equalizer",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.nc2",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.nc3",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.powers",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.pelle150",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.pelle225",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.pelleDivinity",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.pelleLog",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.resurgence",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.cap200",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.cap260",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.nullifiedVoid",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.cursed",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.overcharge",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.powerBurst",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.transient",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.tangible",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.compression",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.hardcap",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.am.stage.chargedNC12",
+    "global": false,
+    "scopes": [
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.dilationAD",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.chargedTotalTime",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.chargedInfinityTime",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.raPowers",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.inflation",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.breakEternityAD",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.alphaTS181",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.stars",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.red",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.green",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.blue",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.yellow",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.black",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.tickHeader",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.freeTicks",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.cEqualizer",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.galaxyStrength",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.raTickspeed",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.baseInterval",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.purchasedTicks",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.freeTickCount",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.equalizedTicks",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.galaxyInterval",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.raTickNote",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.infinite",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.infiniteMultiplier",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.infiniteMultiplierWrapped",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.expanded.infinitePowerWrapped",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierBreakdownTotal",
+      "AntimatterProductionBreakdown"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.purchaseAndSacrifice.multiplier.multiplier",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": [
+      "p0",
+      "p1"
+    ]
+  },
+  {
+    "id": "dimensions.purchaseAndSacrifice.multiplier.power",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": [
+      "p0",
+      "p1"
+    ]
+  },
+  {
+    "id": "dimensions.purchaseAndSacrifice.power.multiplier",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": [
+      "p0",
+      "p1"
+    ]
+  },
+  {
+    "id": "dimensions.purchaseAndSacrifice.power.power",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": [
+      "p0",
+      "p1"
+    ]
+  },
+  {
+    "id": "dimensions.boost.reset.single",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": [
+      "p0"
+    ]
+  },
+  {
+    "id": "dimensions.boost.reset.all",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": [
+      "p0"
+    ]
+  },
+  {
+    "id": "dimensions.boost.reset.first",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": [
+      "p0"
+    ]
   }
 ]

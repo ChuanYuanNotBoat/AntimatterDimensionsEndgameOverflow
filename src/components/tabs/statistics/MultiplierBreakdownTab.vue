@@ -8,6 +8,7 @@ import MultiplierBreakdownEntry from "./MultiplierBreakdownEntry";
 import AntimatterProductionBreakdown from "./AntimatterProductionBreakdown";
 import MultiplierStateSummary from "./MultiplierStateSummary";
 import { antimatterProductionSnapshot } from "@/core/secret-formula/multiplier-tab/antimatter-production-audit";
+import { MultiplierTabIcons } from "@/core/secret-formula/multiplier-tab/icons";
 
 export default {
   name: "MultiplierBreakdownTab",
@@ -29,6 +30,7 @@ export default {
       valueMode: "all",
       // Navigation memory is local UI state, not a new save field. Existing numeric IDs are preserved.
       lastSelectedTabs: {},
+      inCursedCore: false,
     };
   },
   computed: {
@@ -77,6 +79,7 @@ export default {
         !this.dimensionOptions.some(option => option.tier > this.dimensionTier);
     },
     resourceSymbols() {
+      if (this.inCursedCore) return [MultiplierTabIcons.SLABDRILL.symbol];
       return GameDatabase.multiplierTabValues[this.currentKey]?.total?.overlay ?? [];
     },
     analysisModeLabel() {
@@ -93,6 +96,7 @@ export default {
   },
   methods: {
     update() {
+      this.inCursedCore = Slabdrill.coreActive;
       // Use the source formula's own unlock predicate rather than hardcoding progression milestones.
       const groups = availableMultiplierTabGroups(key => this.checkActiveKey(key));
       const signature = groups.map(group => `${group.key}:${group.options.map(option => option.id).join(",")}`).join("|");
@@ -101,7 +105,9 @@ export default {
         this.availableGroupsSignature = signature;
       }
 
-      const selected = resolveMultiplierTab(this.availableGroups, this.currentID);
+      const selected = this.inCursedCore
+        ? this.availableGroups.flatMap(group => group.options).find(option => option.key === "AD")
+        : resolveMultiplierTab(this.availableGroups, this.currentID);
       if (selected && selected.id !== this.currentID) {
         this.selectTab(selected);
       } else if (selected) {
@@ -128,6 +134,7 @@ export default {
     },
     selectTab(option) {
       if (!option) return;
+      if (this.inCursedCore && option.key !== "AD") return;
       this.currentID = option.id;
       player.options.multiplierTab.currTab = option.id;
       this.dimensionTier = 0;
@@ -183,7 +190,7 @@ export default {
 <template>
   <div class="c-stats-tab">
     <div
-      v-if="availableGroups.length"
+      v-if="!inCursedCore && availableGroups.length"
       class="l-multiplier-category-btn-container"
       role="group"
       aria-label="Multiplier categories"
@@ -196,11 +203,11 @@ export default {
         :aria-pressed="group.key === currentGroupKey"
         @click="clickCategory(group)"
       >
-        {{ $legacyText(_s(group.text)) }}
+        {{ $t('analysis.group.' + group.key) }}
       </button>
     </div>
     <div
-      v-if="availableOptions.length > 1"
+      v-if="!inCursedCore && availableOptions.length > 1"
       class="l-multiplier-subtab-btn-container"
       role="group"
       aria-label="Multiplier resources"
@@ -250,7 +257,7 @@ export default {
               :key="opt.tier"
               :value="opt.tier"
             >
-              {{ $legacyText(_s(opt.text)) }}
+              {{ opt.tier === 0 ? $t('analysis.view.all') : $legacyText(opt.text) }}
             </option>
           </select>
           <button
@@ -267,10 +274,7 @@ export default {
       <p
         v-if="currentKey === 'AD'"
         class="c-multiplier-coverage-warning"
-      >
-        AD analyzes individual dimension multipliers. Overall combines producing tiers;
-        select AD1–AD8 for a single tier. Antimatter/sec is shown under Antimatter Production.
-      </p>
+      >{{ $t('analysis.ad.coverage') }}</p>
       <div v-if="currentKey !== 'AM'" class="l-breakdown-view-controls">
         <div class="l-breakdown-view-group" role="group" aria-label="Effect calculation">
           <button
@@ -286,25 +290,19 @@ export default {
             :aria-pressed="valueMode === mode.key"
             @click="selectValueMode(mode.key)"
           >
-            {{ $legacyText(_s(mode.text)) }}
+            {{ $t('analysis.view.' + mode.key) }}
           </button>
         </div>
       </div>
-      <p v-if="isDimensionBreakdown && dimensionPresentation === 'classic'" class="c-multiplier-tab-text-line">
-        Sources follow the original categories. Expand a category to inspect its individual formula steps.
-      </p>
-      <p v-if="currentKey === 'AM'" class="c-multiplier-coverage-warning">
-        Antimatter production attribution remains approximate.
-        Base AD1 Production and one Tickspeed rate are expandable as in the original analysis.
-        Production powers and caps use checkpoints from the actual gameplay getter;
-        loss is measured at the cap itself, not estimated from the product of eight dimension multipliers.
-      </p>
+      <p v-if="isDimensionBreakdown && dimensionPresentation === 'classic'" class="c-multiplier-tab-text-line">{{ $t('analysis.sources.explanation') }}</p>
+      <p v-if="currentKey === 'AM'" class="c-multiplier-coverage-warning">{{ $t('analysis.am.coverage') }}</p>
       <span
         v-for="symbol in resourceSymbols"
         :key="symbol"
       >
         <span
           class="c-symbol-overlay"
+          :style="inCursedCore ? { color: 'var(--color-slabdrill--base)' } : {}"
           v-html="$legacyHtml(symbol)"
         />
       </span>
@@ -320,16 +318,8 @@ export default {
         :presentation="dimensionPresentation"
         :value-mode="valueMode"
       />
-      <div class="c-multiplier-tab-text-line">
-        Note: Entries are only expandable if they contain multiple sources which can be different values.
-        For example, any effects which affect all Dimensions of any type equally will not expand into a
-        list of eight identical numbers.
-        <br>
-        <b>
-          Some entries may cause lag if expanded out fully. Resizing happens over 200 ms (instead of instantly)
-          in order to reduce possible adverse effects due to photosensitivity. This may cause some visual weirdness
-          after prestige events.
-        </b>
+      <div class="c-multiplier-tab-text-line">{{ $t('analysis.expansion.note') }}<br>
+        <b>{{ $t('analysis.expansion.performance') }}</b>
       </div>
     </div>
   </div>

@@ -13,6 +13,7 @@ import { replicanti } from "./replicanti";
 import { TP } from "./tachyon-particles";
 import { tickspeed, tickspeedUpgrades } from "./tickspeed";
 import { TD } from "./time-dimensions";
+import { MultiplierTabIcons } from "./icons";
 
 export const multiplierTabValues = {
   general,
@@ -32,3 +33,10 @@ export const multiplierTabValues = {
   gamespeed,
   replicanti
 };
+
+// Use the celestial's own emblem for all of its named analysis sources.
+for (const values of Object.values(multiplierTabValues)) {
+  for (const [key, entry] of Object.entries(values)) {
+    if (/^(?:source)?slab/iu.test(entry.sourceKey ?? key)) entry.icon = MultiplierTabIcons.SLABDRILL;
+  }
+}
