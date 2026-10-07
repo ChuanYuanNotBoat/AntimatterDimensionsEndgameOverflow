@@ -36,6 +36,7 @@ function setup() {
   const context = vm.createContext({
     multiplierTabValues: values,
     installDimensionSourceGroups: () => {},
+    CelestialDimensionAnalysis: { tree: {} }, DivineDimensionAnalysis: { tree: {} }, ExpansionRewardAnalyses: {},
     MultiplierTabHelper: {
       achievementDimCheck: () => true,
       timeStudyDimCheck: () => true,

@@ -1,3 +1,21 @@
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
+
+function staticTickspeedMultiplier() {
+  const count = Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought;
+  return boundedPositivePower(player.galaxies.times(0.005).add(1.05),
+    boundedPositiveProduct(count, Slabdrill.isCursed ? 12 : 1));
+}
+
+function dimensionPairMultiplier() {
+  if (Slabdrill.isCursed) return new Decimal(1.125);
+  const raw = boundedPositivePower(boundedPositiveProduct(
+    AntimatterDimension(1).multiplier, AntimatterDimension(8).multiplier), 0.02);
+  const cap = DC.E1E15.powEffectsOf(EndgameMastery(91), EndgameUpgrade(11));
+  const ratio = raw.max(1).log10().div(cap.log10().max(1)).max(1);
+  const power = Alpha.isDestroyed ? boundedPositivePower(5, ratio.log10()) : DC.D1;
+  return boundedPositivePower(raw.clampMax(cap), power);
+}
+
 export const infinityChallenges = [
   {
     id: 1,
@@ -35,15 +53,11 @@ export const infinityChallenges = [
       based on ${player.universes.current === 2 ? "Matter" : "Antimatter"} Galaxies.`,
     goal: () => Slabdrill.isCursed ? DC.E2600 : DC.E5000,
     isQuickResettable: false,
-    effect: () => (Laitela.continuumActive
-        ? Decimal.pow(player.galaxies.times(0.005).add(1.05), Tickspeed.continuumValue.times(Slabdrill.isCursed ? 12 : 1))
-        : Decimal.pow(player.galaxies.times(0.005).add(1.05), player.totalTickBought.times(Slabdrill.isCursed ? 12 : 1))),
+    effect: staticTickspeedMultiplier,
     formatEffect: value => formatX(value, 2, 2),
     reward: {
       description: () => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimension multiplier based on ${player.universes.current === 2 ? "Matter" : "Antimatter"} Galaxies and Tickspeed purchases`,
-      effect: () => (Laitela.continuumActive
-        ? Decimal.pow(player.galaxies.times(0.005).add(1.05), Tickspeed.continuumValue.times(Slabdrill.isCursed ? 12 : 1))
-        : Decimal.pow(player.galaxies.times(0.005).add(1.05), player.totalTickBought.times(Slabdrill.isCursed ? 12 : 1))),
+      effect: staticTickspeedMultiplier,
       formatEffect: value => formatX(value, 2, 2),
     },
     unlockAM: () => Slabdrill.isCursed ? DC.E2200 : DC.E12000,
@@ -137,10 +151,7 @@ export const infinityChallenges = [
       description: () =>
         Slabdrill.isCursed ? `Your Antimatter Dimension is raised by ${formatPow(1.125, 2, 3)}` :
         `You get a multiplier to ${player.universes.current === 2 ? "MD" : "AD"} 2-7 based on 1st and 8th ${player.universes.current === 2 ? "MD" : "AD"} multipliers.`,
-      effect: () => Slabdrill.isCursed ? new Decimal(1.125) :
-        AntimatterDimension(1).multiplier.times(AntimatterDimension(8).multiplier).pow(0.02).clampMax(DC.E1E15.powEffectsOf(EndgameMastery(91), EndgameUpgrade(11))).pow(
-        Alpha.isDestroyed ? Decimal.max(Decimal.pow(5, Decimal.log10(Decimal.log10(AntimatterDimension(1).multiplier.times(AntimatterDimension(8).multiplier).pow(0.02)).div(
-        Decimal.log10(DC.E1E15.powEffectsOf(EndgameMastery(91), EndgameUpgrade(11)))))), 1) : 1),
+      effect: dimensionPairMultiplier,
       cap: () => Alpha.isDestroyed ? DC.BEMAX : DC.E1E15.powEffectsOf(EndgameMastery(91), EndgameUpgrade(11)),
       formatEffect: value => Slabdrill.isCursed ? formatPow(value, 2, 3) : formatX(value, 2, 2)
     },

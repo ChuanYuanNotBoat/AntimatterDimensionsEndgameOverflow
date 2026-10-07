@@ -9,6 +9,10 @@ import { reality } from "@/core/secret-formula/reality";
  * }
  */
 export const MultiplierTabIcons = {
+  MACHINE(type) {
+    return { symbol: `<b>${{ RM: "Ϟ", IM: "iM", DM: "jM" }[type]}</b>`,
+      color: type === "RM" ? "var(--color-reality)" : "var(--color-celestials)" };
+  },
   DIMENSION(type, tier) {
     const tierText = tier ?? "";
     switch (type) {
@@ -18,6 +22,10 @@ export const MultiplierTabIcons = {
         return { symbol: `<b>∞${tierText}</b>`, color: "var(--color-infinity)" };
       case "TD":
         return { symbol: `<b>Δ${tierText}</b>`, color: "var(--color-eternity)" };
+      case "CD":
+        return { symbol: `<b>✯${tierText}</b>`, color: "var(--color-celestials)" };
+      case "DD":
+        return { symbol: `<i class="fas fa-crown" />${tierText}`, color: "var(--color-pelle--base)" };
       default:
         throw new Error("Unrecognized dimension type in multiplier tab icons");
     }
@@ -31,6 +39,10 @@ export const MultiplierTabIcons = {
         return { symbol, color: "var(--color-infinity)" };
       case "TD":
         return { symbol, color: "var(--color-eternity)" };
+      case "CD":
+        return { symbol, color: "var(--color-celestials)" };
+      case "DD":
+        return { symbol, color: "var(--color-pelle--base)" };
       case "baseID":
         return { symbol: `<i class="fas fa-arrows-up-to-line" />`, color: "var(--color-infinity)" };
       case "tesseractID":

@@ -9,13 +9,16 @@ import AntimatterProductionBreakdown from "./AntimatterProductionBreakdown";
 import MultiplierStateSummary from "./MultiplierStateSummary";
 import { antimatterProductionSnapshot } from "@/core/secret-formula/multiplier-tab/antimatter-production-audit";
 import { MultiplierTabIcons } from "@/core/secret-formula/multiplier-tab/icons";
+import { machineAnalysisUnlocked } from "@/core/secret-formula/multiplier-tab/expansion-rewards";
+import ExpansionAnalysisSummary from "./ExpansionAnalysisSummary";
 
 export default {
   name: "MultiplierBreakdownTab",
   components: {
     MultiplierBreakdownEntry,
     AntimatterProductionBreakdown,
-    MultiplierStateSummary
+    MultiplierStateSummary,
+    ExpansionAnalysisSummary
   },
   data() {
     return {
@@ -31,6 +34,8 @@ export default {
       // Navigation memory is local UI state, not a new save field. Existing numeric IDs are preserved.
       lastSelectedTabs: {},
       inCursedCore: false,
+      machineType: "RM",
+      unlockedMachineTypes: ["RM"],
     };
   },
   computed: {
@@ -47,7 +52,20 @@ export default {
       return this.currentGroup?.options ?? [];
     },
     currentKey() {
-      return this.currentOption?.key ?? null;
+      return this.isMachineAnalysis ? this.machineType : this.currentOption?.key ?? null;
+    },
+    isMachineAnalysis() {
+      return this.currentOption?.key === "machines";
+    },
+    machineOptions() {
+      return this.unlockedMachineTypes.map(key => ({ key,
+        name: this.$t({ RM: "terms.realityMachine", IM: "terms.imaginaryMachine", DM: "terms.dualMachine" }[key]) }));
+    },
+    projectedCapacityResource() {
+      return ["IM", "DM"].includes(this.currentKey) ? createEntryInfo(`${this.currentKey}_projectedTotal`) : null;
+    },
+    isExpansionAnalysis() {
+      return ["CD", "DD", "RM", "IM", "DM", "realities", "endgames"].includes(this.currentKey);
     },
     resource() {
       if (!this.currentKey) return null;
@@ -125,6 +143,10 @@ export default {
         this.dimensionTier = 0;
       }
       if (this.currentKey === "AM") this.updateAntimatterSnapshot();
+      if (this.isMachineAnalysis) {
+        this.unlockedMachineTypes = ["RM", "IM", "DM"].filter(machineAnalysisUnlocked);
+        if (!this.unlockedMachineTypes.includes(this.machineType)) this.machineType = this.unlockedMachineTypes[0];
+      }
     },
     checkActiveKey(key, tier) {
       const total = GameDatabase.multiplierTabValues[key]?.total;
@@ -148,6 +170,9 @@ export default {
       if (!this.isDimensionBreakdown) return;
       if (tier !== 0 && !this.dimensionOptions.some(option => option.tier === tier)) return;
       this.dimensionTier = tier;
+    },
+    selectMachine(type) {
+      if (this.unlockedMachineTypes.includes(type)) this.machineType = type;
     },
     selectValueMode(mode) {
       if (!["all", "multiplier", "exponent"].includes(mode)) return;
@@ -175,7 +200,7 @@ export default {
     subtabClassObject(option) {
       return {
         "c-multiplier-nav-btn": true,
-        "c-multiplier-nav-btn--active": option.key === this.currentKey,
+        "c-multiplier-nav-btn--active": option.key === this.currentOption?.key,
       };
     },
     updateAntimatterSnapshot(force = false) {
@@ -217,10 +242,10 @@ export default {
         :key="option.key"
         type="button"
         :class="subtabClassObject(option)"
-        :aria-pressed="option.key === currentKey"
+        :aria-pressed="option.key === currentOption.key"
         @click="selectTab(option)"
       >
-        {{ $legacyText(_s(option.text)) }}
+        {{ option.nameKey ? $t(option.nameKey) : $legacyText(_s(option.text)) }}
       </button>
     </div>
     <div
@@ -230,7 +255,7 @@ export default {
       <MultiplierStateSummary :key="currentKey" :resource-key="currentKey" />
       <div class="c-multiplier-context">
         <h3 class="c-multiplier-resource-title">
-          {{ $legacyText(_s(currentOption.text)) }}
+          {{ currentOption.nameKey ? $t(currentOption.nameKey) : $legacyText(_s(currentOption.text)) }}
         </h3>
         <span class="c-multiplier-analysis-kind">{{ $legacyText(_s(analysisModeLabel)) }}</span>
         <div
@@ -271,6 +296,17 @@ export default {
           </button>
         </div>
       </div>
+      <div v-if="isMachineAnalysis" class="l-breakdown-view-controls">
+        <div class="l-breakdown-view-group" role="group" :aria-label="$t('analysis.expansion.machineSelector')">
+          <button v-for="machine in machineOptions" :key="machine.key" type="button"
+            class="c-multiplier-nav-btn" :class="{ 'c-multiplier-nav-btn--active': machine.key === machineType }"
+            :aria-pressed="machine.key === machineType" @click="selectMachine(machine.key)">
+            {{ machine.name }}
+          </button>
+        </div>
+      </div>
+      <ExpansionAnalysisSummary v-if="isExpansionAnalysis" :key="currentKey"
+        :resource-key="currentKey" :dimension-tier="dimensionTier" />
       <p
         v-if="currentKey === 'AD'"
         class="c-multiplier-coverage-warning"
@@ -318,6 +354,8 @@ export default {
         :presentation="dimensionPresentation"
         :value-mode="valueMode"
       />
+      <MultiplierBreakdownEntry v-if="projectedCapacityResource" :key="`${currentKey}-projected-${valueMode}`"
+        :resource="projectedCapacityResource" :is-root="true" :value-mode="valueMode" />
       <div class="c-multiplier-tab-text-line">{{ $t('analysis.expansion.note') }}<br>
         <b>{{ $t('analysis.expansion.performance') }}</b>
       </div>

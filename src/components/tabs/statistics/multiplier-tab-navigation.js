@@ -18,6 +18,8 @@ export const MULTIPLIER_TAB_GROUPS = [
       { id: 2, key: "AD", text: "Antimatter Dimensions", dimensionTiers: 9 },
       { id: 4, key: "ID", text: "Infinity Dimensions", dimensionTiers: 8 },
       { id: 8, key: "TD", text: "Time Dimensions", dimensionTiers: 8 },
+      { id: 12, key: "CD", text: "Celestial Dimensions", nameKey: "navigation.dimensions.celestial", dimensionTiers: 8 },
+      { id: 13, key: "DD", text: "Divine Dimensions", nameKey: "navigation.dimensions.divine", dimensionTiers: 8 },
     ],
   },
   {
@@ -28,6 +30,9 @@ export const MULTIPLIER_TAB_GROUPS = [
       { id: 5, key: "infinities", text: "Infinities" },
       { id: 7, key: "EP", text: "Eternity Points" },
       { id: 9, key: "eternities", text: "Eternities" },
+      { id: 14, key: "machines", text: "Machines", nameKey: "analysis.expansion.machines" },
+      { id: 15, key: "realities", text: "Realities", nameKey: "analysis.expansion.realities.label" },
+      { id: 16, key: "endgames", text: "Endgames", nameKey: "analysis.expansion.endgames.label" },
     ],
   },
   {

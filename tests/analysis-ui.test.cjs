@@ -50,7 +50,8 @@ function setup(selected = 2, inCursedCore = false) {
     MultiplierBreakdownEntry: {},
     // The AM production-audit panel was added to the tab after these tests were written;
     // the harness only needs the reference to resolve, the AM path is not exercised here.
-    MultiplierStateSummary: {}, AntimatterProductionBreakdown: {}
+    MultiplierStateSummary: {}, AntimatterProductionBreakdown: {}, ExpansionAnalysisSummary: {},
+    machineAnalysisUnlocked: () => true
   };
   const options = loadVueScript('MultiplierBreakdownTab.vue', globals);
   const instance = { ...options.data(), $set: (target, key, value) => { target[key] = value; } };

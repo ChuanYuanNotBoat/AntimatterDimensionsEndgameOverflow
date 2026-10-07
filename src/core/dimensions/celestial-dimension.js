@@ -1,6 +1,7 @@
 import { GameMechanicState, RebuyableMechanicState, SetPurchasableMechanicState } from "../game-mechanics";
 import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient } from "../finite-decimal";
 import { DimensionState } from "./dimension";
+import { analysisStep } from "../analysis-steps";
 
 // CD multipliers are strictly nonnegative. Check each source independently so a
 // broken effect remains diagnostic, while valid extreme powers/products stop at
@@ -34,7 +35,20 @@ function celestialEffects(value, effects, power = false) {
   return result;
 }
 
-export function celestialDimensionCommonMultiplier() {
+export function celestialDimensionCommonMultiplier(observer = null) {
+  if (observer) {
+    let mult = DC.D1;
+    for (const [key, effect] of [
+      ["endgame11", EndgameUpgrade(11)], ["celestialEternity", CelestialEternityUpgrade.largeCDMult],
+      ["mastery191", EndgameMastery(191)]
+    ]) {
+      effect.applyEffect(factor => {
+        mult = analysisStep(observer, key, "multiply", mult, celestialProduct(mult, factor, key), factor);
+      });
+    }
+    return analysisStep(observer, "ethereal", "multiply", mult,
+      celestialProduct(mult, Ethereal.sectorBoost, "Ethereal sector boost"), Ethereal.sectorBoost);
+  }
   let mult = celestialEffects(DC.D1, [
     ["Endgame Upgrade 11", EndgameUpgrade(11)],
     ["Celestial Eternity CD multiplier", CelestialEternityUpgrade.largeCDMult],
@@ -42,6 +56,64 @@ export function celestialDimensionCommonMultiplier() {
   ]);
   mult = celestialProduct(mult, Ethereal.sectorBoost, "Ethereal sector boost");
   return mult;
+}
+
+export function celestialDimensionPurchaseBase(tier, observer = null) {
+  const dimension = CelestialDimension(tier);
+  let base = checkedCelestialFactor(
+    CelestialInfinityUpgrade.celDimPurchaseBoost.effectOrDefault(dimension._powerMultiplier), "per-purchase base");
+  base = analysisStep(observer, "purchaseBase", "override", DC.D1, base);
+  CelestialBreakInfinityUpgrade.celDimPurchaseBuff.applyEffect(factor => {
+    base = analysisStep(observer, "purchaseBuff", "multiply", base,
+      celestialProduct(base, factor, "Celestial Break Infinity purchase buff"), factor);
+  });
+  const power = SingularityMilestone.perPurchaseDimMult.effectOrDefault(1);
+  return analysisStep(observer, "purchasePower", "power", base,
+    celestialPower(base, power, "Singularity per-purchase power"), power);
+}
+
+export function celestialDimensionMultiplier(tier, observer = null) {
+  if (SlabdrillUnlocks.dimboost.isUnlocked) {
+    let mult = analysisStep(observer, "slabMultiplier", "override", DC.D1, Slabdrill.power);
+    if (SlabdrillUnlocks.replicanti.isUnlocked) {
+      mult = analysisStep(observer, "slabEthereal", "multiply", mult, mult.times(Ethereal.sectorBoost), Ethereal.sectorBoost);
+    }
+    return mult;
+  }
+  if (Slabdrill.isCursed) return analysisStep(observer, "slabDisabled", "override", DC.D1, DC.D1);
+  const dimension = CelestialDimension(tier);
+  let mult = checkedCelestialFactor(observer ? celestialDimensionCommonMultiplier(observer)
+    : GameCache.celestialDimensionCommonMultiplier.value, "common multiplier");
+  mult = analysisStep(observer, "common", "multiply", DC.D1, mult, mult);
+  const purchase = celestialPower(observer ? celestialDimensionPurchaseBase(tier, observer) : dimension.powerMultiplier,
+    Decimal.floor(dimension.baseAmount), `CD${tier} purchases`);
+  mult = analysisStep(observer, "purchase", "multiply", mult,
+    celestialProduct(mult, purchase, `CD${tier} per-purchase multiplier`), purchase);
+  for (const [key, effect] of [
+    ["singularity", SingularityMilestone.dimensionPow], ["ra", Ra.unlocks.celestialDimensionPower]
+  ]) {
+    effect.applyEffect(power => {
+      mult = analysisStep(observer, key, "power", mult, celestialPower(mult, power, key), power);
+    });
+  }
+  const decay = CelestialDimensions.alphaDecayRemnant;
+  mult = analysisStep(observer, "alphaDecay", "power", mult, celestialPower(mult, decay, "Alpha decay remnant"), decay);
+  const boost = CelestialDimBoost.multiplierToCDTier();
+  mult = analysisStep(observer, "dimboost", "multiply", mult,
+    celestialProduct(mult, boost, "Celestial Dimension Boost"), boost);
+  CelestialInfinityUpgrade.antimatterCelestialDimBuff.applyEffect(factor => {
+    mult = analysisStep(observer, "antimatter", "multiply", mult,
+      celestialProduct(mult, factor, "Celestial Infinity antimatter buff"), factor);
+  });
+  for (const [key, effect] of [["synergy", ResurgenceUpgrade.synergy2], ["mastery302", EndgameMastery(302)]]) {
+    effect.applyEffect(power => {
+      mult = analysisStep(observer, key, "power", mult, celestialPower(mult, power, key), power);
+    });
+  }
+  const mastery = checkedCelestialFactor(EndgameMastery(191).effectOrDefault(1), "Mastery 191 achievement effect");
+  const exponent = mastery.log10().add(1).log10().div(20).add(1);
+  return analysisStep(observer, "achievementConversion", "power", mult,
+    celestialPower(mult, exponent, "Mastery 191 achievement conversion"), exponent);
 }
 
 export function toggleCelestialMatter() {
@@ -140,29 +212,7 @@ class CelestialDimensionState extends DimensionState {
   }
 
   get multiplier() {
-    const tier = this.tier;
-    if (SlabdrillUnlocks.dimboost.isUnlocked) return Slabdrill.power.times(
-      SlabdrillUnlocks.replicanti.isUnlocked ? Ethereal.sectorBoost : 1);
-    if (Slabdrill.isCursed) return DC.D1;
-    let mult = checkedCelestialFactor(GameCache.celestialDimensionCommonMultiplier.value, "common multiplier");
-    mult = celestialProduct(mult,
-      celestialPower(this.powerMultiplier, Decimal.floor(this.baseAmount), `CD${tier} purchases`),
-      `CD${tier} per-purchase multiplier`);
-    mult = celestialEffects(mult, [
-      ["Singularity dimension power", SingularityMilestone.dimensionPow],
-      ["Ra celestial dimension power", Ra.unlocks.celestialDimensionPower]
-    ], true);
-    mult = celestialPower(mult, CelestialDimensions.alphaDecayRemnant, "Alpha decay remnant");
-    mult = celestialProduct(mult, CelestialDimBoost.multiplierToCDTier(), "Celestial Dimension Boost");
-    mult = celestialEffects(mult, [
-      ["Celestial Infinity antimatter buff", CelestialInfinityUpgrade.antimatterCelestialDimBuff]
-    ]);
-    mult = celestialEffects(mult, [["Resurgence synergy 2", ResurgenceUpgrade.synergy2], ["Mastery 302", EndgameMastery(302)]], true);
-    // Decimal equivalent of Achievements.powerConv(). The Number-returning
-    // helper can overflow when Mastery 191 itself is still finite.
-    const mastery = checkedCelestialFactor(EndgameMastery(191).effectOrDefault(1), "Mastery 191 achievement effect");
-    const achievementExponent = mastery.log10().add(1).log10().div(20).add(1);
-    return celestialPower(mult, achievementExponent, "Mastery 191 achievement conversion");
+    return celestialDimensionMultiplier(this.tier);
   }
 
   get isProducing() {
@@ -180,13 +230,7 @@ class CelestialDimensionState extends DimensionState {
   }
 
   get powerMultiplier() {
-    const base = checkedCelestialFactor(
-      CelestialInfinityUpgrade.celDimPurchaseBoost.effectOrDefault(this._powerMultiplier), "per-purchase base");
-    const buffed = celestialEffects(base, [
-      ["Celestial Break Infinity purchase buff", CelestialBreakInfinityUpgrade.celDimPurchaseBuff]
-    ]);
-    return celestialPower(buffed, SingularityMilestone.perPurchaseDimMult.effectOrDefault(1),
-      "Singularity per-purchase power");
+    return celestialDimensionPurchaseBase(this.tier);
   }
 
   get purchases() {

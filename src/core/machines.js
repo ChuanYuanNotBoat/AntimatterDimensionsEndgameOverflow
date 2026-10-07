@@ -1,29 +1,6 @@
 import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
-
-function imaginaryMachineBase() {
-  const rmLog = boundedPositiveSum(MachineHandler.uncappedRM, 1).log10();
-  let base = boundedPositivePower(Decimal.clampMin(rmLog.sub(1000), 0), 2);
-  base = boundedPositiveProduct(base,
-    boundedPositivePower(Decimal.clampMin(rmLog.sub(100000), 1), 0.2));
-  const adaptiveExponent = Decimal.log10(Decimal.max(rmLog, 1)).div(7.5);
-  base = boundedPositiveProduct(base,
-    boundedPositivePower(Decimal.clampMin(rmLog.div(1000000000), 1), adaptiveExponent));
-  return base;
-}
-
-function imaginaryMachineExponent() {
-  const rmLog = boundedPositiveSum(MachineHandler.uncappedRM, 1).log10();
-  let exponent = Effects.productDecimal(
-    EndgameMastery(144), Ra.unlocks.imaginaryMachines, Ra.unlocks.imaginaryMachineEternityPower);
-  const lateFactor = boundedPositiveSum(
-    Decimal.max(Decimal.log10(Decimal.max(rmLog, 1)).sub(45), 0).div(10), 1);
-  exponent = boundedPositiveProduct(exponent, lateFactor);
-  exponent = boundedPositiveProduct(exponent, EtherealStars.green.reward);
-  exponent = boundedPositiveProduct(exponent, DivineDimensions.conversionFormula2);
-  exponent = exponent.timesEffectsOf(ResurgenceUpgrade.imSurge, ResurgenceUpgrade.machineSurge,
-    CompressionUpgrade.entanglementSplit);
-  return exponent;
-}
+import { realityMachineMultiplier, uncappedRealityMachines, uncappedImaginaryMachineCapacity,
+  uncappedDualMachineCapacity, machineCapacity } from "./machine-formulas";
 
 export const MachineHandler = {
   get baseRMCap() { return DC.E1000; },
@@ -55,12 +32,13 @@ export const MachineHandler = {
   },
 
   get hardcapRM() {
-    if (!Alpha.isDestroyed) return this.baseHardcapRM;
-    let exponent = boundedPositiveSum(this.uncappedRM.div(this.baseHardcapRM), 1).log10();
+    const base = this.baseHardcapRM;
+    if (!Alpha.isDestroyed || base.eq(0)) return base;
+    let exponent = boundedPositiveSum(this.uncappedRM.div(base), 1).log10();
     exponent = boundedPositiveSum(exponent, 1).log10();
     exponent = boundedPositiveSum(exponent, 1).log10();
     exponent = boundedPositiveSum(exponent, 1);
-    return boundedPositiveProduct(boundedPositivePower(this.baseHardcapRM, exponent), Teresa.rmMultiplier);
+    return boundedPositiveProduct(boundedPositivePower(base, exponent), Teresa.rmMultiplier);
   },
 
   get distanceToRMCap() {
@@ -68,31 +46,11 @@ export const MachineHandler = {
   },
 
   get realityMachineMultiplier() {
-    let result = new Decimal(ShopPurchase.RMPurchases.currentMult).timesEffectOf(PerkShopUpgrade.rmMult);
-    result = boundedPositiveProduct(result, getAdjustedGlyphEffect("effarigrm"));
-    return boundedPositiveProduct(result, Achievement(167).effectOrDefault(1));
+    return realityMachineMultiplier();
   },
 
   get uncappedRM() {
-    let log10FinalEP = boundedPositiveSum(
-      boundedPositiveSum(player.records.thisReality.maxEP, gainedEternityPoints()), 1).log10();
-    if (!PlayerProgress.realityUnlocked()) {
-      if (log10FinalEP.gt(8000)) log10FinalEP = new Decimal(8000);
-      if (log10FinalEP.gt(6000)) log10FinalEP = log10FinalEP.sub((log10FinalEP.sub(6000)).times(0.75));
-    }
-    let rmGain = boundedPositivePower(DC.E3, log10FinalEP.div(4000).sub(1));
-    // Increase base RM gain if <10 RM
-    if (rmGain.gte(1) && rmGain.lt(10)) rmGain = new Decimal(27).div(4000).times(log10FinalEP).sub(26);
-    rmGain = boundedPositiveProduct(rmGain, this.realityMachineMultiplier);
-    rmGain = boundedPositiveProduct(rmGain, Teresa.rmMultiplier);
-    if (EndgameMastery(143).isBought) {
-      rmGain = rmGain.powEffectsOf(EndgameMastery(143));
-    }
-    rmGain = boundedPositivePower(rmGain, DivineDimensions.conversionFormula2);
-    rmGain = boundedPositiveProduct(rmGain,
-      ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality ? player.realities : 1);
-    CompressionUpgrade.entanglementSplit.applyEffect(power => { rmGain = boundedPositivePower(rmGain, power); });
-    return rmGain.floor();
+    return uncappedRealityMachines();
   },
 
   get gainedRealityMachines() {
@@ -104,9 +62,8 @@ export const MachineHandler = {
   },
 
   get baseIMCap() {
-    const uncappedRM = this.uncappedRM;
-    if (Pelle.isDoomed) return new Decimal(1.6e15);
-    return Decimal.min(boundedPositivePower(imaginaryMachineBase(), imaginaryMachineExponent()), this.hardcapIM);
+    if (Pelle.isDoomed) return this.uncappedIM;
+    return Decimal.min(this.uncappedIM, this.hardcapIM);
   },
 
   get baseIMHardcap() {
@@ -129,27 +86,23 @@ export const MachineHandler = {
   },
 
   get hardcapIM() {
-    if (!Alpha.isDestroyed) return this.baseHardcapIM;
-    const exponent = this.uncappedIM.div(this.baseHardcapIM).add(1).log10().add(1).log10().add(1).log10().add(1);
-    return boundedPositivePower(this.baseHardcapIM, exponent);
+    const base = this.baseHardcapIM;
+    if (!Alpha.isDestroyed || base.eq(0)) return base;
+    const exponent = this.uncappedIM.div(base).add(1).log10().add(1).log10().add(1).log10().add(1);
+    return boundedPositivePower(base, exponent);
   },
 
   get uncappedIM() {
-    const uncappedRM = this.uncappedRM;
-    return Pelle.isDoomed
-      ? new Decimal(1.6e15)
-      : boundedPositivePower(imaginaryMachineBase(), imaginaryMachineExponent());
+    return uncappedImaginaryMachineCapacity();
   },
 
   get currentIMCap() {
-    return Decimal.min(boundedPositiveProduct(player.reality.iMCap,
-      ImaginaryUpgrade(13).effectOrDefault(1)), this.hardcapIM);
+    return machineCapacity("IM");
   },
 
   // This is iM cap based on in-game values at that instant, may be lower than the actual cap
   get projectedIMCap() {
-    return Decimal.min(boundedPositiveProduct(this.baseIMCap,
-      ImaginaryUpgrade(13).effectOrDefault(1)), this.hardcapIM);
+    return machineCapacity("IM", true);
   },
 
   // Use iMCap to store the base cap; applying multipliers separately avoids some design issues the 3xTP upgrade has
@@ -204,30 +157,16 @@ export const MachineHandler = {
   },
 
   get uncappedDM() {
-    const uncappedRM = this.uncappedRM;
-    const cap = Decimal.pow(Decimal.clampMin(this.uncappedIM.add(1).log10().sub(1000), 0), Decimal.clampMin(
-      Decimal.log10(Currency.realityMachines.value.add(1).log10().add(1)).sub(3).min(2).times(
-      Decimal.log10(Currency.realityMachines.value.add(1).log10().add(1)).div(5).max(1).pow(0.5)), 1).times(
-      Decimal.clampMin(Decimal.log10(Decimal.log10(Decimal.log10(uncappedRM.add(1)).add(1)).add(1)).sub(
-      1.75).times(12).min(0.6).add(1), 1).add(Decimal.clampMin(Decimal.log10(Decimal.log10(Decimal.log10(
-      uncappedRM.add(1)).add(1)).add(1)).sub(1.8).times(4).min(0.6), 0)).add(Decimal.clampMin(
-      Decimal.log10(Decimal.log10(Decimal.log10(uncappedRM.add(1)).add(1)).add(1)).sub(1.95).times(2), 0))).times(
-      DivinityMilestone.firstDivine.isReached && !player.disablePostReality ? 1.1 : 1).times(
-      DivineDimensions.conversionFormula2).timesEffectsOf(
-      ResurgenceUpgrade.machineSurge, EndgameMastery(213), CompressionUpgrade.entanglementSplit)).timesEffectOf(
-      EndgameMastery(223));
-    // Dual Machine caps are stored as Decimal values; retain the formula until
-    // it reaches the type's existing finite representation boundary.
-    return Decimal.min(cap, DC.BEMAX);
+    return uncappedDualMachineCapacity();
   },
 
   get currentDMCap() {
-    return boundedPositiveProduct(player.reality.jMCap, DualityUpgrade(13).effectOrDefault(1)).min(this.hardcapDM);
+    return machineCapacity("DM");
   },
 
   // This is jM cap based on in-game values at that instant, may be lower than the actual cap
   get projectedDMCap() {
-    return boundedPositiveProduct(this.baseDMCap, DualityUpgrade(13).effectOrDefault(1)).min(this.hardcapDM);
+    return machineCapacity("DM", true);
   },
 
   // Use DMCap to store the base cap; applying multipliers separately avoids some design issues the 3xTP upgrade has

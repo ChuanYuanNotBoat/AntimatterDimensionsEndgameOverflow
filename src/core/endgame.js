@@ -6,6 +6,7 @@ import { GlyphInfo } from "@/components/modals/options/SelectGlyphInfoDropdown";
 import { AUTOMATOR_MODE, AUTOMATOR_TYPE } from "./automator/automator-backend";
 import { deepmergeAll } from "@/utility/deepmerge";
 import { GlyphTypes } from "./glyph-effects";
+import { analysisStep } from "./analysis-steps";
 
 export function isEndgameAvailable() {
   return player.celestials.pelle.records.totalEndgameAntimatter.add(1).log10().gte(9e15);
@@ -24,13 +25,23 @@ function updateEndgameRecords() {
   if (gainedDoomedParticles().gt(player.records.permanent.maxDP)) player.records.permanent.maxDP = gainedDoomedParticles();
 }
 
-function giveEndgameRewards() {
+export function gainedEndgames(observer = null) {
   let endgameMultiplier = ((ExpansionPack.enslavedPack.isBought && !player.disablePostReality)
     ? Math.floor(1 + Math.pow(Math.log10(Math.min(Tesseracts.effectiveCount, 1000) * Math.max(Math.log10(Tesseracts.effectiveCount) - 2, 1) + 1), Math.log10(player.endgames + 1)))
     : 1);
-  endgameMultiplier *= Math.pow(1.33, Alpha.currentStage);
-  if (DivinityMilestone.firstDivine.isReached && !player.disablePostReality) endgameMultiplier *= 10;
-  endgameMultiplier *= DivineDimensions.conversionFormula1.toNumber();
+  endgameMultiplier = analysisStep(observer, "enslaved", "multiply", 1, endgameMultiplier, endgameMultiplier);
+  const alpha = Math.pow(1.33, Alpha.currentStage);
+  endgameMultiplier = analysisStep(observer, "alpha", "multiply", endgameMultiplier, endgameMultiplier * alpha, alpha);
+  if (DivinityMilestone.firstDivine.isReached && !player.disablePostReality) {
+    endgameMultiplier = analysisStep(observer, "firstDivine", "multiply", endgameMultiplier, endgameMultiplier * 10, 10);
+  }
+  const conversion = DivineDimensions.conversionFormula1.toNumber();
+  return analysisStep(observer, "divinity", "multiply", endgameMultiplier,
+    endgameMultiplier * conversion, conversion);
+}
+
+function giveEndgameRewards() {
+  const endgameMultiplier = gainedEndgames();
   Currency.celestialPoints.add(gainedCelestialPoints());
   Currency.doomedParticles.add(gainedDoomedParticles());
   updateEndgameRecords();

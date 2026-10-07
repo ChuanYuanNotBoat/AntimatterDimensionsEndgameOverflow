@@ -14,6 +14,8 @@ import { TP } from "./tachyon-particles";
 import { tickspeed, tickspeedUpgrades } from "./tickspeed";
 import { TD } from "./time-dimensions";
 import { MultiplierTabIcons } from "./icons";
+import { CelestialDimensionAnalysis, DivineDimensionAnalysis } from "./expansion-dimensions";
+import { ExpansionRewardAnalyses, machineAnalysisUnlocked } from "./expansion-rewards";
 
 export const multiplierTabValues = {
   general,
@@ -21,6 +23,8 @@ export const multiplierTabValues = {
   AD,
   ID,
   TD,
+  CD: CelestialDimensionAnalysis.values,
+  DD: DivineDimensionAnalysis.values,
   IP,
   EP,
   TP,
@@ -33,6 +37,11 @@ export const multiplierTabValues = {
   gamespeed,
   replicanti
 };
+
+for (const [resource, analysis] of Object.entries(ExpansionRewardAnalyses)) {
+  multiplierTabValues[resource] = analysis.values;
+}
+multiplierTabValues.machines = { total: { isActive: () => machineAnalysisUnlocked("RM") } };
 
 // Use the celestial's own emblem for all of its named analysis sources.
 for (const values of Object.values(multiplierTabValues)) {

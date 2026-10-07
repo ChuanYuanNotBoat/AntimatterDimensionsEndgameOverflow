@@ -4,6 +4,8 @@ import { AD_ORDERED_GROUPS, AD_ORDERED_KEYS } from "./antimatter-dimension-break
 import { MultiplierTabHelper } from "./helper-functions";
 import { multiplierTabValues } from "./values";
 import { installDimensionSourceGroups } from "./dimension-source-groups";
+import { CelestialDimensionAnalysis, DivineDimensionAnalysis } from "./expansion-dimensions";
+import { ExpansionRewardAnalyses } from "./expansion-rewards";
 
 const dynamicGenProps = ["TP", "DT", "infinities", "eternities", "gamespeed", "replicanti"];
 const propList = {
@@ -612,3 +614,6 @@ for (const tier of [null, 1, 2, 3, 4, 5, 6, 7, 8]) {
 for (const resource of ["AD", "ID", "TD"]) {
   installDimensionSourceGroups(resource, multiplierTabValues[resource], multiplierTabTree);
 }
+
+Object.assign(multiplierTabTree, CelestialDimensionAnalysis.tree, DivineDimensionAnalysis.tree);
+for (const analysis of Object.values(ExpansionRewardAnalyses)) Object.assign(multiplierTabTree, analysis.tree);

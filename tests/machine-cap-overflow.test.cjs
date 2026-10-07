@@ -8,17 +8,20 @@ const test = require('node:test');
 const source = fs.readFileSync(path.join(__dirname, '../src/core/machines.js'), 'utf8').replace(/\r\n/g, '\n');
 
 test('Imaginary Machine hardcaps use bounded Decimal products and powers', () => {
-  assert.match(source, /import \{ boundedPositivePower, boundedPositiveProduct \} from "\.\/finite-decimal";/);
+  assert.match(source, /import \{ boundedPositivePower, boundedPositiveProduct, boundedPositiveSum \} from "\.\/finite-decimal";/);
   const baseHardcap = source.split('  get baseHardcapIM() {')[1].split('  get hardcapIM() {')[0];
   assert.match(baseHardcap, /const base = boundedPositiveProduct\(this\.baseIMHardcap, DualityUpgrade\(6\)\.effectOrDefault\(1\)\);/);
   assert.match(baseHardcap, /return boundedPositivePower\(base, exponent\);/);
   const hardcap = source.split('  get hardcapIM() {')[1].split('  get uncappedIM() {')[0];
-  assert.match(hardcap, /return boundedPositivePower\(this\.baseHardcapIM, exponent\);/);
+  assert.match(hardcap, /return boundedPositivePower\(base, exponent\);/);
 });
 
 test('Dual Machine caps retain bounded arithmetic and apply the Chapter 3 hardcap', () => {
-  const baseCap = source.split('  get baseDMCap() {')[1].split('  get currentDMCap() {')[0];
-  assert.match(baseCap, /return Decimal\.min\(cap, DC\.BEMAX\);/);
-  assert.match(source, /return boundedPositiveProduct\(player\.reality\.jMCap, DualityUpgrade\(13\)\.effectOrDefault\(1\)\)\.min\(this\.hardcapDM\);/);
-  assert.match(source, /return boundedPositiveProduct\(this\.baseDMCap, DualityUpgrade\(13\)\.effectOrDefault\(1\)\)\.min\(this\.hardcapDM\);/);
+  const formulas = fs.readFileSync(path.join(__dirname, '../src/core/machine-formulas.js'), 'utf8');
+  assert.match(formulas, /boundedPositivePower\(base, power\)/);
+  assert.match(formulas, /Decimal\.min\(cap, DC\.BEMAX\)/);
+  assert.match(source, /return machineCapacity\("DM"\);/);
+  assert.match(source, /return machineCapacity\("DM", true\);/);
+  assert.match(formulas, /boundedPositiveProduct\(cap, upgrade\)/);
+  assert.match(formulas, /Decimal\.min\(cap, hardcap\)/);
 });

@@ -303,7 +303,7 @@ function onBuyDimension(tier) {
   if (NormalChallenge(2).isRunning) player.chall2Pow = 0;
   if (NormalChallenge(4).isRunning || InfinityChallenge(1).isRunning) {
     AntimatterDimensions.resetAmountUpToTier(tier - 1);
-    if (Slabdrill.isCursed) Currency.antinatter.reset();
+    if (Slabdrill.isCursed) Currency.antimatter.reset();
   }
 
   player.postC4Tier = tier;

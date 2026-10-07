@@ -2,6 +2,7 @@ import { BitUpgradeState } from "../game-mechanics";
 import { GameDatabase } from "../secret-formula/game-database";
 
 import { Quotes } from "./quotes";
+import { boundedPositivePower } from "../finite-decimal";
 
 export const Alpha = {
   displayName: "Alpha",
@@ -1094,7 +1095,7 @@ export const Alpha = {
     return 1 - Math.pow(1 - this.alphaDecay, 1 / 4.8);
   },
   get totalSpeedBoost() {
-    return Decimal.pow(Decimal.max(Decimal.log10(Currency.etherealPower.value).sub(7), 0).div(7).add(1), 2).timesEffectsOf(
+    return boundedPositivePower(Decimal.max(Decimal.log10(Currency.etherealPower.value).sub(7), 0).div(7).add(1), 2).timesEffectsOf(
       Achievement(212),
       Achievement(213)
     );

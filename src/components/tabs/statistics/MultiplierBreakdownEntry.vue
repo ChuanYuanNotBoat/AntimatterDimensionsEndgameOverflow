@@ -153,7 +153,7 @@ export default {
       return !forbiddenEntries.some(key => this.resource.key.startsWith(key));
     },
     isDimensionOverall() {
-      return ["AD_total", "ID_total", "TD_total"].includes(this.resource.key);
+      return ["AD_total", "ID_total", "TD_total", "CD_total", "DD_total"].includes(this.resource.key);
     },
     canShowFinalImpact() {
       return this.usesOrdered;
@@ -164,7 +164,7 @@ export default {
     // AD/ID/TD root panels (Overall and per-tier views) get their Overall/by-dimension grouping
     // from the analysis header's inline switch instead of the legacy grouping button.
     isDimensionRoot() {
-      return this.isRoot && /^(AD|ID|TD)_total(_\d+)?$/u.test(this.resource.key);
+      return this.isRoot && /^(AD|ID|TD|CD|DD)_total(_\d+)?$/u.test(this.resource.key);
     },
     usesOrdered() {
       return this.resource.isOrdered;
@@ -1132,7 +1132,7 @@ export default {
            labelled independent section instead of falsely inserting it into
            the AD multiplier formula or expanding every source into eight tiers. -->
       <GameplayLimitSummary
-        v-if="isRoot && isDimensionOverall"
+        v-if="isRoot && ['AD_total', 'ID_total', 'TD_total'].includes(resource.key)"
         :resource-key="resource.key.slice(0, 2)"
       />
       <div v-if="isDilated && !isEmpty && !usesOrdered">

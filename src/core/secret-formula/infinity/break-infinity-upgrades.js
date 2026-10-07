@@ -7,7 +7,9 @@ function rebuyable(config) {
     cost: () => config.initialCost() * Math.pow(config.costIncrease(), player.infinityRebuyables[config.id]),
     maxUpgrades,
     description,
-    effect: () => effectFunction(player.infinityRebuyables[config.id]),
+    // Slabdrill allows more purchases than other runs. A saved transition may
+    // retain those counts; only purchases supported by the current run apply.
+    effect: () => effectFunction(Math.min(player.infinityRebuyables[config.id], config.maxUpgrades())),
     isDisabled,
     // There isn't enough room in the button to fit the EC reduction and "Next:" at the same time while still
     // presenting all the information in an understandable way, so we only show it if the upgrade is maxed

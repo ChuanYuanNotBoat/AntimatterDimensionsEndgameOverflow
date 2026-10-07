@@ -1,15 +1,70 @@
 import { boundedPositivePower, boundedPositiveProduct, boundedPositiveQuotient, boundedPositiveSum } from "../finite-decimal";
 import { DimensionState } from "./dimension";
+import { analysisStep } from "../analysis-steps";
 
-export function divineDimensionCommonMultiplier() {
-  let mult = DC.D1.timesEffectsOf(
-    DivinityUpgrade.divineL1U3, DivinityUpgrade.divineL1U6, DivinityUpgrade.divineL2U1,
-    DivinityUpgrade.divineL2U9, EndgameMastery(192));
-  mult = boundedPositiveProduct(mult, DivinityMilestone.hadronEmpowerment.isReached ? 77 : 1);
-  mult = boundedPositiveProduct(mult, Accelerators.potency.effectValue3);
+export function divineDimensionCommonMultiplier(observer = null) {
+  const effects = [DivinityUpgrade.divineL1U3, DivinityUpgrade.divineL1U6, DivinityUpgrade.divineL2U1,
+    DivinityUpgrade.divineL2U9, EndgameMastery(192)];
+  let mult = DC.D1.timesEffectsOf(...effects);
+  if (observer) {
+    mult = DC.D1;
+    const keys = ["divineL1U3", "divineL1U6", "divineL2U1", "divineL2U9", "mastery192"];
+    effects.forEach((effect, index) => effect.applyEffect(factor => {
+      mult = analysisStep(observer, keys[index], "multiply", mult, boundedPositiveProduct(mult, factor), factor);
+    }));
+  }
+  const hadron = DivinityMilestone.hadronEmpowerment.isReached ? 77 : 1;
+  mult = analysisStep(observer, "hadron", "multiply", mult, boundedPositiveProduct(mult, hadron), hadron);
+  const potency = Accelerators.potency.effectValue3;
+  mult = analysisStep(observer, "accelerator", "multiply", mult, boundedPositiveProduct(mult, potency), potency);
   let starPower = Decimal.log10(boundedPositiveSum(player.celestials.pelle.divinity.divineStars, 1).min(DC.NUMMAX));
-  starPower = starPower.powEffectOf(DivinityUpgrade.divineL3U3);
-  return boundedPositiveProduct(mult, boundedPositivePower(7, starPower));
+  const before = starPower;
+  starPower = analysisStep(observer, "starPower", "power", before,
+    starPower.powEffectOf(DivinityUpgrade.divineL3U3), DivinityUpgrade.divineL3U3.effectOrDefault(1));
+  const stars = boundedPositivePower(7, starPower);
+  return analysisStep(observer, "stars", "multiply", mult, boundedPositiveProduct(mult, stars), stars);
+}
+
+export function divineDimensionPurchaseBase(tier, observer = null) {
+  const dimension = DivineDimension(tier);
+  let base = new Decimal(DivinityUpgrade.divineL2U8.isBought ? 17 : dimension._powerMultiplier);
+  base = analysisStep(observer, "purchaseBase", "override", DC.D1, base);
+  DivinityUpgrade.divineL3U2.applyEffect(factor => {
+    base = analysisStep(observer, "purchaseBuff", "multiply", base, boundedPositiveProduct(base, factor), factor);
+  });
+  return base;
+}
+
+export function divineDimensionMultiplier(tier, observer = null) {
+  const dimension = DivineDimension(tier);
+  let mult = observer ? divineDimensionCommonMultiplier(observer) : GameCache.divineDimensionCommonMultiplier.value;
+  mult = analysisStep(observer, "common", "multiply", DC.D1, mult, mult);
+  const purchase = boundedPositivePower(observer ? divineDimensionPurchaseBase(tier, observer) : dimension.powerMultiplier,
+    Decimal.floor(dimension.baseAmount));
+  mult = analysisStep(observer, "purchase", "multiply", mult, boundedPositiveProduct(mult, purchase), purchase);
+  if (DivinityMilestone.pelleQoL.isReached && !player.disablePostReality) {
+    mult = analysisStep(observer, "pelleQoL", "power", mult, boundedPositivePower(mult, 1.05), 1.05);
+  }
+  const emptiness = Accelerators.emptiness._milestones[1].effectOrDefault(1);
+  mult = analysisStep(observer, "emptiness", "power", mult, boundedPositivePower(mult, emptiness), emptiness);
+  const effects = [DivinityUpgrade.divineL2U7, DivinityUpgrade.divineL3U5, DivinityUpgrade.divineL4U1.effects.matter,
+    DivinityUpgrade.divineL4U3, DivinityUpgrade.divineL5U3, EndgameMastery(211),
+    SingularityMilestone.singDivDimPower, DualityUpgrade(26), EndgameMastery(303)];
+  if (observer) {
+    const keys = ["divineL2U7", "divineL3U5", "divineL4U1", "divineL4U3", "divineL5U3",
+      "mastery211", "singularity", "duality26", "mastery303"];
+    effects.forEach((effect, index) => effect.applyEffect(power => {
+      mult = analysisStep(observer, keys[index], "power", mult, boundedPositivePower(mult, power), power);
+    }));
+  } else {
+    mult = mult.powEffectsOf(...effects);
+  }
+  if (DivinityMilestone.finalRebirth.isReached && !player.disablePostReality) {
+    mult = analysisStep(observer, "finalRebirth", "power", mult, boundedPositivePower(mult, 1.05), 1.05);
+  }
+  const conversion = Achievements.powerConv(EndgameMastery(192).effectOrDefault(1));
+  return analysisStep(observer, "achievementConversion", "power", mult,
+    boundedPositivePower(mult, conversion), conversion);
 }
 
 export function toggleAllDivDims() {
@@ -65,20 +120,7 @@ class DivineDimensionState extends DimensionState {
   }
 
   get multiplier() {
-    let mult = GameCache.divineDimensionCommonMultiplier.value;
-    mult = boundedPositiveProduct(mult,
-      boundedPositivePower(this.powerMultiplier, Decimal.floor(this.baseAmount)));
-    if (DivinityMilestone.pelleQoL.isReached && !player.disablePostReality) {
-      mult = boundedPositivePower(mult, 1.05);
-    }
-    mult = boundedPositivePower(mult, Accelerators.emptiness._milestones[1].effectOrDefault(1));
-    mult = mult.powEffectsOf(
-      DivinityUpgrade.divineL2U7, DivinityUpgrade.divineL3U5, DivinityUpgrade.divineL4U1.effects.matter,
-      DivinityUpgrade.divineL4U3, DivinityUpgrade.divineL5U3, EndgameMastery(211), SingularityMilestone.singDivDimPower, DualityUpgrade(26), EndgameMastery(303));
-    if (DivinityMilestone.finalRebirth.isReached && !player.disablePostReality) {
-      mult = boundedPositivePower(mult, 1.05);
-    }
-    return boundedPositivePower(mult, Achievements.powerConv(EndgameMastery(192).effectOrDefault(1)));
+    return divineDimensionMultiplier(this.tier);
   }
 
   get isProducing() {
@@ -96,7 +138,7 @@ class DivineDimensionState extends DimensionState {
   }
 
   get powerMultiplier() {
-    return new Decimal(DivinityUpgrade.divineL2U8.isBought ? 17 : this._powerMultiplier).timesEffectOf(DivinityUpgrade.divineL3U2);
+    return divineDimensionPurchaseBase(this.tier);
   }
 
   get purchases() {

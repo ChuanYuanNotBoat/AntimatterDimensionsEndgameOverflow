@@ -39,6 +39,9 @@ function rewards(perkPoints, simulatedRealities, achievementRealities = 0) {
   vm.runInContext(currency.slice(currency.indexOf('Currency.perkPoints ='),
     currency.indexOf('\nCurrency.relicShards =')), context);
   const reality = read('core/reality.js');
+  vm.runInContext(read('core/analysis-steps.js').replace(/^export /gm, ''), context);
+  vm.runInContext(reality.match(/export function realityCountReward\([\s\S]*?\n\}/)[0]
+    .replace(/^export /, ''), context);
   vm.runInContext(reality.slice(reality.indexOf('function giveRealityRewards('),
     reality.indexOf('// Due to simulated realities')), context);
   context.props = {

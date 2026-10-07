@@ -1,5 +1,6 @@
 import { canStartEndgameChallenge } from "./endgame-challenge";
 import { boundedPositiveProduct, boundedPositiveSum, finiteNumber } from "./finite-decimal";
+import { analysisStep } from "./analysis-steps";
 
 
 /**
@@ -127,14 +128,22 @@ export function isRealityAvailable() {
 
 // Returns the number of "extra" realities from stored real time or Multiversal effects, should be called
 // with false for checking and true for actual usage, and only "used" once per reality.
-export function simulatedRealityCount(advancePartSimCounters) {
+export function simulatedRealityCount(advancePartSimCounters, observer = null) {
   const amplifiedSim = Enslaved.boostReality ? new Decimal(Enslaved.realityBoostRatio).sub(1) : DC.D0;
   const multiversalSim = new Decimal(AlchemyResource.multiversal.effectValue);
-  let simCount = boundedPositiveProduct(multiversalSim.add(1), amplifiedSim.add(1));
-  simCount = boundedPositiveSum(simCount, player.partSimulatedReality).sub(1).max(0);
-  const whole = simCount.floor();
-  if (advancePartSimCounters) player.partSimulatedReality = simCount.sub(whole).toNumber();
+  let batch = analysisStep(observer, "alchemy", "multiply", DC.D1, multiversalSim.add(1), multiversalSim.add(1));
+  batch = analysisStep(observer, "amplification", "multiply", batch,
+    boundedPositiveProduct(batch, amplifiedSim.add(1)), amplifiedSim.add(1));
+  const simCount = analysisStep(observer, "partial", "add", batch,
+    boundedPositiveSum(batch, player.partSimulatedReality));
+  const remainder = simCount.sub(1).max(0);
+  const whole = analysisStep(observer, "simulatedFloor", "floor", remainder, remainder.floor());
+  if (advancePartSimCounters) player.partSimulatedReality = remainder.sub(whole).toNumber();
   return whole;
+}
+
+export function realityCountReward(batch, bonus, observer = null) {
+  return analysisStep(observer, "achievement154", "add", batch, boundedPositiveSum(batch, bonus));
 }
 
 /**
@@ -316,7 +325,7 @@ function updateRealityRecords(realityProps) {
 function giveRealityRewards(realityProps) {
   const multiplier = boundedPositiveSum(realityProps.simulatedRealities, 1);
   const achievementRealities = binomialDistribution(multiplier, Achievement(154).effectOrDefault(0));
-  const realityAndPPMultiplier = boundedPositiveSum(multiplier, achievementRealities);
+  const realityAndPPMultiplier = realityCountReward(multiplier, achievementRealities);
   const gainedRM = Currency.realityMachines.gte(MachineHandler.hardcapRM) ? DC.D0 : realityProps.gainedRM;
   const rmGain = boundedPositiveProduct(gainedRM, multiplier);
   Currency.realityMachines.value = boundedPositiveSum(Currency.realityMachines.value, rmGain);

@@ -59,6 +59,10 @@ export function normalizeChapter3Save(save) {
     compression.active = false;
     overcharge.isRunning = false;
   } else if (compression.active) overcharge.isRunning = false;
+  // A partially committed Slabdrill exit can leave the global restriction set
+  // after its local flags were cleared. Preserve every genuinely active run.
+  const activeCelestialRun = Object.values(save.celestials).some(celestial => celestial?.run === true);
+  if (slab.isDestroyed && !activeCelestialRun && !collider.void.isRunning) save.disablePostReality = false;
   // Older offline ticks could skip the quote which commits the transition.
   if (slab.isWarping && !slab.isCursed && slab.warpTick >= 3000) slab.warpTick = 2000;
   if (slab.isGoodbye && slab.isCursed && slab.stage === 10 && slab.goodbyeTick >= 2000) slab.goodbyeTick = 1000;
