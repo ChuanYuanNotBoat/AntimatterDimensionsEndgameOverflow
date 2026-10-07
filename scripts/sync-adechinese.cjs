@@ -242,12 +242,17 @@ function jsStrings(source) {
   return result;
 }
 
-function syncScripts(enSource, zhSource, file) {
+function syncScripts(enSource, zhSource, file, unsafeMembers = new Set()) {
   const en = jsStrings(enSource);
   const zh = jsStrings(zhSource);
   const stable = location => location.replace(/\/body\/\d+/gu, "/body/*");
   for (const [location, value] of zh) {
     if (!chinese(value.form.parts.join(""))) continue;
+    const member = location.match(/\/properties\/key:(?:computed|methods)\/value\/properties\/key:([^/]+)/u)?.[1];
+    if (unsafeMembers.has(member)) {
+      unmatched.push({ file, location, reason: "template-action-differs", text: normalize(value.form.parts.join("…")) });
+      continue;
+    }
     let source = en.get(location);
     if (!source) {
       const candidates = [...en].filter(([key]) => stable(key) === stable(location)).map(([, entry]) => entry);
@@ -300,14 +305,42 @@ function textForm(text) {
     expressions: pieces.filter((value, index) => index % 2 === 1).map(value => parse(`(${value})`).program.body[0].expression) };
 }
 
+// A label is only a translation of the same control when its event bindings agree.
+// Keep canonical event arguments intact: changing a string ID also changes the action.
+function templateActions(node, parents) {
+  const events = (node.attrsList ?? []).filter(attribute => /^(?:@|v-on:)/u.test(attribute.name))
+    .map(attribute => `${attribute.name.replace(/^@/u, "v-on:")}=${normalize(attribute.value)}`).sort();
+  return events.length ? [...parents, `${node.tag}:${events.join(";")}`] : parents;
+}
+
+function unsafeTemplateMembers(left, right) {
+  const members = new Set();
+  for (const [location, value] of right) {
+    const source = left.get(location);
+    if (JSON.stringify(source?.actions ?? []) === JSON.stringify(value.actions)) continue;
+    for (const form of [source?.form, value.form].filter(Boolean)) {
+      for (const expression of form.expressions) {
+        babel.traverse(babel.types.file(babel.types.program([babel.types.expressionStatement(expression)])), {
+          ReferencedIdentifier({ node }) { members.add(node.name); },
+          MemberExpression({ node }) {
+            if (node.object.type === "ThisExpression" && !node.computed) members.add(node.property.name);
+          }
+        });
+      }
+    }
+  }
+  return members;
+}
+
 function templateNodes(template) {
   const result = new Map();
   const ast = compiler.compile(template, { preserveWhitespace: false, outputSourceRange: true }).ast;
-  function visit(node, trail) {
+  function visit(node, trail, parents = []) {
     if (!node) return;
+    const actions = templateActions(node, parents);
     if ([2, 3].includes(node.type)) {
       if (!node.isComment && normalize(node.text)) result.set(`${trail}/text`, {
-        form: textForm(node.text), start: node.start, end: node.end, text: node.text, node });
+        form: textForm(node.text), start: node.start, end: node.end, text: node.text, node, actions });
       return;
     }
     for (const attribute of node.attrsList ?? []) {
@@ -316,20 +349,21 @@ function templateNodes(template) {
           ["v-text", "v-html"].includes(attribute.name)) {
         try {
           const values = jsStrings(`const value = (${attribute.value});`);
-          for (const [key, value] of values) result.set(`${location}/${key}`, value);
+          for (const [key, value] of values) result.set(`${location}/${key}`, { ...value, actions });
         } catch { /* Non-expression Vue syntax isn't translation text. */ }
       } else if (!["class", "style", "id", "key", "ref", "slot", "href", "type"].includes(attribute.name) &&
-          !/^(?:@|v-)/u.test(attribute.name)) result.set(location, { form: { parts: [attribute.value], expressions: [] } });
+          !/^(?:@|v-)/u.test(attribute.name)) result.set(location, {
+            form: { parts: [attribute.value], expressions: [] }, actions });
     }
     const counts = new Map();
     for (const child of node.children ?? []) {
       const key = child.tag ?? "text";
       const index = counts.get(key) ?? 0;
       counts.set(key, index + 1);
-      visit(child, `${trail}/${key}:${index}`);
+      visit(child, `${trail}/${key}:${index}`, actions);
     }
     for (let index = 1; index < (node.ifConditions?.length ?? 0); index++) {
-      visit(node.ifConditions[index].block, `${trail}/else:${index}`);
+      visit(node.ifConditions[index].block, `${trail}/else:${index}`, parents);
     }
   }
   visit(ast, "template");
@@ -347,8 +381,9 @@ function compoundNodes(template) {
     if ([2, 3].includes(node.type)) return textForm(node.text).expressions.map(expressionKey).join(";");
     return `${node.tag}:${node.attrsMap?.class ?? ""}(${(node.children ?? []).map(fingerprint).join(";")})`;
   };
-  function visit(node, trail) {
+  function visit(node, trail, parents = []) {
     if (!node || node.type !== 1) return;
+    const actions = templateActions(node, parents);
     if (node.children.some(child => child.type === 1) && node.children.every(valid) &&
         !node.children.some(child => child.type === 1 && child.ifConditions?.length > 1)) {
       const parts = [""];
@@ -370,7 +405,7 @@ function compoundNodes(template) {
         }
       }
       if (/[A-Za-z\u3400-\u9fff]/u.test(parts.join(""))) {
-        result.set(trail, { form: { parts, expressions }, slots, node,
+        result.set(trail, { form: { parts, expressions }, slots, node, actions,
           start: node.children[0].start, end: node.children.at(-1).end });
       }
     }
@@ -379,10 +414,10 @@ function compoundNodes(template) {
       const key = child.tag ?? "text";
       const index = counts.get(key) ?? 0;
       counts.set(key, index + 1);
-      visit(child, `${trail}/${key}:${index}`);
+      visit(child, `${trail}/${key}:${index}`, actions);
     }
     for (let index = 1; index < (node.ifConditions?.length ?? 0); index++) {
-      visit(node.ifConditions[index].block, `${trail}/else:${index}`);
+      visit(node.ifConditions[index].block, `${trail}/else:${index}`, parents);
     }
   }
   visit(ast, "template");
@@ -405,15 +440,19 @@ for (const absolute of walkFiles(path.join(referenceRoot, "src")).filter(file =>
     else {
       const en = compiler.parseComponent(enSource, { deindent: false });
       const zh = compiler.parseComponent(zhSource, { deindent: false });
-      syncScripts(en.script?.content ?? "", zh.script?.content ?? "", file);
       const left = templateNodes(en.template?.content ?? "");
       const right = templateNodes(zh.template?.content ?? "");
+      syncScripts(en.script?.content ?? "", zh.script?.content ?? "", file, unsafeTemplateMembers(left, right));
       const enCompound = compoundNodes(en.template?.content ?? "");
       const zhCompound = compoundNodes(zh.template?.content ?? "");
       const covered = [];
       for (const [location, value] of zhCompound) {
         const source = enCompound.get(location);
         if (!source || covered.some(range => source.start >= range.start && source.end <= range.end)) continue;
+        if (JSON.stringify(source.actions) !== JSON.stringify(value.actions)) {
+          unmatched.push({ file, location, reason: "template-action-differs", text: normalize(value.form.parts.join("…")) });
+          continue;
+        }
         const pair = addPair(source.form, value.form, file, `${location}/compound`, "template-slots");
         if (!pair?.id) continue;
         covered.push(source);
@@ -443,6 +482,10 @@ for (const absolute of walkFiles(path.join(referenceRoot, "src")).filter(file =>
         const insideSlot = source?.start !== undefined &&
           covered.some(range => source.start >= range.start && source.end <= range.end);
         if (source) {
+          if (JSON.stringify(source.actions) !== JSON.stringify(value.actions)) {
+            unmatched.push({ file, location, reason: "template-action-differs", text: normalize(value.form.parts.join("…")) });
+            continue;
+          }
           const pair = addPair(source.form, value.form, file, location, "template-text");
           if (process.argv.includes("--migrate") && extractionRoot === sourceRoot && pair?.id && !insideSlot && source.start !== undefined) {
             const parameters = source.form.expressions.map((expression, index) => {
