@@ -9747,5 +9747,6 @@
   "analysis.expansion.endgames.alpha": "Alpha stage multiplier",
   "analysis.expansion.endgames.firstDivine": "First Divinity milestone",
   "analysis.expansion.endgames.divinity": "Divine Matter conversion multiplier",
-  "analysis.expansion.RM.remainingCapacity": "Remaining RM capacity and credited reward"
+  "analysis.expansion.RM.remainingCapacity": "Remaining RM capacity and credited reward",
+  "analysis.expansion.noSources": "No active sources in this view."
 }

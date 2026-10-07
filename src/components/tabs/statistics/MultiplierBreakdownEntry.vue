@@ -131,6 +131,9 @@ export default {
       return this.entries.length === 0 || !this.isRecent(this.lastNotEmptyAt);
     },
     disabledText() {
+      if (/^(CD|DD|RM|IM|DM|realities|endgames)_(total|projectedTotal)(_\d+)?$/u.test(this.resource.key)) {
+        return this.$t("analysis.expansion.noSources");
+      }
       if (!this.resource.isBase) return `Total effect inactive, disabled, or reduced to ${formatX(1)}`;
       return Decimal.eq(this.resource.mult, 0)
         ? `You cannot gain this resource (prestige requirement not reached)`

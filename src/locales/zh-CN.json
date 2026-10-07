@@ -9544,5 +9544,6 @@
   "analysis.expansion.endgames.alpha": "阿尔法阶段倍率",
   "analysis.expansion.endgames.firstDivine": "首次神性里程碑",
   "analysis.expansion.endgames.divinity": "神性物质转换倍率",
-  "analysis.expansion.RM.remainingCapacity": "现实机器剩余容量与实际计入的奖励"
+  "analysis.expansion.RM.remainingCapacity": "现实机器剩余容量与实际计入的奖励",
+  "analysis.expansion.noSources": "当前视图没有生效的来源。"
 }
