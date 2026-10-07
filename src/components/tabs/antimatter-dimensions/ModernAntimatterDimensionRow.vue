@@ -56,9 +56,10 @@ export default {
         ${this.isFlipped ? "Matter" : "Antimatter"} Dimension at this time`;
       if (this.isCapped) return `Nameless prevents the purchase of more than ${format(1)} 8th
         ${this.isFlipped ? "Matter" : "Antimatter"} Dimension`;
-      if (this.isContinuumActive && this.tier !== 9) return `Continuum produces all your
-        ${this.isFlipped ? "Matter" : "Antimatter"} Dimensions`;
-      return `Purchased ${quantifyHybridLarge("time", this.bought)}`;
+      if (this.isContinuumActive && this.tier !== 9) return this.$t("dimensions.continuumProduction", {
+        dimension: this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural")
+      });
+      return this.$t("dimensions.purchaseCount", { amount: formatHybridLarge(this.bought, 3), count: this.bought.eq(1) ? 1 : 2 });
     },
     costUnit() {
       return `${AntimatterDimension(this.tier - 2).shortDisplayName} ${this.isFlipped ? "MD" : "AD"}`;

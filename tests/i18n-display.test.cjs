@@ -181,10 +181,10 @@ function renderComponent(file, state = {}, globals = {}, computed = {}) {
   const view = new Vue({ ...options, created: undefined, watch: undefined,
     propsData: Object.fromEntries(Object.keys(options.props || {}).filter(key => key in state).map(key => [key, state[key]])),
     components: { ...options.components, LocalizedText: runtime.context.component },
-    computed: { ...options.computed, ...computed },
+    computed: { $locale: () => runtime.service.state.locale, ...options.computed, ...computed },
     methods: { ...options.methods, ...Object.fromEntries(Object.entries(globals).filter(([,value]) => typeof value === "function")),
       $t: runtime.service.t, $recompute() {},
-      $legacyText: value => runtime.display.translate(value, options.name) }
+      $legacyText: (value, scope = options.name) => runtime.display.translate(value, scope) }
   });
   Object.assign(view, state);
   const text = node => node.text ?? (node.children ?? []).map(text).join('');
@@ -371,4 +371,123 @@ test('reviewed ADEC messages preserve whole resources and reduction parameter me
   service.setLocale('en');
   assert.equal(compression(), english);
   assert.equal(JSON.stringify(canonical), before);
+});
+
+test('AD purchase tooltips translate zero, singular, huge counts and Continuum in both layouts while paused', () => {
+  const Decimal = require('break_eternity.js');
+  for (const layout of ['Modern', 'Classic']) for (const isFlipped of [false, true]) {
+    const { service, view } = renderComponent(`src/components/tabs/antimatter-dimensions/${layout}AntimatterDimensionRow.vue`,
+      { tier: 1, isFlipped }, { formatHybridLarge: value => String(value) });
+    for (const amount of [0, 1, '1e1000']) {
+      view.bought = new Decimal(amount);
+      const canonical = String(view.bought);
+      const english = view.boughtTooltip;
+      service.setLocale('zh-CN');
+      assert.equal(view.boughtTooltip, `已购买 ${canonical} 次`);
+      service.setLocale('en');
+      assert.equal(view.boughtTooltip, english);
+      assert.equal(String(view.bought), canonical);
+    }
+    view.isContinuumActive = true;
+    const english = view.boughtTooltip;
+    service.setLocale('zh-CN');
+    assert.equal(view.boughtTooltip, `连续统生产你的所有${isFlipped ? '正物质' : '反物质'}维度`);
+    service.setLocale('en');
+    assert.equal(view.boughtTooltip, english);
+    view.$destroy();
+  }
+});
+
+test('Galactic Power and Ra achievement descriptions select their reviewed context instead of generic fragments', () => {
+  const { service, display } = actual();
+  service.setLocale('zh-CN');
+  assert.equal(display.translate('Increase Galaxy Strength', 'galactic-power:1'), '增强星系效力');
+  assert.equal(display.translate('Galaxies are ×7.12e5 stronger', 'galactic-power:1'), '星系增强×7.12e5');
+  assert.equal(display.translate('Get 1,000 total Ra Celestial Memory levels.', 'normal-achievements:246'),
+    '太阳神的总记忆等级达到 1,000。');
+});
+
+test('achievement boost rows translate complete resource lists and preserve every multiplier and power', () => {
+  const { service, view, render } = renderComponent('src/components/tabs/normal-achievements/NormalAchievementsTab.vue',
+    { showPowers: true, achievementPower: 123, achPowers: 1.24, achMultToIDS: true, achMultToTDS: true,
+      achMultToCDS: true, achMultToVDS: true, achMultToTP: true, achMultToBH: true, achMultToTT: true, achMultToEnt: true,
+      achTPEffect: 234, achCDEffect: 345, achVDEffect: 456, achEnEffect: 567,
+      achPowToTP: 1.25, achPowToCD: 1.26, achPowToVD: 1.27, achPowToEn: 1.28 },
+    { formatX: value => `×${value}`, formatPow: value => `^${value}`, makeEnumeration: values => values.join(', '),
+      timeDisplay() {}, timeDisplayNoDecimals() {}, cancelAnimationFrame() {} },
+    { isDoomed: () => false, isDestroyed: () => false, renderedRows: () => [] });
+  const english = render();
+  service.setLocale('zh-CN');
+  const chinese = render();
+  assert.ok(chinese.includes('反物质维度、无限维度、时间维度：×123'));
+  assert.ok(chinese.includes('时间之理产量：^1.24'));
+  assert.doesNotMatch(chinese, /Dimensions|production|Generation|Power|Particles/u);
+  for (const value of ['×123','×234','×345','×456','×567','^1.24','^1.25','^1.26','^1.27','^1.28']) assert.ok(chinese.includes(value));
+  service.setLocale('en');
+  assert.equal(render(), english);
+  view.$destroy();
+});
+
+test('Flux consumes a complete translated sentence with its highlighted amount and speed', () => {
+  const span = value => ({ toStringShort: () => String(value) });
+  const { service, view, render } = renderComponent('src/components/tabs/statistics/StoredTimeTab.vue',
+    { fluxUnlocked: true, fluxLevel: 7, maxFlux: 8 },
+    { format: value => String(value), formatX: value => `×${value}`,
+      TimeSpan: { fromSeconds: span, fromMinutes: span, fromHours: span } });
+  const english = render();
+  assert.ok(english.includes('6 seconds of Flux Time per real second'));
+  service.setLocale('zh-CN');
+  assert.ok(render().includes('每秒消耗 6 秒时间通量，使游戏速度达到实时速度的 ×7'));
+  assert.doesNotMatch(render(), /of Flux Time|per real second|to provide/u);
+  service.setLocale('en');
+  assert.equal(render(), english);
+  view.$destroy();
+});
+
+test('production expansion and Divinity TextRefs retain all separate reward lines across locale roundtrips', () => {
+  const runtime = actual();
+  const Decimal = require('break_eternity.js');
+  Object.assign(runtime.context, { Decimal, t: runtime.service.t,
+    format: value => String(value), formatInt: value => String(value), formatHybridLarge: value => String(value),
+    formatX: value => `×${value}`, formatPow: value => `^${value}`, formatPercents: value => `${100 * value}%`,
+    player: { universes: { current: 0 }, antimatter: new Decimal('1e600'), endgames: 10,
+      reality: { imaginaryMachines: new Decimal('1e100') },
+      records: { bestEndgame: { glyphLevel: new Decimal(30000), realTime: 50, galaxies: new Decimal('1e8') },
+        bestAntimatterExponentOutsideDoom: new Decimal('1e500') },
+      celestials: { laitela: { singularities: new Decimal('1e100') } } },
+    Currency: { darkMatter: { value: new Decimal('1e100') } }, Tesseracts: { effectiveCount: 50 },
+    DC: { E9E15: Decimal.pow10(9e15) },
+    TimeSpan: { fromMilliseconds: value => ({ toStringShort: () => `${value} ms` }) } });
+  vm.runInContext(stripImports(read('src/i18n/text-ref.js')) + '\nthis.resolve = resolveText;', runtime.context);
+  for (const [file, name, field] of [
+    ['endgame/expansion-packs', 'expansionPacks', 'description'],
+    ['celestials/divinity-milestones', 'divinityMilestones', 'reward']
+  ]) {
+    vm.runInContext(stripImports(read(`src/core/secret-formula/${file}.js`)) + `\nthis.configs = ${name};`, runtime.context);
+    for (const config of Object.values(runtime.context.configs)) {
+      const english = runtime.context.resolve(config[field]);
+      runtime.service.setLocale('zh-CN');
+      const chinese = runtime.context.resolve(config[field]);
+      assert.equal(chinese.split('\n').length, english.split('\n').length);
+      assert.doesNotMatch(chinese, /Unlock|Multiply|Reduce|Gain|Currently|Hadrons|Dimensions|Machine|Matter|Endgame|Reality/u);
+      assert.doesNotMatch(chinese, /\{p\d+\}|\[\[|undefined|NaN/u);
+      runtime.service.setLocale('en');
+      assert.equal(runtime.context.resolve(config[field]), english);
+    }
+  }
+});
+
+function stripImports(source) { return source.replace(/^import .*;$/gm, '').replace(/^export /gm, ''); }
+
+test('Galactic Power formats small Decimal percentages and huge multipliers without native coercion', () => {
+  const Decimal = require('break_eternity.js');
+  const context = vm.createContext({ Decimal, DC: { NUMMAX: new Decimal(Number.MAX_VALUE) },
+    formatX: value => `×${value}`, formatDecimalPercents: value => `${value.times(100)}%`,
+    formatPercents() { throw Error('Native percentage formatter must not receive a Decimal'); } });
+  vm.runInContext(stripImports(read('src/core/secret-formula/endgame/galactic-power.js')) +
+    '\nthis.rewards = galacticPowerRewards;', context);
+  for (const key of ['galaxyStrength', 'galaxyEmpowerment1', 'celestialGalaxyEmpowerment', 'galaxyEmpowerment2']) {
+    assert.ok(context.rewards[key].formatEffect(new Decimal(1.25)).includes('25%'));
+    assert.ok(context.rewards[key].formatEffect(new Decimal('1e1000')).includes('×1e1000'));
+  }
 });

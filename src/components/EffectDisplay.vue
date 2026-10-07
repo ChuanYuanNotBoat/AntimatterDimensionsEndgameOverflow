@@ -10,6 +10,10 @@ export default {
       required: false,
       default: undefined
     },
+    displayScope: {
+      type: String,
+      default: undefined
+    },
     br: {
       type: Boolean,
       required: false
@@ -147,6 +151,6 @@ export default {
 <template>
   <span v-if="isVisible && effectDisplay !== undefined">
     <br v-if="br">
-    {{ $legacyText(_s(labelDisplay)) }}{{ $legacyText(_s(effectDisplay)) }}
+    {{ $legacyText(_s(labelDisplay)) }}{{ $legacyText(_s(effectDisplay), displayScope) }}
   </span>
 </template>

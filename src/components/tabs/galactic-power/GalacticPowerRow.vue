@@ -47,11 +47,12 @@ export default {
 <template>
   <div v-show="isUnlocked">
     <div class="c-galactic-power-text">
-      {{ $legacyText(_s(title)) }} {{ $legacyText(_s(description)) }}.
+      {{ $legacyText(_s(title)) }} {{ $legacyText(_s(description), `galactic-power:${config.id}`) }}.
     </div>
     <div class="c-galactic-power-text">
       <EffectDisplay
         :config="config"
+        :display-scope="`galactic-power:${config.id}`"
       />
     </div>
   </div>

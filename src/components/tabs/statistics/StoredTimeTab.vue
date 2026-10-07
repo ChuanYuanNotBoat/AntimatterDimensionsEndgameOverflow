@@ -309,11 +309,10 @@ export default {
         {{ $t('ade.a4a66e2192c8922a', { p0: $legacyText(_s(formatInt(1))) }) }}
       </span>
       <span v-if="fluxLevel !== 1">
-        {{ $t('ade.e2d02c360d28eca3') }}
-        <span class="special-text">{{ $legacyText(_s(format(fluxLevel - 1))) }}</span>
-        {{ $legacyText(_s(pluralize("second", fluxLevel - 1))) }} of Flux Time per real second to provide a
-        <span class="special-text">{{ $legacyText(_s(formatX(fluxLevel))) }}</span>
-        {{ $t('ade.e010c0efd29a4e1d') }}
+        <LocalizedText id="statistics.storedTime.fluxConsumption" :values="{ count: fluxLevel - 1 }">
+          <template #p0><span class="special-text">{{ format(fluxLevel - 1) }}</span></template>
+          <template #p1><span class="special-text">{{ formatX(fluxLevel) }}</span></template>
+        </LocalizedText>
       </span>
       <br>
       <br>

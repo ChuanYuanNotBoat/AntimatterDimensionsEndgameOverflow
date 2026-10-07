@@ -3,9 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { execFileSync } = require('node:child_process');
 const { test, before } = require('node:test');
 const babel = require('@babel/core');
-const { localized, enumerateKeys, parameterNames } = require('../scripts/i18n-audit.cjs');
+const { localized, enumerateKeys, parameterNames, domainFor } = require('../scripts/i18n-audit.cjs');
 const read = file => fs.readFileSync(path.join(__dirname, '../src/i18n', file), 'utf8');
 const strip = text => text.replace(/^import .*;\s*$/gm, '').replace(/^export /gm, '');
 let IntlMessageFormat;
@@ -135,6 +136,33 @@ test('static audit enumerates immutable key choices and leaves state-derived key
   assert.deepEqual(values, [['one', 'two'], null]);
   const message = new IntlMessageFormat("Literal '{hidden}' {choice, select, a {{amount}} other {{count, number}}}", 'en');
   assert.deepEqual(parameterNames(message.getAst()), ['amount', 'choice', 'count']);
+});
+
+test('static audit normalizes Windows paths before domain classification and reviewed dependency matching', () => {
+  assert.equal(domainFor('src\\core\\secret-formula\\news.js'), 'news-quotes-ending');
+  assert.equal(domainFor('src\\core\\celestials\\quotes\\teresa.js'), 'news-quotes-ending');
+  // Isolate the path simulation so it cannot affect the other tests or module loader.
+  const output = execFileSync(process.execPath, ['-e', String.raw`
+    const path = require('node:path');
+    const relative = path.relative;
+    path.relative = (...args) => relative(...args).replaceAll('/', '\\');
+    require('./scripts/i18n-audit.cjs').audit().then(report => {
+      const files = [...report.findings, ...report.candidates, ...Object.values(report.references).flat()];
+      console.log(JSON.stringify({
+        errors: report.findings.filter(finding => finding.severity === 'error'),
+        reviewed: report.findings.filter(finding => finding.status === 'display-only')
+          .map(({ file, type, expression }) => ({ file, type, expression })),
+        nonPortablePaths: files.filter(entry => entry.file?.includes('\\')).map(entry => entry.file)
+      }));
+    }).catch(error => { console.error(error); process.exitCode = 1; });
+  `], { cwd: path.resolve(__dirname, '..'), encoding: 'utf8', timeout: 30000 });
+  const report = JSON.parse(output);
+  assert.deepEqual(report.errors, []);
+  assert.deepEqual(report.nonPortablePaths, []);
+  assert.deepEqual(report.reviewed, [
+    { file: 'src/i18n/vue-adapter.js', type: 'string-dependency', expression: 'result !== value' },
+    { file: 'src/i18n/vue-adapter.js', type: 'string-dependency', expression: 'translated !== value' },
+  ]);
 });
 test('opt-in browser reports retain bounded final output and extra parameters without changing the formatter', () => {
   const selector = "'{literal}' {choice, select, a {{amount}} other {{count, number}}}";

@@ -28,7 +28,7 @@ export const galacticPowerRewards = {
     },
     formatEffect: value => `Galaxies are ${Decimal.gte(value, 11)
       ? formatX(value, 2, 2)
-      : formatPercents(new Decimal(value).sub(1), 2, 2)} stronger`
+      : formatDecimalPercents(new Decimal(value).sub(1), 2, 2)} stronger`
   },
   remoteGalaxyScale: {
     id: 2,
@@ -145,7 +145,7 @@ export const galacticPowerRewards = {
     },
     formatEffect: value => `The above Galactic Powers are ${Decimal.gte(value, 11)
       ? formatX(value, 2, 2)
-      : formatPercents(new Decimal(value).sub(1), 2, 2)} stronger`
+      : formatDecimalPercents(new Decimal(value).sub(1), 2, 2)} stronger`
   },
   celestialGalaxyEmpowerment: {
     id: 11,
@@ -162,7 +162,7 @@ export const galacticPowerRewards = {
     },
     formatEffect: value => `Celestial Galaxies are ${Decimal.gte(value, 11)
       ? formatX(value, 2, 2)
-      : formatPercents(new Decimal(value).sub(1), 2, 2)} stronger`
+      : formatDecimalPercents(new Decimal(value).sub(1), 2, 2)} stronger`
   },
   freeGalaxies: {
     id: 12,
@@ -221,7 +221,7 @@ export const galacticPowerRewards = {
     },
     formatEffect: value => `The above Galactic Powers are ${Decimal.gte(value, 11)
       ? formatX(value, 2, 2)
-      : formatPercents(new Decimal(value).sub(1), 2, 2)} stronger`
+      : formatDecimalPercents(new Decimal(value).sub(1), 2, 2)} stronger`
   },
   stelliferousUniverse: {
     id: 16,

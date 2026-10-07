@@ -60,7 +60,7 @@ export default {
         type="divinityUpgrades"
         class="l-hint-text--divinity-upgrade c-hint-text--divinity-upgrade"
       >
-        {{ $legacyText(_s(config.name)) }}
+        {{ $legacyText(_s(config.name), "divinity-upgrades") }}
       </HintText>
       <span>
         <DescriptionDisplay :config="config" />

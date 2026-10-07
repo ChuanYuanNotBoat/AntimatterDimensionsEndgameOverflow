@@ -1,4 +1,6 @@
 <script>
+import { resolveText } from "@/i18n/text-ref";
+
 export default {
   name: "DivinityMilestoneButton",
   props: {
@@ -20,7 +22,7 @@ export default {
       return this.milestone.config;
     },
     descriptionLines() {
-      return this.config.reward.split("\n").map(x => x.trim());
+      return resolveText(this.config.reward).split("\n").map(x => x.trim());
     },
     divinities() {
       return this.config.divinities;
@@ -65,14 +67,26 @@ export default {
         :key="descriptionKey"
         class="c-divinity-reward-description"
       >
-        {{ $legacyText(_s(description)) }}
+        {{ description }}
       </div>
     </button>
   </div>
 </template>
 
 <style scoped>
+.o-divinity-milestone__reward {
+  max-width: calc(100vw - 16rem);
+}
+
 .c-divinity-reward-description {
   text-align: left;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .o-divinity-milestone__reward {
+    max-width: calc(100vw - 4rem);
+    padding: 2rem;
+  }
 }
 </style>

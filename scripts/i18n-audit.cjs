@@ -6,7 +6,7 @@ const compiler = require('vue-template-compiler');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const policy = JSON.parse(fs.readFileSync(path.join(root, 'docs/i18n-audit-domains.json'), 'utf8'));
-const domainFor = value => policy.domains.find(domain => new RegExp(domain.pattern, 'iu').test(value))?.id ?? 'shared';
+const domainFor = value => policy.domains.find(domain => new RegExp(domain.pattern, 'iu').test(value.replaceAll('\\', '/')))?.id ?? 'shared';
 const scopesByKey = new Map();
 for (const entry of JSON.parse(fs.readFileSync(path.join(root, 'docs/adechinese-sync.json'), 'utf8')).provenance) {
   scopesByKey.set(entry.id, [...new Set(entry.references.map(reference => reference.file))]);
@@ -104,20 +104,21 @@ async function audit() {
     if (names) calls.push({ keys, names, form, file, line });
   };
   for (const file of files(path.join(root, 'src')).filter(name => /\.(?:js|vue)$/u.test(name))) {
+    const relativeFile = path.relative(root, file).replaceAll('\\', '/');
     const source = fs.readFileSync(file, 'utf8');
     const part = file.endsWith('.vue') ? compiler.parseComponent(source).script ?? { content: '', start: 0 } : { content: source, start: 0 };
     const offset = source.slice(0, part.start ?? 0).split('\n').length - 1;
     const ast = babel.parseSync(part.content, { configFile: false, babelrc: false, sourceType: 'module' });
     const add = (kind, node) => candidates.push({
-      kind, domain: domainFor(file), impact: /automator/u.test(file) ? 'automator' : /storage|migration/u.test(file) ? 'save' :
+      kind, domain: domainFor(relativeFile), impact: /automator/u.test(file) ? 'automator' : /storage|migration/u.test(file) ? 'save' :
         /core/u.test(file) ? 'logic-or-stable-index' : 'display-or-css', status: 'needs-producer-consumer-review',
-      file: path.relative(root, file).replaceAll(path.sep, '/'), line: node.loc.start.line + offset,
+      file: relativeFile, line: node.loc.start.line + offset,
       expression: part.content.slice(node.start, node.end).replace(/\s+/gu, ' ').slice(0, 240),
     });
     babel.traverse(ast, {
       BinaryExpression({ node, scope }) {
         if (['===', '==', '!==', '!='].includes(node.operator) && localized(node, scope)) {
-          addFinding({ type: 'localized-identity-dependency', file: path.relative(root, file), line: node.loc.start.line + offset,
+          addFinding({ type: 'localized-identity-dependency', file: relativeFile, line: node.loc.start.line + offset,
             reason: 'translated-comparison', expression: part.content.slice(node.start, node.end).replace(/\s+/gu, ' ') });
         }
         if (['===', '==', '!==', '!='].includes(node.operator) && (usesName(node.left) || usesName(node.right))) {
@@ -127,21 +128,21 @@ async function audit() {
       SwitchStatement({ node }) { if (usesName(node.discriminant)) add('name-dispatch', node.discriminant); },
       MemberExpression({ node, scope }) {
         if (node.computed && localized(node.property, scope)) addFinding({ type: 'localized-identity-dependency',
-          file: path.relative(root, file), line: node.loc.start.line + offset, reason: 'translated-index', expression: part.content.slice(node.start, node.end).replace(/\s+/gu, ' ') });
+          file: relativeFile, line: node.loc.start.line + offset, reason: 'translated-index', expression: part.content.slice(node.start, node.end).replace(/\s+/gu, ' ') });
         if (node.computed && usesName(node.property)) add('name-derived-index', node);
         else if (node.computed && node.property.type === 'StringLiteral') add('literal-index', node);
       },
       AssignmentExpression({ node, scope }) {
         if (/^(?:player[.[]|.*className)/u.test(part.content.slice(node.left.start, node.left.end)) && localized(node.right, scope)) {
-          addFinding({ type: 'localized-identity-dependency', file: path.relative(root, file), line: node.loc.start.line + offset,
+          addFinding({ type: 'localized-identity-dependency', file: relativeFile, line: node.loc.start.line + offset,
             reason: 'translated-save-or-css-assignment', expression: part.content.slice(node.start, node.end).replace(/\s+/gu, ' ') });
         }
       },
       ObjectProperty({ node }) {
-        if (node.key.name === 'nameKey' && node.value.type === 'StringLiteral') keyReferences.push({ key: node.value.value, file: path.relative(root, file), line: node.loc.start.line + offset });
+        if (node.key.name === 'nameKey' && node.value.type === 'StringLiteral') keyReferences.push({ key: node.value.value, file: relativeFile, line: node.loc.start.line + offset });
       },
       CallExpression({ node, scope }) {
-        inspectCall(node, scope, path.relative(root, file), node.loc.start.line + offset, part.content);
+        inspectCall(node, scope, relativeFile, node.loc.start.line + offset, part.content);
         if (node.callee.type !== 'MemberExpression') return;
         const method = node.callee.property.name;
         if (['toLowerCase', 'toUpperCase', 'replace', 'replaceAll'].includes(method) && usesName(node.callee.object)) {
@@ -158,7 +159,7 @@ async function audit() {
       const inspectExpression = (expression, line) => {
         const tree = babel.parseSync(`(${expression});`, { configFile: false, babelrc: false, sourceType: 'module' });
         babel.traverse(tree, { CallExpression({ node, scope }) {
-          inspectCall(node, scope, path.relative(root, file), line, `(${expression});`);
+          inspectCall(node, scope, relativeFile, line, `(${expression});`);
         } });
       };
       function visit(node) {
@@ -169,11 +170,11 @@ async function audit() {
         if ([2, 3].includes(node.type) && !node.isComment && /[A-Za-z]{3,}/u.test(node.text ?? '') &&
             !['code', 'pre', 'textarea'].includes(node.parent?.tag)) {
           const literal = (node.text ?? '').replace(/\{\{[\s\S]*?\}\}/gu, '').replace(/\s+/gu, ' ').trim();
-          if (/[A-Za-z]{3,}/u.test(literal)) addFinding({ type: 'hardcoded-ui-english', file: path.relative(root, file), line,
+          if (/[A-Za-z]{3,}/u.test(literal)) addFinding({ type: 'hardcoded-ui-english', file: relativeFile, line,
             reason: 'visible-template-literal-candidate', text: literal.slice(0, 500) });
         }
         for (const attribute of node.attrsList ?? []) {
-          if (node.tag === 'LocalizedText' && attribute.name === 'id') keyReferences.push({ key: attribute.value, file: path.relative(root, file), line });
+          if (node.tag === 'LocalizedText' && attribute.name === 'id') keyReferences.push({ key: attribute.value, file: relativeFile, line });
           if (/^(?::|v-bind:)/u.test(attribute.name) || ['v-if', 'v-else-if', 'v-show', 'v-text', 'v-html'].includes(attribute.name)) inspectExpression(attribute.value, line);
         }
         for (const child of node.children ?? []) visit(child);

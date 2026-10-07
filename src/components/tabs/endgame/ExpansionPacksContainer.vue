@@ -1,4 +1,5 @@
 <script>
+import { resolveText } from "@/i18n/text-ref";
 import CostDisplay from "@/components/CostDisplay";
 
 export default {
@@ -21,7 +22,7 @@ export default {
   },
   computed: {
     descriptionLines() {
-      return this.pack.config.description.split("\n").map(x => x.trim());
+      return resolveText(this.pack.config.description).split("\n").map(x => x.trim());
     },
     isLarge() {
       return this.descriptionLines.length >= 10;
@@ -77,13 +78,13 @@ export default {
         <div class="o-symbol">
           {{ $legacyText(_s(symbol)) }}
         </div>
-        <div>
+        <div class="c-expansion-pack-copy">
           <div
             v-for="(description, descriptionKey) in descriptionLines"
             :key="descriptionKey"
             :class="textClassObject"
           >
-            {{ $legacyText(_s(description)) }}
+            {{ description }}
           </div>
           <CostDisplay
             v-if="!isBought"
@@ -98,12 +99,25 @@ export default {
 </template>
 
 <style scoped>
+.o-expansion-pack {
+  max-width: calc(100vw - 16rem);
+  height: auto;
+  min-height: 25rem;
+}
+
 .c-expansion-packs-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
   align-self: center;
+  width: 100%;
+}
+
+.c-expansion-pack-copy {
+  flex: 1;
+  min-width: 0;
+  padding-left: 18rem;
 }
 
 .o-symbol {
@@ -114,11 +128,27 @@ export default {
 }
 
 .o-expansion-pack-text {
-  margin-left: 18rem;
   font-size: 1.4rem;
+  overflow-wrap: anywhere;
 }
 
 .o-expansion-pack-text__small {
   font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .o-expansion-pack {
+    max-width: calc(100vw - 4rem);
+    min-height: 12rem;
+  }
+
+  .o-symbol {
+    left: 1rem;
+    font-size: 6rem;
+  }
+
+  .c-expansion-pack-copy {
+    padding-left: 7rem;
+  }
 }
 </style>

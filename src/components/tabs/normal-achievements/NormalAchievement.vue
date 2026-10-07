@@ -207,7 +207,7 @@ export default {
           {{ $legacyText(_s(processedName)) }} ({{ $legacyText(_s(processedId)) }})
         </div>
         <div class="o-achievement__tooltip__description">
-          {{ $legacyText(_s(processedDescription)) }}
+          {{ $legacyText(_s(processedDescription), `normal-achievements:${id}`) }}
         </div>
         <div
           v-if="config.reward"

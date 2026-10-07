@@ -1,3 +1,6 @@
+import { t } from "../../../i18n";
+import { textRef } from "../../../i18n/text-ref";
+
 function rebuyable(config) {
   const effectFunction = config.effect || (x => x);
   const { name, id, layer, maxUpgrades, description, isDisabled, noLabel, onPurchased } = config;
@@ -15,8 +18,8 @@ function rebuyable(config) {
     formatEffect: config.formatEffect ||
       (value => {
         return (value === config.maxUpgrades
-          ? `Currently: ${formatX(10 - value)}`
-          : `Currently: ${formatX(10 - value)} | Next: ${formatX(10 - value - 1)}`);
+          ? t("divinity.upgrades.currentEffect", { current: formatX(10 - value) })
+          : t("divinity.upgrades.nextEffect", { current: formatX(10 - value), next: formatX(10 - value - 1) }));
       }),
     formatCost: value => formatPostBreak(value, 2, 0),
     noLabel,
@@ -187,8 +190,7 @@ export const divinityUpgrades = {
     id: "divineL2U10",
     layer: 2,
     cost: new Decimal(1777777),
-    description: () => `Divine Matter effects are set to highest-ever Divine Matter and Divine Energy gain
-      is always produced at a ${formatPercents(1)} rate with no penalty`
+    description: textRef("divinity.upgrades.completion", () => ({ rate: formatPercents(1) }))
   },
   divineL3U1: rebuyable({
     name: "Entropy Reduction",
@@ -234,14 +236,14 @@ export const divinityUpgrades = {
     maxUpgrades: 10,
     effect: value => player.disablePostReality ? DC.D0 : Player.bestRunVSPM.times(value / 20),
     description: () => {
-      let generation = `Generate ${formatInt(5 * player.celestials.pelle.divinityRebuyables[3])}%`;
+      let generation = `${formatInt(5 * player.celestials.pelle.divinityRebuyables[3])}%`;
       if (!DivinityUpgrade.divineL3U4.isCapped) {
         generation += ` ➜ ${formatInt(5 * (1 + player.celestials.pelle.divinityRebuyables[3]))}%`;
       }
-      return `${generation} of your best VS/min from your last 10 Condenses`;
+      return textRef("divinity.upgrades.nebulaGeneration", { percentage: generation });
     },
     isDisabled: effect => effect.eq(0),
-    formatEffect: value => `${format(value, 2, 1)} VS/min`,
+    formatEffect: value => t("divinity.upgrades.nebulaRate", { amount: format(value, 2, 1) }),
     noLabel: false
   }),
   divineL3U5: {

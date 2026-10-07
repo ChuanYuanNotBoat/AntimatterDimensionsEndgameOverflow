@@ -50,52 +50,10 @@ export default {
       return this.rows.filter((_, i) => this.renderedRowIndices.includes(i));
     },
     boostText() {
-      const achievementPower = formatX(this.achievementPower, 2, 3);
-      const achTPEffect = formatX(this.achTPEffect, 2, 3);
-      const achCDEffect = formatX(this.achCDEffect, 2, 3);
-      const achVDEffect = formatX(this.achVDEffect, 2, 3);
-      const achEnEffect = formatX(this.achEnEffect, 2, 3);
-
-      const boostList = [];
-
-      const dimMultList = [];
-      if (!this.isFlipped) dimMultList.push("Antimatter");
-      if (this.isFlipped) dimMultList.push("Matter");
-      if (this.achMultToIDS) dimMultList.push("Infinity");
-      if (this.achMultToTDS) dimMultList.push("Time");
-      boostList.push(`${makeEnumeration(dimMultList)} Dimensions: ${achievementPower}`);
-      if (this.achMultToCDS) boostList.push(`Celestial Dimensions: ${achCDEffect}`);
-      if (this.achMultToVDS) boostList.push(`Divine Dimensions: ${achVDEffect}`);
-
-      if (this.achMultToTP) boostList.push(`Tachyon Particles: ${achTPEffect}`);
-      if (this.achMultToBH) boostList.push(`Black Hole Power: ${achievementPower}`);
-      if (this.achMultToTT) boostList.push(`Time Theorem production: ${achievementPower}`);
-      if (this.achMultToEnt) boostList.push(`Entropy Generation: ${achEnEffect}`);
-      return `${boostList.join("<br>")}`;
+      return this.achievementBoostRows(false);
     },
     megaBoostText() {
-      const achievementPowers = formatPow(this.achPowers, 2, 3);
-      const achTPPow = formatPow(this.achPowToTP, 2, 3);
-      const achCDPow = formatPow(this.achPowToCD, 2, 3);
-      const achVDPow = formatPow(this.achPowToVD, 2, 3);
-      const achEnPow = formatPow(this.achPowToEn, 2, 3);
-
-      const powersList = [];
-
-      const dimPowList = [];
-      if (!this.isFlipped) dimPowList.push("Antimatter");
-      if (this.isFlipped) dimPowList.push("Matter");
-      if (this.achMultToIDS) dimPowList.push("Infinity");
-      if (this.achMultToTDS) dimPowList.push("Time");
-      powersList.push(`${makeEnumeration(dimPowList)} Dimensions: ${achievementPowers}`);
-      if (this.achMultToCDS) powersList.push(`Celestial Dimensions: ${achCDPow}`);
-      if (this.achMultToVDS) powersList.push(`Divine Dimensions: ${achVDPow}`);
-
-      if (this.achMultToTP) powersList.push(`Tachyon Particles: ${achTPPow}`);
-      if (this.achMultToBH) powersList.push(`Black Hole Power: ${achievementPowers}`);
-      if (this.achMultToTT) powersList.push(`Time Theorem production: ${achievementPowers}`);
-      if (this.achMultToEnt) powersList.push(`Entropy Generation: ${achEnPow}`);
-      return `${powersList.join("<br>")}`;
+      return this.achievementBoostRows(true);
     },
   },
   watch: {
@@ -114,6 +72,23 @@ export default {
     cancelAnimationFrame(this.renderAnimationId);
   },
   methods: {
+    achievementBoostRows(power) {
+      const formatBoost = value => (power ? formatPow(value, 2, 3) : formatX(value, 2, 3));
+      const common = formatBoost(power ? this.achPowers : this.achievementPower);
+      const dimensions = [this.$t(this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural")];
+      if (this.achMultToIDS) dimensions.push(this.$t("terms.infinityDimension", {}, "plural"));
+      if (this.achMultToTDS) dimensions.push(this.$t("terms.timeDimension", {}, "plural"));
+      const resource = this.$locale === "zh-CN" ? dimensions.join("、") : makeEnumeration(dimensions);
+      const rows = [this.$t("achievements.boost", { resource, amount: common })];
+      const add = (label, amount) => rows.push(this.$t("achievements.boost", { resource: label, amount }));
+      if (this.achMultToCDS) add(this.$t("terms.celestialDimension", {}, "plural"), formatBoost(power ? this.achPowToCD : this.achCDEffect));
+      if (this.achMultToVDS) add(this.$t("terms.divineDimension", {}, "plural"), formatBoost(power ? this.achPowToVD : this.achVDEffect));
+      if (this.achMultToTP) add(this.$t("terms.tachyonParticle", {}, "plural"), formatBoost(power ? this.achPowToTP : this.achTPEffect));
+      if (this.achMultToBH) add(this.$t("achievements.blackHolePower"), common);
+      if (this.achMultToTT) add(this.$t("achievements.theoremProduction"), common);
+      if (this.achMultToEnt) add(this.$t("achievements.entropyProduction"), formatBoost(power ? this.achPowToEn : this.achEnEffect));
+      return rows;
+    },
     update() {
       const gameSpeedupFactor = getGameSpeedupFactor();
       this.achievementPower.copyFrom(Achievements.power);
@@ -193,9 +168,7 @@ export default {
       if (this.isDoomed && !PlayerProgress.endgameUnlocked()) {
         return row >= 18;
       }
-      else {
-        return row >= 17;
-      }
+      return row >= 17;
     },
     timeDisplay,
     timeDisplayNoDecimals,
@@ -224,11 +197,11 @@ export default {
       </span>
       <span v-else>
         {{ $t('ade.8f267cb91cdbcedc') }}<SwapAchievementImagesButton />
-        <div v-html="$legacyHtml(boostText)" />
+        <div v-for="(boost, index) in boostText" :key="index">{{ boost }}</div>
       </span>
       <span v-if="showPowers">
         {{ $t('ade.3712b1b0276990af') }}<SwapAchievementImagesButton />
-        <div v-html="$legacyHtml(megaBoostText)" />
+        <div v-for="(boost, index) in megaBoostText" :key="index">{{ boost }}</div>
       </span>
     </div>
     <div class="c-achievements-tab__header">

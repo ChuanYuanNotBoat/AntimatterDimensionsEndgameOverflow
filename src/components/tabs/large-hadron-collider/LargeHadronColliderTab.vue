@@ -47,6 +47,9 @@ export default {
     };
   },
   computed: {
+    firstAcceleratorRequirement() {
+      return format(Decimal.pow10(1e200), 2, 2);
+    },
     hadronSpeedText() {
       if (this.hadronSpeed === 0) return `Your Hadrons are stationary`;
       if (this.hadronSpeed >= 149896229) return `Your Hadrons are moving
@@ -208,20 +211,19 @@ export default {
         v-if="!hasAccelerator"
         class="c-large-hadron-collider-description"
       >
-        {{ $t('ade.3871fe20f4628bd8', { p0: $legacyText(_s(format(Decimal.pow10(1e200),2,2))), p1: $legacyText(_s(isFlipped?"Matter":"Antimatter")) }) }}
+        {{ $t('ade.3871fe20f4628bd8', { p0: firstAcceleratorRequirement, p1: $legacyText(_s(isFlipped?"Matter":"Antimatter")) }) }}
       </div>
       <div
         class="c-large-hadron-collider-entropy"
         v-if="canSeeEntropy1"
       >
-        Excess Entropy in the universe has caused your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} to
-        decay past {{ $legacyText(_s(format(amSoftcap, 2, 2))) }}, and has restricted it from exceeding {{ $legacyText(_s(format(amHardcap, 2, 2))) }}.
+        {{ $t("collider.entropyLimit", { resource: $t(isFlipped ? "terms.matter" : "terms.antimatter", {}, "alias1"), softcap: format(amSoftcap, 2, 2), hardcap: format(amHardcap, 2, 2) }) }}
       </div>
       <div
         class="c-large-hadron-collider-entropy"
         v-if="canSeeEntropy2"
       >
-        The {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} decay is significantly stronger past {{ $legacyText(_s(format(amSoftcap2, 2, 2))) }}.
+        {{ $t("collider.strongerDecay", { resource: $t(isFlipped ? "terms.matter" : "terms.antimatter", {}, "alias1"), softcap: format(amSoftcap2, 2, 2) }) }}
       </div>
       <div
         class="c-large-hadron-collider-entropy"
@@ -234,7 +236,7 @@ export default {
     <br>
     <div v-if="highestAntimatter.gt(10)">
       <span class="c-void-antimatter-amount">
-        [Your highest {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} inside The Void is {{ $legacyText(_s(format(highestAntimatter, 2, 1))) }}.]
+        {{ $t("collider.voidRecord", { resource: $t(isFlipped ? "terms.matter" : "terms.antimatter", {}, "alias1"), amount: format(highestAntimatter, 2, 1) }) }}
       </span>
       <br>
       <span class="c-null">{{ $t('ade.53f8790e58571e38', { p0: $legacyText(_s(formatNullAmount(nullMatter))), p1: $legacyText(_s(formatNullAmount(nullPerSecond))) }) }}</span>
@@ -262,21 +264,20 @@ export default {
     >
       {{ $legacyText(_s(modeDisplay)) }}
     </PrimaryButton>
-    <div v-if="voidMode === 0">
+    <div v-if="voidMode === 0" class="c-void-description">
       {{ $t('ade.b90d7241977ab1f9') }}
       <br>
-      Your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} will slowly decay and you will gain Null Matter from the decayed {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }}.
+      {{ $t("collider.voidDecay", { resource: $t(isFlipped ? "terms.matter" : "terms.antimatter", {}, "alias1") }) }}
       <span v-if="nullified">
         <LocalizedText id="ade.eca6cd5186a09521">
     <template #p0><br></template>
   </LocalizedText>
       </span>
     </div>
-    <div v-if="voidMode === 1">
-      Entering The Void in Nullified Mode will force an Endgame reset and Dilate your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} by {{ $legacyText(_s(format(0.01, 2, 2))) }}.
+    <div v-if="voidMode === 1" class="c-void-description">
+      {{ $t("collider.nullifiedEntry", { resource: $t(isFlipped ? "terms.matter" : "terms.antimatter", {}, "alias1"), power: format(0.01, 2, 2) }) }}
       <br>
-      You will generate Null Particles based on your {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }}, which empower
-      {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimensions while inside The Void in normal mode (Currently: {{ $legacyText(_s(formatPow(nullParticleEffect, 2, 3))) }}).
+      {{ $t("collider.nullifiedReward", { resource: $t(isFlipped ? "terms.matter" : "terms.antimatter", {}, "alias1"), effect: formatPow(nullParticleEffect, 2, 3) }) }}
     </div>
     <NullUpgradesTabComponent />
   </div>
@@ -317,12 +318,21 @@ export default {
   font-size: 2rem;
   font-weight: bold;
   color: red;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .c-void-antimatter-amount {
   position: relative;
   font-size: 1rem;
   color: red;
+}
+
+.c-void-description {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .c-null {

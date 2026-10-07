@@ -1,3 +1,5 @@
+import { textRef } from "../../../../i18n/text-ref";
+
 export const celestialEternityPlusUpgrades = {
   megaCelTickspeedReduction: {
     id: "megaCelTickspeedReduction",
@@ -16,7 +18,7 @@ export const celestialEternityPlusUpgrades = {
   betterCIPFormula: {
     id: "betterCIPFormula",
     cost: DC.E3000,
-    description: () => `Reduce the Celestial Infinity Point conversion formula divisor by ${formatPercents(0.1)}`,
+    description: textRef("ade.00a1d67efd5982f8", () => ({ p0: formatPercents(0.1) })),
     effect: 0.9
   },
   oldStoneSlabAndSteelDrill: {

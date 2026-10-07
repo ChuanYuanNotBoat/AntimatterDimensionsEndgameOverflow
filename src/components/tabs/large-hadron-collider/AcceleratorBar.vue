@@ -151,7 +151,7 @@ export default {
     </div>
     <div class="o-accelerator-bar-percentage">
       {{ $legacyText(_s(formatPercents(percentage, 3))) }}
-      <span v-if="!isMaxed">({{ $legacyText(_s(isActive ? "Filling" : "Idle")) }})</span>
+      <span v-if="!isMaxed">({{ $t(isActive ? "collider.accelerator.filling" : "collider.accelerator.idle") }})</span>
     </div>
     <CustomizeableTooltip
       class="o-accelerator-bar-milestone-hover-container"
@@ -161,13 +161,13 @@ export default {
       content-class="o-accelerator-bar-milestone-hover-area"
     >
       <template #tooltipContent>
-        {{ selectedMilestoneResourceText }}
+        {{ $legacyText(selectedMilestoneResourceText, "accelerators") }}
         <br>
         <br>
-        {{ selectedMilestoneDescriptionText }}
+        {{ $legacyText(selectedMilestoneDescriptionText, "accelerators") }}
         <div v-if="showEffect">
           <br>
-          Currently: {{ selectedMilestoneEffectText }}
+          {{ $legacyText(`Currently: ${selectedMilestoneEffectText}`, "accelerators") }}
         </div>
       </template>
     </CustomizeableTooltip>

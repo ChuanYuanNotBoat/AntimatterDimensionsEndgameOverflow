@@ -44,6 +44,10 @@ export default {
       return typeof value === "number" ? `${formatInt(100 * value)}%` : format(value, 2);
     },
     acceleratorName() {
+      const key = this.accelerator.config.key;
+      if (key === "potency") return this.$t("collider.accelerator.potency");
+      if (key === "emptiness") return this.$t("collider.accelerator.emptiness");
+      if (key === "cosmic") return this.$t("collider.accelerator.cosmic");
       return this.accelerator.name;
     },
     drainResource() {

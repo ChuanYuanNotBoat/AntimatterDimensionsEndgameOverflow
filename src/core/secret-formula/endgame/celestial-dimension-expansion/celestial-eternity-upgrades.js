@@ -1,3 +1,5 @@
+import { textRef } from "../../../../i18n/text-ref";
+
 function rebuyable(config) {
   const effectFunction = config.effect || (x => x);
   const { id, maxUpgrades, description, isDisabled, noLabel, onPurchased, isDecimal } = config;
@@ -24,7 +26,7 @@ export const celestialEternityUpgrades = {
     costIncrease: 1e4,
     maxUpgrades: 10,
     effect: value => player.disablePostReality ? 1 : Math.pow(0.99, value),
-    description: () => `Reduce the Celestial Infinity Point conversion formula divisor by ${formatPercents(0.01)}`,
+    description: textRef("ade.54886a8def14c41b", () => ({ p0: formatPercents(0.01) })),
     formatEffect: value => `${formatX(value, 2, 3)}`,
     noLabel: false
   }),
@@ -66,7 +68,7 @@ export const celestialEternityUpgrades = {
   x2CIPAuto: {
     id: "x2CIPAuto",
     cost: 1e10,
-    description: () => `Unlock an Autobuyer for the ${formatX(2)} CIP Multiplier Upgrade`
+    description: textRef("celestialEternity.upgrades.cipAutobuyer", () => ({ multiplier: formatX(2) }))
   },
   betterCelCrunchAuto: {
     id: "betterCelCrunchAuto",
