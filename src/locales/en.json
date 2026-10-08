@@ -9948,5 +9948,9 @@
   "analysis.hunt.expected.min": "Expected time for the next core: approximately {amount} min.",
   "analysis.hunt.expected.h": "Expected time for the next core: approximately {amount} h.",
   "analysis.hunt.expected.d": "Expected time for the next core: approximately {amount} d.",
-  "analysis.hunt.expected.yr": "Expected time for the next core: approximately {amount} yr."
+  "analysis.hunt.expected.yr": "Expected time for the next core: approximately {amount} yr.",
+  "analysis.hunt.expectedTitle": "Expected wait for the next core",
+  "analysis.hunt.expectedDurationDays": "{days} d {clock}",
+  "analysis.hunt.expectedZeroReason": "The current chance is zero.",
+  "analysis.hunt.clockFormat": "Hours : minutes : seconds"
 }

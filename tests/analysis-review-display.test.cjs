@@ -63,17 +63,28 @@ test('AG, RG, TG retain the vanilla atom, replication and dilation icon assignme
   assert.match(galaxies,/replicanti:[\s\S]*?icon: MultiplierTabIcons.SPECIFIC_GLYPH\("replication"\)/u);
   assert.match(galaxies,/tachyon:[\s\S]*?icon: MultiplierTabIcons.SPECIFIC_GLYPH\("dilation"\)/u);
 });
-test('hunt expectation uses interval divided by chance, with readable units and a zero-chance state',()=>{
+test('hunt expectation uses hours, minutes and seconds, with days and a zero-chance state',()=>{
   const script=fs.readFileSync('src/components/tabs/statistics/SlabdrillHuntFactors.vue','utf8')
     .match(/<script>([\s\S]*?)<\/script>/)[1].replace(/^import[^;]+;\s*/gm,'').replace('export default','module.exports =');
   const slab={huntChanceFactors:{},cores:4,currentStage:4,huntInterval:316.40625,huntChance:0.0005};
-  const ctx={module:{exports:{}},Decimal,Slabdrill:slab,ExpandingControlBox:{},format:String,formatInt:String};
+  const ctx={module:{exports:{}},window:{},Guard:{isDecimal(){}},Decimal,Slabdrill:slab,
+    ExpandingControlBox:{},format:String,formatInt:String};
+  vm.runInNewContext(fs.readFileSync('src/core/timespan.js','utf8'),ctx);
+  ctx.TimeSpan=ctx.window.TimeSpan;
   vm.runInNewContext(script,ctx);const component=ctx.module.exports;
   const state=component.data();component.methods.update.call(state);
-  assert.equal(state.expectedUnit,'min');assert.equal(state.expectedAmount,'10.546875');
+  assert.equal(state.expectedClock,'00:10:33');assert.equal(state.hasExpectedDays,false);
   slab.huntChance=1;slab.huntInterval=1000;component.methods.update.call(state);
-  assert.equal(state.expectedUnit,'s');assert.equal(state.expectedAmount,'1');
+  assert.equal(state.expectedClock,'00:00:01');
+  slab.huntInterval=316.40625;component.methods.update.call(state);
+  assert.equal(state.expectedClock,'00:00:00.32');
+  slab.huntInterval=90061000;component.methods.update.call(state);
+  assert.equal(state.expectedDays,'1');assert.equal(state.expectedClock,'01:01:01');
   slab.huntChance=0;component.methods.update.call(state);assert.equal(state.zeroChance,true);
   slab.huntChance=Number.MIN_VALUE;component.methods.update.call(state);
-  assert.equal(state.expectedUnit,'yr');assert.doesNotMatch(state.expectedAmount,/Infinity|NaN/u);
+  assert.equal(state.hasExpectedDays,true);assert.doesNotMatch(state.expectedDays,/Infinity|NaN/u);
+  state.factors={final:new Decimal('0.000465314159')};
+  assert.equal(component.computed.finalProbability.call(state),'0.04653%');
+  state.factors.final=new Decimal(1);
+  assert.equal(component.computed.finalProbability.call(state),'100.00000%');
 });

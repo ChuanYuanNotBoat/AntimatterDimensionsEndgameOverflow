@@ -9745,5 +9745,9 @@
   "analysis.hunt.expected.min": "获得下一个核心的期望时间：约 {amount} 分钟。",
   "analysis.hunt.expected.h": "获得下一个核心的期望时间：约 {amount} 小时。",
   "analysis.hunt.expected.d": "获得下一个核心的期望时间：约 {amount} 天。",
-  "analysis.hunt.expected.yr": "获得下一个核心的期望时间：约 {amount} 年。"
+  "analysis.hunt.expected.yr": "获得下一个核心的期望时间：约 {amount} 年。",
+  "analysis.hunt.expectedTitle": "获得下一个核心的期望等待时间",
+  "analysis.hunt.expectedDurationDays": "{days} 天 {clock}",
+  "analysis.hunt.expectedZeroReason": "当前搜寻概率为零。",
+  "analysis.hunt.clockFormat": "时 : 分 : 秒"
 }

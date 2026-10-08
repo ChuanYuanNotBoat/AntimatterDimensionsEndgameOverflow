@@ -97,7 +97,12 @@ async function initialize(page) {
       await label.click();await page.waitForTimeout(650);
       const hunt=page.locator('.c-hunt-factors');
       const bounds=await hunt.boundingBox();assert.ok(bounds.width>300&&bounds.height>150,'hunt breakdown must have readable width and height');
-      assert.match(await hunt.innerText(),locale==='zh-CN'?/期望时间：约/u:/Expected time.*approximately/u);
+      assert.match(await hunt.innerText(),locale==='zh-CN'?/期望等待时间/u:/Expected wait/u);
+      assert.match(await hunt.locator('.c-hunt-expected-time__value').innerText(),/\d{2}:\d{2}:\d{2}/u);
+      assert.match(await hunt.locator('.c-hunt-final-probability').innerText(),/^\d+\.\d{5}%$/u);
+      const labelBounds=await hunt.locator('.c-hunt-expected-time__label').boundingBox();
+      const timeBounds=await hunt.locator('.c-hunt-expected-time__value').boundingBox();
+      assert.ok(timeBounds.y>labelBounds.y,'expected time value must be on its own line');
       const chance=await page.evaluate(()=>{
         const state=JSON.stringify(player);const random=Math.random;Math.random=()=>{throw Error('hunt display used RNG');};
         try {
