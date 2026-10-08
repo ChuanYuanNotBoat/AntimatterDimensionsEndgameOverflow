@@ -20,6 +20,67 @@ export function realityMachineMultiplier(observer = null) {
     boundedPositiveProduct(result, achievement), achievement);
 }
 
+export function baseRealityMachineCapacity(observer = null) {
+  let multiplier = DC.D1;
+  if (ExpansionPack.teresaPack.isBought && !player.disablePostReality) {
+    const perk = PerkShopUpgrade.rmMult.effectOrDefault(1);
+    multiplier = analysisStep(observer, "capPerkShop", "multiply", multiplier,
+      multiplier.timesEffectsOf(PerkShopUpgrade.rmMult), perk);
+  }
+  if (ExpansionPack.teresaPack.isBought && !player.disablePostReality && !Alpha.isDestroyed) {
+    const teresa = Teresa.rmMultiplier;
+    multiplier = analysisStep(observer, "capTeresaMult", "multiply", multiplier,
+      boundedPositiveProduct(multiplier, teresa), teresa);
+  }
+  if (EffarigUnlock.endgame.canBeApplied) {
+    const glyph = getAdjustedGlyphEffect("effarigrm");
+    multiplier = analysisStep(observer, "capGlyph", "multiply", multiplier,
+      boundedPositiveProduct(multiplier, glyph), glyph);
+  }
+  const smallBoost = DC.D1.timesEffectsOf(EndgameMastery(153));
+  const imaginaryBase = analysisStep(observer, "capImaginaryBase", "override", DC.D1,
+    ImaginaryUpgrade(6).effectOrDefault(1));
+  const imaginary = analysisStep(observer, "capSmallPower", "power", imaginaryBase,
+    boundedPositivePower(imaginaryBase, smallBoost), smallBoost);
+  let largeBoost = DC.D1;
+  for (const [key, effect] of [["capSingularity", SingularityMilestone.rmCap], ["capRa", Ra.unlocks.realityMachineCap]]) {
+    effect.applyEffect(factor => {
+      largeBoost = analysisStep(observer, key, "multiply", largeBoost, boundedPositiveProduct(largeBoost, factor), factor);
+    });
+  }
+  const divine = DivineDimensions.conversionFormula2;
+  largeBoost = analysisStep(observer, "capDivinity", "multiply", largeBoost,
+    boundedPositiveProduct(largeBoost, divine), divine);
+  ResurgenceUpgrade.machineSurge.applyEffect(factor => {
+    largeBoost = analysisStep(observer, "capMachineSurge", "multiply", largeBoost,
+      boundedPositiveProduct(largeBoost, factor), factor);
+  });
+  let base = analysisStep(observer, "capBase", "override", DC.D1, MachineHandler.baseRMCap);
+  base = analysisStep(observer, "capMultipliers", "multiply", base, boundedPositiveProduct(base, multiplier), multiplier);
+  base = analysisStep(observer, "capImaginary", "multiply", base, boundedPositiveProduct(base, imaginary), imaginary);
+  let result = analysisStep(observer, "capLargePower", "power", base, boundedPositivePower(base, largeBoost), largeBoost);
+  if (ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality) {
+    result = analysisStep(observer, "capRMSurge", "multiply", result,
+      boundedPositiveProduct(result, player.realities), player.realities);
+  }
+  CompressionUpgrade.entanglementSplit.applyEffect(power => {
+    result = analysisStep(observer, "capCompression", "power", result, boundedPositivePower(result, power), power);
+  });
+  return result;
+}
+
+export function realityMachineCapacity(observer = null) {
+  const base = baseRealityMachineCapacity(observer);
+  if (!Alpha.isDestroyed || base.eq(0)) return base;
+  let exponent = boundedPositiveSum(MachineHandler.uncappedRM.div(base), 1).log10();
+  exponent = boundedPositiveSum(exponent, 1).log10();
+  exponent = boundedPositiveSum(exponent, 1).log10();
+  exponent = boundedPositiveSum(exponent, 1);
+  const powered = analysisStep(observer, "capAlpha", "power", base, boundedPositivePower(base, exponent), exponent);
+  return analysisStep(observer, "capTeresa", "multiply", powered,
+    boundedPositiveProduct(powered, Teresa.rmMultiplier), Teresa.rmMultiplier);
+}
+
 export function uncappedRealityMachines(observer = null) {
   let epLog = boundedPositiveSum(boundedPositiveSum(player.records.thisReality.maxEP, gainedEternityPoints()), 1).log10();
   epLog = analysisStep(observer, "epInput", "override", DC.D1, epLog);

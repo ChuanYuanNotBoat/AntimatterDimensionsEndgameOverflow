@@ -1,4 +1,5 @@
 <script>
+import { glyphDescription } from "@/i18n/content-display";
 export default {
   name: "GlyphTooltipEffect",
   props: {
@@ -27,7 +28,8 @@ export default {
         : undefined;
     },
     effectStringTemplate() {
-      return this.effectConfig.singleDesc;
+      void this.$i18nRevision;
+      return glyphDescription(this.effectConfig.singleDesc, this.effect);
     },
     primaryEffectText() {
       const value = this.effectConfig.formatSingleEffect(this.value);
@@ -91,20 +93,20 @@ export default {
     class="c-glyph-tooltip__effect"
     :class="{ 'o-pelle-disabled': isPelleDisabled }"
   >
-    <span v-html="$legacyHtml(convertedParts[0])" />
+    <span v-html="convertedParts[0]" />
     <!-- Do not "fix" the spacing on these spans; moving effectText to its own line causes extra spaces to appear -->
     <span
       v-if="hasValue"
       :style="valueStyle"
     >{{ $legacyText(_s(primaryEffectText)) }}</span>
-    <span v-html="$legacyHtml(convertedParts[1])" />
+    <span v-html="convertedParts[1]" />
     <span
       v-if="hasSecondaryValue"
       :style="valueStyle"
     >{{ $legacyText(_s(secondaryEffectText)) }}</span>
     <span
       v-if="hasSecondaryValue"
-      v-html="$legacyHtml(convertedParts[2])"
+      v-html="convertedParts[2]"
     />
   </div>
 </template>

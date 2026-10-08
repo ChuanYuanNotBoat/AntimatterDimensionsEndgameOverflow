@@ -61,7 +61,14 @@ function sourceTransform(resource, breakdown, tiers, sources, mode) {
     const trace = breakdown.tierTrace(tier);
     const candidates = sources.flatMap(key => (desired === "power" && key === "purchase"
       ? ["purchaseImaginaryPower", "purchaseSingularityPower"] : [key]));
-    const keys = candidates.filter(key => trace[key] && (!desired || trace[key].type === desired));
+    const keys = candidates.filter(key => {
+      const step = trace[key];
+      if (!step || (desired && step.type !== desired)) return false;
+      // Identity effects are inactive sources even when floating arithmetic left
+      // a tiny difference between the recorded before/after values.
+      return step.alwaysShow || !["multiply", "power"].includes(step.type) ||
+        step.value === undefined || !Decimal.eq(step.value, 1);
+    });
     const transforms = keys.map(key => ({ tier, transform: trace[key] }));
     return { tier, keys, transforms };
   }).filter(item => item.transforms.length);

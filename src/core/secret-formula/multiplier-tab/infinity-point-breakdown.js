@@ -199,26 +199,17 @@ function evaluateInfinityPoints(skipKey = null, steps = null) {
 
   const totalMultDisabled = Effarig.isRunning && Effarig.currentStage === EFFARIG_STAGES.INFINITY;
   if (!totalMultDisabled) {
-    ip = orderedMultiplyStep(steps, "iap", ip, ShopPurchase.IPPurchases.currentMult, skipKey);
-    ip = orderedMultiplyStep(steps, "timeStudy", ip, normalTimeStudyMult(), skipKey);
-    ip = orderedMultiplyStep(steps, "achievement", ip, normalAchievementMult(), skipKey);
-    ip = orderedMultiplyStep(steps, "dilationUpgrade", ip, DilationUpgrade.ipMultDT.effectOrDefault(1), skipKey);
-    ip = orderedMultiplyStep(steps, "glyph", ip, getAdjustedGlyphEffect("infinityIP"), skipKey);
-    if (!Ascensions.ipA.isUnlocked) {
-      ip = orderedMultiplyStep(steps, "infinityUpgrade", ip, InfinityUpgrade.ipMult.effectOrDefault(1), skipKey);
+    // Gameplay folds the multiplier sources together before multiplying the base.
+    // Reuse that exact order: multiplying the base into each step can cross a floor
+    // boundary and invent a one-IP diagnostic difference.
+    const base = ip;
+    const raw = {};
+    const total = totalIPMult({ steps: raw, skip: new Set(skipKey ? [skipKey] : []) });
+    for (const [key, step] of Object.entries(raw)) {
+      if (steps) addOrderedTransform(steps, key, "multiply", boundedPositiveProduct(base, step.before),
+        boundedPositiveProduct(base, step.after), { value: step.value });
     }
-    if (Replicanti.areUnlocked) {
-      ip = orderedMultiplyStep(steps, "alchemy", ip, ReplicantiMultipliers.ipMult, skipKey);
-    }
-    if (LHC.voidRunning) {
-      ip = orderedMultiplyStep(steps, "nullUpgrade", ip, NullUpgrade.infinityPointMult.effectOrDefault(1), skipKey);
-    }
-    if (SlabdrillUnlocks.breakInfinity.isUnlocked) {
-      ip = orderedMultiplyStep(steps, "slabMultiplier", ip, Slabdrill.slabPowers.ipMult(), skipKey);
-    }
-    if (Slabdrill.isCursed && BreakInfinityUpgrade.autobuyerSpeed.isBought) {
-      ip = orderedMultiplyStep(steps, "slabAutobuyer", ip, 666, skipKey);
-    }
+    ip = boundedPositiveProduct(base, total);
   }
 
   if (Teresa.isRunning) {

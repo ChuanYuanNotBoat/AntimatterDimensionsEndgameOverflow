@@ -1,44 +1,16 @@
 import { boundedPositivePower, boundedPositiveProduct, boundedPositiveSum } from "./finite-decimal";
 import { realityMachineMultiplier, uncappedRealityMachines, uncappedImaginaryMachineCapacity,
-  uncappedDualMachineCapacity, machineCapacity } from "./machine-formulas";
+  uncappedDualMachineCapacity, machineCapacity, baseRealityMachineCapacity, realityMachineCapacity } from "./machine-formulas";
 
 export const MachineHandler = {
   get baseRMCap() { return DC.E1000; },
 
   get baseHardcapRM() {
-    let effectMultipliers = DC.D1;
-    if (ExpansionPack.teresaPack.isBought && !player.disablePostReality) {
-      effectMultipliers = effectMultipliers.timesEffectsOf(PerkShopUpgrade.rmMult);
-    }
-    if (ExpansionPack.teresaPack.isBought && !player.disablePostReality && !Alpha.isDestroyed) {
-      effectMultipliers = boundedPositiveProduct(effectMultipliers, Teresa.rmMultiplier);
-    }
-    if (EffarigUnlock.endgame.canBeApplied) {
-      effectMultipliers = boundedPositiveProduct(effectMultipliers, getAdjustedGlyphEffect("effarigrm"));
-    }
-    const smallBoost = DC.D1.timesEffectsOf(EndgameMastery(153));
-    let largeBoost = DC.D1.timesEffectsOf(SingularityMilestone.rmCap, Ra.unlocks.realityMachineCap);
-    largeBoost = boundedPositiveProduct(largeBoost, DivineDimensions.conversionFormula2);
-    largeBoost = largeBoost.timesEffectOf(ResurgenceUpgrade.machineSurge);
-    let base = boundedPositiveProduct(this.baseRMCap, effectMultipliers);
-    base = boundedPositiveProduct(base,
-      boundedPositivePower(ImaginaryUpgrade(6).effectOrDefault(1), smallBoost));
-    let result = boundedPositivePower(base, largeBoost);
-    if (ResurgenceUpgrade.rmSurge.isBought && !player.disablePostReality) {
-      result = boundedPositiveProduct(result, player.realities);
-    }
-    CompressionUpgrade.entanglementSplit.applyEffect(power => { result = boundedPositivePower(result, power); });
-    return result;
+    return baseRealityMachineCapacity();
   },
 
   get hardcapRM() {
-    const base = this.baseHardcapRM;
-    if (!Alpha.isDestroyed || base.eq(0)) return base;
-    let exponent = boundedPositiveSum(this.uncappedRM.div(base), 1).log10();
-    exponent = boundedPositiveSum(exponent, 1).log10();
-    exponent = boundedPositiveSum(exponent, 1).log10();
-    exponent = boundedPositiveSum(exponent, 1);
-    return boundedPositiveProduct(boundedPositivePower(base, exponent), Teresa.rmMultiplier);
+    return realityMachineCapacity();
   },
 
   get distanceToRMCap() {

@@ -131,7 +131,7 @@ export default {
       return this.entries.length === 0 || !this.isRecent(this.lastNotEmptyAt);
     },
     disabledText() {
-      if (/^(CD|DD|RM|IM|DM|realities|endgames)_(total|projectedTotal)(_\d+)?$/u.test(this.resource.key)) {
+      if (/^(CD|DD|RM|RMCap|IM|DM|TR|HR|realities|endgames)_(total|projectedTotal)(_\d+)?$/u.test(this.resource.key)) {
         return this.$t("analysis.expansion.noSources");
       }
       if (!this.resource.isBase) return `Total effect inactive, disabled, or reduced to ${formatX(1)}`;
@@ -224,6 +224,7 @@ export default {
     // Vue templates resolve helpers on the component instance.
     starResourceForEntry,
     entryMatchesMode(entry, seen = new Set()) {
+      if (this.valueMode === "all") return entry.isActive;
       const cached = this._modeMatches.get(entry.key);
       if (cached !== undefined) return cached;
       if (seen.has(entry.key)) return false;
@@ -281,9 +282,8 @@ export default {
         const scan = this.showGroup[i] || now - (this._lastChildScan[i] ?? -Infinity) >= 2000;
         if (scan) {
           this._lastChildScan[i] = now;
-          this._cachedChildAvailability[i] = entry.isOrdered
-            ? childGroups.some(group => group.entries.length > 0)
-            : childGroups.some(group => group.hasVisibleEntries);
+          this._cachedChildAvailability[i] = childGroups.some(group => group.entries.some(child =>
+            child.isVisible && this.entryMatchesMode(child)));
         }
         if (this._cachedChildAvailability[i]) this.hadChildEntriesAt[i] = now;
       }
@@ -302,6 +302,7 @@ export default {
       this.toggleChildren(index);
     },
     toggleChildren(index) {
+      if (!this.hasChildEntries(index)) return;
       // Vue 2 does not observe direct writes to previously absent array indexes.
       this.$set(this.showGroup, index, !this.showGroup[index]);
       this.update(true);
@@ -527,6 +528,9 @@ export default {
         }
       }
       if (!data.hasTransform || !data.isVisible) return DC.D0;
+      // A positive starting value supplies the bar's baseline budget. Zero or sub-unit
+      // inputs are never drawn as a penalty from an artificial starting value of 1.
+      if (data.transformType === "input") return this.log10ForImpact(data.transformAfter).clampMin(0);
       // A trace mismatch is a residual/debugging signal, not a gameplay source.
       // Keep the row visible, but never let it consume contribution/path percentage.
       if (entry.key.endsWith("traceMismatch")) return DC.D0;
@@ -612,14 +616,13 @@ export default {
     },
     shouldShowEntry(entry) {
       if (this.valueMode !== "all" && !this.entryMatchesMode(entry)) return false;
-      return entry.isActive && (entry.data.isVisible ||
-        (!entry._hasTransform && this.isRecent(entry.data.lastVisibleAt)));
+      return entry.isActive && entry.data.isVisible;
     },
     barSymbol(index) {
       return this.entries[index].icon?.symbol ?? null;
     },
     hasChildEntries(index) {
-      return this.isRecent(this.hadChildEntriesAt[index]);
+      return Boolean(this._cachedChildAvailability[index]);
     },
     expandIcon(index) {
       return this.showGroup[index] ? "far fa-minus-square" : "far fa-plus-square";
@@ -657,13 +660,12 @@ export default {
       // Display both multiplier and powers, but make sure to give an empty string if there's neither
       const entry = this.entries[index];
       if (!entry.data.isVisible) {
-        return `${percString}: ${entry.name}`;
+        return `${percString}: ${this.$legacyText(entry.name)}`;
       }
       if (entry.data.invalidValue) return `${percString}: ${entry.name} (Diagnostic value unavailable)`;
       const overrideStr = this.valueMode === "all" ? entry.displayOverride : null;
       let valueStr;
-      if (overrideStr) valueStr = `(${overrideStr})`;
-      else {
+      {
         const values = [];
         const formatFn = x => {
           const isDilated = entry.isDilated;
@@ -692,10 +694,12 @@ export default {
             values.push(formatPow(entry.data.pow, 2, 3));
           }
         }
-        valueStr = values.length === 0 ? "" : `(${values.join(", ")})`;
+        if (values.length === 0) values.push(this.valueMode === "exponent" ? formatPow(1) : formatX(1));
+        if (overrideStr && !values.includes(overrideStr)) values.push(this.$legacyText(overrideStr));
+        valueStr = `(${values.join("; ")})`;
       }
 
-      return `${percString}: ${entry.name} ${valueStr}`;
+      return `${percString}: ${this.$legacyText(entry.name)} ${valueStr}`;
     },
     orderedEntryString(index) {
       const entry = this.entries[index];
@@ -712,6 +716,9 @@ export default {
         ? this.$t("analysis.row.path", { share: formatPercents(this.orderedPathPercentList[index] ?? 0, 1) })
         : "";
       const value = entry.data.invalidValue ? this.$t("analysis.row.unavailable") : this.transformValueString(entry);
+      if (entry.data.transformType === "input") {
+        return this.$t("analysis.row.input", { name: this.$legacyText(entry.name), value });
+      }
       return this.$t("analysis.row.relative", {
         impact: padPercents(impactString), mode: this.$t(`analysis.impact.${mode}`), path: pathShare,
         name: this.$legacyText(entry.name), value: this.$legacyText(value)
@@ -719,46 +726,62 @@ export default {
     },
     transformValueString(entry) {
       const data = entry.data;
-      if (data.transformAggregate) {
-        if (data.transformDisplay) return `(${data.transformDisplay})`;
-        if (!data.transformHasValue) return "";
-        return data.transformType === "power"
-          ? `(${formatPow(data.transformValue, 2, 3)} per tier)`
-          : `(${formatX(data.transformValue, 2, 2)})`;
-      }
+      // Mixed dimension categories already provide their raw multipliers and per-tier powers.
+      // Avoid adding an equivalent ratio (or an artificial 1 → value) beside the same effects.
+      if (data.transformAggregate && data.transformDisplay && !data.transformHasValue &&
+          /[×^]/u.test(data.transformDisplay)) return `(${this.$legacyText(data.transformDisplay)})`;
+      const values = [];
       if (!data.hasTransform) {
         // Informational rows without an ordered trace (e.g. ID_highestDim, ID_tickspeed) can
         // appear inside ordered panels; show their actual effect instead of a fake "1 ➜ 1".
         const overrideStr = entry.displayOverride;
-        if (overrideStr) return `(${overrideStr})`;
-        const values = [];
         if (Decimal.neq(data.mult, 1)) {
           values.push(entry.isBase ? format(data.mult, 2, 2) : formatX(data.mult, 2, 2));
         }
         if (Decimal.neq(data.pow, 1)) values.push(formatPow(data.pow, 2, 3));
-        return values.length === 0 ? "" : `(${values.join(", ")})`;
+        if (values.length === 0) values.push(formatX(1));
+        if (overrideStr && !values.includes(overrideStr)) values.push(this.$legacyText(overrideStr));
+        return `(${values.join("; ")})`;
       }
-      if (data.transformDisplay) return `(${data.transformDisplay})`;
-
       switch (data.transformType) {
         case "multiply":
-          return data.transformHasValue ? `(${formatX(data.transformValue, 2, 2)})` : "";
+          values.push(formatX(data.transformHasValue ? data.transformValue
+            : data.transformAfter.div(data.transformBefore.max(new Decimal(DC.BEMAX).recip())), 2, 2));
+          break;
         case "power":
-          return data.transformHasValue ? `(${formatPow(data.transformValue, 2, 3)})` : "";
+          values.push(data.transformHasValue ? formatPow(data.transformValue, 2, 3)
+            : `${format(data.transformBefore, 2, 2)} ➜ ${format(data.transformAfter, 2, 2)}`);
+          break;
+        case "input":
+          values.push(format(data.transformAfter, 2, 2));
+          break;
         case "formula":
-          return `(${format(data.transformAfter, 2, 2)})`;
+          if (data.transformAggregate && data.transformBefore.gt(0)) {
+            values.push(formatX(data.transformAfter.div(data.transformBefore), 2, 2));
+          } else {
+            values.push(`${format(data.transformBefore, 2, 2)} ➜ ${format(data.transformAfter, 2, 2)}`);
+          }
+          break;
         case "softcap":
         case "hardcap":
         case "override":
         case "floor":
         default:
-          return `(${format(data.transformBefore, 2, 2)} ➜ ${format(data.transformAfter, 2, 2)})`;
+          values.push(`${format(data.transformBefore, 2, 2)} ➜ ${format(data.transformAfter, 2, 2)}`);
       }
+      if (data.transformAggregate && data.transformHasValue && data.transformType === "power") {
+        values[0] = this.$t("analysis.row.perTier", { value: values[0] });
+      }
+      if (data.transformDisplay && !values.includes(data.transformDisplay)) {
+        values.push(this.$legacyText(data.transformDisplay));
+      }
+      return `(${values.join("; ")})`;
     },
     transformTypeString(entry) {
       if (entry.data.transformAggregate) return "Aggregate";
       const labels = {
         multiply: "Multiplier",
+        input: "Formula input",
         power: "Power",
         formula: "Formula",
         softcap: "Softcap",
@@ -797,8 +820,7 @@ export default {
         ? x => format(x, 2, 2)
         : x => `/${format(finiteDecimal(x.reciprocal()), 2, 2)}`;
 
-      if (overrideStr) valueStr = `(${overrideStr})`;
-      else {
+      {
         const values = [];
         if (this.valueMode === "all" && this.replacePowers && Decimal.neq(entry.data.pow, 1)) {
           const finalMult = this.resource.fakeValue ?? this.resource.mult;
@@ -811,16 +833,18 @@ export default {
             values.push(formatPow(entry.data.pow, 2, 3));
           }
         }
-        valueStr = values.length === 0 ? "" : `(${values.join(", ")})`;
+        if (values.length === 0) values.push(formatX(1));
+        if (overrideStr && !values.includes(overrideStr)) values.push(this.$legacyText(overrideStr));
+        valueStr = `(${values.join("; ")})`;
       }
 
-      return `${percString}: ${entry.name} ${valueStr}`;
+      return `${percString}: ${this.$legacyText(entry.name)} ${valueStr}`;
     },
     totalString() {
       const resource = this.resource;
-      const name = resource.name;
+      const name = this.$legacyText(resource.name);
       const overrideStr = resource.displayOverride;
-      if (overrideStr) return `${name}: ${overrideStr}`;
+      if (overrideStr) return `${name}: ${this.$legacyText(overrideStr)}`;
 
       const val = resource.mult;
       return resource.isBase
@@ -887,7 +911,7 @@ export default {
       >
         <span
           class="c-bar-overlay"
-          v-html="$legacyHtml(barSymbol(index))"
+          v-html="barSymbol(index)"
         />
       </div>
     </div>
@@ -906,7 +930,7 @@ export default {
       >
         <span
           class="c-bar-overlay"
-          v-html="$legacyHtml(barSymbol(index))"
+          v-html="barSymbol(index)"
         />
       </div>
     </div>

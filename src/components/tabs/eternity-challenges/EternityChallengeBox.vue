@@ -1,4 +1,5 @@
 <script>
+import { localizedDescription } from "@/i18n/content-display";
 import wordShift from "@/core/word-shift";
 
 import DescriptionDisplay from "@/components/DescriptionDisplay";
@@ -31,13 +32,22 @@ export default {
   },
   computed: {
     config() {
-      return this.challenge.config;
+      return localizedDescription(this.challenge.config, `eternity-challenges:${this.challenge.id}`);
+    },
+    rewardConfig() {
+      return localizedDescription(this.challenge.config.reward, `eternity-challenges:${this.challenge.id}`);
     },
     goalDisplay() {
       const config = this.config;
-      let goal = `Goal: ${this.goalAtCompletions(this.completions)} IP`;
+      let goal = this.$t("challenge.goal", { amount: this.goalAtCompletions(this.completions),
+        resource: this.$t("terms.infinityPoint") });
       if (config.restriction) {
-        goal += ` ${config.formatRestriction(config.restriction(this.completions))}`;
+        const restriction = config.restriction(this.completions);
+        const text = this.challenge.id === 4
+          ? (restriction === 0 ? this.$t("challenge.noInfinities")
+            : this.$t("challenge.infinityLimit", { count: formatInt(restriction) }))
+          : this.$t("challenge.timeLimit", { seconds: format(restriction, 0, 1) });
+        goal += ` ${text}`;
       }
       return goal;
     },
@@ -106,19 +116,19 @@ export default {
       <DescriptionDisplay :config="config" />
     </template>
     <template #bottom>
-      <div :style="{ visiblity: completions < 5 ? 'visible' : 'hidden' }">
+      <div :style="{ visibility: completions < 5 ? 'visible' : 'hidden' }">
         <div>
-          Completed {{ quantifyInt("time", completions) }}
+          {{ $t('challenge.completions', { count: formatInt(completions) }) }}
         </div>
         {{ goalDisplay }}
       </div>
       <span v-if="showGoalSpan">
-        Goal Span: {{ firstGoal }} IP - {{ lastGoal }} IP
+        {{ $t('challenge.goalSpan', { first: firstGoal, last: lastGoal }) }}
       </span>
       <span>
-        Reward:
+        {{ $t('challenge.rewardLabel') }}
         <DescriptionDisplay
-          :config="config.reward"
+          :config="rewardConfig"
           :length="55"
           name="c-challenge-box__reward-description"
         />
@@ -132,7 +142,7 @@ export default {
         <EffectDisplay
           v-if="completions < 5"
           :config="nextRewardConfig"
-          label="Next"
+          :label="$t('challenge.next')"
           :ignore-capped="true"
         />
       </span>

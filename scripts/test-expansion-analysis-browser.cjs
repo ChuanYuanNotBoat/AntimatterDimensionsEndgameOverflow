@@ -11,6 +11,7 @@ const baseline = execFileSync('git', ['show', '85e3ea44c:src/core/machines.js'],
 const legacyDimensions = Object.fromEntries(['celestial', 'divine'].map(type => [type,
   execFileSync('git', ['show', `85e3ea44c:src/core/dimensions/${type}-dimension.js`], { encoding: 'utf8' })]));
 const finiteSource = fs.readFileSync('src/core/finite-decimal.js', 'utf8').replace(/^export /gm, '');
+const legacyCompression = execFileSync('git', ['show','559120d11:src/core/compression.js'], {encoding:'utf8'});
 const url = process.env.ADE_TEST_URL || 'http://127.0.0.1:8080/?realityTest=1';
 
 async function initialize(page, save) {
@@ -51,7 +52,7 @@ async function initialize(page, save) {
         }
       });
       await initialize(page);
-      const locked = await page.evaluate(() => Object.fromEntries(['CD','DD','machines','realities','endgames']
+      const locked = await page.evaluate(() => Object.fromEntries(['CD','DD','machines','realities','endgames','TR','HR']
         .map(key => [key, GameDatabase.multiplierTabValues[key].total.isActive()])));
       assert.ok(Object.values(locked).every(value => value === false), 'new pages hidden in a fresh save');
       await initialize(page, fixture);
@@ -64,6 +65,7 @@ async function initialize(page, save) {
         player.disablePostReality = false;
         player.endgames = Math.max(player.endgames, 1);
         Currency.divinities.value = new Decimal(100);
+        if (!EndgameMastery.timeCompression.isBought) player.endgameMasteries.permanentMasteries.push(3);
         Currency.imaginaryMachines.value = MachineHandler.hardcapIM;
         player.options.newUI = true;
         ui.view.newUI = true;
@@ -109,7 +111,7 @@ async function initialize(page, save) {
           player.celestials.slabdrill.stage = cursed ? 6 : 0;
           player.celestials.slabdrill.serpentinePower = new Decimal(10);
           for (const cache of Object.values(GameCache)) cache.invalidate?.();
-          for (const key of ['uncappedRM','uncappedIM','uncappedDM','currentIMCap','projectedIMCap','currentDMCap','projectedDMCap']) {
+          for (const key of ['baseHardcapRM','hardcapRM','uncappedRM','uncappedIM','uncappedDM','currentIMCap','projectedIMCap','currentDMCap','projectedDMCap']) {
             const expected = oldMachines[key]; const actual = MachineHandler[key];
             if (!finite(actual)) throw new Error(`${key} became non-finite`);
             if (finite(expected) && !actual.eq_tolerance(expected, 1e-10)) throw new Error(`${key} differs from gameplay baseline`);
@@ -132,6 +134,27 @@ async function initialize(page, save) {
         return results;
       }, { baseline, legacyDimensions, finiteSource });
       assert.equal(formulas.length, 4);
+      const radiation = await page.evaluate(({legacyCompression,finiteSource})=>{
+        const extract=name=>{
+          const marker=`export function ${name}(`;const start=legacyCompression.indexOf(marker);
+          const brace=legacyCompression.indexOf('{',start);let end=brace+1,depth=1;
+          while(depth) {if(legacyCompression[end]==='{')depth++;if(legacyCompression[end]==='}')depth--;end++;}
+          return legacyCompression.slice(start,end).replace('export ','');
+        };
+        const old=new Function('Decimal','DC',finiteSource+'\n'+['getBaseHR','hawkingRadiationMultiplier','getHR','getThermalRadiationGainPerSecond'].map(extract).join('\n')+
+          '\nreturn {getHR,getThermalRadiationGainPerSecond};')(Decimal,DC);
+        for(const active of [false,true]) {
+          player.compression.active=active;
+          const expectedTR=old.getThermalRadiationGainPerSecond();
+          if(!getThermalRadiationGainPerSecond().eq_tolerance(expectedTR,1e-12)) throw Error('TR changed from gameplay baseline');
+          const expectedHR=old.getHR(player.records.totalEndgameAntimatter,true);
+          if(!getHR(player.records.totalEndgameAntimatter,true).eq_tolerance(expectedHR,1e-12)) throw Error('HR changed from gameplay baseline');
+          if(!getThermalRadiationGainPerSecond({steps:{},skip:new Set()}).eq(getThermalRadiationGainPerSecond())) throw Error('TR observer mismatch');
+        }
+        player.compression.active=false;
+        return true;
+      },{legacyCompression,finiteSource});
+      assert.ok(radiation);
       const rmBefore = await page.evaluate(() => String(Currency.realityMachines.value));
       await page.evaluate(() => { Currency.realityMachines.value = MachineHandler.hardcapRM.div(2); });
       await page.waitForTimeout(160);
@@ -144,7 +167,7 @@ async function initialize(page, save) {
       assert.ok(roomLimit, 'RM headline must respect the remaining capacity');
       await page.evaluate(value => { Currency.realityMachines.value = new Decimal(value); }, rmBefore);
       await page.waitForTimeout(160);
-      for (const id of [12,13,14,15,16]) {
+      for (const id of [12,13,14,15,16,17,18]) {
         await page.evaluate(id => {
           const component = document.querySelector('.c-stats-tab')?.__vue__;
           if (component) component.selectTab(component.availableGroups.flatMap(group => group.options).find(option => option.id === id));
@@ -163,9 +186,25 @@ async function initialize(page, save) {
             const text = await page.locator('.c-stats-tab').innerText();
             assert.doesNotMatch(text, /Message unavailable|NaN|undefined/u);
             if (type !== 'RM') {
-              assert.match(text, locale === 'zh-CN' ? /当前.*有效容量/u : /Current effective.*cap/u);
-              assert.match(text, locale === 'zh-CN' ? /预计容量/u : /Projected.*cap/u);
-              assert.equal(await page.locator('.c-multiplier-entry-root-container').count(), 2);
+              assert.match(text, locale === 'zh-CN' ? /当前公式计算.*容量上限/u : /capacity from the current formula/u);
+              assert.doesNotMatch(text, /历史最高|当前有效容量|Current effective.*cap|Projected.*cap/u);
+              assert.equal(await page.locator('.c-multiplier-entry-root-container').count(), 1);
+              assert.doesNotMatch(await page.locator('.c-symbol-overlay').innerText(), /虚幻机器|重构机器/u);
+              if (type === 'IM') {
+                const bars = await page.evaluate(() => document.querySelector('.c-multiplier-entry-root-container').__vue__.orderedPathPercentList);
+                assert.ok(bars.some(share => share > 0), 'IM capacity must fill the contribution bar');
+                assert.ok(await page.locator('.c-multiplier-entry-root-container .c-inline-expander--children').count(),
+                  'IM base and power sources must offer their active child steps');
+                if(locale==='zh-CN') await page.screenshot({path:'.tmp/im-capacity-zh.png',fullPage:true});
+              }
+            } else {
+              const toggle=page.locator('.c-rm-view-toggle');
+              await toggle.click();await page.waitForTimeout(180);
+              assert.equal(await page.locator('.c-multiplier-entry-root-container').count(),1);
+              assert.equal(await page.evaluate(()=>document.querySelector('.c-stats-tab').__vue__.resource.key),'RMCap_total');
+              assert.ok(await page.evaluate(()=>GameDatabase.multiplierTabValues.RMCap.total.multValue().eq(MachineHandler.hardcapRM)));
+              await toggle.click();await page.waitForTimeout(180);
+              assert.equal(await page.evaluate(()=>document.querySelector('.c-stats-tab').__vue__.resource.key),'RM_total');
             }
           }
         }
@@ -195,7 +234,7 @@ async function initialize(page, save) {
         const originalRandom = Math.random;
         Math.random = () => { throw new Error('analysis consumed RNG'); };
         try {
-          for (const key of ['realities','endgames','RM','IM','DM']) {
+          for (const key of ['realities','endgames','RM','RMCap','IM','DM','TR','HR']) {
             const data = GameDatabase.multiplierTabValues[key];
             data.total.multValue();
             for (const [name, entry] of Object.entries(data)) if (name !== 'total') {
@@ -237,7 +276,7 @@ async function initialize(page, save) {
       assert.ok(purchases.wasActive && purchases.disabled);
       assert.equal(purchases.methods.length, 4);
       assert.deepEqual(errors, []);
-      console.log(JSON.stringify({ locale, baselineFormulaCases: formulas.length, analysisPages: 5,
+      console.log(JSON.stringify({ locale, baselineFormulaCases: formulas.length, analysisPages: 7,
         internalMachines: 3, unlocks: 'passed', readOnly, cursedC4Purchases: purchases.methods, errors }));
       await context.close();
     }

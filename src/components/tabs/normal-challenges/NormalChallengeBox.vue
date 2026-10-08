@@ -1,4 +1,5 @@
 <script>
+import { localizedDescription } from "@/i18n/content-display";
 import ChallengeBox from "@/components/ChallengeBox";
 import DescriptionDisplay from "@/components/DescriptionDisplay";
 import EffectDisplay from "@/components/EffectDisplay";
@@ -38,17 +39,17 @@ export default {
     },
     descriptionDisplayConfig() {
       if (this.isUnlocked) {
-        return this.challenge.config;
+        return localizedDescription(this.challenge.config, `normal-challenges:${this.challenge.id}`);
       }
       return {
-        description: `Infinity ${formatInt(this.lockedAt)} times to unlock.`
+        description: () => this.$t("challenge.unlock", { count: formatInt(this.lockedAt) })
       };
     },
     name() {
       return `C${this.challenge.id}`;
     },
     overrideLabel() {
-      return this.isBroken ? "Broken" : "";
+      return this.isBroken ? this.$t("challenge.broken") : "";
     },
   },
   methods: {
@@ -83,7 +84,9 @@ export default {
       <DescriptionDisplay :config="descriptionDisplayConfig" />
     </template>
     <template #bottom>
-      <span :class="{ 'o-pelle-disabled': isDisabled }">Reward: {{ reward }}</span>
+      <span :class="{ 'o-pelle-disabled': isDisabled }">{{ $t('challenge.reward', {
+        reward: $legacyText(reward, `normal-challenges:${challenge.id}`)
+      }) }}</span>
       <div v-if="showingCharged">
         <EffectDisplay
           br

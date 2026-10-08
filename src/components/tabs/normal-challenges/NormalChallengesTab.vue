@@ -39,8 +39,7 @@ export default {
       {{ $t('ade.dc6ab157ae4ae24d') }}
     </div>
     <div>
-      If you have an active Big Crunch Autobuyer, it will attempt to Crunch
-      as soon as possible when reaching Infinite {{ $legacyText(_s(isFlipped ? "matter" : "antimatter")) }}.
+      {{ $t('challenge.normalAutobuyer', { resource: $t(isFlipped ? 'terms.matter' : 'terms.antimatter') }) }}
     </div>
     <div v-if="showCharge">
       <LocalizedText id="ade.e41f8ad682ecbec7">

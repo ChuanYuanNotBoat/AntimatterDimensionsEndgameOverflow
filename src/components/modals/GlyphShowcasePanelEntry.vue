@@ -1,4 +1,5 @@
 <script>
+import { glyphDescription } from "@/i18n/content-display";
 import GlyphComponent from "@/components/GlyphComponent";
 
 export default {
@@ -124,7 +125,7 @@ export default {
       return heights[effects - 1];
     },
     formatEffectString(dbEntry, value) {
-      const rawDesc = dbEntry.shortDesc;
+      const rawDesc = glyphDescription(dbEntry.shortDesc, dbEntry.id);
       const singleValue = dbEntry.formatSingleEffect
         ? dbEntry.formatSingleEffect(value)
         : dbEntry.formatEffect(value);

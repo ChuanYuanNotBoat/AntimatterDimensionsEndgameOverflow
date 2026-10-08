@@ -27,6 +27,7 @@ function panel(entries, mode = 'all', total = 1) {
   vm.runInNewContext(source, context);
   const options = context.module.exports;
   const instance = { ...options.data(), entries, resource: { key: 'X_total', mult: new Decimal(total) },
+    $legacyText: value => value,
     valueMode: mode, usesOrdered: false, impactMode: false, _modeMatches: new Map(),
     rollingAverage: { average: [], add(point) { this.average = point ?? []; }, clear() { this.average = []; } },
   };

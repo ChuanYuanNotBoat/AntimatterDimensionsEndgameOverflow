@@ -107,6 +107,10 @@ export default {
   },
   methods: {
     update() {
+      // This header component survives save switches. Refresh the purchase shortcut
+      // before any visibility, first-Eternity, challenge, or Dilation early return.
+      this.penteractAffordable = Penteracts.canBuyPenteract;
+      this.creditsClosed = GameEnd.creditsEverClosed;
       this.isVisible = Player.canEternity ||
         EternityMilestone.autoUnlockID.isReached || InfinityDimension(8).isUnlocked;
       this.isDilation = player.dilation.active;
@@ -158,8 +162,6 @@ export default {
       this.peakEPRateVal.copyFrom(player.records.thisEternity.bestEPminVal);
       this.peakEPRate.copyFrom(player.records.thisEternity.bestEPmin);
       this.showEPRate = this.peakEPRate.lte(this.rateThreshold);
-      this.creditsClosed = GameEnd.creditsEverClosed;
-      this.penteractAffordable = Penteracts.canBuyPenteract;
     },
     updateChallengeWithRUPG() {
       const ec = EternityChallenge.current;

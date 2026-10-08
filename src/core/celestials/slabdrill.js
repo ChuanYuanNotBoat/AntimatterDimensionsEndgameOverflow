@@ -54,10 +54,17 @@ export const Slabdrill = {
     return player.celestials.slabdrill.core.isActive;
   },
   get huntChance() {
-    return Decimal.pow10(-this.cores).times(Decimal.pow10(this.currentStage)).times(
-      player.antimatter.max(10).log10().log10().pow(3).add(1)).div(10000).times(
-      SlabdrillUnlocks.dilation.isUnlocked ? 16 : 1).times(
-      SlabdrillUnlocks.reality.isUnlocked ? Slabdrill.slabPowers.chaosCores().times(66) : 1).clamp(0, 1).toNumber();
+    return this.huntChanceFactors.final.toNumber();
+  },
+  get huntChanceFactors() {
+    const cores = Decimal.pow10(-this.cores);
+    const stage = Decimal.pow10(this.currentStage);
+    const antimatter = player.antimatter.max(10).log10().log10().pow(3).add(1);
+    const dilation = new Decimal(SlabdrillUnlocks.dilation.isUnlocked ? 16 : 1);
+    const reality = SlabdrillUnlocks.reality.isUnlocked ? Slabdrill.slabPowers.chaosCores().times(66) : DC.D1;
+    // Preserve the gameplay operation order; the display reads this same result without rolling a hunt.
+    const raw = cores.times(stage).times(antimatter).div(10000).times(dilation).times(reality);
+    return { cores, stage, antimatter, dilation, reality, raw, final: raw.clamp(0, 1) };
   },
   get huntInterval() {
     return 1000 * Math.pow(0.75, this.currentStage);

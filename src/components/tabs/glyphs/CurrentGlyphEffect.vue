@@ -1,4 +1,5 @@
 <script>
+import { glyphDescription } from "@/i18n/content-display";
 export default {
   name: "CurrentGlyphEffect",
   props: {
@@ -22,7 +23,8 @@ export default {
       const value2 = this.effectConfig.conversion === undefined
         ? ""
         : this.effectConfig.formatSecondaryEffect(this.effectConfig.conversion(baseValue));
-      const desc = this.effectConfig.totalDesc;
+      void this.$i18nRevision;
+      const desc = glyphDescription(this.effectConfig.totalDesc, this.effect.id);
       return desc
         .replace("{value}", value1)
         .replace("{value2}", value2);

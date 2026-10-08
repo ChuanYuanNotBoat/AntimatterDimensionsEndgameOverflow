@@ -59,13 +59,13 @@ export default {
     },
     buttonText() {
       if (this.overrideLabel.length > 0) return this.overrideLabel;
-      if (this.isRunning || this.inC1) return "Running";
-      if (this.isCompleted) return "Completed";
-      if (this.isUnlocked) return "Start";
+      if (this.isRunning || this.inC1) return this.$t("challenge.running");
+      if (this.isCompleted) return this.$t("challenge.completed");
+      if (this.isUnlocked) return this.$t("challenge.start");
       const lockedText = this.lockedAt === undefined
         ? ""
         : ` (${formatInt(this.infinities)}/${formatInt(this.lockedAt)})`;
-      return `Locked${lockedText}`;
+      return this.$t("challenge.locked", { progress: lockedText });
     }
   },
   methods: {

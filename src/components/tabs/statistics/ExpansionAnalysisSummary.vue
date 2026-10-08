@@ -6,7 +6,8 @@ export default {
   name: "ExpansionAnalysisSummary",
   props: {
     resourceKey: { type: String, required: true },
-    dimensionTier: { type: Number, default: 0 }
+    dimensionTier: { type: Number, default: 0 },
+    capacityMode: { type: Boolean, default: false }
   },
   data() {
     return { state: {} };
@@ -30,12 +31,11 @@ export default {
           : null;
       } else if (resource === "IM" || resource === "DM") {
         const imaginary = resource === "IM";
-        const recorded = imaginary ? player.reality.iMCap : player.reality.jMCap;
         const projected = imaginary ? MachineHandler.baseIMCap : MachineHandler.baseDMCap;
-        state.recorded = format(recorded, 2, 2);
         state.cap = format(imaginary ? MachineHandler.hardcapIM : MachineHandler.hardcapDM, 2, 2);
         state.projected = format(projected, 2, 2);
-        state.peakDiffers = !Decimal.eq(recorded, projected);
+        state.zero = Decimal.eq(projected, 0);
+        state.saturated = Decimal.gte(projected, DC.BEMAX);
       } else if (resource === "realities") {
         const estimate = realityCountEstimate();
         state.expected = format(estimate.expected, 2, 2);
@@ -45,6 +45,8 @@ export default {
         state.available = isRealityAvailable();
       } else if (resource === "endgames") {
         state.available = isEndgameAvailable();
+      } else if (resource === "HR") {
+        state.available = Player.canCrunch && player.compression.active;
       }
       this.state = state;
     }
@@ -59,15 +61,22 @@ export default {
       <p>{{ $t('analysis.expansion.purchaseNote') }}</p>
     </template>
     <template v-else-if="resourceKey === 'RM'">
+      <template v-if="capacityMode">
+        <p>{{ $t('analysis.expansion.rmCapSummary', state) }}</p>
+        <p>{{ $t('analysis.expansion.rmCapNote') }}</p>
+      </template>
+      <template v-else>
       <p>{{ $t('analysis.expansion.rmSummary', state) }}</p>
       <p v-if="state.passive !== null">{{ $t('analysis.expansion.rmPassive', state) }}</p>
       <p v-if="state.full">{{ $t('analysis.expansion.rmFull') }}</p>
       <p v-if="!state.available">{{ $t('analysis.expansion.realityUnavailable') }}</p>
+      </template>
     </template>
     <template v-else-if="resourceKey === 'IM' || resourceKey === 'DM'">
       <p>{{ $t('analysis.expansion.capacitySummary', state) }}</p>
       <p>{{ $t('analysis.expansion.capacityNote') }}</p>
-      <p v-if="state.peakDiffers">{{ $t('analysis.expansion.peakNote') }}</p>
+      <p v-if="state.zero">{{ $t('analysis.expansion.zeroCapacity') }}</p>
+      <p v-if="state.saturated">{{ $t('analysis.expansion.saturatedCapacity') }}</p>
       <p>{{ $t('analysis.expansion.exponentNote') }}</p>
     </template>
     <template v-else-if="resourceKey === 'realities'">
@@ -78,6 +87,13 @@ export default {
     <template v-else-if="resourceKey === 'endgames'">
       <p>{{ $t('analysis.expansion.endgameNote') }}</p>
       <p v-if="!state.available">{{ $t('analysis.expansion.endgameUnavailable') }}</p>
+    </template>
+    <template v-else-if="resourceKey === 'TR'">
+      <p>{{ $t('analysis.expansion.trNote') }}</p>
+    </template>
+    <template v-else-if="resourceKey === 'HR'">
+      <p>{{ $t('analysis.expansion.hrNote') }}</p>
+      <p v-if="!state.available">{{ $t('analysis.expansion.hrUnavailable') }}</p>
     </template>
   </div>
 </template>

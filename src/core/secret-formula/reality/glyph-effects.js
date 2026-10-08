@@ -47,7 +47,8 @@ export const glyphEffects = {
     singleDesc: "Time Dimension power +{value}",
     totalDesc: "Time Dimension multipliers ^{value}",
     shortDesc: "TD power +{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.2).times(Decimal.pow(strength, 0.5)).div(100).add(1)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveSum(
+      boundedPositiveProduct(boundedPositivePower(level, 0.2), boundedPositivePower(strength, 0.5)).div(100), 1)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level, 0.4).times(Math.pow(strength, 1.2)).div(50).add(1)
       : Decimal.pow(level, 0.32).times(Math.pow(strength, 0.45)).div(75).add(1.01)),
@@ -65,7 +66,8 @@ export const glyphEffects = {
     totalDesc: "Game runs ×{value} faster",
     genericDesc: "Game speed multiplier",
     shortDesc: "Game speed ×{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.5).times(strength).add(1)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveSum(
+      boundedPositiveProduct(boundedPositivePower(level, 0.5), strength), 1)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level, strength).add(1)
       : (GlyphAlteration.isEmpowered("time")
@@ -86,7 +88,8 @@ export const glyphEffects = {
     totalDesc: "Eternity gain ×{value}",
     genericDesc: "Eternity gain multiplier",
     shortDesc: "Eternities ×{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level.times(strength), 0.3).add(1)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveSum(
+      boundedPositivePower(boundedPositiveProduct(level, strength), 0.3), 1)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(Decimal.pow(level, 0.25).times(strength).times(GlyphAlteration.sacrificeBoost("time")))
       : Decimal.pow(new Decimal(strength + 3).times(level), 0.9).times(
@@ -114,7 +117,8 @@ export const glyphEffects = {
     shortDesc: () => (GlyphAlteration.isAdded("time")
       ? "EP ×{value} and ^{value2}"
       : "EP ×{value}"),
-    effect: (level, strength) => Slabdrill.isCursed ? DC.D2.pow(Decimal.pow(level, 0.5).times(strength))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositivePower(2,
+      boundedPositiveProduct(boundedPositivePower(level, 0.5), strength))
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(Decimal.pow(level, strength + 1).times(100))
       : Decimal.clampMin(Decimal.pow(level.times(strength), 3).times(100), 1)),
@@ -136,7 +140,8 @@ export const glyphEffects = {
     singleDesc: "Multiply Dilated Time gain by {value}",
     totalDesc: "Dilated Time gain ×{value}",
     shortDesc: "DT ×{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.1).times(Decimal.pow(strength, 0.5)).add(1)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveSum(
+      boundedPositiveProduct(boundedPositivePower(level, 0.1), boundedPositivePower(strength, 0.5)), 1)
       : (EffarigUnlock.endgame.canBeApplied
       ? boundedPositivePower(10, boundedPositiveProduct(level, strength).div(150))
       : (GlyphAlteration.isEmpowered("dilation")
@@ -157,7 +162,12 @@ export const glyphEffects = {
     genericDesc: "Tachyon Galaxy cost multiplier",
     shortDesc: "TG threshold ×{value}",
     effect: (level, strength) => {
-      if (Slabdrill.isCursed) return DC.D1.div(Decimal.pow(level, 0.03).times(Decimal.pow(strength, 0.25)));
+      if (Slabdrill.isCursed) {
+        const divisor = boundedPositiveProduct(boundedPositivePower(level, 0.03),
+          boundedPositivePower(strength, 0.25));
+        // A zero effective level provides no threshold reduction.
+        return DC.D1.div(divisor.max(1));
+      }
       const endgame = EffarigUnlock.endgame.canBeApplied;
       const weakening = DC.D1.sub(Decimal.pow(level, endgame ? 0.4 : 0.17)
         .times(endgame ? strength : Math.pow(strength, 0.35)).div(100))
@@ -194,7 +204,8 @@ export const glyphEffects = {
     shortDesc: () => (GlyphAlteration.isAdded("dilation")
       ? "{value} TT/hr and TTgen ×{value2}"
       : "{value} TT/hr"),
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.25).times(strength).div(10000)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.25), strength).div(10000)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level.times(strength), 0.6).div(1000)
       : Decimal.pow(level.times(strength), 0.5).div(10000)),
@@ -218,7 +229,8 @@ export const glyphEffects = {
     totalDesc: () => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimension multipliers ^{value} while Dilated`,
     genericDesc: () => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions ^x while Dilated`,
     shortDesc: () => `Dilated ${player.universes.current === 2 ? "MD" : "AD"} power +{value}`,
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.05).times(Decimal.pow(strength, 0.3))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.05), boundedPositivePower(strength, 0.3))
       : (EffarigUnlock.endgame.canBeApplied
       ? boundedPositiveSum(boundedPositiveProduct(level, strength), 1)
       : boundedPositiveSum(boundedPositiveProduct(boundedPositivePower(level, 0.7),
@@ -240,7 +252,7 @@ export const glyphEffects = {
     totalDesc: "Replication speed ×{value}",
     genericDesc: "Replication speed multiplier",
     shortDesc: "Replication speed ×{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.4).times(strength)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(boundedPositivePower(level, 0.4), strength)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(level.times(strength).div(100))
       : (GlyphAlteration.isEmpowered("replication")
@@ -260,7 +272,8 @@ export const glyphEffects = {
     singleDesc: "Replicanti multiplier power +{value}",
     totalDesc: "Replicanti multiplier ^{value}",
     shortDesc: "Replicanti mult. power +{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.1).times(Decimal.pow(strength, 0.5))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.1), boundedPositivePower(strength, 0.5))
       : (EffarigUnlock.endgame.canBeApplied
       ? level.times(Math.pow(strength, 2)).times(GlyphAlteration.sacrificeBoost("replication")).add(1)
       : Decimal.pow(level, 0.5).times(strength).div(25)
@@ -289,7 +302,8 @@ export const glyphEffects = {
     shortDesc: () => (GlyphAlteration.isAdded("replication")
       ? `×DT and repl. by +{value} per ${format(DC.E10000)} replicanti`
       : `×DT by +{value} per ${format(DC.E10000)} replicanti`),
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.06).times(Decimal.pow(strength, 0.2))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.06), boundedPositivePower(strength, 0.2))
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level, strength).times(0.0005)
       : Decimal.pow(level, 0.3).times(Decimal.pow(strength, 0.65)).times(0.0003)),
@@ -321,7 +335,8 @@ export const glyphEffects = {
       ➜ ^(${format(0.4, 1, 1)} + {value})`,
     genericDesc: "Replicanti factor for Glyph level",
     shortDesc: "Replicanti pow. for level +{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.1).times(Decimal.pow(strength, 0.5)).div(1000)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.1), boundedPositivePower(strength, 0.5)).div(1000)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(Decimal.pow(level, 0.3).times(strength), 0.5).div(40)
       : Decimal.pow(Decimal.pow(level, 0.25).times(Math.pow(strength, 0.4)), 0.5).div(50)),
@@ -370,7 +385,8 @@ export const glyphEffects = {
       ➜ ^(${formatInt(7)} + {value})`,
     genericDesc: "Infinity Power conversion rate",
     shortDesc: "Infinity Power conversion +{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.2).times(Decimal.pow(strength, 0.75)).div(10)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.2), boundedPositivePower(strength, 0.75)).div(10)
       : EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level, 0.25).times(strength).times(0.05)
       : Decimal.pow(level, 0.2).times(Math.pow(strength, 0.4)).times(0.04),
@@ -395,13 +411,14 @@ export const glyphEffects = {
     shortDesc: () => (GlyphAlteration.isAdded("infinity")
       ? "IP ×{value} and ^{value2}"
       : "IP ×{value}"),
-    effect: (level, strength) => Slabdrill.isCursed ? DC.D2.pow(level.times(Decimal.pow(strength, 3)))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositivePower(2,
+      boundedPositiveProduct(level, boundedPositivePower(strength, 3)))
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(Decimal.pow(level, strength + 1).times(10000))
       : Decimal.clampMin(Decimal.pow(level.times(strength + 1), 6).times(10000), 1)),
     formatEffect: x => format(x, 2, 3),
     combine: effects => {
-      let sum = effects.reduce(Decimal.prodReducer, DC.D1);
+      const sum = effects.reduce(boundedPositiveProduct, DC.D1);
       return { value: sum, capped: false };
     },
     softcap: value => ((Effarig.eternityCap !== undefined) ? Decimal.min(value, Effarig.eternityCap) : value),
@@ -422,7 +439,8 @@ export const glyphEffects = {
     totalDesc: "Infinity gain ×{value}",
     genericDesc: "Infinity gain multiplier",
     shortDesc: "Infinities ×{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level.times(strength), 0.6).add(1)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveSum(
+      boundedPositivePower(boundedPositiveProduct(level, strength), 0.6), 1)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(level.times(strength))
       : (GlyphAlteration.isEmpowered("infinity")
@@ -451,7 +469,8 @@ export const glyphEffects = {
     shortDesc: () => (GlyphAlteration.isAdded("power")
       ? `${player.universes.current === 2 ? "MD" : "AD"} power +{value} and ${player.universes.current === 2 ? "MG" : "AG"} cost ×{value2}`
       : `${player.universes.current === 2 ? "MD" : "AD"} power +{value}`),
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.1).times(Decimal.pow(strength, 0.3)).div(100).add(1)
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveSum(
+      boundedPositiveProduct(boundedPositivePower(level, 0.1), boundedPositivePower(strength, 0.3)).div(100), 1)
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level, 0.25).times(strength).div(50).add(1)
       : Decimal.pow(level, 0.2).times(Math.pow(strength, 0.4)).div(75).add(1.015)),
@@ -474,7 +493,8 @@ export const glyphEffects = {
     singleDesc: () => `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimension multipliers ×{value}`,
     genericDesc: () => `Multiplier to ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimension multipliers`,
     shortDesc: () => `${player.universes.current === 2 ? "MD" : "AD"} ×{value}`,
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow10(Decimal.pow(level, 1.25).times(Decimal.pow(strength, 5)))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositivePower(10,
+      boundedPositiveProduct(boundedPositivePower(level, 1.25), boundedPositivePower(strength, 5)))
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(Decimal.pow(level, strength).times(9e15))
       : (GlyphAlteration.isEmpowered("power")
@@ -494,7 +514,8 @@ export const glyphEffects = {
     singleDesc: "Dimension Boost multiplier ×{value}",
     genericDesc: "Dimension Boost multiplier",
     shortDesc: "Dimboost mult. ×{value}",
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.15).times(Decimal.pow(strength, 0.6))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.15), boundedPositivePower(strength, 0.6))
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow10(Decimal.pow(level, 0.5).times(strength).times(GlyphAlteration.sacrificeBoost("power")))
       : Decimal.clampMin(Decimal.pow(level.times(strength), 0.5).times(
@@ -514,7 +535,8 @@ export const glyphEffects = {
     totalDesc: () => `Multiplier from "Buy ${formatInt(10)}" ×{value}`,
     genericDesc: () => `"Buy ${formatInt(10)}" bonus increase`,
     shortDesc: () => `${player.universes.current === 2 ? "MD" : "AD"} "Buy ${formatInt(10)}" mult. ×{value}`,
-    effect: (level, strength) => Slabdrill.isCursed ? Decimal.pow(level, 0.3).times(Decimal.pow(strength, 1.5))
+    effect: (level, strength) => Slabdrill.isCursed ? boundedPositiveProduct(
+      boundedPositivePower(level, 0.3), boundedPositivePower(strength, 1.5))
       : (EffarigUnlock.endgame.canBeApplied
       ? Decimal.pow(level, strength).add(1)
       : new Decimal(level).times(strength).div(12).add(1)),

@@ -1,6 +1,6 @@
 import { t } from "../../../i18n";
 import { analysisStep } from "../../analysis-steps";
-import { uncappedRealityMachines, machineCapacity } from "../../machine-formulas";
+import { uncappedRealityMachines, machineCapacity, realityMachineCapacity } from "../../machine-formulas";
 import { boundedPositiveProduct, boundedPositiveSum } from "../../finite-decimal";
 import { MultiplierTabIcons } from "./icons";
 import { addOrderedTransform, addOrderedFinalImpacts, createOrderedTransformCache } from "./ordered-breakdown";
@@ -45,6 +45,30 @@ function expectedRealityCount(observer) {
 }
 
 const definitions = {
+  TR: {
+    unlocked: () => PlayerProgress.compressionUnlocked(), evaluate: observer => getThermalRadiationGainPerSecond(observer),
+    roots: ["base", "trGain", "mastery281", "mastery282", "mastery283", "achievement276", "serpent"],
+    groups: {}, icon: () => ({ symbol: "<i class='fas fa-fire' />", color: "#5ed5a9" })
+  },
+  HR: {
+    unlocked: () => PlayerProgress.compressionUnlocked(), evaluate: observer => {
+      const total = getHR(player.records.totalEndgameAntimatter, true, observer);
+      const remaining = total.sub(Currency.hawkingRadiation.value).clampMin(0);
+      return analysisStep(observer, "existing", "formula", total, remaining);
+    },
+    roots: ["base", "multipliers", "existing"],
+    groups: { base: ["antimatterInput", "antimatterLog", "exponent"],
+      multipliers: ["hrGain", "achievement276", "burst", "serpent"] },
+    icon: () => ({ symbol: "<i class='fas fa-sun' />", color: "#3333ff", textColor: "white" })
+  },
+  RMCap: {
+    unlocked: () => machineAnalysisUnlocked("RM"), evaluate: realityMachineCapacity,
+    roots: ["capBase", "capMultipliers", "capImaginary", "capLargePower", "capRMSurge", "capCompression", "capAlpha", "capTeresa"],
+    groups: { capMultipliers: ["capPerkShop", "capTeresaMult", "capGlyph"],
+      capImaginary: ["capImaginaryBase", "capSmallPower"],
+      capLargePower: ["capSingularity", "capRa", "capDivinity", "capMachineSurge"] },
+    icon: () => MultiplierTabIcons.MACHINE("RM")
+  },
   RM: {
     unlocked: () => machineAnalysisUnlocked("RM"), evaluate: realityMachines,
     roots: ["base", "multipliers", "teresa", "mastery143", "divinity", "rmSurge", "compression",
@@ -95,9 +119,12 @@ function rewardAnalysis(resource, definition) {
     const raw = {};
     const value = evaluate(null, projected, raw);
     const steps = {};
-    for (const [key, step] of Object.entries(raw)) addOrderedTransform(steps, key, step.type,
+    for (const [key, step] of Object.entries(raw)) addOrderedTransform(steps, key,
+      ["storedCapacity", "imBase", "dmBase", "epInput", "rmInput", "capBase", "capImaginaryBase", "antimatterInput"].includes(key) ||
+        (["TR", "HR"].includes(resource) && key === "base") ? "input" : step.type,
       step.before, step.after, { value: step.value,
-        alwaysShow: ["base", "storedCapacity", "imBase", "dmBase", "fullCapacity", "pelle"].includes(key) });
+        alwaysShow: ["base", "storedCapacity", "imBase", "dmBase", "fullCapacity", "pelle", "rmInput", "capBase",
+          "imThreshold", "imPower", "dmPower"].includes(key) });
     addOrderedFinalImpacts(steps, key => evaluate(key, projected), value,
       ["base", "storedCapacity", "imBase", "dmBase", "epInput", "rmInput", "fullCapacity"]);
     return { steps, value };

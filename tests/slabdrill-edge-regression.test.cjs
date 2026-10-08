@@ -87,6 +87,9 @@ test('Alpha cap scaling handles zero reward and zero base cap without dividing z
   const w = setup();
   w.context.Alpha = { isDestroyed: true };
   w.context.Teresa = { rmMultiplier: w.DC.D1 };
+  w.context.baseRealityMachineCapacity = () => w.DC.D0;
+  w.run(read('core/machine-formulas.js').match(/export function realityMachineCapacity\(observer = null\) \{[\s\S]*?\n\}/u)[0]
+    .replace('export ', ''));
   for (const type of ['RM', 'IM']) {
     const method = read('core/machines.js').match(new RegExp(`get hardcap${type}\\(\\) \\{[\\s\\S]*?\\n  \\}`))[0];
     const machine = w.run(`({ baseHardcap${type}: DC.D0, uncapped${type}: DC.D0, ${method} })`);

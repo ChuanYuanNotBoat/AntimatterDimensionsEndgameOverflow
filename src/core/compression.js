@@ -2,6 +2,7 @@ import { RebuyableMechanicState, SetPurchasableMechanicState } from "./game-mech
 import { canStartEndgameChallenge } from "./endgame-challenge";
 import { finiteDecimal, isFiniteDecimal, boundedPositivePower, boundedPositiveProduct,
   boundedPositiveSum, boundedSignedProduct } from "./finite-decimal";
+import { analysisStep } from "./analysis-steps";
 
 export function startCompressionRequest() {
   if (!PlayerProgress.compressionUnlocked()) return false;
@@ -108,35 +109,39 @@ export function getElectroWaveMult(thresholdUpgrade) {
   return (1 + thresholdMult * 0.9);
 }
 
-export function getThermalRadiationGainPerSecond() {
-  const trRate = new Decimal(Currency.hawkingRadiation.value)
-    .timesEffectsOf(
-      CompressionUpgrade.trGain,
-      EndgameMastery(281),
-      EndgameMastery(282),
-      EndgameMastery(283),
-      Achievement(276)
-    );
-  return boundedPositiveProduct(trRate, DivinityMilestone.serpentPower.isReached ? 10 : 1);
+function radiationEffects(initial, entries, observer) {
+  let result = initial;
+  for (const [key, effect] of entries) effect.applyEffect(factor => {
+    result = analysisStep(observer, key, "multiply", result, boundedPositiveProduct(result, factor), factor);
+  });
+  return result;
+}
+
+export function getThermalRadiationGainPerSecond(observer = null) {
+  const base = analysisStep(observer, "base", "override", DC.D1, new Decimal(Currency.hawkingRadiation.value));
+  const trRate = radiationEffects(base, [["trGain", CompressionUpgrade.trGain],
+    ["mastery281", EndgameMastery(281)], ["mastery282", EndgameMastery(282)],
+    ["mastery283", EndgameMastery(283)], ["achievement276", Achievement(276)]], observer);
+  const serpent = DivinityMilestone.serpentPower.isReached ? 10 : 1;
+  return analysisStep(observer, "serpent", "multiply", trRate, boundedPositiveProduct(trRate, serpent), serpent);
 }
 
 export function getNextThermalRadiationGainPerSecond() {
-  const trRate = boundedPositiveSum(Currency.hawkingRadiation.value, getHawkingRadiationGain(true))
-    .timesEffectsOf(
-      CompressionUpgrade.trGain,
-      EndgameMastery(281),
-      EndgameMastery(282),
-      EndgameMastery(283),
-      Achievement(276)
-    );
+  const trRate = radiationEffects(boundedPositiveSum(Currency.hawkingRadiation.value, getHawkingRadiationGain(true)),
+    [["trGain", CompressionUpgrade.trGain], ["mastery281", EndgameMastery(281)],
+      ["mastery282", EndgameMastery(282)], ["mastery283", EndgameMastery(283)],
+      ["achievement276", Achievement(276)]], null);
   return boundedPositiveProduct(trRate, DivinityMilestone.serpentPower.isReached ? 10 : 1);
 }
 
-export function hawkingRadiationMultiplier() {
-  return boundedPositiveProduct(DC.D1.timesEffectsOf(
-    CompressionUpgrade.hrGain,
-    Achievement(276)
-  ), (DivinityMilestone.powerBurst.isReached ? 10 : 1) * (DivinityMilestone.serpentPower.isReached ? 10 : 1));
+export function hawkingRadiationMultiplier(observer = null) {
+  const upgrades = radiationEffects(DC.D1, [["hrGain", CompressionUpgrade.hrGain],
+    ["achievement276", Achievement(276)]], observer);
+  const burst = DivinityMilestone.powerBurst.isReached ? 10 : 1;
+  const serpent = DivinityMilestone.serpentPower.isReached ? 10 : 1;
+  const milestones = analysisStep(observer, "burst", "multiply", DC.D1, new Decimal(burst), burst);
+  const combined = analysisStep(observer, "serpent", "multiply", milestones, milestones.times(serpent), serpent);
+  return boundedPositiveProduct(upgrades, combined);
 }
 
 export function rewardHR() {
@@ -147,15 +152,22 @@ export function rewardHR() {
 // applying the reward only once upon unlock promotes min-maxing the upgrade by unlocking dilation with
 // TP multipliers as large as possible. Applying the reward to a base TP value and letting the multipliers
 // act dynamically on this fixed base value elsewhere solves that issue
-export function getBaseHR(antimatter, requireInfinity) {
-  if (!Player.canCrunch && requireInfinity) return DC.D0;
-  if (Decimal.lt(antimatter, Decimal.pow10(308))) return DC.D0;
-  return boundedPositivePower(10, Decimal.log10(Decimal.log10(antimatter).div(308)).sqrt().times(2));
+export function getBaseHR(antimatter, requireInfinity, observer = null) {
+  const input = analysisStep(observer, "antimatterInput", "override", DC.D1, new Decimal(antimatter));
+  if ((!Player.canCrunch && requireInfinity) || Decimal.lt(input, Decimal.pow10(308))) {
+    return analysisStep(observer, "base", "override", DC.D1, DC.D0);
+  }
+  const log = analysisStep(observer, "antimatterLog", "formula", input, Decimal.log10(input));
+  const exponent = analysisStep(observer, "exponent", "formula", log,
+    Decimal.log10(log.div(308)).sqrt().times(2));
+  return analysisStep(observer, "base", "override", DC.D1, boundedPositivePower(10, exponent));
 }
 
 // Returns the TP that would be gained this run
-export function getHR(antimatter, requireInfinity) {
-  return boundedPositiveProduct(getBaseHR(antimatter, requireInfinity), hawkingRadiationMultiplier());
+export function getHR(antimatter, requireInfinity, observer = null) {
+  const base = getBaseHR(antimatter, requireInfinity, observer);
+  const multiplier = hawkingRadiationMultiplier(observer);
+  return analysisStep(observer, "multipliers", "multiply", base, boundedPositiveProduct(base, multiplier), multiplier);
 }
 
 // Returns the amount of TP gained, subtracting out current TP; used for displaying gained TP, text on the

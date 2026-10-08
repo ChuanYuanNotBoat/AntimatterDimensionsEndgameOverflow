@@ -11,6 +11,7 @@ import { antimatterProductionSnapshot } from "@/core/secret-formula/multiplier-t
 import { MultiplierTabIcons } from "@/core/secret-formula/multiplier-tab/icons";
 import { machineAnalysisUnlocked } from "@/core/secret-formula/multiplier-tab/expansion-rewards";
 import ExpansionAnalysisSummary from "./ExpansionAnalysisSummary";
+import SlabdrillHuntFactors from "./SlabdrillHuntFactors";
 
 export default {
   name: "MultiplierBreakdownTab",
@@ -18,7 +19,8 @@ export default {
     MultiplierBreakdownEntry,
     AntimatterProductionBreakdown,
     MultiplierStateSummary,
-    ExpansionAnalysisSummary
+    ExpansionAnalysisSummary,
+    SlabdrillHuntFactors
   },
   data() {
     return {
@@ -35,6 +37,7 @@ export default {
       lastSelectedTabs: {},
       inCursedCore: false,
       machineType: "RM",
+      rmCapacityMode: false,
       unlockedMachineTypes: ["RM"],
     };
   },
@@ -61,14 +64,13 @@ export default {
       return this.unlockedMachineTypes.map(key => ({ key,
         name: this.$t({ RM: "terms.realityMachine", IM: "terms.imaginaryMachine", DM: "terms.dualMachine" }[key]) }));
     },
-    projectedCapacityResource() {
-      return ["IM", "DM"].includes(this.currentKey) ? createEntryInfo(`${this.currentKey}_projectedTotal`) : null;
-    },
     isExpansionAnalysis() {
-      return ["CD", "DD", "RM", "IM", "DM", "realities", "endgames"].includes(this.currentKey);
+      return ["CD", "DD", "RM", "IM", "DM", "realities", "endgames", "TR", "HR"].includes(this.currentKey);
     },
     resource() {
       if (!this.currentKey) return null;
+      if (this.currentKey === "RM" && this.rmCapacityMode) return createEntryInfo("RMCap_total");
+      if (["IM", "DM"].includes(this.currentKey)) return createEntryInfo(`${this.currentKey}_projectedTotal`);
       const tierSuffix = this.isDimensionBreakdown && this.dimensionTier > 0 ? `_${this.dimensionTier}` : "";
       return createEntryInfo(`${this.currentKey}_total${tierSuffix}`);
     },
@@ -174,6 +176,7 @@ export default {
     selectMachine(type) {
       if (this.unlockedMachineTypes.includes(type)) this.machineType = type;
     },
+    toggleRMView() { this.rmCapacityMode = !this.rmCapacityMode; },
     selectValueMode(mode) {
       if (!["all", "multiplier", "exponent"].includes(mode)) return;
       this.valueMode = mode;
@@ -304,9 +307,11 @@ export default {
             {{ machine.name }}
           </button>
         </div>
+        <button v-if="machineType === 'RM'" type="button" class="c-multiplier-nav-btn c-rm-view-toggle"
+          @click="toggleRMView">{{ $t(rmCapacityMode ? 'analysis.expansion.rmShowGain' : 'analysis.expansion.rmShowCap') }}</button>
       </div>
       <ExpansionAnalysisSummary v-if="isExpansionAnalysis" :key="currentKey"
-        :resource-key="currentKey" :dimension-tier="dimensionTier" />
+        :resource-key="currentKey" :dimension-tier="dimensionTier" :capacity-mode="rmCapacityMode" />
       <p
         v-if="currentKey === 'AD'"
         class="c-multiplier-coverage-warning"
@@ -339,7 +344,7 @@ export default {
         <span
           class="c-symbol-overlay"
           :style="inCursedCore ? { color: 'var(--color-slabdrill--base)' } : {}"
-          v-html="$legacyHtml(symbol)"
+          v-html="symbol"
         />
       </span>
       <AntimatterProductionBreakdown
@@ -354,11 +359,10 @@ export default {
         :presentation="dimensionPresentation"
         :value-mode="valueMode"
       />
-      <MultiplierBreakdownEntry v-if="projectedCapacityResource" :key="`${currentKey}-projected-${valueMode}`"
-        :resource="projectedCapacityResource" :is-root="true" :value-mode="valueMode" />
       <div class="c-multiplier-tab-text-line">{{ $t('analysis.expansion.note') }}<br>
         <b>{{ $t('analysis.expansion.performance') }}</b>
       </div>
+      <SlabdrillHuntFactors v-if="inCursedCore" />
     </div>
   </div>
 </template>

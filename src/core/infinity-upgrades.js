@@ -84,17 +84,30 @@ export class InfinityUpgradeState extends SetPurchasableMechanicState {
   }
 }
 
-export function totalIPMult() {
+export function totalIPMult(observer = null) {
   if (Effarig.isRunning && Effarig.currentStage === EFFARIG_STAGES.INFINITY) {
     return DC.D1;
   }
   let ipMult = DC.D1;
   const multiply = (name, factor) => {
+    const key = /^TS/u.test(name) ? "timeStudy" : /^Achievement/u.test(name) ? "achievement" : {
+      "IP shop purchases": "iap", "DT-based IP multiplier": "dilationUpgrade", "Infinity IP glyph": "glyph",
+      "Infinity IP upgrade": "infinityUpgrade", "Replicanti IP multiplier": "alchemy",
+      "Void IP multiplier": "nullUpgrade", "Slabdrill IP multiplier": "slabMultiplier",
+      "Cursed IP multiplier": "slabAutobuyer"
+    }[name];
+    if (observer?.skip.has(key)) return;
     const value = new Decimal(factor);
     if (![value.sign, value.layer, value.mag].every(Number.isFinite)) {
       throw new Error(`Invalid IP multiplier source: ${name}`);
     }
+    const before = ipMult;
     ipMult = boundedPositiveProduct(ipMult, value);
+    if (observer) {
+      const previous = observer.steps[key];
+      observer.steps[key] = { type: "multiply", before: previous?.before ?? before, after: ipMult,
+        value: boundedPositiveProduct(previous?.value ?? DC.D1, value) };
+    }
   };
   multiply("IP shop purchases", ShopPurchase.IPPurchases.currentMult);
   for (const [name, source] of [

@@ -14,12 +14,11 @@ export default {
   computed: {
     message() {
       const infinity = formatPostBreak(Number.MAX_VALUE, 2);
-      return `Breaking Infinity will allow you to gain ${this.isFlipped ? "matter" : "antimatter"} past ${infinity}${PlayerProgress.eternityUnlocked()
-        ? "." : `, and allow you to read numbers past ${infinity}.`}
-        Dimensions and Tickspeed Upgrades will scale in cost faster after ${infinity} ${this.isFlipped ? "matter" : "antimatter"}.
-        You will gain additional Infinity Points on Big Crunch based on ${this.isFlipped ? "matter" : "antimatter"} produced over ${infinity}.\
-        ${EternityMilestone.keepAutobuyers.isReached ? "" : `\nIt will also unlock Break Infinity Upgrades and max\
-        all Normal Challenge Autobuyers.`}`.split("\n");
+      const values = { infinity, resource: this.$t(this.isFlipped ? "terms.matter" : "terms.antimatter") };
+      const lines = [this.$t(PlayerProgress.eternityUnlocked() ? "breakInfinity.gain" : "breakInfinity.firstGain", values),
+        this.$t("breakInfinity.costs", values), this.$t("breakInfinity.points", values)];
+      if (!EternityMilestone.keepAutobuyers.isReached) lines.push(this.$t("breakInfinity.autobuyers"));
+      return lines;
     },
   },
   methods: {
@@ -39,7 +38,7 @@ export default {
     @confirm="handleYesClick"
   >
     <template #header>
-      You are Breaking Infinity
+      {{ $t('breakInfinity.title') }}
     </template>
     <div class="c-modal-message__text">
       <span
@@ -50,7 +49,7 @@ export default {
       </span>
     </div>
     <template #confirm-text>
-      Break
+      {{ $t('breakInfinity.confirm') }}
     </template>
   </ModalWrapperChoice>
 </template>

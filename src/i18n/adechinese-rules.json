@@ -78992,5 +78992,609 @@
     "protectedParameters": [
       "p0"
     ]
+  },
+  {
+    "id": "challenge.cursed.normal.2",
+    "global": false,
+    "scopes": [
+      "normal-challenges:2"
+    ]
+  },
+  {
+    "id": "challenge.cursed.normal.3",
+    "global": false,
+    "scopes": [
+      "normal-challenges:3"
+    ]
+  },
+  {
+    "id": "challenge.cursed.normal.8",
+    "global": false,
+    "scopes": [
+      "normal-challenges:8"
+    ]
+  },
+  {
+    "id": "challenge.cursed.normal.11",
+    "global": false,
+    "scopes": [
+      "normal-challenges:11"
+    ]
+  },
+  {
+    "id": "challenge.cursed.infinity.2",
+    "global": false,
+    "scopes": [
+      "infinity-challenges:2"
+    ]
+  },
+  {
+    "id": "challenge.cursed.infinity.3",
+    "global": false,
+    "scopes": [
+      "infinity-challenges:3"
+    ]
+  },
+  {
+    "id": "challenge.cursed.eternity.7",
+    "global": false,
+    "scopes": [
+      "eternity-challenges:7"
+    ]
+  },
+  {
+    "id": "challenge.cursed.infinity.2.reward",
+    "global": false,
+    "scopes": [
+      "infinity-challenges:2"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.9",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:9",
+      "eternity-challenges:10",
+      "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.10",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:9",
+      "eternity-challenges:10",
+      "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.11",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:9",
+      "eternity-challenges:10",
+      "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.yourAD",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:9",
+      "eternity-challenges:10",
+      "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.pelle",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:9",
+      "eternity-challenges:10",
+      "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.current",
+    "global": false,
+    "scopes": [
+      "eternity-challenges",
+      "eternity-challenges:9",
+      "eternity-challenges:10",
+      "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "analysis.review.0",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.1",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.2",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.3",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.4",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.5",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.6",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.7",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.8",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.9",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.10",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.11",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.12",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.13",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.14",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.15",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.16",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.17",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.18",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.19",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.20",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.21",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.22",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.23",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.24",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.25",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.26",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.27",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.28",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.29",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.30",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.31",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.32",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.33",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.34",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.35",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.36",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.37",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.38",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.39",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.40",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.41",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.42",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.43",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.44",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.45",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.46",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.47",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.48",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.49",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.50",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.51",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.52",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.53",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "analysis.review.54",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry",
+      "MultiplierStateSummary"
+    ]
+  },
+  {
+    "id": "glyph.description.replicationglyphlevel.single",
+    "global": false,
+    "scopes": [
+      "glyph-effects:replicationglyphlevel"
+    ]
+  },
+  {
+    "id": "glyph.description.infinityrate.single",
+    "global": false,
+    "scopes": [
+      "glyph-effects:infinityrate"
+    ]
+  },
+  {
+    "id": "glyph.description.realityDTglyph.single",
+    "global": false,
+    "scopes": [
+      "glyph-effects:realityDTglyph"
+    ]
+  },
+  {
+    "id": "glyph.description.replicationdtgain.single",
+    "global": false,
+    "scopes": [
+      "glyph-effects:replicationdtgain"
+    ]
+  },
+  {
+    "id": "glyph.description.replicationdtgain.added",
+    "global": false,
+    "scopes": [
+      "glyph-effects:replicationdtgain"
+    ]
+  },
+  {
+    "id": "glyph.description.replicationdtgain.addedTotal",
+    "global": false,
+    "scopes": [
+      "glyph-effects:replicationdtgain"
+    ]
   }
 ]

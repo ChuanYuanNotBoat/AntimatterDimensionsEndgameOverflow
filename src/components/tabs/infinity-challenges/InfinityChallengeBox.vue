@@ -1,4 +1,5 @@
 <script>
+import { localizedDescription } from "@/i18n/content-display";
 import ChallengeBox from "@/components/ChallengeBox";
 import DescriptionDisplay from "@/components/DescriptionDisplay";
 import EffectDisplay from "@/components/EffectDisplay";
@@ -26,7 +27,10 @@ export default {
   },
   computed: {
     config() {
-      return this.challenge.config;
+      return localizedDescription(this.challenge.config, `infinity-challenges:${this.challenge.id}`);
+    },
+    rewardConfig() {
+      return localizedDescription(this.challenge.config.reward, `infinity-challenges:${this.challenge.id}`);
     },
     name() {
       return `IC${this.challenge.id}`;
@@ -62,10 +66,11 @@ export default {
     </template>
     <template #bottom>
       <div class="l-challenge-box__bottom--infinity">
-        <span>Goal: {{ format(config.goal()) }} {{ isFlipped ? "matter" : "antimatter" }}</span>
+        <span>{{ $t('challenge.goal', { amount: format(config.goal()),
+          resource: $t(isFlipped ? 'terms.matter' : 'terms.antimatter') }) }}</span>
         <DescriptionDisplay
-          :config="config.reward"
-          title="Reward:"
+          :config="rewardConfig"
+          :title="$t('challenge.rewardLabel')"
         />
         <EffectDisplay
           :config="config.reward"

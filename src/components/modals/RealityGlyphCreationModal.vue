@@ -1,4 +1,5 @@
 <script>
+import { glyphDescription } from "@/i18n/content-display";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import PrimaryButton from "@/components/PrimaryButton";
 
@@ -42,7 +43,7 @@ export default {
       if (this.realityGlyphLevel.lt(effect[0])) return `(Requires Glyph level ${formatInt(effect[0])})`;
       const config = GlyphEffects[effect[1]];
       const value = config.effect(this.realityGlyphLevel, rarityToStrength(100 + Ra.unlocks.realityGlyphRarity.effectOrDefault(0)));
-      const effectTemplate = config.singleDesc;
+      const effectTemplate = glyphDescription(config.singleDesc, config.id);
       return effectTemplate.replace("{value}", config.formatEffect(value));
     }
   },

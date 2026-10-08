@@ -23,6 +23,15 @@ function readDisplayDecimal(getter) {
   }
 }
 
+function visibleTransform(transform) {
+  if (transform === null) return false;
+  if (transform.alwaysShow) return true;
+  if (["multiply", "power"].includes(transform.type) && transform.value !== null) {
+    return transform.value.neq(1);
+  }
+  return transform.before.neq(transform.after) || (transform.value !== null && transform.value.neq(1));
+}
+
 export class BreakdownEntryInfo {
   constructor(key) {
     this.key = key;
@@ -86,8 +95,7 @@ export class BreakdownEntryInfo {
       pow = powResult.value;
       invalidValue = multResult.invalid || powResult.invalid;
       if (this._hasTransform) {
-        isVisible = transform !== null && (transform.alwaysShow || transform.before.neq(transform.after) ||
-          (transform.value !== null && transform.value.neq(1)));
+        isVisible = visibleTransform(transform);
       } else {
         isVisible = pow.neq(1) || mult.neq(1);
       }
@@ -251,8 +259,7 @@ export class BreakdownEntryInfo {
   isVisibleWithTransform(transform) {
     if (!this.isActive) return false;
     if (this._hasTransform) {
-      return transform !== null && (transform.alwaysShow || transform.before.neq(transform.after) ||
-        (transform.value !== null && transform.value.neq(1)));
+      return visibleTransform(transform);
     }
     return this.pow.neq(1) || this.mult.neq(1);
   }

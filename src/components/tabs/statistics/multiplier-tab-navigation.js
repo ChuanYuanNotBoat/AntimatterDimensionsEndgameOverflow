@@ -41,6 +41,8 @@ export const MULTIPLIER_TAB_GROUPS = [
     options: [
       { id: 6, key: "replicanti", text: "Replicanti Speed" },
       { id: 10, key: "DT", text: "Dilated Time" },
+      { id: 17, key: "TR", text: "Thermal Radiation", nameKey: "terms.thermalRadiation" },
+      { id: 18, key: "HR", text: "Hawking Radiation", nameKey: "terms.hawkingRadiation" },
     ],
   },
 ];

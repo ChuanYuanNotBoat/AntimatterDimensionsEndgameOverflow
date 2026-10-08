@@ -35,6 +35,16 @@ test('Hawking Radiation has a zero reward below Infinity and a finite reward at 
   assert.ok(w.context.getBaseHR(new Decimal('1e308'),false).eq(1));assert.ok(finite(w.context.getHR(w.DC.BEMAX,false)));
   w.context.Player.canCrunch=false;assert.ok(w.context.getHR(w.DC.BEMAX,true).eq(0));
 });
+test('Thermal Radiation bounds every valid factor and its observer is read-only',()=>{
+  const w=setup();w.player.compression.hawkingRadiation=w.DC.BEMAX;
+  w.player.compression.rebuyables[1]=Number.MAX_SAFE_INTEGER;
+  const before=JSON.stringify(w.player);const observer={steps:{},skip:new Set()};
+  const actual=w.context.getThermalRadiationGainPerSecond(observer);
+  assert.ok(finite(actual));assert.ok(actual.eq(w.DC.BEMAX));
+  assert.ok(actual.eq(w.context.getThermalRadiationGainPerSecond()));
+  assert.equal(JSON.stringify(w.player),before);
+  assert.ok(observer.steps.base.after.eq(w.DC.BEMAX));
+});
 test('Waves award exact thresholds without rounding gaps or overflow',()=>{
   const w=setup();for(const tr of [0,1,999]){w.player.compression.thermalRadiation=new Decimal(tr);w.context.updateElectromagneticWaves();assert.ok(w.player.compression.baseElectromagneticWaves.eq(0));}
   for(let count=1;count<=12;count++){w.player.compression.thermalRadiation=Decimal.pow(10,count-1).times(1000);w.context.updateElectromagneticWaves();assert.ok(w.player.compression.baseElectromagneticWaves.eq(count),`threshold ${count}`);}

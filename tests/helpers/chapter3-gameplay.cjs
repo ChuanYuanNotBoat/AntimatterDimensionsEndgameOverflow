@@ -37,6 +37,7 @@ function setup() {
   const load = name => run(source(name));
   run(read('core/extensions.js').match(/Math\.clamp = [\s\S]*?Math\.clampMax = [\s\S]*?\n};/)[0]);
   load('core/finite-decimal.js');
+  load('core/analysis-steps.js');
   for (const file of ['effect','game-mechanic','puchasable','set-purchasable','rebuyable','bit-upgrade-state','effects']) load('core/game-mechanics/'+file+'.js');
   run(source('core/currency.js').split('Currency.antimatter =')[0]);
   run('this.Currency=Currency;this.DecimalCurrency=DecimalCurrency;');
