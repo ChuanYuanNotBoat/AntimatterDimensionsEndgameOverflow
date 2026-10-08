@@ -9940,5 +9940,13 @@
   "analysis.review.51": "Breakdown differs from the current IP gain formula",
   "analysis.review.52": "Breakdown differs from the current EP gain formula",
   "analysis.review.53": "Per-tier powers: {p0}",
-  "analysis.review.54": "{p0} per tier"
+  "analysis.review.54": "{p0} per tier",
+  "analysis.hunt.expectedZero": "Expected time for the next core: infinite (current chance is zero).",
+  "analysis.hunt.expectedNote": "Calculated as interval ÷ chance, assuming the current conditions stay fixed and you hunt every interval. This is an average, not a guaranteed waiting time.",
+  "analysis.hunt.expected.ms": "Expected time for the next core: approximately {amount} ms.",
+  "analysis.hunt.expected.s": "Expected time for the next core: approximately {amount} s.",
+  "analysis.hunt.expected.min": "Expected time for the next core: approximately {amount} min.",
+  "analysis.hunt.expected.h": "Expected time for the next core: approximately {amount} h.",
+  "analysis.hunt.expected.d": "Expected time for the next core: approximately {amount} d.",
+  "analysis.hunt.expected.yr": "Expected time for the next core: approximately {amount} yr."
 }

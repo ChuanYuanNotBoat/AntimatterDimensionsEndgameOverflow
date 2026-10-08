@@ -4,13 +4,23 @@ import ExpandingControlBox from "@/components/ExpandingControlBox";
 export default {
   name: "SlabdrillHuntFactors",
   components: { ExpandingControlBox },
-  data: () => ({ factors: {}, interval: "", cores: "", stage: "" }),
+  data: () => ({ factors: {}, interval: "", cores: "", stage: "", expectedAmount: "", expectedUnit: "s",
+    zeroChance: false }),
   methods: {
     update() {
       this.factors = Slabdrill.huntChanceFactors;
       this.cores = formatInt(Slabdrill.cores);
       this.stage = formatInt(Slabdrill.currentStage);
       this.interval = format(Slabdrill.huntInterval, 0, 2);
+      // Match the Number probability used by hunt(), including underflow to zero.
+      const chance = Slabdrill.huntChance;
+      this.zeroChance = chance === 0;
+      if (this.zeroChance) return;
+      const milliseconds = new Decimal(Slabdrill.huntInterval).div(chance);
+      const units = [["yr", 31557600000], ["d", 86400000], ["h", 3600000], ["min", 60000], ["s", 1000]];
+      const [unit, divisor] = units.find(([, duration]) => milliseconds.gte(duration)) ?? ["ms", 1];
+      this.expectedUnit = unit;
+      this.expectedAmount = format(milliseconds.div(divisor), 2, 2);
     }
   },
   created() { this.update(); }
@@ -35,6 +45,11 @@ export default {
           </tbody>
         </table>
         <p>{{ $t('analysis.hunt.interval', { interval }) }}</p>
+        <p class="c-hunt-expected-time">
+          {{ zeroChance ? $t('analysis.hunt.expectedZero')
+            : $t('analysis.hunt.expected.' + expectedUnit, { amount: expectedAmount }) }}
+        </p>
+        <p class="c-hunt-factors-note">{{ $t('analysis.hunt.expectedNote') }}</p>
         <p class="c-hunt-factors-note">{{ $t('analysis.hunt.note') }}</p>
       </template>
     </ExpandingControlBox>

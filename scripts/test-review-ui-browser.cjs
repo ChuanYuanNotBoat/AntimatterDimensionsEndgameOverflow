@@ -97,6 +97,7 @@ async function initialize(page) {
       await label.click();await page.waitForTimeout(650);
       const hunt=page.locator('.c-hunt-factors');
       const bounds=await hunt.boundingBox();assert.ok(bounds.width>300&&bounds.height>150,'hunt breakdown must have readable width and height');
+      assert.match(await hunt.innerText(),locale==='zh-CN'?/期望时间：约/u:/Expected time.*approximately/u);
       const chance=await page.evaluate(()=>{
         const state=JSON.stringify(player);const random=Math.random;Math.random=()=>{throw Error('hunt display used RNG');};
         try {
