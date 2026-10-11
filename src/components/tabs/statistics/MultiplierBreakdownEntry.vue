@@ -752,6 +752,13 @@ export default {
           values.push(data.transformHasValue ? formatPow(data.transformValue, 2, 3)
             : `${format(data.transformBefore, 2, 2)} ➜ ${format(data.transformAfter, 2, 2)}`);
           break;
+        case "logPower":
+          values.push(this.$t("analysis.detail.logPowerValue", {
+            exponent: formatPow(data.transformValue, 2, 3),
+            before: format(data.transformBefore, 2, 2),
+            after: format(data.transformAfter, 2, 2)
+          }));
+          break;
         case "input":
           values.push(format(data.transformAfter, 2, 2));
           break;
@@ -783,6 +790,7 @@ export default {
         multiply: "Multiplier",
         input: "Formula input",
         power: "Power",
+        logPower: this.$t("analysis.detail.logPowerType"),
         formula: "Formula",
         softcap: "Softcap",
         hardcap: "Hardcap",

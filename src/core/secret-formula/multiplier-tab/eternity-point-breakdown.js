@@ -5,6 +5,7 @@ import {
   addOrderedTraceMismatch,
   addOrderedTransform,
   createOrderedTransformCache,
+  orderedDilatedValueStep,
   orderedMultiplyStep,
   orderedPowerStep,
   orderedTransformStep,
@@ -158,7 +159,7 @@ function evaluateEternityPoints(skipKey = null, steps = null) {
   } else if (V.isRunning) {
     ep = orderedPowerStep(steps, "nerfV", ep, 0.5, skipKey);
   } else if (Laitela.isRunning) {
-    ep = orderedTransformStep(steps, "nerfLaitela", "softcap", ep, dilatedValueOf(ep), skipKey);
+    ep = orderedDilatedValueStep(steps, "nerfLaitela", ep, skipKey);
   }
 
   if (GlyphAlteration.isAdded("time")) {

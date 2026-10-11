@@ -101,6 +101,14 @@ export function orderedTransformStep(steps, key, type, current, after, skipKey =
   return steps ? addOrderedTransform(steps, key, type, current, after, options) : diagnosticValue(after).value;
 }
 
+export function orderedDilatedValueStep(steps, key, current, skipKey = null) {
+  if (isOrderedSourceSkipped(skipKey, key)) return current;
+  const after = dilatedValueOf(current);
+  return steps ? addOrderedTransform(steps, key, "logPower", current, after, {
+    value: getDilationPower()
+  }) : diagnosticValue(after).value;
+}
+
 export function addOrderedFinalImpacts(steps, evaluate, finalWith, nonRemovableKeys = ["base"]) {
   const nonRemovable = new Set(nonRemovableKeys);
   for (const [key, transform] of Object.entries(steps)) {
@@ -197,7 +205,7 @@ export function aggregateOrderedTransforms(items, resourceLabel, includeFinal = 
     if (sourceType === "multiply") {
       sourceValue = active.reduce((product, item) =>
         boundedPositiveProduct(product, item.transform.value), DC.D1);
-    } else if (sourceType === "power" && active.every(item =>
+    } else if (["power", "logPower"].includes(sourceType) && active.every(item =>
       Decimal.eq(item.transform.value, active[0].transform.value))) {
       // Equal powers apply per tier; multiplying them across tiers invents an exponent.
       sourceValue = active[0].transform.value;

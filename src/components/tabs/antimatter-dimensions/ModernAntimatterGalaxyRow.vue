@@ -44,17 +44,24 @@ export default {
     },
     buttonText() {
       if (this.lockText !== null) return this.lockText;
-      const reset = [];
-      if (!Achievement(111).isUnlocked ||
+      const resetsDimensions = !Achievement(111).isUnlocked ||
         (player.disablePostReality && !(Alpha.isRunning && Alpha.currentStage >= 12) &&
-        !(LHC.voidRunning && NullUpgrade.limerick1.isBought) &&
-        !SlabdrillUnlocks.eternityChallengeTen.isUnlocked)) reset.push("Dimensions");
-      if (!Achievement(143).isUnlocked ||
+          !(LHC.voidRunning && NullUpgrade.limerick1.isBought) &&
+          !SlabdrillUnlocks.eternityChallengeTen.isUnlocked);
+      const resetsDimensionBoosts = !Achievement(143).isUnlocked ||
         (player.disablePostReality && !(Alpha.isRunning && Alpha.currentStage >= 20) &&
-        !(LHC.voidRunning && NullUpgrade.limerick2.isBought))) reset.push("Dimension Boosts");
-      return reset.length === 0
-        ? `Increase the power of Tickspeed upgrades`
-        : `Reset your ${makeEnumeration(reset)} to increase the power of Tickspeed upgrades`;
+          !(LHC.voidRunning && NullUpgrade.limerick2.isBought));
+      let reset = "none";
+      if (resetsDimensions && resetsDimensionBoosts) reset = "both";
+      else if (resetsDimensions) reset = "dimensions";
+      else if (resetsDimensionBoosts) reset = "boosts";
+      return this.$t("dimensions.galaxy.button", {
+        reset,
+        dimensions: this.$t(
+          this.isFlipped ? "terms.matterDimension" : "terms.antimatterDimension", {}, "plural"
+        ),
+        boosts: this.$t("terms.dimensionBoost", {}, "plural")
+      });
     },
     sumText() {
       const parts = [Decimal.max(this.galaxies.normal, GalacticPowers.galacticAscension.isUnlocked ? 1 : 0)];
@@ -68,10 +75,10 @@ export default {
       if (parts.length >= 2) {
         if (GalacticPowers.galacticAscension.isUnlocked) {
           all = ` = ${this.formatGalaxies(parts.reduce(Decimal.prodReducer).div(this.galaxies.unstable))}`;
+        } else {
+          all = ` = ${this.formatGalaxies(parts.decimalSum().div(this.galaxies.unstable))}`;
         }
-        else all = ` = ${this.formatGalaxies(parts.decimalSum().div(this.galaxies.unstable))}`;
-      }
-      else all = "";
+      } else all = "";
       const instability = this.galaxies.unstable.gt(1) ? ` / ${this.formatGalaxies(this.galaxies.unstable)}` : "";
       return `${sum}<span style="color: red">${instability}</span>${all}`;
     },

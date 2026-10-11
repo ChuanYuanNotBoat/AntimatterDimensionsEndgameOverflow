@@ -1,3 +1,4 @@
+import { textRef } from "../../../../i18n/text-ref";
 import { boundedPositiveQuotient, boundedPositiveProduct } from "../../../finite-decimal";
 const thisInfinityMult = thisInfinity => {
   // All "this inf time" or "best inf time" mults are * 10
@@ -280,8 +281,9 @@ export const normalTimeStudies = [
     requiresST: [122, 123],
     description: () => ((Perk.studyActiveEP.isBought && !player.disablePostReality)
       ? `You gain ${formatX(50)} more Eternity Points`
-      : `You gain more EP based on how fast your last ten Eternities
-      were${PlayerProgress.realityUnlocked() ? " (real time)" : ""}`),
+      : textRef(PlayerProgress.realityUnlocked()
+        ? "timeStudy.121.description.realTime"
+        : "timeStudy.121.description")),
     effect: () => ((Perk.studyActiveEP.isBought && !player.disablePostReality)
       ? 50
       : Math.clamp(250 / Player.averageRealTimePerEternity, 1, 50)),
@@ -418,8 +420,9 @@ export const normalTimeStudies = [
     cost: 7,
     requirement: [151],
     reqType: TS_REQUIREMENT_TYPE.AT_LEAST_ONE,
-    description: () => `${formatX(Slabdrill.isCursed ? Decimal.pow10(4928) : DC.E616)} multiplier
-      ${Slabdrill.isCursed ? "to your Antimatter Dimension" : `on all ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions`}`,
+    description: () => (Slabdrill.isCursed
+      ? textRef("timeStudy.161.cursedDescription", { multiplier: formatX(Decimal.pow10(4928)) })
+      : `${formatX(DC.E616)} multiplier on all ${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions`),
     effect: () => Slabdrill.isCursed ? Decimal.pow10(4928) : DC.E616
   },
   {
@@ -562,8 +565,9 @@ export const normalTimeStudies = [
     requirement: [212],
     reqType: TS_REQUIREMENT_TYPE.AT_LEAST_ONE,
     requiresST: [224],
-    description: () => Slabdrill.isCursed ? `Galaxies are ${formatPercents(0.07)} stronger` :
-      `Distant Galaxy cost scaling starts ${formatInt(7)} Galaxies later`,
+    description: () => Slabdrill.isCursed
+      ? textRef("timeStudy.223.cursedDescription", { effect: formatPercents(0.07) })
+      : `Distant Galaxy cost scaling starts ${formatInt(7)} Galaxies later`,
     effect: () => Slabdrill.isCursed ? 1.07 : 7
   },
   {

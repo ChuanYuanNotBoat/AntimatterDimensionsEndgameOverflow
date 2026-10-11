@@ -140,7 +140,15 @@ export function createI18n({ catalogs, defaultLocale = "en", metadata = [], warn
   }
 
   function unavailable() {
-    return packs.get(defaultLocale)?.get("common.messageUnavailable|text")?.format() ?? "Message unavailable.";
+    for (const candidate of new Set([state.locale, defaultLocale])) {
+      try {
+        const message = packs.get(candidate)?.get("common.messageUnavailable|text")?.format();
+        if (typeof message === "string") return message;
+      } catch {
+        // A diagnostic fallback must not throw while reporting a separate message error.
+      }
+    }
+    return "Message unavailable.";
   }
 
   function t(key, values = {}, form = "text") {

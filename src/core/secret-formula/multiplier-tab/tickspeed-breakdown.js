@@ -131,7 +131,7 @@ function trace(skipKey = null, steps = null, inputs = snapshot(), producingTiers
     intervalStep("slabdrillReplicanti", "power", boundedPositivePower(interval, 0.42), "Slabdrill Replicanti unlock", 0.42);
   }
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
-    intervalStep("dilation", "formula", dilatedValueOf(interval));
+    intervalStep("dilation", "logPower", dilatedValueOf(interval), "", getDilationPower());
   }
   if (player.compression.active) intervalStep("compression", "formula", compressedMultiplier(interval));
   if (player.endgame.overcharge.isRunning) {

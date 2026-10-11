@@ -5,6 +5,7 @@ import {
   addOrderedTraceMismatch,
   addOrderedTransform,
   createOrderedTransformCache,
+  orderedDilatedValueStep,
   orderedMultiplyStep,
   orderedPowerStep,
   orderedTransformStep,
@@ -217,7 +218,7 @@ function evaluateInfinityPoints(skipKey = null, steps = null) {
   } else if (V.isRunning) {
     ip = orderedPowerStep(steps, "nerfV", ip, 0.5, skipKey);
   } else if (Laitela.isRunning) {
-    ip = orderedTransformStep(steps, "nerfLaitela", "softcap", ip, dilatedValueOf(ip), skipKey);
+    ip = orderedDilatedValueStep(steps, "nerfLaitela", ip, skipKey);
   }
 
   if (GlyphAlteration.isAdded("infinity")) {

@@ -594,6 +594,7 @@ export const GameStorage = {
     EventHub.dispatch(GAME_EVENT.GAME_LOAD);
     AutomatorBackend.initializeFromSave();
     Lazy.invalidateAll();
+    Slabdrill.recoverMissedStage();
     Slabdrill.updatePelleDomainPause();
 
     const rawDiff = Date.now() - player.lastUpdate;

@@ -1,3 +1,5 @@
+import { textRef } from "../../../i18n/text-ref";
+
 function rebuyable(config) {
   const effectFunction = config.effect || (x => x);
   const { id, maxUpgrades, description, isDisabled, noLabel, onPurchased } = config;
@@ -84,8 +86,10 @@ export const breakInfinityUpgrades = {
     id: "infinitiedMult",
     cost: () => 1e5 * (Alpha.isRunning ? AlphaUnlocks.breakInfinity.effects.nerfA.effectOrDefault(1) : 1) *
       (SlabdrillUnlocks.breakInfinity.isUnlocked ? 1000 : 1),
-    description: () => Slabdrill.isCursed ? "Your Antimatter Dimension gains a multiplier based on Infinities" :
-      `${player.universes.current === 2 ? "Matter" : "Antimatter"} Dimensions gain a multiplier based on Infinities`,
+    description: textRef("breakInfinity.infinitiedMult.description", () => ({
+      state: Slabdrill.isCursed ? "cursed" : "other",
+      dimension: player.universes.current === 2 ? "matter" : "antimatter"
+    })),
     effect: () => Slabdrill.isCursed ? Currency.infinitiesTotal.value.add(1).pLog10().times(25).add(1).pow(8) :
       Currency.infinitiesTotal.value.add(1).pLog10().times(25).add(1),
     formatEffect: value => formatX(value, 2, 2),
@@ -208,13 +212,13 @@ export const breakInfinityUpgrades = {
     costIncrease: () => 10,
     maxUpgrades: () => 10,
     effect: value => Player.bestRunIPPM.times(value / 10),
-    description: () => {
+    description: textRef("breakInfinity.ipGeneration.description", () => {
       let generation = `Generate ${formatInt(10 * player.infinityRebuyables[2])}%`;
       if (!BreakInfinityUpgrade.ipGen.isCapped) {
         generation += ` ➜ ${formatInt(10 * (1 + player.infinityRebuyables[2]))}%`;
       }
-      return `${generation} of your best IP/min from your last 10 Infinities`;
-    },
+      return { p0: generation };
+    }),
     isDisabled: effect => effect.eq(0),
     formatEffect: value => `${format(value, 2, 1)} IP/min`,
     noLabel: false

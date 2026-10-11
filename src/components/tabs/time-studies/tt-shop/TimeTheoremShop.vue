@@ -53,16 +53,17 @@ export default {
     },
     TTgenRateText() {
       if (this.theoremGeneration.lt(1 / 3600)) {
-        return `one TT every ${TimeSpan.fromSeconds(
-          this.theoremGeneration.reciprocal()).toStringShort(false)}`;
+        return this.$t("timeTheoremShop.rate.every", {
+          duration: TimeSpan.fromSeconds(this.theoremGeneration.reciprocal()).toStringShort(false)
+        });
       }
       if (this.theoremGeneration.lt(0.1)) {
-        return `${format(this.theoremGeneration.times(3600), 2, 2)} TT/hour`;
+        return this.$t("timeTheoremShop.rate.hour", { amount: format(this.theoremGeneration.times(3600), 2, 2) });
       }
-      return `${format(this.theoremGeneration, 2, 2)} TT/sec`;
+      return this.$t("timeTheoremShop.rate.second", { amount: format(this.theoremGeneration, 2, 2) });
     },
     totalTimeTheoremText() {
-      return `${quantify("total Time Theorem", this.totalTimeTheorems, 2, 2, this.formatTimeTheoremType)}`;
+      return this.formatTimeTheoremType(this.totalTimeTheorems, 2, 2);
     },
     minimizeArrowStyle() {
       return {
@@ -92,7 +93,9 @@ export default {
       player.timestudy.shopMinimized = !player.timestudy.shopMinimized;
     },
     formatAM(am) {
-      return `${format(am)} ${this.isFlipped ? "M" : "AM"}`;
+      return this.$t(this.isFlipped ? "timeTheoremShop.cost.matter" : "timeTheoremShop.cost.antimatter", {
+        amount: format(am)
+      });
     },
     buyWithAM() {
       TimeTheorems.buyOne(false, "am");
@@ -188,10 +191,10 @@ export default {
               >
             </span>
             <span v-if="showTTGen">
-              You are gaining {{ $legacyText(_s(TTgenRateText)) }}.
+              {{ $t('timeTheoremShop.gaining', { rate: TTgenRateText }) }}
             </span>
             <span v-else>
-              You have {{ $legacyText(_s(totalTimeTheoremText)) }}.
+              {{ $t('timeTheoremShop.total', { amount: $legacyText(_s(totalTimeTheoremText)) }) }}
             </span>
           </div>
         </div>

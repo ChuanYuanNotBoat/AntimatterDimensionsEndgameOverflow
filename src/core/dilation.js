@@ -408,14 +408,17 @@ export function getDilationTimeEstimate(goal) {
     .div(rawDTGain)).toTimeEstimate();
 }
 
-export function dilatedValueOf(value) {
-  if (value.lte(0)) return new Decimal(0);
-  const log10 = value.log10();
+export function getDilationPower() {
   let basePenalty = 0.75;
   if (Alpha.isRunning) basePenalty = Effects.min(1, AlphaUnlocks.unlockDilation.effects.nerf, AlphaUnlocks.dilatedEternity.effects.nerf);
   if (!player.disablePostReality) basePenalty = AlphaUnlocks.unlockDilation.effects.buff.effectOrDefault(0.75);
-  const dilationPenalty = basePenalty * Effects.product(DilationUpgrade.dilationPenalty);
-  const reducedLog = boundedPositivePower(Decimal.abs(log10), dilationPenalty);
+  return basePenalty * Effects.product(DilationUpgrade.dilationPenalty);
+}
+
+export function dilatedValueOf(value) {
+  if (value.lte(0)) return new Decimal(0);
+  const log10 = value.log10();
+  const reducedLog = boundedPositivePower(Decimal.abs(log10), getDilationPower());
   return boundedPositivePower(10, new Decimal(Decimal.sign(log10)).times(reducedLog));
 }
 

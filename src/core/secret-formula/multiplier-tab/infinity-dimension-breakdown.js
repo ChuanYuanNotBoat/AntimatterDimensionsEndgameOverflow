@@ -7,6 +7,7 @@ import {
   isOrderedSourceSkipped,
   aggregateOrderedTransforms,
   createOrderedTransformCache,
+  orderedDilatedValueStep,
   orderedMultiplyStep,
   orderedPowerStep,
   orderedTransformStep,
@@ -305,7 +306,7 @@ function evaluateInfinityDimension(tier, skipKey = null, steps = null) {
   mult = powerGroup(steps, "preDilationPowers", mult, preDilationPowers(), skipKey);
 
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
-    mult = orderedTransformStep(steps, "dilation", "softcap", mult, dilatedValueOf(mult), skipKey);
+    mult = orderedDilatedValueStep(steps, "dilation", mult, skipKey);
   }
 
   if (Effarig.isRunning) {

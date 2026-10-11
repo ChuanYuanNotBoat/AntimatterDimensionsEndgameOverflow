@@ -6,14 +6,6 @@ export default {
   components: {
     ModalWrapperChoice
   },
-  computed: {
-    message() {
-      return `In the midst of the chaos, you broke free of Slabdrill's grip. You can now truly escape.`;
-    },
-    entranceLabel() {
-      return `SLABDRILL'S REALITY IS COLLAPSING`;
-    }
-  },
   methods: {
     handleYesClick() {
       if (!Slabdrill.isCursed || Slabdrill.coreActive || Slabdrill.currentStage < Slabdrill.layerReqs.length) return;
@@ -32,13 +24,13 @@ export default {
     @confirm="handleYesClick"
   >
     <template #header>
-      {{ entranceLabel }}
+      {{ $t("slabdrill.trueEscape.title") }}
     </template>
     <div class="c-modal-message__text">
-      {{ $legacyText(_s(message)) }}
+      {{ $t("slabdrill.trueEscape.message") }}
     </div>
     <template #confirm-text>
-      ESCAPE
+      {{ $t("reality.escape.force") }}
     </template>
   </ModalWrapperChoice>
 </template>

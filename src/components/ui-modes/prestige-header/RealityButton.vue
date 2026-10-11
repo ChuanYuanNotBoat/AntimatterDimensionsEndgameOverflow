@@ -182,13 +182,13 @@ export default {
     >
       <div class="l-reality-button__contents">
         <template v-if="cursed && canReality && overridden">
-          <div>ESCAPE</div>
+          <div>{{ $t('reality.escape.force') }}</div>
         </template>
         <template v-else-if="cursed && (!canReality || trapped) && !overridden">
-          <div>You cannot escape a Cursed Reality</div>
+          <div>{{ $t('ade.d4f9309dc9a6e3bb') }}</div>
         </template>
         <template v-else-if="cursed && canReality && !trapped">
-          <div>Escape the Cursed Reality...</div>
+          <div>{{ $t('reality.escape.available') }}</div>
         </template>
         <template v-else-if="readyToWarp && !cursed && !destroyed">
           <div>{{ $legacyText(_s(warpMessage)) }}</div>

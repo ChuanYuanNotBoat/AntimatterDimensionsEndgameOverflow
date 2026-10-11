@@ -39,8 +39,10 @@ export default {
           total Time Theorems`;
       }
       if (this.id === 6) {
-        const achRows = Perk.firstPerk.isBought ? "" : ` and ${formatInt(13)} rows of Achievements`;
-        return `Requirement: ${format("1e4000")} Eternity Points${achRows}`;
+        const key = Perk.firstPerk.isBought
+          ? "timeStudy.dilation.realityRequirement"
+          : "timeStudy.dilation.realityRequirement.withAchievements";
+        return this.$t(key, { amount: format("1e4000") });
       }
       return "";
     },

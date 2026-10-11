@@ -27,10 +27,9 @@ export default {
       return this.setup.study;
     },
     hintText() {
-      const id = this.study.id;
-      if (!this.setup.path) return id;
+      if (!this.setup.path) return "";
       const pathEntry = NormalTimeStudies.pathList.find(p => p.path === this.setup.path);
-      return `${id} ${pathEntry.name}`;
+      return pathEntry.name;
     },
     isUseless() {
       return Pelle.uselessTimeStudies.includes(this.study.id) && Pelle.isDoomed;
@@ -60,7 +59,7 @@ export default {
       type="studies"
       class="l-hint-text--time-study"
     >
-      {{ $legacyText(_s(hintText)) }}
+      {{ study.id }}<template v-if="hintText"> {{ $legacyText(_s(hintText), "normal-time-study") }}</template>
     </HintText>
     <span :class="{ 'o-pelle-disabled': isUseless }">
       <DescriptionDisplay

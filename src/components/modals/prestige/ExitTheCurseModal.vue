@@ -11,9 +11,6 @@ export default {
       return `You really thought you could escape from me? Think again. This was all part of my plan, after all. You cannot
       escape. You will remain here as my eternal prisoner. Accept your fate.`;
     },
-    entranceLabel() {
-      return `The Illusion of Free Will`;
-    }
   },
   methods: {
     handleYesClick() {
@@ -28,13 +25,13 @@ export default {
     @confirm="handleYesClick"
   >
     <template #header>
-      {{ entranceLabel }}
+      {{ $t('ade.82a215e9c0023cca') }}
     </template>
     <div class="c-modal-message__text">
       {{ $legacyText(_s(message)) }}
     </div>
     <template #confirm-text>
-      I am stronger than you
+      {{ $t('slabdrill.exitTheCurse.confirm') }}
     </template>
   </ModalWrapperChoice>
 </template>

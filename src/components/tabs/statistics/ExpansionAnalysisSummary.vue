@@ -12,6 +12,9 @@ export default {
   data() {
     return { state: {} };
   },
+  created() {
+    this.update();
+  },
   methods: {
     update() {
       const resource = this.resourceKey;
@@ -62,12 +65,12 @@ export default {
     </template>
     <template v-else-if="resourceKey === 'RM'">
       <template v-if="capacityMode">
-        <p>{{ $t('analysis.expansion.rmCapSummary', state) }}</p>
+        <p>{{ $t('analysis.expansion.rmCapSummary', { cap: state.cap }) }}</p>
         <p>{{ $t('analysis.expansion.rmCapNote') }}</p>
       </template>
       <template v-else>
-      <p>{{ $t('analysis.expansion.rmSummary', state) }}</p>
-      <p v-if="state.passive !== null">{{ $t('analysis.expansion.rmPassive', state) }}</p>
+      <p>{{ $t('analysis.expansion.rmSummary', { single: state.single, batch: state.batch, cap: state.cap }) }}</p>
+      <p v-if="state.passive !== null">{{ $t('analysis.expansion.rmPassive', { passive: state.passive }) }}</p>
       <p v-if="state.full">{{ $t('analysis.expansion.rmFull') }}</p>
       <p v-if="!state.available">{{ $t('analysis.expansion.realityUnavailable') }}</p>
       </template>

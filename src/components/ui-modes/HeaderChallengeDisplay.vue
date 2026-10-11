@@ -129,6 +129,20 @@ export default {
       }
       return names;
     },
+    localizedActiveChallengeNames() {
+      return this.activeChallengeNames.map(name => {
+        if (name === "a Cursed Reality") return this.$t("header.challenge.cursedReality");
+        const eternityChallenge = /^Eternity Challenge (\d+)(.*)$/u.exec(name);
+        if (eternityChallenge) {
+          return `${this.$t("header.challenge.eternity", { p0: eternityChallenge[1] })}${eternityChallenge[2]}`;
+        }
+        const infinityChallenge = /^Infinity Challenge (\d+)(.*)$/u.exec(name);
+        if (infinityChallenge) {
+          return `${this.$t("header.challenge.infinity", { p0: infinityChallenge[1] })}${infinityChallenge[2]}`;
+        }
+        return this.$legacyText(name);
+      });
+    },
     isVisible() {
       return this.infinityUnlocked || this.activeChallengeNames.length > 0;
     },
@@ -140,7 +154,7 @@ export default {
         return `${this.activeChallengeNames.join(" + ")}. Good luck.`;
       }
       if (this.inSlab) {
-        return `${this.activeChallengeNames.join(" + ")}. Not every story has a good ending.`;
+        return this.$t("ade.9b8f8c80250a9b7e", { p0: this.localizedActiveChallengeNames.join(" + ") });
       }
       if (this.activeChallengeNames.length === 0) {
         return "the Antimatter Universe (no active challenges)";

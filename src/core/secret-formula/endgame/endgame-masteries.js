@@ -1,4 +1,5 @@
 import { boundedPositivePower } from "../../finite-decimal";
+import { textRef } from "../../../i18n/text-ref";
 
 export const endgameMasteries = [
   {
@@ -6,7 +7,7 @@ export const endgameMasteries = [
     cost: 1,
     requirement: [],
     reqType: EM_REQUIREMENT_TYPE.ALL,
-    description: () => `Generate ${formatInt(1)} Perk Point per minute per Endgame`,
+    description: textRef("endgameMastery.perkPointGeneration", () => ({ amount: formatInt(1) })),
     effect: () => player.disablePostReality ? 0 : player.endgames,
     formatEffect: value => `${formatHybridSmall(value, 3)}/min`
   },

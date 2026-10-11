@@ -129,6 +129,85 @@ export const Slabdrill = {
   advanceLayer() {
     if (this.isCursed && this.currentStage < this.layerReqs.length) player.celestials.slabdrill.stage++;
   },
+  recoverMissedStage() {
+    if (!this.isCursed || this.coreActive) return false;
+    const stage = this.currentStage;
+    let requirementMet = false;
+    switch (stage) {
+      case 0:
+        requirementMet = DimBoost.purchasedBoosts.gt(0);
+        break;
+      case 1:
+        requirementMet = player.galaxies.gt(0);
+        break;
+      case 2:
+        requirementMet = Currency.infinities.gt(0);
+        break;
+      case 3:
+        requirementMet = player.break;
+        break;
+      case 4:
+        requirementMet = InfinityChallenge(4).isCompleted;
+        break;
+      case 5:
+        requirementMet = player.replicanti.unl;
+        break;
+      case 6:
+        requirementMet = Currency.eternities.gt(0);
+        break;
+      case 7:
+        requirementMet = TimeStudy(181).isBought;
+        break;
+      case 8:
+        requirementMet = EternityChallenge(10).completions >= 1;
+        break;
+      case 9:
+        requirementMet = player.dilation.active;
+        break;
+      case 10:
+        requirementMet = player.celestials.slabdrill.isGoodbye && player.celestials.slabdrill.goodbyeTick >= 1000;
+        break;
+      default:
+        return false;
+    }
+    if (!requirementMet) return false;
+
+    if (stage === 0) secondSoftCelestialReset();
+    if (stage === 1) {
+      for (const type of BASIC_GLYPH_TYPES) player.reality.glyphs.sac[type] = DC.D0;
+      player.reality.glyphs.sac.effarig = DC.D0;
+      player.reality.glyphs.sac.reality = DC.D0;
+    }
+    if (stage === 2) player.breakEternityRebuyables = Array(10).fill(0);
+    if (stage === 5) {
+      player.endgame.ethereal.power = DC.D0;
+      player.endgame.ethereal.sector = 1;
+    }
+    this.advanceLayer();
+    if (stage === 3) {
+      GameCache.tickSpeedMultDecrease.invalidate();
+      GameCache.dimensionMultDecrease.invalidate();
+      Glyphs.refreshActive();
+      for (const type of BASIC_GLYPH_TYPES) Glyphs.addToInventory(GlyphGenerator.omniGlyph(type));
+    }
+    if (stage === 5) player.replicanti.chance = DC.D1.div(1000);
+    if (stage >= 6 && stage <= 9) Glyphs.refreshActive();
+    const quoteByStage = [
+      this.quotes.dimboost,
+      this.quotes.galaxy,
+      this.quotes.infinity,
+      this.quotes.breakInfinity,
+      this.quotes.infinityChallengeFour,
+      this.quotes.replicanti,
+      this.quotes.eternity,
+      this.quotes.timeStudy181,
+      this.quotes.eternityChallengeTen,
+      this.quotes.dilation,
+      this.quotes.reality
+    ];
+    quoteByStage[stage]?.show();
+    return true;
+  },
   hunt() {
     const core = player.celestials.slabdrill.core;
     const now = Date.now();
@@ -140,6 +219,9 @@ export const Slabdrill = {
   },
   enterCore() {
     if (!this.isCursed || this.coreActive) return false;
+    // Reconcile the outside run before taking the return snapshot. The core has
+    // its own forced Break Infinity state, which must not count as stage progress.
+    this.recoverMissedStage();
     player.celestials.slabdrill.records = matchOnlyDeepmerge(player, player.celestials.slabdrill.records, "eternityChalls");
     finishProcessReality({ reset: true });
     const cache = Object.keys(GameCache);

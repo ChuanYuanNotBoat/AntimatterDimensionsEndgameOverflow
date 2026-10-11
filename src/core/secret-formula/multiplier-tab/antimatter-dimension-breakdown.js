@@ -4,6 +4,7 @@ import {
   isOrderedSourceSkipped,
   aggregateOrderedTransforms,
   createOrderedTransformCache,
+  orderedDilatedValueStep,
   orderedMultiplyStep,
   orderedPowerStep,
 } from "./ordered-breakdown";
@@ -319,9 +320,9 @@ function trace(tier, skipKey = null, steps = null) {
 
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
     pow("dilationGlyphPower", getAdjustedGlyphEffect("dilationpow"));
-    transform("dilation", "softcap", current => dilatedValueOf(current));
+    value = orderedDilatedValueStep(steps, "dilation", value, skipKey);
   } else if (Enslaved.isRunning) {
-    transform("dilation", "softcap", current => dilatedValueOf(current));
+    value = orderedDilatedValueStep(steps, "dilation", value, skipKey);
   }
   mul("dilationUpgrade", effect(DilationUpgrade.ndMultDT));
   if (Effarig.isRunning) transform("effarig", "formula", current => Effarig.multiplier(current));

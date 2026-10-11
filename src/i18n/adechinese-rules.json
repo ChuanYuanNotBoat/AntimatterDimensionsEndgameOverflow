@@ -19493,7 +19493,7 @@
   },
   {
     "id": "ade.1b45e6f55a5cc403",
-    "global": true,
+    "global": false,
     "scopes": [
       "alpha"
     ],
@@ -31989,7 +31989,8 @@
     "global": false,
     "scopes": [
       "elemental",
-      "elemental:5"
+      "elemental:5",
+      "slabdrill:12"
     ],
     "protectedParameters": []
   },
@@ -78381,6 +78382,54 @@
     "protectedParameters": []
   },
   {
+    "id": "analysis.source.breakEternityIdPower",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.infinityDimensionOverflow",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabIdMultiplier",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabIc4IdPenalty",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabEternityIdPenalty",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.source.slabEc10IdPenalty",
+    "global": false,
+    "scopes": [
+      "MultiplierBreakdownEntry"
+    ],
+    "protectedParameters": []
+  },
+  {
     "id": "analysis.source.achievement",
     "global": false,
     "scopes": [
@@ -78450,6 +78499,22 @@
   },
   {
     "id": "analysis.limits.endpoint.includesZero",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.overflow.first",
+    "global": false,
+    "scopes": [
+      "GameplayLimitSummary"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "analysis.limits.overflow.second",
     "global": false,
     "scopes": [
       "GameplayLimitSummary"
@@ -78572,7 +78637,8 @@
     "id": "analysis.am.stage.cursed",
     "global": false,
     "scopes": [
-      "AntimatterProductionBreakdown"
+      "AntimatterProductionBreakdown",
+      "GameplayLimitSummary"
     ],
     "protectedParameters": []
   },
@@ -78994,6 +79060,17 @@
     ]
   },
   {
+    "id": "dimensions.boost.effect.cursed",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": [
+      "p0"
+    ]
+  },
+  {
     "id": "challenge.cursed.normal.2",
     "global": false,
     "scopes": [
@@ -79079,6 +79156,13 @@
       "eternity-challenges:9",
       "eternity-challenges:10",
       "eternity-challenges:11",
+      "eternity-challenges:12"
+    ]
+  },
+  {
+    "id": "challenge.eternity.description.12",
+    "global": false,
+    "scopes": [
       "eternity-challenges:12"
     ]
   },
@@ -79287,7 +79371,6 @@
     "id": "analysis.review.21",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79295,7 +79378,6 @@
     "id": "analysis.review.22",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79303,7 +79385,6 @@
     "id": "analysis.review.23",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79311,7 +79392,6 @@
     "id": "analysis.review.24",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79319,7 +79399,6 @@
     "id": "analysis.review.25",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79327,7 +79406,6 @@
     "id": "analysis.review.26",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79335,7 +79413,6 @@
     "id": "analysis.review.27",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79343,7 +79420,6 @@
     "id": "analysis.review.28",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79351,7 +79427,6 @@
     "id": "analysis.review.29",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79359,7 +79434,6 @@
     "id": "analysis.review.30",
     "global": false,
     "scopes": [
-      "MultiplierBreakdownEntry",
       "MultiplierStateSummary"
     ]
   },
@@ -79596,5 +79670,80 @@
     "scopes": [
       "glyph-effects:replicationdtgain"
     ]
+  },
+  {
+    "id": "slabdrill.strike.name.dimensionBoost",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.galaxy",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.infinity",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.breakInfinity",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.infinityChallengeFour",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.replicanti",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.eternity",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.timeStudy181",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.eternityChallengeTen",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.timeDilation",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.name.reality",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.nerf.tickspeed",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.nerf.infinityDimensions",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.nerf.replicanti",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
+  },
+  {
+    "id": "slabdrill.strike.nerf.timeStudy181",
+    "global": false,
+    "scopes": ["SlabdrillStrike"]
   }
 ]
