@@ -58,7 +58,7 @@ export default {
         v-else
         class="o-autobuyer-btn o-autobuyer-btn--unavailable"
       >
-        Complete the challenge to change mode
+        {{ $t('autobuyers.tickspeed.lockedMode') }}
       </button>
     </template>
   </AutobuyerBox>

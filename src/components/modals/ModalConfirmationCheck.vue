@@ -23,6 +23,9 @@ export default {
       };
     },
     tooltipText() {
+      if (this.option === "compression") {
+        return this.$t(this.setting ? "compression.confirmation.disable" : "compression.confirmation.reenable");
+      }
       return `${this.setting ? "Disable" : "Reenable"} the ${this.confirmation.name} confirmation`;
     },
   },
@@ -49,7 +52,7 @@ export default {
         class="fas fa-check"
       />
       <div class="c-modal__confirmation-toggle__tooltip">
-        {{ $legacyText(_s(tooltipText)) }}
+        {{ $legacyText(tooltipText) }}
       </div>
     </div>
     <span class="c-modal__confirmation-toggle__text">

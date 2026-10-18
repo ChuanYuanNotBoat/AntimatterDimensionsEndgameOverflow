@@ -36,18 +36,18 @@ export default {
   >
     <template #header>
       <span>
-        You are about to exit Compression
+        {{ $t('compression.exit.header') }}
       </span>
     </template>
     <div class="c-modal-message__text">
       <span>
-        If you exit Compression now, you will {{ $legacyText(_s(gainText)) }}.
+        {{ $t('compression.exit.confirm', { gain: $legacyText(gainText) }) }}
       </span>
       <br>
       {{ $t('ade.a4d500e55df8919f') }}
     </div>
     <template #confirm-text>
-      Exit
+      {{ $t('compression.exit.button') }}
     </template>
   </ModalWrapperChoice>
 </template>

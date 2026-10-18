@@ -155,23 +155,18 @@ export default {
     </div>
     <div>
       <p>
-        {{ $t('ade.9f717812b3aa8e61') }}
-        <span class="c-infinity-dim-description__accent">{{ $legacyText(_s(format(infinityPower, 2, 1))) }}</span>
-        {{ $t('ade.a3d6a0d2b9ed9f9d') }}
-        <br>
-        <span v-if="!isEC9Running">
-          <LocalizedText id="ade.4bab93012bc5e520">
-            <template #p0><span class="c-infinity-dim-description__accent">{{ $legacyText(_s(formatPow(conversionRate, 2, 3))) }}</span></template>
-          </LocalizedText>
-        </span>
-        <span v-else>
-          {{ $t('ade.c49489009c660834') }}
-        </span>
-        {{ $t('ade.78738e88cda9fee1') }}
-        <span class="c-infinity-dim-description__accent">{{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}</span>
-        {{ $t('ade.d4830b8713ebe808') }}
-        <span v-if="!isEC9Running">{{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Dimensions.</span>
-        <span v-else>Time Dimensions due to Eternity Challenge 9.</span>
+        <LocalizedText id="dimensions.infinity.power">
+          <template #p0><span class="c-infinity-dim-description__accent">{{ format(infinityPower, 2, 1) }}</span></template>
+          <template #p1><br></template>
+          <template #p2>
+            <LocalizedText v-if="!isEC9Running" id="dimensions.infinity.conversion">
+              <template #p0><span class="c-infinity-dim-description__accent">{{ formatPow(conversionRate, 2, 3) }}</span></template>
+            </LocalizedText>
+            <span v-else>{{ $t('ade.c49489009c660834') }}</span>
+          </template>
+          <template #p3><span class="c-infinity-dim-description__accent">{{ formatX(dimMultiplier, 2, 1) }}</span></template>
+          <template #p4>{{ isEC9Running ? $t('dimensions.infinity.ec9Target') : $t(isFlipped ? 'terms.matterDimension' : 'terms.antimatterDimension', {}, 'plural') }}</template>
+        </LocalizedText>
       </p>
     </div>
     <div>
@@ -228,8 +223,7 @@ export default {
       {{ $t('ade.2792dc9a8effa3f0', { p0: $legacyText(_s(format(freeTesseractSoftcap,2,2))) }) }}
       <div v-if="!isAlphaDestroyed">
         <br>
-        This softcap causes Tesseracts past {{ $legacyText(_s(format(freeTesseractSoftcap, 2, 2))) }} to eternally approach
-        a hardcap of {{ $legacyText(_s(format(freeTesseractHardcap, 2, 2))) }} without ever actually reaching it.
+        {{ $t('dimensions.infinity.tesseractLimit', { soft: format(freeTesseractSoftcap, 2, 2), hard: format(freeTesseractHardcap, 2, 2) }) }}
       </div>
     </div>
     <div v-if="isEnslavedRunning">

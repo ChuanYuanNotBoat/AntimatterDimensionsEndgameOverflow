@@ -41,8 +41,9 @@ export default {
       <br>
       {{ $t('ade.38ca641dce4c5a63') }}
       <br>
-      {{ $t('ade.1376ed272e52269b') }} <i class="fas fa-lock-open" /> to make the game prevent you
-      from doing anything this Endgame which would cause you to fail their unlock condition.
+      <LocalizedText id="endgame.upgrades.lock">
+        <template #p0><i class="fas fa-lock-open" /></template>
+      </LocalizedText>
       <span :ach-tooltip="$legacyText(lockTooltip)">
         <i class="fas fa-question-circle" />
       </span>

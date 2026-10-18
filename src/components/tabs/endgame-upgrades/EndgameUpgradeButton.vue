@@ -37,6 +37,20 @@ export default {
     config() {
       return this.upgrade.config;
     },
+    effectConfig() {
+      const config = this.config;
+      if (config.id !== 8) return config;
+      return {
+        ...config,
+        formatEffect: value => {
+          const canonical = config.formatEffect(value);
+          const parts = /^(.+?) Endgames? every (.+)$/u.exec(canonical);
+          return parts ? this.$t("endgame.upgrades.generationInterval", {
+            amount: parts[1], interval: this.$legacyText(parts[2])
+          }) : canonical;
+        }
+      };
+    },
     classObject() {
       return {
         "c-endgame-upgrade-btn--bought": this.isBought,
@@ -106,7 +120,7 @@ export default {
         </template>
         <template v-else>
           <EffectDisplay
-            :config="config"
+            :config="effectConfig"
             br
           />
           <CostDisplay

@@ -175,7 +175,7 @@ export default {
           </span>
           {{ $t('ade.78738e88cda9fee1') }}
           <span :class="instabilityClassObject()">
-            {{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}<span v-if="!isEffectActive"> (Disabled)</span>
+            {{ $legacyText(_s(formatX(dimMultiplier, 2, 1))) }}<span v-if="!isEffectActive"> {{ $t('dimensions.celestial.disabled') }}</span>
           </span>
           {{ $t('ade.18388a22507a9dbf') }}
           <span>{{ $t('ade.0a01db022efb97a1') }}</span>

@@ -21,23 +21,17 @@ export default {
       return `${this.name} Universe`;
     },
     message() {
-      return `Perform a Endgame reset and enter the ${this.name} Universe.`;
+      return this.$t("universes.entry.reset", { universe: this.$legacyText(this.topLabel) });
     },
     description() {
       switch (this.number) {
         case 1:
-          return `Inside the Transient Universe, Tickspeed and Time Dimensions are disabled. Game Speed is fixed
-          at ${format(0.001, 3, 3)}. You gain severely less Tachyon Particles and Dilated Time
-          (exponent^${format(0.1, 1, 1)}). The tetration of your Antimatter generation is multiplied
-          by ${format(0.9, 1, 1)}. Antimatter and Infinity Dimensions are dilated by ${format(0.1, 1, 1)} which
-          can be reduced via Relativistic Particles. Relativistic Particles are gained inside the Transient
-          Universe based on Antimatter and time spent inside this Universe.`;
+          return this.$t("universes.entry.transientDescription", {
+            speed: format(0.001, 3, 3), penalty: format(0.1, 1, 1),
+            tetration: format(0.9, 1, 1), dilation: format(0.1, 1, 1)
+          });
         case 2:
-          return `Inside the Tangible Universe, Antimatter Dimensions are translated into Matter Dimensions.
-          All other Dimension types are disabled. Lai’tela as a whole is disabled. Game Speed is fixed
-          at ${format(0.001, 3, 3)}. The tetration of Matter is halved then increased by ${formatInt(1)}.
-          Matter generates Molecular Mass based on time spent inside this Universe, and Molecular Mass adds to
-          the final tetration of Matter gain.`;
+          return this.$t("universes.entry.tangibleDescription", { speed: format(0.001, 3, 3), height: formatInt(1) });
         case 3:
           return ``;
         case 4:
@@ -59,8 +53,7 @@ export default {
           return `Existing the Transient Universe will give Ephemeral Light based on highest Antimatter reached,
           which empowers Galaxy Generation inside Doom and Tachyon Particles and Dilated Time gain outside Pelle.`;
         case 2:
-          return `Existing the Tangible Universe will give Stellar Augmenters based on highest Matter reached,
-          which boosts the strength of Gray Stars.`;
+          return this.$t("universes.entry.tangibleReward");
         case 3:
           return ``;
         case 4:
@@ -109,10 +102,10 @@ export default {
 <template>
   <ModalWrapperChoice @confirm="handleYesClick">
     <template #header>
-      {{ topLabel }}
+      {{ $legacyText(topLabel) }}
     </template>
     <div>
-      {{ $legacyText(_s(message)) }}
+      {{ message }}
       <br>
       <br>
       <div
@@ -120,19 +113,19 @@ export default {
         class="universe-description"
       >
         <br><br>
-        {{ $legacyText(_s(description)) }}
+        {{ $legacyText(description) }}
       </div>
       <br><br>
       <div>
-        {{ $legacyText(_s(reward)) }}
+        {{ $legacyText(reward) }}
       </div>
       <br>
       <div>
-        Reach {{ $legacyText(_s(format(highestAntimatter, 2, 1))) }} Antimatter to gain rewards from the {{ $legacyText(_s(name)) }} Universe.
+        {{ $t('universes.entry.rewardThreshold', { amount: format(highestAntimatter, 2, 1), resource: $t(number === 2 ? 'terms.matter' : 'terms.antimatter'), universe: $legacyText(topLabel) }) }}
       </div>
     </div>
     <template #confirm-text>
-      Begin
+      {{ $t('universes.entry.button') }}
     </template>
   </ModalWrapperChoice>
 </template>

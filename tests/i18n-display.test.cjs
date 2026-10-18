@@ -516,3 +516,142 @@ test('Galactic Power formats small Decimal percentages and huge multipliers with
     assert.ok(context.rewards[key].formatEffect(new Decimal('1e1000')).includes('×1e1000'));
   }
 });
+
+test('Batch A/B scoped messages retain parameter order and roundtrip without competing scope rules', () => {
+  const { service, display } = actual();
+  const rules = JSON.parse(read('src/i18n/adechinese-rules.json')).filter(rule =>
+    /^(dimensions\.(?:tooltip|buy|boost|galaxy|purchaseTimes|sacrifice)|slabdrill\.(?:effects|condition|strike)\.|compression\.exit\.|endgame\.collider\.|universes\.tangible\.|dimensions\.universalLimit|infinity\.passive\.|compression\.upgrades\.|endgame\.galacticEffect\.|endgame\.expansion\.|endgame\.masteries\.|endgame\.stars\.|endgame\.milestones\.)/u.test(rule.id));
+  assert.ok(rules.length > 50);
+  for (const rule of rules) {
+    const template = service.messageSource(rule.id, 'en', rule.form);
+    const values = Object.fromEntries([...template.matchAll(/\{(p\d+)\}/gu)].map((m, i) => [m[1], `×${i + 2}.50`]));
+    const canonical = template.replace(/\{(p\d+)\}/gu, (_, name) => values[name]);
+    for (const scope of rule.scopes) {
+      service.setLocale('zh-CN');
+      assert.equal(display.translate(canonical, scope), service.t(rule.id, values, rule.form), `${rule.id}/${scope}`);
+      service.setLocale('en');
+      assert.equal(display.translate(canonical, scope), canonical, `${rule.id}/${scope}`);
+    }
+  }
+});
+
+test('charged-upgrade hints and locked dimension prices preserve their actual meanings', () => {
+  const { service } = actual(); service.setLocale('zh-CN');
+  for (const key of ['ade.09d3c343a8f2191c','ade.0bc8be150b7e51fc']) {
+    assert.match(service.t(key), /已充能/u); assert.doesNotMatch(service.t(key), /未充能/u);
+  }
+  for (const [key, resource] of [['ade.0e6c57db71518a7b','永恒点数'],['ade.bf16249a88df4a3b','永恒点数'],
+    ['ade.2563bc10ad33d8f9','天界点数'],['ade.1be3f49bbe5e362c','无限点数']]) {
+    assert.ok(service.t(key).includes(resource), key);
+  }
+});
+
+test('both Infinity layouts render whole dimension targets in EC9 and flipped states', () => {
+  const Decimal = require('break_eternity.js');
+  for (const layout of ['Modern','Classic']) for (const isEC9Running of [false,true]) for (const isFlipped of [false,true]) {
+    const { service, view, render } = renderComponent(`src/components/tabs/infinity-dimensions/${layout}InfinityDimensionsTab.vue`,
+      { infinityPower: new Decimal(123), dimMultiplier: new Decimal(456), conversionRate: 7, isEC9Running, isFlipped,
+        showLockedDimCostNote: false }, { format: String, formatX: x => `×${x}`, formatPow: x => `^${x}` });
+    const english = render(); assert.match(english, isEC9Running ? /Time Dimensions due to Eternity Challenge 9/u : /(?:Anti)?[Mm]atter Dimensions/u);
+    service.setLocale('zh-CN');
+    assert.ok(render().includes(isEC9Running ? '时间维度' : isFlipped ? '正物质维度' : '反物质维度'));
+    assert.doesNotMatch(render(), /Dimensions\.|Compression Upgrade|维度维度/u);
+    service.setLocale('en'); assert.equal(render(), english); view.$destroy();
+  }
+});
+
+test('Endgame unlock explanations and Void ANR retain prerequisites', () => {
+  const { service } = actual(); service.setLocale('zh-CN');
+  assert.match(service.t('ade.6fc343de35b1b8fb'), /权限会永久保留/u);
+  assert.match(service.t('ade.38ca641dce4c5a63'), /未解锁.*已解锁.*Shift/u);
+  assert.match(service.t('ade.633ed9379a3147be'), /抹除多元宇宙后.*ANR/u);
+  assert.doesNotMatch(service.t('ade.633ed9379a3147be'), /1%/u);
+});
+
+test('Tangible Universe resolves as a whole term without translating unknown compound suffixes', () => {
+  const { service, display } = actual(); service.setLocale('zh-CN');
+  assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), '真际宇宙');
+  assert.equal(display.translate('Unreleased Tangible Universe','EnterUniverseModal'), 'Unreleased Tangible Universe');
+  assert.equal(service.t('navigation.universes.transient'), '流幻宇宙');
+  service.setLocale('en'); assert.equal(display.translate('Tangible Universe','EnterUniverseModal'), 'Tangible Universe');
+  assert.equal(display.translate('Unreleased Tangible Universe','EnterUniverseModal'), 'Unreleased Tangible Universe');
+});
+
+test('Slabdrill uses finite display IDs and Compression confirmation uses its own context', () => {
+  const { service, display } = actual(); service.setLocale('zh-CN');
+  for (const id of ['dimensionBoost', 'galaxy', 'infinity', 'breakInfinity', 'infinityChallengeFour', 'replicanti',
+    'eternity', 'timeStudy181', 'eternityChallengeTen', 'timeDilation', 'reality']) {
+    assert.ok(service.messageSource(`slabdrill.strike.name.${id}`, 'en'));
+    assert.match(service.t(`slabdrill.strike.name.${id}`), /[\u3400-\u9fff]/u);
+  }
+  for (const word of ['Infinite','Forever','Eternal']) assert.doesNotMatch(display.translate(`You are here ${word}`, 'SlabdrillStrike'), /You are here/u);
+  assert.equal(display.translate('None','SlabdrillStrike'), '无');
+  for (const key of ['compression.confirmation.disable','compression.confirmation.reenable']) {
+    assert.match(service.t(key), /压缩确认/u); assert.doesNotMatch(service.t(key), /激能确认/u);
+  }
+});
+
+test('both Divine layouts translate the whole effect paragraph and preserve its formatted values', () => {
+  for (const layout of ['Modern', 'Classic']) for (const isFlipped of [false, true]) {
+    const { service, view, render } = renderComponent(`src/components/tabs/divine-dimensions/${layout}DivineDimensionTab.vue`,
+      { divineMatter: 123, conversionFormula1: 2, conversionFormula2: 3, conversionFormula3: 0.25, isFlipped },
+      { format: String, formatX: value => `×${value}`, formatPow: value => `^${value}`,
+        formatPercents: value => `${100 * value}%` });
+    const english = render();
+    service.setLocale('zh-CN');
+    const chinese = render();
+    assert.doesNotMatch(chinese, /Exponent while|reduction to Hadron|all Machines/u);
+    assert.ok(chinese.includes(service.t(isFlipped ? 'terms.matter' : 'terms.antimatter')));
+    for (const value of ['123', '×2', '^3', '25%']) assert.ok(chinese.includes(value));
+    service.setLocale('en');
+    assert.equal(render(), english);
+    view.$destroy();
+  }
+});
+
+test('Universe entry confirmations render the correct whole resource and reward requirement', () => {
+  for (const [number, name] of [[1, 'Transient'], [2, 'Tangible']]) {
+    const { service, view, render } = renderComponent('src/components/modals/prestige/EnterUniverseModal.vue',
+      { number, name }, { format: String, formatInt: String }, { highestAntimatter: () => 123 });
+    const english = render();
+    service.setLocale('zh-CN');
+    const chinese = render();
+    assert.doesNotMatch(chinese, /Inside the|Perform an|Reach |Begin|Tangible|Transient/u);
+    assert.ok(chinese.includes(number === 2 ? '真际宇宙' : '流幻宇宙'));
+    assert.ok(chinese.includes(`123 ${service.t(number === 2 ? 'terms.matter' : 'terms.antimatter')}`));
+    service.setLocale('en');
+    assert.equal(render(), english);
+    assert.equal(view.name, name);
+    assert.equal(view.number, number);
+    view.$destroy();
+  }
+});
+
+test('short effect display adapters translate without replacing the gameplay configs', () => {
+  for (const [file, config, props, key] of [
+    ['src/components/tabs/time-compression/CompressionUpgradeButton.vue',
+      { id: 2, formatEffect: () => '^2 ➜ Next: ^3' }, { isRebuyable: true, showTooltip: false }, 'compression.upgrades.nextEffect'],
+    ['src/components/tabs/endgame-upgrades/EndgameUpgradeButton.vue',
+      { id: 8, formatEffect: () => '2 Endgames every 3 seconds' }, {}, 'endgame.upgrades.generationInterval']
+  ]) {
+    const original = config.formatEffect;
+    const { service, view } = renderComponent(file, { upgrade: { config }, ...props });
+    const english = view.effectConfig.formatEffect(0);
+    service.setLocale('zh-CN');
+    const chinese = view.effectConfig.formatEffect(0);
+    assert.doesNotMatch(chinese, /Next:|Endgames|every|seconds/u, key);
+    service.setLocale('en');
+    assert.equal(view.effectConfig.formatEffect(0), english);
+    assert.equal(config.formatEffect, original);
+    assert.equal(config.formatEffect(0), english);
+    view.$destroy();
+  }
+});
+
+test('flipped Break Eternity purchase instructions use Matter rather than Antimatter', () => {
+  const { service } = actual();
+  service.setLocale('zh-CN');
+  assert.match(service.t('ade.bff617a48096f688'), /物质/u);
+  assert.doesNotMatch(service.t('ade.bff617a48096f688'), /反物质/u);
+  assert.match(service.t('ade.35d3c89b5b7d585d'), /反物质/u);
+});

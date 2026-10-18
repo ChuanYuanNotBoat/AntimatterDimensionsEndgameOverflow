@@ -115,6 +115,7 @@ async function main() {
         }
       }
       for (const child of node.children ?? []) collectTemplate(child);
+      for (const slot of Object.values(node.scopedSlots ?? {})) collectTemplate(slot);
       for (const branch of node.ifConditions ?? []) collectTemplate(branch.block);
     }
     if (component.template) collectTemplate(compiler.compile(component.template.content).ast);
@@ -146,6 +147,7 @@ async function main() {
         }
       }
       for (const child of node.children ?? []) check(child);
+      for (const slot of Object.values(node.scopedSlots ?? {})) check(slot);
       for (const branch of node.ifConditions ?? []) check(branch.block);
     }
     if (ast) check(ast);

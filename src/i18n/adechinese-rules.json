@@ -6271,7 +6271,8 @@
     "global": false,
     "scopes": [
       "break-infinity-upgrades",
-      "break-infinity-upgrades:postGalaxy"
+      "break-infinity-upgrades:postGalaxy",
+      "InfinityUpgradeButton"
     ],
     "protectedParameters": []
   },
@@ -9004,7 +9005,8 @@
       "ResetRealityModal",
       "StatisticsTab",
       "confirmation-types",
-      "hotkeys"
+      "hotkeys",
+      "HotkeysModal"
     ],
     "protectedParameters": []
   },
@@ -12131,10 +12133,7 @@
   {
     "id": "ade.0a789b4a49f1278f",
     "global": true,
-    "scopes": [
-      "ClassicAntimatterDimensionsTab",
-      "ModernAntimatterDimensionsTab"
-    ],
+    "scopes": [],
     "protectedParameters": []
   },
   {
@@ -14495,19 +14494,13 @@
   {
     "id": "ade.cf6bc0387c6f735d",
     "global": true,
-    "scopes": [
-      "ClassicInfinityDimensionRow",
-      "ModernInfinityDimensionRow"
-    ],
+    "scopes": [],
     "protectedParameters": []
   },
   {
     "id": "ade.0036372ea486e800",
     "global": true,
-    "scopes": [
-      "ClassicTimeDimensionRow",
-      "ModernTimeDimensionRow"
-    ],
+    "scopes": [],
     "protectedParameters": []
   },
   {
@@ -23821,7 +23814,8 @@
       "endgame-masteries",
       "endgame-masteries:52",
       "galactic-power",
-      "galactic-power:1"
+      "galactic-power:1",
+      "GalacticPowerRow"
     ],
     "protectedParameters": []
   },
@@ -30361,7 +30355,8 @@
     "global": true,
     "scopes": [
       "galactic-power",
-      "galactic-power:1"
+      "galactic-power:1",
+      "GalacticPowerRow"
     ],
     "protectedParameters": []
   },
@@ -46995,7 +46990,8 @@
     "global": false,
     "scopes": [
       "confirmation-types",
-      "hotkeys"
+      "hotkeys",
+      "HotkeysModal"
     ],
     "protectedParameters": []
   },
@@ -69206,17 +69202,13 @@
   {
     "id": "ade.875d0be86967004f",
     "global": true,
-    "scopes": [
-      "LargeHadronColliderTab"
-    ],
+    "scopes": [],
     "protectedParameters": []
   },
   {
     "id": "ade.8b3aaf23808abd7d",
     "global": true,
-    "scopes": [
-      "LargeHadronColliderTab"
-    ],
+    "scopes": [],
     "protectedParameters": []
   },
   {
@@ -79674,76 +79666,644 @@
   {
     "id": "slabdrill.strike.name.dimensionBoost",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.galaxy",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.infinity",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.breakInfinity",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.infinityChallengeFour",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.replicanti",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.eternity",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.timeStudy181",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.eternityChallengeTen",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.timeDilation",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.name.reality",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.nerf.tickspeed",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.nerf.infinityDimensions",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.nerf.replicanti",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
   },
   {
     "id": "slabdrill.strike.nerf.timeStudy181",
     "global": false,
-    "scopes": ["SlabdrillStrike"]
+    "scopes": [
+      "SlabdrillStrike"
+    ]
+  },
+  {
+    "id": "hotkeys.action.max",
+    "global": false,
+    "scopes": [
+      "HotkeysModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "hotkeys.action.eternity",
+    "global": false,
+    "scopes": [
+      "HotkeysModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "hotkeys.action.reality",
+    "global": false,
+    "scopes": [
+      "HotkeysModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.tooltip.continuum.antimatter",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ModernInfinityDimensionRow",
+      "ModernTimeDimensionRow",
+      "ClassicAntimatterDimensionRow",
+      "ClassicInfinityDimensionRow",
+      "ClassicTimeDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.tooltip.continuum.matter",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ModernInfinityDimensionRow",
+      "ModernTimeDimensionRow",
+      "ClassicAntimatterDimensionRow",
+      "ClassicInfinityDimensionRow",
+      "ClassicTimeDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.tooltip.continuum.infinity",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ModernInfinityDimensionRow",
+      "ModernTimeDimensionRow",
+      "ClassicAntimatterDimensionRow",
+      "ClassicInfinityDimensionRow",
+      "ClassicTimeDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.tooltip.continuum.time",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ModernInfinityDimensionRow",
+      "ModernTimeDimensionRow",
+      "ClassicAntimatterDimensionRow",
+      "ClassicInfinityDimensionRow",
+      "ClassicTimeDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.tooltip.purchased",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ModernInfinityDimensionRow",
+      "ModernTimeDimensionRow",
+      "ClassicAntimatterDimensionRow",
+      "ClassicInfinityDimensionRow",
+      "ClassicTimeDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.tooltip.purchasedOnce",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ModernInfinityDimensionRow",
+      "ModernTimeDimensionRow",
+      "ClassicAntimatterDimensionRow",
+      "ClassicInfinityDimensionRow",
+      "ClassicTimeDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.buy.power",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.boost.power",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": [],
+    "form": "lower"
+  },
+  {
+    "id": "dimensions.boost.rangeAll",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.boost.rangeSingle",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.boost.rangeFirst",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.boost.range",
+    "global": false,
+    "scopes": [
+      "ModernDimensionBoostRow",
+      "ClassicDimensionBoostRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.exit.noGain",
+    "global": false,
+    "scopes": [
+      "ExitCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.exit.gain",
+    "global": false,
+    "scopes": [
+      "ExitCompressionModal"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.none",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.eternal.0",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.eternal.1",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.eternal.2",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.nerfDescription.0",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.nerfDescription.1",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.nerfDescription.3",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.nerfDescription.8",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.nerfDescription.9",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.0",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.1",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.2",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.3",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.4",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.5",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.6",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.7",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.8",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "slabdrill.strike.buffDescription.9",
+    "global": false,
+    "scopes": [
+      "SlabdrillStrike"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "universes.tangible.entry",
+    "global": false,
+    "scopes": [
+      "TangibleUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "universes.tangible.exitGoal",
+    "global": false,
+    "scopes": [
+      "TangibleUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "universes.tangible.exitGain",
+    "global": false,
+    "scopes": [
+      "TangibleUniverseTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.universalLimit",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionRow",
+      "ClassicAntimatterDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.buy.powerAndSacrificeMult",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterDimensionsTab",
+      "ClassicAntimatterDimensionsTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.antimatter.dimensions",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterGalaxyRow",
+      "ClassicAntimatterGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.antimatter.boosts",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterGalaxyRow",
+      "ClassicAntimatterGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.antimatter.both",
+    "global": false,
+    "scopes": [
+      "ModernAntimatterGalaxyRow",
+      "ClassicAntimatterGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.celestial.dimensions",
+    "global": false,
+    "scopes": [
+      "ModernCelestialGalaxyRow",
+      "ClassicCelestialGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.celestial.boosts",
+    "global": false,
+    "scopes": [
+      "ModernCelestialGalaxyRow",
+      "ClassicCelestialGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.galaxy.reset.celestial.both",
+    "global": false,
+    "scopes": [
+      "ModernCelestialGalaxyRow",
+      "ClassicCelestialGalaxyRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.purchaseTimes",
+    "global": false,
+    "scopes": [
+      "ModernDivineDimensionRow",
+      "ClassicDivineDimensionRow",
+      "ModernCelestialDimensionRow",
+      "ClassicCelestialDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.sacrifice.disabledMult",
+    "global": false,
+    "scopes": [
+      "ClassicAntimatterDimensionsTabHeader",
+      "ModernAntimatterDimensionsTab"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "dimensions.buy.untilCost",
+    "global": false,
+    "scopes": [
+      "ClassicAntimatterDimensionRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "infinity.passive.bestRuns",
+    "global": false,
+    "scopes": [
+      "InfinityUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.galaxyQuantity",
+    "global": false,
+    "scopes": [
+      "BreakEternityUpgradeButton",
+      "GalacticPowerRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.galacticEffect.empowerment",
+    "global": false,
+    "scopes": [
+      "GalacticPowerRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.galacticEffect.celestial",
+    "global": false,
+    "scopes": [
+      "GalacticPowerRow"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.upgrades.hrGain",
+    "global": false,
+    "scopes": [
+      "CompressionUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.upgrades.postNerf.antimatter",
+    "global": false,
+    "scopes": [
+      "CompressionUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "compression.upgrades.postNerf.matter",
+    "global": false,
+    "scopes": [
+      "CompressionUpgradeButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.masteries.perkGeneration",
+    "global": false,
+    "scopes": [
+      "NormalEndgameMastery"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.stars.grayReset",
+    "global": false,
+    "scopes": [
+      "StarContainer"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.milestones.capped",
+    "global": false,
+    "scopes": [
+      "EndgameMilestoneButton"
+    ],
+    "protectedParameters": []
+  },
+  {
+    "id": "endgame.milestones.current",
+    "global": false,
+    "scopes": [
+      "EndgameMilestoneButton"
+    ],
+    "protectedParameters": []
   }
 ]

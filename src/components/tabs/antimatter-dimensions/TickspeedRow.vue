@@ -95,7 +95,7 @@ export default {
           {{ $t('ade.1cf452a0de5ee488') }}
         </span>
         <span v-else-if="isTransient">
-          Tickspeed Does Not Exist (Transient Universe)
+          {{ $t('dimensions.tickspeed.transient') }}
         </span>
         <span v-else>
           {{ $t('ade.88514df31e826cee', { p0: $legacyText(_s(format(cost))) }) }}

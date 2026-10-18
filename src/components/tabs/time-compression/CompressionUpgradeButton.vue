@@ -41,6 +41,18 @@ export default {
     };
   },
   computed: {
+    effectConfig() {
+      const config = this.upgrade.config;
+      if (!this.isRebuyable || config.id !== 2) return config;
+      return {
+        ...config,
+        formatEffect: value => {
+          const canonical = config.formatEffect(value);
+          const parts = /^(.*?)\s*➜\s*Next:\s*(.+)$/u.exec(canonical);
+          return parts ? this.$t("compression.upgrades.nextEffect", { p0: parts[1], p1: parts[2] }) : canonical;
+        }
+      };
+    },
     classObject() {
       return {
         "o-compression-upgrade": true,
@@ -102,7 +114,7 @@ export default {
         <EffectDisplay
           :key="boughtAmount"
           br
-          :config="upgrade.config"
+          :config="effectConfig"
         />
       </span>
       <CostDisplay

@@ -796,7 +796,8 @@ body.t-s12 {
 .l-dimension-single-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  height: 5.5rem;
+  min-height: 5.5rem;
+  height: auto;
   align-content: center;
 }
 
