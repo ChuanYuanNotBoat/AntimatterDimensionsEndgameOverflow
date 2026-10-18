@@ -88,7 +88,7 @@ export default {
       <LocalizedText id="ade.b122b19881bfdf43">
     <template #p0><br></template>
     <template #p1><br v-if="needsFirstLinebreak"></template>
-    <template #p2><span v-if="config.secondary.path()">Use only the {{ $legacyText(_s(config.secondary.path())) }} path</span>
+    <template #p2><span v-if="config.secondary.path">Use only the {{ $legacyText(_s(config.secondary.path())) }} path</span>
 <span v-else>
         {{ formatValue(requirement.current) }}/{{ formatValue(requirement.total) }}
         <br v-if="needsSecondLinebreak">

@@ -221,6 +221,9 @@ export class DimBoost {
 
     let boostEffects;
     if (NormalChallenge(8).isRunning) boostEffects = newUnlock;
+    else if (Ascensions.dbA.isUnlocked && boosts.gte(DimBoost.maxDimensionsUnlockable - 1) && newUnlock === "") {
+      boostEffects = `${formattedMultText} ${formattedPowText}`;
+    }
     else if (newUnlock === "") boostEffects = `${formattedMultText} ${dimensionRange} ${formattedPowText}`;
     else boostEffects = `${newUnlock} and ${formattedMultText} ${dimensionRange} ${formattedPowText}`;
 

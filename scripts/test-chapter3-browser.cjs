@@ -49,7 +49,7 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
     }
     const page = await preparePage({ viewport: { width: 1450, height: 1100 } });
     const save = fs.readFileSync(process.env.ADE_TEST_SAVE, "utf8").trim();
-    const base = await page.evaluate(async s => {
+    const base = await page.evaluate(async ({ s, batchAB }) => {
       GameIntervals.stop();
 
       GameIntervals.start = () => {};
@@ -85,6 +85,15 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
       player.options.confirmations.compression = false;
       player.options.confirmations.overcharge = false;
       player.options.confirmations.universes = false;
+      // The display matrix mounts Compression independently of the supplied save's progress.
+      if (batchAB && !player.endgameMasteries.permanentMasteries.includes(3)) {
+        player.endgameMasteries.permanentMasteries.push(3);
+      }
+      if (batchAB) {
+        ResurgenceUpgrade.unl1.set.add(ResurgenceUpgrade.unl1.id);
+        player.endgame.overcharge.allowComplex = true;
+        player.endgame.overcharge.charged.complex.add(11);
+      }
       Lazy.invalidateAll();
       GameUI.update();
       await Vue.nextTick();
@@ -94,7 +103,7 @@ const batchAB = process.env.ADE_TEST_DOMAIN_BATCH === "AB";
       };
       stopNews(ui);
       return GameSaveSerializer.serialize(player);
-    }, save);
+    }, { s: save, batchAB });
 
     const scenarioReports = [];
     const runtimeAudits = [];

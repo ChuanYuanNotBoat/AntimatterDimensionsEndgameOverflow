@@ -96,7 +96,7 @@ test('Legacy save normalization is idempotent and preserves progress and unknown
   const before=JSON.stringify(w.player);w.context.normalizeChapter3Save(w.player);assert.equal(JSON.stringify(w.player),before);
 });
 test('Large offline steps stop at every mandatory cinematic quote',()=>{
-  const source=read('game.js');const assignments=source.match(/player\.celestials\.slabdrill\.(?:goodbyeTick|warpTick) = Math\.min\([^;]+;/g);
+  const source=read('game.js');const assignments=source.match(/player\.celestials\.slabdrill\.(?:goodbyeTick|warpTick) = Math\.min\(\d+,[^;]+;/g);
   assert.equal(assignments.length,4);for(const statement of assignments){const w=setup();w.context.realDiff=86400000;w.run(statement);const cap=Number(statement.match(/Math\.min\((\d+)/)[1]);const key=statement.includes('goodbyeTick')?'goodbyeTick':'warpTick';assert.equal(w.player.celestials.slabdrill[key],cap);}
 });
 

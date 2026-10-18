@@ -217,7 +217,7 @@ export const Slabdrill = {
     core.lastFound = now;
     return true;
   },
-  enterCore() {
+  enterCore(coreJump = false) {
     if (!this.isCursed || this.coreActive) return false;
     // Reconcile the outside run before taking the return snapshot. The core has
     // its own forced Break Infinity state, which must not count as stage progress.
@@ -230,7 +230,7 @@ export const Slabdrill = {
     }
     player.celestials.slabdrill.core.isActive = true;
     player.break = true;
-    Tab.dimensions.antimatter.show(true);
+    Tab.dimensions.antimatter.show(!coreJump);
     return true;
   },
   exitCore() {

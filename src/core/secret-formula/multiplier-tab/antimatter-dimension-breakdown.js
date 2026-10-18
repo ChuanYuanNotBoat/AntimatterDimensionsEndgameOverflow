@@ -178,145 +178,146 @@ function trace(tier, skipKey = null, steps = null) {
     return value;
   }
   if (NormalChallenge(10).isRunning && tier > 6) return value;
-  if (EternityChallenge(11).isRunning) {
-    mul("ec11InfinityPower", Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
-    mul("ec11Dimboost", DimBoost.multiplierToNDTier(tier));
-    return value;
-  }
   if (Slabdrill.coreActive) {
     transform("slabCore", "override", () => DC.D1.times(Slabdrill.slabPowers.adMult()),
       "Slabdrill core replaces all ordinary AD multipliers");
     return value;
   }
 
-  group("commonEffects", () => {
-    mul("achievementMultiplier", Achievements.power);
-    mul("shopDimension", ShopPurchase.dimPurchases.currentMult);
-    mul("shopAll", ShopPurchase.allDimPurchases.currentMult);
-    if (!EternityChallenge(9).isRunning) {
-      mul("infinityPower", Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
-    }
-    for (const id of ["totalAMMult", "currentAMMult", "achievementMult", "slowestChallengeMult"]) {
-      mul(`break${id}`, effect(BreakInfinityUpgrade[id]));
-    }
-    for (const id of ["totalTimeMult", "thisInfinityTimeMult"]) mul(`infinity${id}`, effect(InfinityUpgrade[id]));
-    for (const id of [18, 48, 56, 65, 72, 73, 74, 76, 84, 91, 92]) {
-      mul(`achievement${id}`, effect(Achievement(id)));
-    }
-    for (const id of [91, 101, 161, 193]) mul(`timeStudy${id}`, effect(TimeStudy(id)));
-    mul("infinityChallenge3", effect(InfinityChallenge(3)));
-    mul("infinityChallenge3Reward", effect(InfinityChallenge(3).reward));
-    mul("infinityChallenge8", effect(InfinityChallenge(8)));
-    mul("eternityChallenge10", effect(EternityChallenge(10)));
-    mul("alchemyDimensionality", effect(AlchemyResource.dimensionality));
-    mul("pelleADUpgrade", effect(PelleUpgrade.antimatterDimensionMult));
-    mul("infinityChallenge6", DC.D1.dividedByEffectOf(InfinityChallenge(6)));
-    mul("glyphMultiplier", getAdjustedGlyphEffect("powermult"));
-    mul("alchemyForce", Currency.realityMachines.value.powEffectOf(AlchemyResource.force));
-    if (Pelle.isDoomed && !PelleDestructionUpgrade.disableADNerf.canBeApplied) {
-      mul("pelleNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(50).max(1)));
-    }
-    if (Alpha.isRunning) mul("alphaNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(125).max(1)));
-    if (Slabdrill.isCursed) {
-      mul("slabAMNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(1666).max(1)));
-      mul("slabChallenges", Decimal.pow(6.66, NormalChallenges.all.countWhere(c => c.id <= 9 && c.isCompleted)));
-    }
-    if (LHC.voidRunning) mul("nullUpgrade", effect(NullUpgrade.antimatterDimensionMult));
-  });
+  if (EternityChallenge(11).isRunning) {
+    mul("ec11InfinityPower", Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
+    mul("ec11Dimboost", DimBoost.multiplierToNDTier(tier));
+  } else {
+    group("commonEffects", () => {
+      mul("achievementMultiplier", Achievements.power);
+      mul("shopDimension", ShopPurchase.dimPurchases.currentMult);
+      mul("shopAll", ShopPurchase.allDimPurchases.currentMult);
+      if (!EternityChallenge(9).isRunning) {
+        mul("infinityPower", Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
+      }
+      for (const id of ["totalAMMult", "currentAMMult", "achievementMult", "slowestChallengeMult"]) {
+        mul(`break${id}`, effect(BreakInfinityUpgrade[id]));
+      }
+      for (const id of ["totalTimeMult", "thisInfinityTimeMult"]) mul(`infinity${id}`, effect(InfinityUpgrade[id]));
+      for (const id of [18, 48, 56, 65, 72, 73, 74, 76, 84, 91, 92]) {
+        mul(`achievement${id}`, effect(Achievement(id)));
+      }
+      for (const id of [91, 101, 161, 193]) mul(`timeStudy${id}`, effect(TimeStudy(id)));
+      mul("infinityChallenge3", effect(InfinityChallenge(3)));
+      mul("infinityChallenge3Reward", effect(InfinityChallenge(3).reward));
+      mul("infinityChallenge8", effect(InfinityChallenge(8)));
+      mul("eternityChallenge10", effect(EternityChallenge(10)));
+      mul("alchemyDimensionality", effect(AlchemyResource.dimensionality));
+      mul("pelleADUpgrade", effect(PelleUpgrade.antimatterDimensionMult));
+      mul("infinityChallenge6", DC.D1.dividedByEffectOf(InfinityChallenge(6)));
+      mul("glyphMultiplier", getAdjustedGlyphEffect("powermult"));
+      mul("alchemyForce", Currency.realityMachines.value.powEffectOf(AlchemyResource.force));
+      if (Pelle.isDoomed && !PelleDestructionUpgrade.disableADNerf.canBeApplied) {
+        mul("pelleNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(50).max(1)));
+      }
+      if (Alpha.isRunning) mul("alphaNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(125).max(1)));
+      if (Slabdrill.isCursed) {
+        mul("slabAMNerf", DC.D1.div(Currency.antimatter.value.add(1).log10().times(1666).max(1)));
+        mul("slabChallenges", Decimal.pow(6.66, NormalChallenges.all.countWhere(c => c.id <= 9 && c.isCompleted)));
+      }
+      if (LHC.voidRunning) mul("nullUpgrade", effect(NullUpgrade.antimatterDimensionMult));
+    });
 
-  const purchases = Laitela.continuumActive && tier !== 9 ? AntimatterDimension(tier).continuumValue
-    : Decimal.floor(AntimatterDimension(tier).bought.div(10));
-  if (!Ascensions.b10mA.isUnlocked) mul("purchases", Decimal.pow(AntimatterDimensions.buyTenMultiplier, purchases));
-  mul("dimboost", DimBoost.multiplierToNDTier(tier));
+    const purchases = Laitela.continuumActive && tier !== 9 ? AntimatterDimension(tier).continuumValue
+      : Decimal.floor(AntimatterDimension(tier).bought.div(10));
+    if (!Ascensions.b10mA.isUnlocked) mul("purchases", Decimal.pow(AntimatterDimensions.buyTenMultiplier, purchases));
+    mul("dimboost", DimBoost.multiplierToNDTier(tier));
 
-  group("tierEffects", () => {
-    // EffectOrDefault() may legitimately return a primitive number when an upgrade is inactive.
-    // Gameplay starts this product from DC.D1; normalize the individual factors too, because
-    // the analysis needs to recompute the product for TS31 counterfactual attribution.
-    const rawTier = new Decimal(tier === 9 ? 1 : effect(AntimatterDimension(tier).infinityUpgrade));
-    const rawBreak = new Decimal(effect(BreakInfinityUpgrade.infinitiedMult));
-    const tierFactor = isOrderedSourceSkipped(skipKey, "tierInfinityUpgrade") ? DC.D1 : rawTier;
-    const breakFactor = isOrderedSourceSkipped(skipKey, "breakInfinitiedMult") ? DC.D1 : rawBreak;
-    mul("tierInfinityUpgrade", rawTier);
-    mul("breakInfinitiedMult", rawBreak);
-    // The gameplay powers the PRODUCT of the above two multipliers by TS31; only the extra
-    // (power - 1) belongs to TS31. Recompute its factor when either source is removed.
-    const ts31 = new Decimal(effect(TimeStudy(31)));
-    mul("timeStudy31", tierFactor.times(breakFactor).pow(ts31.sub(1)));
+    group("tierEffects", () => {
+      // EffectOrDefault() may legitimately return a primitive number when an upgrade is inactive.
+      // Gameplay starts this product from DC.D1; normalize the individual factors too, because
+      // the analysis needs to recompute the product for TS31 counterfactual attribution.
+      const rawTier = new Decimal(tier === 9 ? 1 : effect(AntimatterDimension(tier).infinityUpgrade));
+      const rawBreak = new Decimal(effect(BreakInfinityUpgrade.infinitiedMult));
+      const tierFactor = isOrderedSourceSkipped(skipKey, "tierInfinityUpgrade") ? DC.D1 : rawTier;
+      const breakFactor = isOrderedSourceSkipped(skipKey, "breakInfinitiedMult") ? DC.D1 : rawBreak;
+      mul("tierInfinityUpgrade", rawTier);
+      mul("breakInfinitiedMult", rawBreak);
+      // The gameplay powers the PRODUCT of the above two multipliers by TS31; only the extra
+      // (power - 1) belongs to TS31. Recompute its factor when either source is removed.
+      const ts31 = new Decimal(effect(TimeStudy(31)));
+      mul("timeStudy31", tierFactor.times(breakFactor).pow(ts31.sub(1)));
 
-    if (tier === 1) {
-      mul("unspentIP", effect(InfinityUpgrade.unspentIPMult));
-      mul("unspentIPCharged", effect(InfinityUpgrade.unspentIPMult.chargedEffect));
-      for (const id of [11, 28, 31, 68, 71]) mul(`achievementTier${id}`, effect(Achievement(id)));
-      if (!Ascensions.sacA.isUnlocked) mul("timeStudy234Multiplier", effect(TimeStudy(234)));
-    }
-    if ((tier === 8 && !Ascensions.sacA.isUnlocked) || (tier === 1 && Slabdrill.isCursed)) {
-      mul("sacrificeMultiplier", Sacrifice.totalBoost);
-    }
-    for (const [id, applies] of [
-      [12, tier === 2], [13, tier >= 3 && tier <= 8], [14, tier === 4],
-      [15, tier >= 5 && tier <= 8], [16, tier === 6], [17, tier === 7],
-      [23, tier === 8], [34, tier < 8], [64, tier <= 4]
-    ]) {
-      if (applies) mul(`achievementTier${id}`, effect(Achievement(id)));
-    }
-    if (tier < 8 && !Ascensions.sacA.isUnlocked) mul("timeStudy71Multiplier", effect(TimeStudy(71)));
-    if (tier === (Slabdrill.isCursed ? 1 : 8) && !Ascensions.sacA.isUnlocked) {
-      mul("timeStudy214Multiplier", effect(TimeStudy(214)));
-    }
-    if (tier > 1 && tier < 8 && !Slabdrill.isCursed) {
-      mul("infinityChallenge8Reward", effect(InfinityChallenge(8).reward));
-    }
-    if (Achievement(43).isUnlocked) mul("achievementTier43", 1 + tier / 100);
-    if (Slabdrill.isCursed) mul("slabMultiplier", Slabdrill.slabPowers.adMult());
-  });
-  transform("minimum", "hardcap", current => current.clampMin(1));
+      if (tier === 1) {
+        mul("unspentIP", effect(InfinityUpgrade.unspentIPMult));
+        mul("unspentIPCharged", effect(InfinityUpgrade.unspentIPMult.chargedEffect));
+        for (const id of [11, 28, 31, 68, 71]) mul(`achievementTier${id}`, effect(Achievement(id)));
+        if (!Ascensions.sacA.isUnlocked) mul("timeStudy234Multiplier", effect(TimeStudy(234)));
+      }
+      if ((tier === 8 && !Ascensions.sacA.isUnlocked) || (tier === 1 && Slabdrill.isCursed)) {
+        mul("sacrificeMultiplier", Sacrifice.totalBoost);
+      }
+      for (const [id, applies] of [
+        [12, tier === 2], [13, tier >= 3 && tier <= 8], [14, tier === 4],
+        [15, tier >= 5 && tier <= 8], [16, tier === 6], [17, tier === 7],
+        [23, tier === 8], [34, tier < 8], [64, tier <= 4]
+      ]) {
+        if (applies) mul(`achievementTier${id}`, effect(Achievement(id)));
+      }
+      if (tier < 8 && !Ascensions.sacA.isUnlocked) mul("timeStudy71Multiplier", effect(TimeStudy(71)));
+      if (tier === (Slabdrill.isCursed ? 1 : 8) && !Ascensions.sacA.isUnlocked) {
+        mul("timeStudy214Multiplier", effect(TimeStudy(214)));
+      }
+      if (tier > 1 && tier < 8 && !Slabdrill.isCursed) {
+        mul("infinityChallenge8Reward", effect(InfinityChallenge(8).reward));
+      }
+      if (Achievement(43).isUnlocked) mul("achievementTier43", 1 + tier / 100);
+      if (Slabdrill.isCursed) mul("slabMultiplier", Slabdrill.slabPowers.adMult());
+    });
+    transform("minimum", "hardcap", current => current.clampMin(1));
 
-  group("powers", () => {
-    if (InfinityChallenge(4).isRunning && (player.postC4Tier !== tier || Slabdrill.isCursed)) {
-      pow("ic4Nerf", InfinityChallenge(4).effectValue);
-    }
-    if (InfinityChallenge(4).isCompleted) pow("ic4Reward", InfinityChallenge(4).reward.effectValue);
-    pow("glyphPower", getAdjustedGlyphEffect("powerpow"));
-    pow("effarigGlyphPower", getAdjustedGlyphEffect("effarigdimensions"));
-    pow("raMomentum", Ra.momentumValue);
-    pow("tierInfinityCharged", effect(AntimatterDimension(tier).infinityUpgrade.chargedEffect));
-    pow("infinityTotalTimeCharged", effect(InfinityUpgrade.totalTimeMult.chargedEffect));
-    pow("infinityThisTimeCharged", effect(InfinityUpgrade.thisInfinityTimeMult.chargedEffect));
-    pow("alchemyPower", effect(AlchemyResource.power));
-    pow("achievement183", effect(Achievement(183)));
-    pow("pelleParadoxPower", effect(PelleRifts.paradox));
-    pow("singularityPower", effect(SingularityMilestone.dimensionPow));
-    pow("raTheoremPower", effect(Ra.unlocks.allDimPowTT));
-    for (const id of ["totalAMMult", "currentAMMult", "infinitiedMult", "achievementMult", "slowestChallengeMult"]) {
-      pow(`breakCharged${id}`, effect(BreakInfinityUpgrade[id].chargedEffect));
-    }
-    if (ExpansionPack.pellePack.isBought && !player.disablePostReality) {
-      pow("pellePackPower", Decimal.pow(Decimal.log10(player.records.bestEndgame.galaxies).div(100), 1.5).add(1));
-    }
-    pow("cursedGlyphPower", getAdjustedGlyphEffect("curseddimensions"));
-    pow("vPower", effect(VUnlocks.adPow));
-    if (Pelle.isDoomed && PelleCelestialUpgrade.vMilestones1.canBeApplied) pow("pelleVPower", VUnlocks.adPow.effectValue);
-    if (PelleStrikes.infinity.hasStrike && !PelleStrikes.infinity.isDestroyed()) pow("pelleStrikePower", 0.5);
-    if (Ascensions.dbA.isUnlocked) pow("ascensionDimboostPower", DimBoost.powerToND);
-    if (Ascensions.b10mA.isUnlocked) {
-      const oom = (Laitela.continuumActive && tier !== 9 ? AntimatterDimension(tier).continuumValue
-        : Decimal.floor(AntimatterDimension(tier).bought.div(10))).max(1).log10();
-      pow("ascensionPurchasePower", AntimatterDimensions.buyOoMPower.times(oom).add(1));
-    }
-    if (Ascensions.sacA.isUnlocked && tier === 8) pow("ascensionSacrificePower", Sacrifice.totalPower);
-    if (tier < 8 && Ascensions.sacA.isUnlocked) pow("timeStudy71Power", effect(TimeStudy(71)));
-    if (tier === 8 && Ascensions.sacA.isUnlocked) pow("timeStudy214Power", effect(TimeStudy(214)));
-    if (tier === 1 && Ascensions.sacA.isUnlocked) pow("timeStudy234Power", effect(TimeStudy(234)));
-    if (SlabdrillUnlocks.infinity.isUnlocked) pow("slabPower", Slabdrill.slabPowers.adPow());
-    if (Slabdrill.isCursed) {
-      pow("slabIC8Power", effect(InfinityChallenge(8).reward));
-      if (NormalChallenge(10).isRunning) pow("slabNC10", 0.75);
-      if (NormalChallenge(12).isRunning) pow("slabNC12", 0.5 + player.chall2Pow / 2);
-      if (EternityChallenge(3).isRunning) pow("slabEC3", 0.5);
-      if (SlabdrillUnlocks.eternityChallengeTen.isUnlocked) pow("slabEC10", 0.75);
-    }
-  });
+    group("powers", () => {
+      if (InfinityChallenge(4).isRunning && (player.postC4Tier !== tier || Slabdrill.isCursed)) {
+        pow("ic4Nerf", InfinityChallenge(4).effectValue);
+      }
+      if (InfinityChallenge(4).isCompleted) pow("ic4Reward", InfinityChallenge(4).reward.effectValue);
+      pow("glyphPower", getAdjustedGlyphEffect("powerpow"));
+      pow("effarigGlyphPower", getAdjustedGlyphEffect("effarigdimensions"));
+      pow("raMomentum", Ra.momentumValue);
+      pow("tierInfinityCharged", effect(AntimatterDimension(tier).infinityUpgrade.chargedEffect));
+      pow("infinityTotalTimeCharged", effect(InfinityUpgrade.totalTimeMult.chargedEffect));
+      pow("infinityThisTimeCharged", effect(InfinityUpgrade.thisInfinityTimeMult.chargedEffect));
+      pow("alchemyPower", effect(AlchemyResource.power));
+      pow("achievement183", effect(Achievement(183)));
+      pow("pelleParadoxPower", effect(PelleRifts.paradox));
+      pow("singularityPower", effect(SingularityMilestone.dimensionPow));
+      pow("raTheoremPower", effect(Ra.unlocks.allDimPowTT));
+      for (const id of ["totalAMMult", "currentAMMult", "infinitiedMult", "achievementMult", "slowestChallengeMult"]) {
+        pow(`breakCharged${id}`, effect(BreakInfinityUpgrade[id].chargedEffect));
+      }
+      if (ExpansionPack.pellePack.isBought && !player.disablePostReality) {
+        pow("pellePackPower", Decimal.pow(Decimal.log10(player.records.bestEndgame.galaxies).div(100), 1.5).add(1));
+      }
+      pow("cursedGlyphPower", getAdjustedGlyphEffect("curseddimensions"));
+      pow("vPower", effect(VUnlocks.adPow));
+      if (Pelle.isDoomed && PelleCelestialUpgrade.vMilestones1.canBeApplied) pow("pelleVPower", VUnlocks.adPow.effectValue);
+      if (PelleStrikes.infinity.hasStrike && !PelleStrikes.infinity.isDestroyed()) pow("pelleStrikePower", 0.5);
+      if (Ascensions.dbA.isUnlocked) pow("ascensionDimboostPower", DimBoost.powerToND);
+      if (Ascensions.b10mA.isUnlocked) {
+        const oom = (Laitela.continuumActive && tier !== 9 ? AntimatterDimension(tier).continuumValue
+          : Decimal.floor(AntimatterDimension(tier).bought.div(10))).max(1).log10();
+        pow("ascensionPurchasePower", AntimatterDimensions.buyOoMPower.times(oom).add(1));
+      }
+      if (Ascensions.sacA.isUnlocked && tier === 8) pow("ascensionSacrificePower", Sacrifice.totalPower);
+      if (tier < 8 && Ascensions.sacA.isUnlocked) pow("timeStudy71Power", effect(TimeStudy(71)));
+      if (tier === 8 && Ascensions.sacA.isUnlocked) pow("timeStudy214Power", effect(TimeStudy(214)));
+      if (tier === 1 && Ascensions.sacA.isUnlocked) pow("timeStudy234Power", effect(TimeStudy(234)));
+      if (SlabdrillUnlocks.infinity.isUnlocked) pow("slabPower", Slabdrill.slabPowers.adPow());
+      if (Slabdrill.isCursed) {
+        pow("slabIC8Power", effect(InfinityChallenge(8).reward));
+        if (NormalChallenge(10).isRunning) pow("slabNC10", 0.75);
+        if (NormalChallenge(12).isRunning) pow("slabNC12", 0.5 + player.chall2Pow / 2);
+        if (EternityChallenge(3).isRunning) pow("slabEC3", 0.5);
+        if (SlabdrillUnlocks.eternityChallengeTen.isUnlocked) pow("slabEC10", 0.75);
+      }
+    });
+
+  }
 
   if (player.dilation.active || (PelleStrikes.dilation.hasStrike && !PelleStrikes.dilation.isDestroyed())) {
     pow("dilationGlyphPower", getAdjustedGlyphEffect("dilationpow"));
@@ -364,7 +365,7 @@ function trace(tier, skipKey = null, steps = null) {
     transform("ninthLog", "formula", current => current.max(10).log10());
     mul("ninthDuality", effect(DualityUpgrade(30)));
     if (Slabdrill.isCursed) pow("ninthSlabPower",
-      Math.max((player.celestials.slabdrill.goodbyeTick - 300000) / 30000 + 1, 1));
+      Math.max((player.celestials.slabdrill.goodbyeTick - 120000) / 30000 + 1, 1));
   }
   return value;
 }

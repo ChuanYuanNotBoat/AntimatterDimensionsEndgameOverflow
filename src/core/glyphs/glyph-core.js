@@ -822,7 +822,7 @@ export const Glyphs = {
     this.removeFromInventory(glyph);
     this.unequip(targetSlot, glyph.idx);
     if (Slabdrill.isCursed) {
-      Slabdrill.enterCore();
+      Slabdrill.enterCore(true);
       Slabdrill.exitCore();
     } else {
       finishProcessReality({
