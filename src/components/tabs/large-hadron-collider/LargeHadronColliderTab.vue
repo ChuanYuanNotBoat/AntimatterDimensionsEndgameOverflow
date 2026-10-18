@@ -163,42 +163,48 @@ export default {
         >
           <br>
           <div v-if="milestonesReached >= 1">
-            C Milestone {{ $legacyText(_s(formatInt(1))) }}: Tesseract Equalizer.
-            Effective Tesseracts are slowly shifting from (bought + free) into (bought * free).
-            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.5) * 2, 0, 1), 3, 3))) }} complete, making the current
-            number of Effective Tesseracts equal to {{ $legacyText(_s(format(tessEqual, 2, 2))) }}.
+            {{ $t('ade.010ae3ab7407629d', {
+              p0: $legacyText(_s(formatInt(1))),
+              p1: $legacyText(_s(formatPercents(Math.clamp((c - 0.5) * 2, 0, 1), 3, 3))),
+              p2: $legacyText(_s(format(tessEqual, 2, 2)))
+            }) }}
           </div>
           <div v-if="milestonesReached >= 2">
             <br>
-            C Milestone {{ $legacyText(_s(formatInt(2))) }}: {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} Equalizer.
-            {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} production is slowly shifting from
-            ({{ $legacyText(_s(isFlipped ? "MDMults" : "ADMults")) }} * Tickspeed) into
-            ({{ $legacyText(_s(isFlipped ? "MDMults" : "ADMults")) }}^log10(max(Tickspeed, 1))).
-            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.7) * 10/3, 0, 1), 3, 3))) }} complete, making current
-            {{ $legacyText(_s(isFlipped ? "Matter" : "Antimatter")) }} production equal to {{ $legacyText(_s(format(antiEqual, 2, 2))) }}.
+            {{ $t('ade.0279a0ccf6628bea', {
+              p0: $legacyText(_s(formatInt(2))),
+              p1: $legacyText(_s(isFlipped ? "Matter" : "Antimatter")),
+              p2: $legacyText(_s(isFlipped ? "MDMults" : "ADMults")),
+              p3: $legacyText(_s(formatPercents(Math.clamp((c - 0.7) * 10/3, 0, 1), 3, 3))),
+              p4: $legacyText(_s(format(antiEqual, 2, 2)))
+            }) }}
           </div>
           <div v-if="milestonesReached >= 3">
             <br>
-            C Milestone {{ $legacyText(_s(formatInt(3))) }}: Tickspeed Equalizer.
-            Effective Tickspeed Upgrades are slowly shifting from (bought + free) into (bought * free).
-            This shift is {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.85) * 20/3, 0, 1), 3, 3))) }} complete, making the current
-            number of Effective Tickspeed Upgrades equal to {{ $legacyText(_s(format(tickEqual, 2, 2))) }}.
+            {{ $t('ade.919836e0ad91f53c', {
+              p0: $legacyText(_s(formatInt(3))),
+              p1: $legacyText(_s(formatPercents(Math.clamp((c - 0.85) * 20/3, 0, 1), 3, 3))),
+              p2: $legacyText(_s(format(tickEqual, 2, 2)))
+            }) }}
           </div>
           <div v-if="milestonesReached >= 4">
             <br>
-            C Milestone {{ $legacyText(_s(formatInt(4))) }}: Black Hole and Potency Improvement.
-            Black Holes now also apply a power effect which is increasing from 1 to log10(log10(max(BHMult, 10))) + 1.
-            Furthermore, the Divine Matter/Energy multiplier from the Potency Accelerator now also applies a power effect
-            which is increasing from 1 to (max(log10(max(PotencyMult, 1)) - 18.5, 0) / 3) + 1.
-            These shifts are {{ $legacyText(_s(formatPercents(Math.clamp((c - 0.95) * 20, 0, 1), 3, 3))) }} complete, making the current
-            Black Hole {{ $legacyText(_s(formatInt(1))) }} boost equal to {{ $legacyText(_s(formatPow(bh1Improve, 2, 3))) }}, the current
-            Black Hole {{ $legacyText(_s(formatInt(2))) }} boost equal to {{ $legacyText(_s(formatPow(bh2Improve, 2, 3))) }}, and the current
-            Divine Matter/Energy boost from the Potency Accelerator equal to {{ $legacyText(_s(formatPow(potencyImprove, 2, 3))) }}.
+            {{ $t('ade.76c4e5f6f576cf14', {
+              p0: $legacyText(_s(formatInt(4))),
+              p1: $legacyText(_s(formatPercents(Math.clamp((c - 0.95) * 20, 0, 1), 3, 3))),
+              p2: $legacyText(_s(formatInt(1))),
+              p3: $legacyText(_s(formatPow(bh1Improve, 2, 3))),
+              p4: $legacyText(_s(formatInt(2))),
+              p5: $legacyText(_s(formatPow(bh2Improve, 2, 3))),
+              p6: $legacyText(_s(formatPow(potencyImprove, 2, 3)))
+            }) }}
           </div>
           <div v-if="milestonesReached >= 5">
             <br>
-            C Milestone {{ $legacyText(_s(formatInt(5))) }}: Light unlock.
-            You have reached {{ $legacyText(_s(formatInt(1))) }}C and can now generate Light (coming soon).
+            {{ $t('ade.20855500db9fb3de', {
+              p0: $legacyText(_s(formatInt(5))),
+              p1: $legacyText(_s(formatInt(1)))
+            }) }}
           </div>
           <br>
           <div>
