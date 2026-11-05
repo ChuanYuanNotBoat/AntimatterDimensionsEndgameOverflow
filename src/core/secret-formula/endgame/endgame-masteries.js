@@ -1,4 +1,4 @@
-import { boundedPositivePower } from "../../finite-decimal";
+import { boundedPositivePower, boundedPositiveProduct } from "../../finite-decimal";
 import { textRef } from "../../../i18n/text-ref";
 
 export const endgameMasteries = [
@@ -507,7 +507,7 @@ export const endgameMasteries = [
     requirement: [271, 272, 273, 274],
     reqType: EM_REQUIREMENT_TYPE.ENTANGLEMENT,
     description: "Multiply Thermal Radiation based on Celestial Points of Eternity",
-    effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000), 8).max(1),
+    effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000).max(1), 8),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -534,7 +534,9 @@ export const endgameMasteries = [
     requirement: [282],
     reqType: EM_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: "Empower Galactic Power based on Celestial Points of Eternity",
-    effect: () => player.disablePostReality ? DC.D1 : boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000), 1.5).max(1),
+    effect: () => player.disablePostReality ? DC.D1 : boundedPositiveProduct(
+      boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(4000).max(1).min(2), 1.5),
+      boundedPositivePower(player.endgame.celDimExpansion.celestialEternityPoints.max(1).log10().div(8000).max(1), 0.1)),
     formatEffect: value => formatPow(value, 2, 3)
   },
   {

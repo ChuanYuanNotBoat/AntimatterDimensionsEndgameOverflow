@@ -1854,7 +1854,7 @@ export const normalAchievements = [
     checkRequirement: () => player.endgames >= 1e12,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     get reward() {
-      return `Start Endgames with ${format(1e24, 2, 2)} filled Reality Machines`;
+      return `Start Endgames with Teresa's Canister filled.`;
     },
     effect: () => player.disablePostReality ? DC.D0 : Decimal.pow10(24),
     progress: () => Achievement(217).isUnlocked ? DC.D1 : Decimal.clamp(new Decimal(player.endgames).div(1e12), 0, 1)
@@ -2054,7 +2054,7 @@ export const normalAchievements = [
     description: "Unlock the Large Hadron Collider.",
     checkRequirement: () => ExpansionPack.alphaPack.isBought,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
-    progress: () => Achievement(241).isUnlocked ? DC.D1 : Decimal.clamp(player.antimatter.max(10).log10().log10().div(200), 0, 1)
+    progress: () => Achievement(241).isUnlocked ? DC.D1 : (Pelle.isDoomed ? DC.DM1 : Decimal.clamp(player.antimatter.max(10).log10().log10().div(200), 0, 1))
   },
   {
     id: 242,
@@ -2068,7 +2068,7 @@ export const normalAchievements = [
     id: 243,
     name: "Journey's End",
     description: "Unlock Celestial Eternity Plus.",
-    checkRequirement: () => Currency.celestialEternityPoints.gte(DC.E1000),
+    checkRequirement: () => gainedCelestialEternityPoints().gte(DC.E1000),
     checkEvent: GAME_EVENT.CELESTIAL_ETERNITY_RESET_BEFORE,
     progress: () => Achievement(243).isUnlocked ? DC.D1 : Decimal.clamp(Currency.celestialEternityPoints.value.max(1).log10().div(1000), 0, 1)
   },
@@ -2190,7 +2190,7 @@ export const normalAchievements = [
     id: 261,
     name: ["False", "Deity", "Monarch"],
     description: "Become a Celestial.",
-    checkRequirement: () => player.celestials.slabdrill.hasBoughtNinthDimension && player.endgame.creditsTick > 0 && !player.endgame.credits,
+    checkRequirement: () => PlayerProgress.celestialPlusUnlocked(),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     get reward() {
       return `Gain ${formatX(10)} more Condenses.`;

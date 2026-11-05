@@ -73,5 +73,6 @@ export function getGalacticPowerGainPerSecond() {
     source.applyEffect(value => { exponent = boundedPositiveProduct(exponent, value); });
   }
   exponent = boundedPositiveProduct(exponent, NormalChallenge(10).chargedEffect);
-  return Pelle.isDoomed ? DC.D0 : boundedPositivePower(base, exponent);
+  const gain = Pelle.isDoomed ? DC.D0 : boundedPositivePower(base, exponent);
+  return boundedPositivePower(gain.min(DC.E1E6), gain.max(1).log10().div(1e6).max(1).pow(0.1));
 }

@@ -126,20 +126,23 @@ class InfinityDimensionState extends DimensionState {
     return Currency.infinityPoints.gte(this.cost);
   }
 
+  _prevAmount = DC.D0;
+
+  get prevAmount() {
+    return this._prevAmount ?? DC.D0;
+  }
+
+  set prevAmount(value) {
+    this._prevAmount = value;
+  }
+
+  /**
+   * @returns {Decimal}
+   */
   get rateOfChange() {
-    const tier = this.tier;
-    let toGain = DC.D0;
-    if (tier === 8) {
-      // We need a extra 10x here (since ID8 production is per-second and
-      // other ID production is per-10-seconds).
-      EternityChallenge(7).reward.applyEffect(v => toGain = v.times(10));
-      if (EternityChallenge(7).isRunning) EternityChallenge(7).applyEffect(v => toGain = v.times(10));
-    } else {
-      toGain = InfinityDimension(tier + 1).productionPerSecond;
-    }
-    const current = Decimal.max(this.amount, 1);
-    return boundedPositiveProduct(
-      boundedPositiveQuotient(boundedPositiveProduct(toGain, 10), current), getGameSpeedupForDisplay());
+    let gained = this.prevAmount.lte(0) ? DC.D0 : InfinityDimension(this.tier).amount.div(this.prevAmount).pow(DC.E3.div(Time.unscaledDeltaTime._ms)).sub(1).times(100);
+    this.prevAmount = InfinityDimension(this.tier).amount;
+    return gained;
   }
 
   get productionPerSecond() {

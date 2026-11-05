@@ -55,34 +55,34 @@ export const Hadrons = {
     return factor;
   },
   get singularityMultiplier() {
-    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 4));
+    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 6));
     if (!DualityUpgrade(15).isBought || player.disablePostReality) return DC.D1;
     let exponent = boundedPositiveProduct(this.hadrons.totalLight, time.min(hadronEffectivenessCap()));
     exponent = boundedPositiveProduct(exponent, 10);
     return boundedPositivePower(10, exponent);
   },
   get darkMatterCapMultiplier() {
-    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 2));
+    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 3));
     if (!DualityUpgrade(16).isBought || player.disablePostReality) return DC.D1;
     let exponent = boundedPositiveProduct(this.hadrons.totalLight, time.min(hadronEffectivenessCap()));
     exponent = boundedPositiveProduct(exponent, 100);
     return boundedPositivePower(10, exponent);
   },
   get darkEnergyAscensionBoost() {
-    const time = softenedHadronTime(this.timeFactor);
+    const time = softenedHadronTime(boundedPositiveProduct(this.timeFactor, 5 / 3));
     return DualityUpgrade(17).isBought && !player.disablePostReality
       ? boundedPositiveProduct(this.hadrons.totalLight, time.min(hadronEffectivenessCap()))
       : DC.D0;
   },
   get entropyFormulaBoost() {
-    const time = softenedHadronTime(this.timeFactor, 2);
+    const time = softenedHadronTime(this.timeFactor);
     if (!DualityUpgrade(18).isBought || player.disablePostReality) return DC.D1;
     const base = boundedPositiveSum(
       boundedPositiveProduct(Decimal.log10(time.max(1).min(hadronEffectivenessCap())), 2), 1);
     return boundedPositivePower(base, this.hadrons.totalLight);
   },
   get continuumMultiplier() {
-    const time = softenedHadronTime(this.timeFactor, 5);
+    const time = softenedHadronTime(this.timeFactor, 2);
     if (!DualityUpgrade(19).isBought || player.disablePostReality) return DC.D1;
     const darkHadronFactor = boundedPositiveSum(1, DualityUpgrade(21).effectOrDefault(0));
     const logFactor = Decimal.log10(time.max(1).min(hadronEffectivenessCap())).div(10);

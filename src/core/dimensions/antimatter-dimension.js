@@ -583,29 +583,23 @@ class AntimatterDimensionState extends DimensionState {
     return false;
   }
 
+  _prevAmount = DC.D0;
+
+  get prevAmount() {
+    return this._prevAmount ?? DC.D0;
+  }
+
+  set prevAmount(value) {
+    this._prevAmount = value;
+  }
+
   /**
    * @returns {Decimal}
    */
   get rateOfChange() {
-    const tier = this.tier;
-    if (tier === 9 ||
-      (tier > 3 && EternityChallenge(3).isRunning) ||
-      (tier > 6 && NormalChallenge(12).isRunning)) {
-      return DC.D0;
-    }
-
-    if (tier === 8 && !(player.celestials.slabdrill.goodbyeTick >= 40000 || Slabdrill.isDestroyed)) return DC.D0;
-
-    let toGain;
-    if (tier === 7 && EternityChallenge(7).isRunning) {
-      toGain = boundedPositiveProduct(InfinityDimension(1).productionPerSecond, 10);
-    } else if (NormalChallenge(12).isRunning) {
-      toGain = AntimatterDimension(tier + 2).productionPerSecond;
-    } else {
-      toGain = AntimatterDimension(tier + 1).productionPerSecond;
-    }
-    return boundedPositiveProduct(
-      boundedPositiveProduct(toGain, 10).div(this.amount.max(1)), getGameSpeedupForDisplay());
+    let gained = this.prevAmount.lte(0) ? DC.D0 : AntimatterDimension(this.tier).amount.div(this.prevAmount).pow(DC.E3.div(Time.unscaledDeltaTime._ms)).sub(1).times(100);
+    this.prevAmount = AntimatterDimension(this.tier).amount;
+    return gained;
   }
 
   /**
@@ -776,7 +770,7 @@ class AntimatterDimensionState extends DimensionState {
       }
       return dimensionProduction;
     }
-    let production = tier === 1 ? CMilestones.antimatterEqualizer(dimensionProduction, Tickspeed.perSecond)
+    let production = (tier === 1 || (tier === 2 && NormalChallenge(12).isRunning)) ? CMilestones.antimatterEqualizer(dimensionProduction, Tickspeed.perSecond)
       : boundedPositiveProduct(dimensionProduction, tier === 9 ? 1 : Tickspeed.perSecond);
     // An optional, read-only diagnostic records the *gameplay* production path.
     // It is never allocated by normal ticks; statistics can inspect actual cap losses
@@ -789,7 +783,9 @@ class AntimatterDimensionState extends DimensionState {
       diagnostic.push({ key: "raw", type: "formula", before: DC.D1, after: raw,
         display: tier === 9 ? "Effective amount × gameplay multiplier (AD9 bypasses Tickspeed)"
           : "Effective amount × gameplay multiplier × one Tickspeed rate" });
-      if (tier === 1) record("antimatterEqualizer", "formula", raw, "C Hadron Antimatter equalizer");
+      if (tier === 1 || (tier === 2 && NormalChallenge(12).isRunning)) {
+        record("antimatterEqualizer", "formula", raw, "C Hadron Antimatter equalizer");
+      }
     }
     let checkpoint = production;
     if (NormalChallenge(2).isRunning) {
@@ -797,7 +793,7 @@ class AntimatterDimensionState extends DimensionState {
     }
     record?.("challenge2", "multiply", checkpoint, "Normal Challenge 2 multiplier (when active)");
     checkpoint = production;
-    if (tier === 1 && !player.compression.active) {
+    if ((tier === 1 || (tier === 2 && NormalChallenge(12).isRunning)) && !player.compression.active) {
       if (NormalChallenge(3).isRunning) {
         production = production.times(player.chall3Pow);
       }
@@ -869,6 +865,12 @@ class AntimatterDimensionState extends DimensionState {
       }
       record?.("productionCap260", "softcap", checkpoint, "AD1 production compression above 10^(1e260)");
       checkpoint = production;
+      if (production.gt(Decimal.pow10(1e280)) && !Pelle.isDoomed && !player.endgame.overcharge.isRunning && !Slabdrill.isCursed) {
+        const log10 = production.log10();
+        production = Decimal.pow10(Decimal.pow(log10.div(1e280), 0.2).times(1e280));
+      }
+      record?.("productionCap280", "softcap", checkpoint, "AD1 production compression above 10^(1e280)");
+      checkpoint = production;
       if (production.gt(10) && LHC.nullifiedVoidRunning) {
         const log10 = production.log10();
         production = Decimal.pow10(Decimal.pow(log10, 0.01));
@@ -903,19 +905,27 @@ class AntimatterDimensionState extends DimensionState {
         production = boundedTetrate10(slog.times(0.5).add(1).add(Currency.molecularMass.value.max(1).slog().div(2).sub(1).max(0)));
       }
       record?.("tangibleUniverse", "formula", checkpoint, "Tangible Universe: Molecular Mass production transform");
-    } else if (tier === 1 && diagnostic) {
+    } else if ((tier === 1 || (tier === 2 && NormalChallenge(12).isRunning)) && diagnostic) {
       diagnostic.push({ key: "compressionBypass", type: "override", before: production, after: production,
         alwaysShow: true, display: "Compression bypasses the AD1 production powers and celestial softcaps" });
     }
+    checkpoint = production;
+    if ((tier === 1 || (tier === 2 && NormalChallenge(12).isRunning)) && player.compression.active) {
+      if (production.gt(Decimal.pow10(1e25))) {
+        const log10 = production.log10();
+        production = Decimal.pow10(Decimal.pow(log10.div(1e25), 0.1).times(1e25));
+      }
+    }
+    record?.("compressionProductionCap", "softcap", checkpoint, "Compression production softcap above 10^(1e25)");
     // Endgame and challenge caps apply to every AD tier, not to its multiplier.
     checkpoint = production;
     const cap = this.cappedProductionInNormalChallenges;
-    production = tier !== 1 && NormalChallenge(12).isCharged &&
+    production = (tier !== 1 && (tier !== 2 || !NormalChallenge(12).isRunning)) && NormalChallenge(12).isCharged &&
       ((player.break && !NormalChallenge.isRunning) || InfinityChallenge.isRunning || Enslaved.isRunning)
       ? production.min(boundedPositiveProduct(dimensionProduction, NormalChallenge(2).isRunning ? player.chall2Pow : 1))
       : production.min(cap);
     let capDisplay = diagnostic ? `Production hardcap: ${format(cap, 2, 2)}/sec` : "";
-    if (diagnostic && tier !== 1 && NormalChallenge(12).isCharged &&
+    if (diagnostic && (tier !== 1 && (tier !== 2 || !NormalChallenge(12).isRunning)) && NormalChallenge(12).isCharged &&
         ((player.break && !NormalChallenge.isRunning) || InfinityChallenge.isRunning || Enslaved.isRunning)) {
       capDisplay = "Charged NC12 caps production at the pre-Tickspeed output (including NC2 when active)";
     }

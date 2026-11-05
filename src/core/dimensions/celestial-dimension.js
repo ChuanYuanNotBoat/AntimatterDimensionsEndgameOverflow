@@ -196,14 +196,23 @@ class CelestialDimensionState extends DimensionState {
     return Currency.celestialPoints.gte(this.cost);
   }
 
+  _prevAmount = DC.D0;
+
+  get prevAmount() {
+    return this._prevAmount ?? DC.D0;
+  }
+
+  set prevAmount(value) {
+    this._prevAmount = value;
+  }
+
+  /**
+   * @returns {Decimal}
+   */
   get rateOfChange() {
-    const tier = this.tier;
-    if (tier === 8) {
-      return DC.D0;
-    }
-    const toGain = CelestialDimension(tier + 1).productionPerSecond;
-    const current = Decimal.max(this.amount, 1);
-    return boundedPositiveQuotient(boundedPositiveProduct(toGain, 10), current);
+    let gained = this.prevAmount.lte(0) ? DC.D0 : CelestialDimension(this.tier).amount.div(this.prevAmount).pow(DC.E3.div(Time.unscaledDeltaTime._ms)).sub(1).times(100);
+    this.prevAmount = CelestialDimension(this.tier).amount;
+    return gained;
   }
 
   get productionPerSecond() {
@@ -438,7 +447,7 @@ export const CelestialDimensions = {
 
   get alphaDecayRemnant() {
     return Alpha.isDestroyed ? Time.thisCelestialInfinityRealTime.totalHours.plusEffectOf(CelestialInfinityUpgrade.alphaDecayStartBoost).div(
-      this.alphaDecaySpeed).min(5).div(5) : DC.D1;
+      this.alphaDecaySpeed).min(1) : DC.D1;
   },
 
   get conversionExponent() {
@@ -840,10 +849,10 @@ export class CelestialGalaxy {
 function celestialGalaxyReset() {
   EventHub.dispatch(GAME_EVENT.CELESTIAL_GALAXY_RESET_BEFORE);
   player.endgame.celDimExpansion.galaxies = player.endgame.celDimExpansion.galaxies.add(1);
-  if (!CelestialEternityUpgrade.freeDimBoost.isBought) {
+  if (!CelestialEternityUpgrade.freeGalaxy.isBought) {
     player.endgame.celDimExpansion.dimBoosts = new Decimal(CelestialInfinityUpgrade.buffedStart.effectOrDefault(0));
   }
-  softCelestialReset(0);
+  softCelestialReset(0, !CelestialEternityUpgrade.freeGalaxy.isBought, !CelestialEternityUpgrade.freeGalaxy.isBought);
   EventHub.dispatch(GAME_EVENT.CELESTIAL_GALAXY_RESET_AFTER);
 }
 

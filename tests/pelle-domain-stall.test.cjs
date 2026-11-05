@@ -73,6 +73,12 @@ test('ordinary, cursed and completed Domain saves are unaffected by the AD9 paus
 });
 
 function gameLoopPrefix(env) {
+  const storage = new Map();
+  env.localStorage = {
+    getItem: key => storage.get(key) ?? null,
+    setItem(key, value) { storage.set(key, String(value)); this[key] = String(value); },
+  };
+  env.document = { title: '' };
   const p = env.player;
   p.introFrozen = true;
   p.introTick = 90000;
